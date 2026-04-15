@@ -323,15 +323,16 @@
                 <ol class="task-list">
                     <li><strong>Zadanie:</strong> Zbuduj drugą sieć po prawej stronie routera.</li>
                     <li><strong>Konfiguracja:</strong> Na routerze ustaw IP dla portu G0/1: <code>10.0.0.1</code>. Na PC4 ustaw IP: <code>10.0.0.10</code> oraz Bramę: <code>10.0.0.1</code>.</li>
-                    <li><strong>Testowanie:</strong> Ping z PC1 do PC4 (<code>ping 10.0.0.10</code>). Pierwszy pakiet może wypaść (ARP), kolejne przejdą!</li>
+                    <li><strong>Testowanie:</strong> Ping z PC1 do PC4 (<code>ping 10.0.0.10</code>). Pierwszy pakiet może przepaść (<em>Request timed out</em>), ale kolejne przejdą!</li>
                 </ol>
 <div class="conclusion-box">
-                    <div class="conclusion-icon">🗺️</div>
-                    <div class="conclusion-text">
-                        <strong>Wniosek:</strong>
-                        Router połączył dwie różne "wioski". Kiedy PC1 wysyła pakiet do PC4, widzi, że to inna sieć, więc śle go do Bramy. <br>
-                        <b>Ważne:</b> Pierwszy ping często "wypada" (Request timed out), ponieważ urządzenia muszą najpierw użyć protokołu <b>ARP</b>, aby poznać swoje adresy MAC na nowej trasie. Dopiero gdy tablice ARP się wypełnią, pakiety ping (ICMP) mogą swobodnie latać!
-                    </div>
+    <div class="conclusion-icon">🗺️</div>
+    <div class="conclusion-text">
+        <strong>Wniosek:</strong>
+        Router połączył dwie różne "wioski". Kiedy PC1 wysyła pakiet do PC4, widzi, że to inna sieć, więc przekazuje go do Bramy. <br>
+        <b>Ważne:</b> Pierwszy ping często kończy się błędem (<em>Request timed out</em>), ponieważ urządzenia muszą najpierw użyć protokołu <b>ARP</b>, aby poznać swoje adresy MAC na nowej trasie. Dopiero gdy tablice ARP się wypełnią, pakiety ping (ICMP) mogą swobodnie latać!
+    </div>
+</div>
                 </div>                
             </div>
         </div>
