@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4: DNS i NAT - Filar 1</title>
+    <style>
+        /* --- ZMIENNE CSS --- */
+        :root {
+            --bg-color: #f4f7f6; --text-main: #2d3436; --text-muted: #636e72;
+            --card-bg: #ffffff; --l2-color: #0984e3; --l3-color: #e17055;
+            --success-color: #00b894; --code-bg: #2d3436; --code-text: #55efc4;
+            --line-color: #b2bec3; --isp-color: #d63031; --nat-color: #fdcb6e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 20px; }
+        header { text-align: center; margin-bottom: 40px; padding: 20px 0; }
+        h1 { font-size: 2.2rem; color: #2d3436; margin-bottom: 10px; }
+        
+        /* --- NAWIGACJA --- */
+        .main-nav { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+        .nav-btn { background: #ffffff; border: 2px solid var(--l2-color); color: var(--l2-color); padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.95rem; transition: all 0.2s ease; }
+        .nav-btn:hover { background: #e3f2fd; }
+        .nav-btn.active { background: var(--l2-color); color: #ffffff; box-shadow: 0 4px 6px rgba(9, 132, 227, 0.3); }
+
+        /* --- KARTY LAB --- */
+        .lab-container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; }
+        .lab-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; border-left: 6px solid var(--success-color); }
+        .lab-card:nth-child(2) { border-left-color: var(--nat-color); }
+        
+        .lab-header { background: #f8f9fa; padding: 20px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .lab-header h3 { font-size: 1.3rem; color: #2d3436; }
+        .time-badge { background: #dfe6e9; color: #2d3436; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .lab-body { padding: 25px; }
+        .goal-box { background: #e3f2fd; color: #0c5460; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-style: italic; border-left: 4px solid #0984e3; }
+        .task-list { margin-left: 20px; margin-bottom: 20px; }
+        .task-list li { margin-bottom: 12px; }
+        
+        /* --- GUI & CLI --- */
+        .gui-path { background: #f1f2f6; padding: 10px 15px; border-radius: 6px; font-family: 'Segoe UI', sans-serif; font-size: 0.95rem; margin: 10px 0; border: 1px solid #dfe4ea; display: inline-block; width: 100%; }
+        .gui-path strong { color: #2f3542; }
+        .gui-arrow { color: var(--l2-color); margin: 0 5px; font-weight: bold; }
+        code { background: #dfe6e9; color: #2d3436; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.9rem; font-weight: bold; }
+        .cli-block { background: var(--code-bg); color: var(--code-text); padding: 15px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.9rem; margin: 10px 0; overflow-x: auto; white-space: pre; line-height: 1.4; border-left: 4px solid var(--nat-color); }
+        .cli-comment { color: #b2bec3; font-style: italic; }
+
+        .conclusion-box { background: #e8f8f5; border: 1px solid #a3e4d7; padding: 15px; border-radius: 8px; margin-top: 20px; display: flex; gap: 15px; align-items: flex-start; }
+        .conclusion-icon { font-size: 1.5rem; }
+        .conclusion-text strong { color: #00b894; display: block; margin-bottom: 5px; }
+
+        /* --- SCHEMATY --- */
+        .topology-box { background: #fdfdfd; border: 2px dashed #dfe6e9; border-radius: 8px; padding: 20px; margin-bottom: 25px; overflow-x: auto; display: flex; justify-content: center; }
+        .tree ul { padding-top: 20px; position: relative; display: flex; justify-content: center; padding-left: 0; margin: 0; }
+        .tree li { text-align: center; list-style-type: none; position: relative; padding: 20px 10px 0 10px; display: flex; flex-direction: column; align-items: center; }
+        .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid var(--line-color); width: 50%; height: 20px; }
+        .tree li::after { right: auto; left: 50%; border-left: 2px solid var(--line-color); }
+        .tree li:only-child::after, .tree li:only-child::before { display: none; }
+        .tree li:only-child { padding-top: 0; }
+        .tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+        .tree li:last-child::before { border-right: 2px solid var(--line-color); border-radius: 0 5px 0 0; }
+        .tree li:first-child::after { border-radius: 5px 0 0 0; }
+        .tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid var(--line-color); width: 0; height: 20px; }
+        
+        .node { background: white; border: 2px solid #b2bec3; border-radius: 8px; padding: 10px; min-width: 100px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: inline-block; z-index: 2; position: relative; }
+        .node.router { border-color: var(--l3-color); border-width: 3px; }
+        .node.isp { border-color: var(--isp-color); border-width: 3px; background: #fdf2f2; }
+        .node.server { border-color: var(--success-color); border-width: 3px; }
+        .node.nat { border-color: var(--nat-color); border-width: 4px; border-style: dashed; }
+        
+        .node-icon { font-size: 2rem; margin-bottom: 5px; display: block; }
+        .node-name { font-weight: bold; font-size: 0.85rem; color: #2d3436; display: block; }
+        .node-ip { font-family: 'Consolas', monospace; font-size: 0.75rem; color: #636e72; display: block; margin-top: 3px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>💻 Laboratorium Packet Tracer</h1>
+        <p style="color: var(--text-muted);">Praktyczne ćwiczenia z Filaru 1. Zbuduj to, o czym czytałeś!</p>
+        
+        <nav class="main-nav">
+            <a href="index.html" class="nav-btn">📖 Teoria</a>
+            <a href="cwiczenia.html" class="nav-btn">💻 Lab 1</a>
+            <a href="cwiczenia2.html" class="nav-btn">💻 Lab 2</a>
+            <a href="cwiczenia3.html" class="nav-btn">💻 Lab 3</a>
+            <a href="cwiczenia4.html" class="nav-btn active">💻 Lab 4: DNS i NAT</a>
+        </nav>
+    </header>
+
+    <main class="lab-container">
+        <h2 style="text-align: center; margin-bottom: 10px;">Ćwiczenie 4: Prawdziwy Internet</h2>
+        
+        <!-- FAZA 1 -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Faza 1: DNS (Książka Telefoniczna)</h3>
+                <div class="time-badge">⏱️ Czas: 30 minut</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Sprawić, by użytkownicy mogli wpisywać w przeglądarce <code>www.google.com</code> zamiast trudnego do zapamiętania adresu IP <code>8.8.8.8</code>.</div>
+                
+                <ol class="task-list">
+                    <li><strong>Baza:</strong> Używamy topologii z Lab 3. Mamy tam Serwer Google (8.8.8.8). Użyjemy go również jako serwera DNS.</li>
+                    <li><strong>Konfiguracja usługi DNS:</strong> Uczymy serwer, jak tłumaczyć nazwy na IP.
+                        <div class="gui-path">🖱️ Kliknij Serwer Google <span class="gui-arrow">➔</span> Zakładka <strong>Services</strong> <span class="gui-arrow">➔</span> Po lewej <strong>DNS</strong></div>
+                        <ul>
+                            <li>Zaznacz DNS Service: <strong>On</strong></li>
+                            <li>W polu Name wpisz: <code>www.google.com</code></li>
+                            <li>W polu Address wpisz: <code>8.8.8.8</code></li>
+                            <li>Kliknij przycisk <strong>Add</strong>.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Aktualizacja DHCP:</strong> Komputery w naszej firmie muszą wiedzieć, kogo pytać o nazwy stron!
+                        <div class="gui-path">🖱️ Kliknij Serwer DHCP (w naszej firmie) <span class="gui-arrow">➔</span> Zakładka <strong>Services</strong> <span class="gui-arrow">➔</span> <strong>DHCP</strong></div>
+                        W polu <strong>DNS Server</strong> wpisz <code>8.8.8.8</code> i kliknij <strong>Save</strong>.
+                    </li>
+                    <li><strong>Odświeżenie IP na PC:</strong> Wejdź na PC1, przełącz IP na <em>Static</em> i z powrotem na <em>DHCP</em>. Sprawdź, czy w polu DNS Server pojawiło się 8.8.8.8.</li>
+                    <li><strong>Wielki Test:</strong> Na PC1 otwórz zakładkę <strong>Desktop</strong>, wybierz <strong>Web Browser</strong> (Przeglądarka). W pasku adresu wpisz <code>www.google.com</code> i wciśnij Enter. Powinna załadować się strona!</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">📖</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> DNS to książka telefoniczna internetu. Komputery komunikują się TYLKO za pomocą adresów IP. Kiedy wpisujesz nazwę strony, Twój komputer najpierw pyta serwera DNS: "Jaki IP ma www.google.com?", a dopiero potem wysyła tam właściwe dane.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAZA 2 -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Faza 2: NAT (Magiczna Peleryna)</h3>
+                <div class="time-badge">⏱️ Czas: 1 godzina</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Ukrycie całej naszej prywatnej sieci (192.168.x.x) pod jednym publicznym adresem IP. Tak działa każdy domowy router!</div>
+                
+                <div class="topology-box">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <div class="node isp">
+                                    <span class="node-icon">🏢</span>
+                                    <span class="node-name">Internet (ISP)</span>
+                                    <span class="node-ip">Odrzuca prywatne IP!</span>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node nat">
+                                            <span class="node-icon">🎭</span>
+                                            <span class="node-name">Nasz Router (NAT)</span>
+                                            <span class="node-ip">Tłumaczy 192.168.x.x na 200.0.0.1</span>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="node server">
+                                                    <span class="node-icon">🖧</span>
+                                                    <span class="node-name">Nasza Sieć Prywatna</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ol class="task-list">
+                    <li><strong>Symulacja prawdziwego świata:</strong> W Lab 3 dodaliśmy na routerze ISP trasę powrotną do naszej sieci. W prawdziwym świecie ISP tego NIE ZROBI (adresy 192.168.x.x są zablokowane w internecie). 
+                        <div class="gui-path">🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> <strong>Static</strong></div>
+                        Zaznacz trasę <code>192.168.10.0</code> i kliknij <strong>Remove</strong>. Zrób to samo dla <code>192.168.20.0</code>. <br>
+                        <em>Spróbuj teraz spingować 8.8.8.8 z PC1. Przestało działać! Pakiet tam dociera, ale nie potrafi wrócić.</em>
+                    </li>
+                    <li><strong>Konfiguracja NAT (CLI):</strong> Musimy włączyć NAT na Naszym Routerze. Zrobimy to w CLI, bo to zadanie dla prawdziwych inżynierów. Najpierw określamy, który port jest "wewnątrz" firmy, a który "na zewnątrz".</li>
+                </ol>
+
+<div class="cli-block">
+<span class="cli-comment">! Na Naszym Routerze (Firma):</span>
+enable
+configure terminal
+
+<span class="cli-comment">! Port w stronę naszej firmy (Inside)</span>
+interface gigabitEthernet 0/0
+ ip nat inside
+exit
+
+<span class="cli-comment">! Port w stronę Internetu (Outside)</span>
+interface gigabitEthernet 0/1
+ ip nat outside
+exit
+</div>
+
+                <ol class="task-list" start="3">
+                    <li><strong>Lista dostępu (ACL):</strong> Mówimy routerowi, komu pozwalamy na wyjście do internetu. Pozwolimy wszystkim z naszej sieci.</li>
+                </ol>
+
+<div class="cli-block">
+<span class="cli-comment">! Tworzymy listę nr 1, która pozwala na wszystko</span>
+access-list 1 permit any
+</div>
+
+                <ol class="task-list" start="4">
+                    <li><strong>Uruchomienie magii (PAT / NAT Overload):</strong> Łączymy listę z portem wyjściowym.</li>
+                </ol>
+
+<div class="cli-block">
+<span class="cli-comment">! Tłumacz adresy z listy 1 na publiczny adres portu G0/1</span>
+ip nat inside source list 1 interface gigabitEthernet 0/1 overload
+</div>
+
+                <ol class="task-list" start="5">
+                    <li><strong>Wielki Test:</strong> Wejdź na PC1 i ponownie spinguj <code>8.8.8.8</code>. Działa! 
+                    <li><strong>Zajrzyj pod maskę:</strong> Na Naszym Routerze w CLI wpisz komendę: <br><code>show ip nat translations</code>. Zobaczysz tabelkę, w której router zapisuje, jak podmienił prywatny adres PC1 na swój publiczny adres 200.0.0.1!</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🎭</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> NAT (Network Address Translation) to tłumacz. Kiedy PC1 wysyła pakiet do Google, Nasz Router zdejmuje z niego prywatny adres (192.168.10.100), nakleja swój publiczny (200.0.0.1) i wysyła w świat. Google odpowiada do routera, a router pamięta, kto o to pytał, i przekazuje odpowiedź do PC1. Dzięki temu cała szkoła/firma może korzystać z internetu, mając wykupiony tylko JEDEN publiczny adres IP!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
