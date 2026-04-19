@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Wiedzy - Egzamin INF.02</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            color: #2f3640;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 900px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+        p.subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: #7f8fa6;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dcdde1;
+        }
+        th {
+            background-color: #f1f2f6;
+            color: #2d3436;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .pillar-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .weight-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: white;
+            text-align: center;
+            min-width: 45px;
+        }
+        ul.concept-list {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.6;
+            color: #4b4b4b;
+        }
+        ul.concept-list li {
+            margin-bottom: 4px;
+        }
+
+        /* Kolory zgodne z wykresem kołowym */
+        .bg-ms { background-color: #00b894; }
+        .bg-net { background-color: #0984e3; }
+        .bg-lin { background-color: #d63031; }
+        .bg-hw { background-color: #e1b12c; } /* Lekko przyciemniony żółty dla czytelności */
+        .bg-exc { background-color: #6c5ce7; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Drzewo Wiedzy - Egzamin INF.02</h1>
+        <p class="subtitle">Zestawienie tabelaryczne tematów i pojęć</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Filar Wiedzy</th>
+                    <th style="width: 15%; text-align: center;">Waga</th>
+                    <th style="width: 55%;">Tematy i Pojęcia (Zakres)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filar 1: Microsoft -->
+                <tr>
+                    <td>
+                        <div class="pillar-name">
+                            <span class="color-dot bg-ms"></span>
+                            Infrastruktura Microsoft
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="weight-badge bg-ms">35%</span>
+                    </td>
+                    <td>
+                        <ul class="concept-list">
+                            <li><strong>Active Directory:</strong> Tworzenie domen, OU, kont użytkowników i grup</li>
+                            <li><strong>Zarządzanie:</strong> Uprawnienia NTFS, udziały sieciowe (SMB), ukryte udziały ($)</li>
+                            <li><strong>Usługi:</strong> IIS (Web Server, Host Headers), DNS (Strefy, Rekordy A/CNAME/SOA), RRAS (NAT)</li>
+                            <li><strong>High Availability:</strong> NIC Teaming, Profile Mobilne (Roaming Profiles)</li>
+                            <li><strong>Zarządzanie z CLI:</strong> Rodzina komend <code>net</code> (user, localgroup, share)</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <!-- Filar 2: Sieci -->
+                <tr>
+                    <td>
+                        <div class="pillar-name">
+                            <span class="color-dot bg-net"></span>
+                            Sieci Komputerowe
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="weight-badge bg-net">30%</span>
+                    </td>
+                    <td>
+                        <ul class="concept-list">
+                            <li><strong>Podstawy LAN:</strong> Adresacja IP, maski, adresy MAC, konfiguracja Switcha</li>
+                            <li><strong>Routing:</strong> Brama domyślna, routing statyczny</li>
+                            <li><strong>Segmentacja:</strong> VLANy (802.1q), porty Access i Trunk, Router-on-a-Stick</li>
+                            <li><strong>Usługi sieciowe:</strong> DHCP (pule, rezerwacje), DNS, NAT</li>
+                            <li><strong>Matematyka sieciowa:</strong> Subnetting IPv4 (wyliczanie hostów i bram)</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <!-- Filar 3: Linux -->
+                <tr>
+                    <td>
+                        <div class="pillar-name">
+                            <span class="color-dot bg-lin"></span>
+                            Administracja Linux
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="weight-badge bg-lin">15%</span>
+                    </td>
+                    <td>
+                        <ul class="concept-list">
+                            <li><strong>Nawigacja i Pliki:</strong> <code>cd</code>, <code>ls</code>, <code>mkdir</code>, dowiązania symboliczne (<code>ln -s</code>)</li>
+                            <li><strong>Uprawnienia:</strong> Model UGO, zapis oktalny (<code>chmod 711</code>), <code>chown</code></li>
+                            <li><strong>Diagnostyka CLI:</strong> <code>top</code> (zombie), <code>lsblk</code>, <code>lscpu</code>, <code>free</code></li>
+                            <li><strong>Archiwizacja:</strong> Pakowanie i rozpakowywanie (<code>tar</code>)</li>
+                            <li><strong>Strumienie:</strong> Przekierowania wyjścia do plików (<code>></code>)</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <!-- Filar 4: Hardware -->
+                <tr>
+                    <td>
+                        <div class="pillar-name">
+                            <span class="color-dot bg-hw"></span>
+                            Warstwa Fizyczna
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="weight-badge bg-hw">12%</span>
+                    </td>
+                    <td>
+                        <ul class="concept-list">
+                            <li><strong>Okablowanie:</strong> Standardy T568A/B, zarabianie gniazd Keystone i wtyków RJ45</li>
+                            <li><strong>Montaż:</strong> Instalacja RAM, GPU, montaż paneli w szafach RACK</li>
+                            <li><strong>Diagnostyka:</strong> Odczyt parametrów S.M.A.R.T, program GPU-Z, CrystalDiskInfo</li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <!-- Filar 5: Excel -->
+                <tr>
+                    <td>
+                        <div class="pillar-name">
+                            <span class="color-dot bg-exc"></span>
+                            Logika Biznesowa
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="weight-badge bg-exc">8%</span>
+                    </td>
+                    <td>
+                        <ul class="concept-list">
+                            <li><strong>Formuły matematyczne:</strong> Obliczanie VAT, kwot Brutto/Netto, sumowanie</li>
+                            <li><strong>Funkcje logiczne:</strong> Instrukcje warunkowe (<code>JEŻELI</code>), sprawdzanie komórek (<code>CZY.PUSTA</code>)</li>
+                            <li><strong>Formatowanie:</strong> Formatowanie walutowe (PLN), formatowanie warunkowe (kolory)</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
