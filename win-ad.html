@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teoria: Windows Server i Active Directory</title>
+      <!-- Ładowanie wspólnego pliku CSS -->
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+    <header>
+        <h1>📘 Windows Server i Active Directory</h1>
+        <div class="main-nav">
+            <span class="nav-btn active">Teoria i Wprowadzenie</span>
+        </div>
+    </header>
+
+    <div class="lab-container">
+
+        <!-- AKT I -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>AKT I: Koszmar administratora lat 90. (Po co nam to wszystko?)</h3>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">Cel: Pokazanie, jaki problem rozwiązujemy.</div>
+
+                <h4 class="section-title">1. Świat bez domeny (Grupa robocza)</h4>
+                <ul class="task-list">
+                    <li>Wyobraźcie sobie szkołę lub firmę z 50 komputerami. Każdy komputer to osobna, samotna wyspa.</li>
+                    <li>Uczeń "Kowalski" ma swoje konto na komputerze w sali nr 1. Jeśli usiądzie do komputera w sali nr 2, nie zaloguje się – ten drugi komputer w ogóle go nie zna.</li>
+                    <li>Kowalski zapomniał hasła? Administrator musi wstać, podejść do jego biurka, zalogować się na swoje specjalne konto i ręcznie zmienić hasło.</li>
+                    <li>Do firmy przychodzi 10 nowych pracowników? Admin musi podejść do 50 komputerów i na każdym z nich ręcznie wyklikać 10 nowych kont.</li>
+                </ul>
+
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">⚠️</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> Taki model (nazywany grupą roboczą) sprawdza się w domu, ale w firmie to koszmar i strata czasu.
+                    </div>
+                </div>
+
+                <h4 class="section-title">2. Rozwiązanie problemu</h4>
+                <ul class="task-list">
+                    <li>W roku 2000 Microsoft pokazał światu <strong>Active Directory (AD)</strong>. To był przełom, który sprawił, że z jednego miejsca można zarządzać tysiącami komputerów. Do dziś to rozwiązanie działa w większości firm na świecie.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- AKT II -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>AKT II: Czym właściwie jest Active Directory? (Jak to sobie wyobrazić?)</h3>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">Cel: Proste wytłumaczenie, jak działa ta usługa.</div>
+
+                <h4 class="section-title">1. Lista kontaktów i bramkarz na imprezie</h4>
+                <ul class="task-list">
+                    <li>Active Directory to w dużym uproszczeniu potężna <strong>baza danych</strong>.</li>
+                    <li>Działa jak <strong>lista kontaktów w smartfonie</strong>: pozwala szybko znaleźć informacje (np. adres e-mail do księgowej, listę wszystkich drukarek w budynku).</li>
+                    <li>Jednocześnie działa jak <strong>bramkarz w klubie</strong>: kiedy wpisujesz login i hasło, AD sprawdza, czy jesteś na liście gości i czy masz prawo wejść do konkretnego folderu (np. z ocenami lub wypłatami).</li>
+                </ul>
+
+                <h4 class="section-title">2. Windows 10 vs Windows Server</h4>
+                <ul class="task-list">
+                    <li>Dlaczego nie zainstalujemy AD na zwykłym Windowsie 10?</li>
+                    <li>Windows 10 to system do <em>używania</em> (grania, pisania, przeglądania internetu).</li>
+                    <li>Windows Server to system do <em>dawania</em> (udostępniania plików, zarządzania hasłami). Pod maską to ten sam system, ale wersja Server ma odblokowane specjalne narzędzia, których zwykły Windows nie ma.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- AKT III -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>AKT III: Słownik pojęć (Z czym to się je?)</h3>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">Cel: Wyjaśnienie trudnych słów, które będą na egzaminie.</div>
+
+                <ul class="task-list">
+                    <li><strong>Domena (Domain):</strong> To taki "Klub VIP". Zamknięte środowisko. Wszystkie komputery i użytkownicy, którzy są w domenie, ufają sobie nawzajem i podlegają tym samym zasadom. Domena ma swoją nazwę, np. <code>szkola.local</code> albo <code>egzamin.pl</code>.</li>
+                    <li><strong>Kontroler domeny (Domain Controller - DC):</strong> Najważniejszy serwer w firmie. To on jest tym "bramkarzem". Przechowuje całą bazę haseł i użytkowników. Gdy rano wpisujesz hasło do komputera, Twój komputer pyta kontrolera domeny: "Hej, to Kowalski, to jego hasło, czy mogę go wpuścić?".</li>
+                    <li><strong>Jednostki organizacyjne (Organizational Units - OU):</strong> To po prostu "foldery" wewnątrz naszej domeny. Tworzymy je, żeby mieć porządek. Robimy folder "Nauczyciele", folder "Uczniowie", folder "Laptopy". Dzięki temu możemy łatwo zarządzać grupami – np. zablokować dostęp do Facebooka tylko w folderze "Uczniowie".</li>
+                </ul>
+
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">💡</div>
+                    <div class="conclusion-text">
+                        <strong>Ważne:</strong> W firmach zawsze są co najmniej dwa kontrolery domeny. Jak jeden się zepsuje, drugi przejmuje jego rolę.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AKT IV -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>AKT IV: Święta trójca technologiczna (Co działa pod maską?)</h3>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">Cel: Zrozumienie mechanizmów bez wchodzenia w nudne szczegóły.</div>
+
+                <ul class="task-list">
+                    <li><strong>DNS – Nawigacja GPS:</strong> Kiedy komputer chce się zalogować, musi znaleźć kontrolera domeny. Jak go szuka? Używa DNS jak nawigacji GPS. Jeśli DNS nie działa, komputer "błądzi" i logowanie kończy się błędem.</li>
+                    <li><strong>LDAP – Język tłumacza:</strong> To język, w którym inne programy rozmawiają z naszą bazą AD. Jeśli szkoła kupi nowy system do e-dziennika i chce, żebyście logowali się do niego starym hasłem z Windowsa, ten e-dziennik użyje języka LDAP, żeby zapytać Active Directory, czy Wasze hasło jest poprawne.</li>
+                    <li><strong>Kerberos – Opaska na festiwalu:</strong> To system sprawdzania tożsamości. Działa dokładnie jak wejściówka na festiwal muzyczny. Rano logujesz się do komputera (pokazujesz dowód przy głównej bramie). Kontroler domeny daje Ci wirtualną "opaskę na rękę" (tzw. bilet/ticket). Później, gdy chcesz wejść na dysk sieciowy albo coś wydrukować, nie musisz już podawać hasła – system widzi Twoją opaskę i wpuszcza Cię do środka.</li>
+                </ul>
+
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">⭐</div>
+                    <div class="conclusion-text">
+                        <strong>Złota zasada:</strong> Bez działającego DNS nie ma Active Directory.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AKT V -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>AKT V: Prawdziwa moc (Co nam to daje w praktyce?)</h3>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">Cel: Pokazanie "magii", którą będą sami konfigurować na zajęciach.</div>
+
+                <ul class="task-list">
+                    <li><strong>Logowanie jednokrotne (SSO):</strong> To efekt naszej "opaski festiwalowej". Logujesz się raz, a potem masz dostęp do wszystkiego w firmie bez ciągłego wpisywania haseł.</li>
+                    <li><strong>Profile mobilne:</strong> Siadasz do dowolnego komputera w szkole, logujesz się, a na pulpicie pojawiają się Twoje pliki i Twoja tapeta. Zmieniasz komputer – Twoje rzeczy "wędrują" za Tobą.</li>
+                    <li><strong>Zasady grupy (GPO):</strong> Magiczna różdżka administratora. Zamiast biegać po 100 komputerach, admin klika na serwerze: "Zablokuj Panel sterowania" albo "Ustaw tapetę z logo szkoły". Po ponownym uruchomieniu, wszystkie 100 komputerów posłusznie wykonuje to polecenie.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- AKT VI -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>AKT VI: Przyszłość (Gdzie to zmierza?)</h3>
+            </div>
+            <div class="lab-body">
+                <ul class="task-list">
+                    <li>Czy to, czego się uczycie, zaraz zniknie? <strong>Nie.</strong></li>
+                    <li>Dziś firmy przenoszą się do chmury (np. Microsoft 365). Tam działa nowsza wersja tego systemu, zwana <strong>Microsoft Entra ID</strong>.</li>
+                    <li>Jednak większość firm w Polsce działa w modelu <strong>hybrydowym</strong> – mają lokalne serwery (których uczycie się na egzaminie), które łączą się z chmurą. Zrozumienie tych podstaw to Wasz bilet wstępu do pierwszej pracy w IT.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
