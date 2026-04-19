@@ -102,12 +102,13 @@
             </div>
             <div class="lab-body">
                 <div class="goal-box">
-                    Cel: Zrozumienie pojęcia Domeny i procesu logowania.
+                    Cel: Zrozumienie pojęcia Domeny, procesu logowania oraz roli DNS.
                 </div>
                 <ul class="task-list">
                     <li><strong>Domena (Nasza Szkoła):</strong> Wszystkie komputery w szkole są podłączone do wirtualnej strefy, np. <code>zs1.local</code>.</li>
                     <li><strong>Kontroler Domeny (DC):</strong> To najważniejsza funkcja serwera. Kiedy siadacie na lekcji do komputera nr 5 i wpisujecie swoje hasło, ten komputer wcale go nie sprawdza! On wysyła ciche zapytanie kablem sieciowym do serwera w piwnicy: <em>"Hej Szefie, ktoś wpisał login 'maciek' i hasło 'zaq123'. Wpuszczamy go?"</em>.</li>
                     <li>Jeśli serwer powie "Tak", logujecie się. Jeśli serwer padnie – nikt w szkole nie zaloguje się do komputera.</li>
+                    <li><strong>Skąd komputer wie, gdzie jest serwer? (Magia DNS):</strong> Wyobraźcie sobie, że serwer w piwnicy to nasz "Bramkarz". Ale szkoła jest wielka. Komputer w sali 32 musi wiedzieć, jak do niego trafić. Do tego służy <strong>DNS (Książka Telefoniczna / GPS)</strong>. Kiedy wpisujecie hasło, komputer najpierw pyta DNS: <em>"Pod jakim adresem IP znajdę szefa domeny zs1.local?"</em>. Jeśli informatyk źle skonfiguruje DNS, komputer zgubi się w sieci i logowanie zakończy się błędem!</li>
                 </ul>
             </div>
 
@@ -122,11 +123,11 @@
             </div>
             <div class="lab-body">
                 <div class="goal-box">
-                    Cel: Wyjaśnienie struktury AD (Użytkownicy, Grupy, OU).
+                    Cel: Wyjaśnienie struktury AD (Użytkownicy, Grupy, OU) oraz polityki kont.
                 </div>
                 <p style="margin-bottom: 15px;"><strong>Czym jest AD?</strong> To wielka baza danych, w której informatyk ma poukładaną całą szkołę z klocków.</p>
                 <ul class="task-list">
-                    <li><strong>Użytkownicy:</strong> Konta konkretnych osób (np. <code>dyrektor_nowak</code>, <code>uczen_maciek</code>).</li>
+                    <li><strong>Użytkownicy:</strong> Konta konkretnych osób (np. <code>dyrektor_nowak</code>, <code>uczen_maciek</code>). Informatyk nie tylko tworzy konto, ale też ustala jego zasady. Może zaznaczyć opcję <strong>"Hasło nigdy nie wygasa"</strong>, wymusić zmianę hasła przy pierwszym logowaniu, albo ustawić, że konto "Praktykant" automatycznie wygaśnie i zablokuje się 31 sierpnia (to bardzo częste zadania na egzaminie!).</li>
                     <li><strong>Grupy:</strong> Zbieramy ludzi w paczki. Mamy grupę <strong>Nauczyciele</strong>, grupę <strong>Uczniowie</strong> i grupę <strong>Administracja</strong>. Po co? Bo jak chcemy dać dostęp do nowej drukarki, to dajemy go całej grupie jednym kliknięciem, zamiast wyklikiwać 50 nazwisk.</li>
                     <li><strong>Jednostki Organizacyjne (OU):</strong> To są wirtualne "pokoje" w serwerze. Informatyk tworzy OU o nazwie <code>Pracownia_32</code> i wrzuca tam 20 komputerów. Tworzy OU <code>Sekretariat</code> i wrzuca tam komputer pani Basi. Dzięki temu ma porządek.</li>
                 </ul>
