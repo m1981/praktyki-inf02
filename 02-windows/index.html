@@ -5,363 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teoria: Active Directory</title>
     <link rel="stylesheet" href="../common.css">
+    <style>
+        /* Lokalne kolory tagów dla Filaru 2 (Windows) */
+        :root {
+            --win-ad-color: #00b894; /* Zielony - Struktura */
+            --win-ad-bg: #e8f8f5;
+            --win-gpo-color: #d63031; /* Czerwony - Restrykcje */
+            --win-gpo-bg: #fdedec;
+            --win-file-color: #0984e3; /* Niebieski - Pliki */
+            --win-file-bg: #e3f2fd;
+        }
+        .card.win-ad { border-top-color: var(--win-ad-color); }
+        .card.win-gpo { border-top-color: var(--win-gpo-color); }
+        .card.win-file { border-top-color: var(--win-file-color); }
+
+        .tag.win-ad { background: var(--win-ad-bg); color: var(--win-ad-color); }
+        .tag.win-gpo { background: var(--win-gpo-bg); color: var(--win-gpo-color); }
+        .tag.win-file { background: var(--win-file-bg); color: var(--win-file-color); }
+    </style>
 </head>
 <body>
 
     <header>
-        <h1>🏫 Moduł Teoretyczny: Jak działa sieć w naszej szkole?</h1>
-        <p style="color: var(--text-muted); font-size: 1.2rem;">(Czyli po co nam Windows Server)</p>
+        <h1>🏫 Filar 2: Windows Server</h1>
+        <p class="subtitle">Jak działa sieć w naszej szkole? (Czyli po co nam serwer)</p>
     </header>
 
-    <div class="lab-container">
+    <main class="roadmap-container">
 
-        <!-- ROZDZIAŁ 1 -->
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Rozdział 1: Koszmar szkolnego informatyka</h3>
-                <span class="time-badge">Wstęp</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Uświadomienie problemu braku centralizacji. Dlaczego zwykły Windows to za mało?
-                </div>
-                <ul class="task-list">
-                    <li><strong>Jak macie w domu:</strong> Masz swój komputer, swoje konto, instalujesz co chcesz. Jesteś panem swojego losu.</li>
-                    <li><strong>Wyobraźcie sobie naszą szkołę bez serwera:</strong> Mamy 3 pracownie informatyczne (po 20 komputerów), komputery w bibliotece, w sekretariacie i u dyrektora. Razem około 80 maszyn.
-                        <ul style="margin-top: 10px; margin-left: 20px; list-style-type: circle;">
-                            <li>Przychodzi nowy uczeń do klasy 1. Szkolny administrator musiałby biegać z pendrivem po wszystkich 80 komputerach i ręcznie zakładać mu konto <code>jkowalski</code>, żeby uczeń mógł usiąść gdziekolwiek.</li>
-                            <li>Nauczyciel prosi: "Zainstalujcie mi nowego Pythona w sali 32". Informatyk spędza całe popołudnie, klikając "Dalej -> Dalej -> Zakończ" na 20 stanowiskach.</li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">🚨</div>
-                    <div class="conclusion-text">
-                        <strong>Wniosek:</strong>
-                        To jest niewykonalne. Dlatego w serwerowni (gdzieś w piwnicy szkoły) buczy potężna maszyna z <strong>Windows Serverem</strong>. Od teraz komputery w pracowniach są "głupimi końcówkami", które słuchają rozkazów z góry.
-                    </div>
-                </div>
-            </div>
-<!-- WIZUALIZACJA DO ROZDZIAŁU 1 -->
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node switch">
-                                    <span class="node-icon">🖧</span>
-                                    <span class="node-name">Główny Switch</span>
-                                    <span class="node-ip">Serwerownia</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node server">
-                                            <span class="node-icon">🖥️</span>
-                                            <span class="node-name">Windows Server</span>
-                                            <span class="node-ip">"Szef"</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="node switch">
-                                            <span class="node-icon">🖧</span>
-                                            <span class="node-name">Switch Sala 32</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">💻</span>
-                                                    <span class="node-name">PC-01</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">💻</span>
-                                                    <span class="node-name">PC-02</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="node">
-                                            <span class="node-icon">💻</span>
-                                            <span class="node-name">Sekretariat</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-        </div>
-
-        <!-- ROZDZIAŁ 2 -->
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Rozdział 2: Kontroler Domeny – Szkolny "Bramkarz"</h3>
-                <span class="time-badge">Logowanie</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Zrozumienie pojęcia Domeny, procesu logowania oraz roli DNS.
-                </div>
-                <ul class="task-list">
-                    <li><strong>Domena (Nasza Szkoła):</strong> Wszystkie komputery w szkole są podłączone do wirtualnej strefy, np. <code>zs1.local</code>.</li>
-                    <li><strong>Kontroler Domeny (DC):</strong> To najważniejsza funkcja serwera. Kiedy siadacie na lekcji do komputera nr 5 i wpisujecie swoje hasło, ten komputer wcale go nie sprawdza! On wysyła ciche zapytanie kablem sieciowym do serwera w piwnicy: <em>"Hej Szefie, ktoś wpisał login 'maciek' i hasło 'zaq123'. Wpuszczamy go?"</em>.</li>
-                    <li>Jeśli serwer powie "Tak", logujecie się. Jeśli serwer padnie – nikt w szkole nie zaloguje się do komputera.</li>
-                    <li><strong>Skąd komputer wie, gdzie jest serwer? (Magia DNS):</strong> Wyobraźcie sobie, że serwer w piwnicy to nasz "Bramkarz". Ale szkoła jest wielka. Komputer w sali 32 musi wiedzieć, jak do niego trafić. Do tego służy <strong>DNS (Książka Telefoniczna / GPS)</strong>. Kiedy wpisujecie hasło, komputer najpierw pyta DNS: <em>"Pod jakim adresem IP znajdę szefa domeny zs1.local?"</em>. Jeśli informatyk źle skonfiguruje DNS, komputer zgubi się w sieci i logowanie zakończy się błędem!</li>
-                </ul>
-            </div>
-
-
-        </div>
-
-        <!-- ROZDZIAŁ 3 -->
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Rozdział 3: Active Directory (AD) – Dziennik dla komputerów</h3>
-                <span class="time-badge">Struktura</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Wyjaśnienie struktury AD (Użytkownicy, Grupy, OU) oraz polityki kont.
-                </div>
-                <p style="margin-bottom: 15px;"><strong>Czym jest AD?</strong> To wielka baza danych, w której informatyk ma poukładaną całą szkołę z klocków.</p>
-                <ul class="task-list">
-                    <li><strong>Użytkownicy:</strong> Konta konkretnych osób (np. <code>dyrektor_nowak</code>, <code>uczen_maciek</code>). Informatyk nie tylko tworzy konto, ale też ustala jego zasady. Może zaznaczyć opcję <strong>"Hasło nigdy nie wygasa"</strong>, wymusić zmianę hasła przy pierwszym logowaniu, albo ustawić, że konto "Praktykant" automatycznie wygaśnie i zablokuje się 31 sierpnia (to bardzo częste zadania na egzaminie!).</li>
-                    <li><strong>Grupy:</strong> Zbieramy ludzi w paczki. Mamy grupę <strong>Nauczyciele</strong>, grupę <strong>Uczniowie</strong> i grupę <strong>Administracja</strong>. Po co? Bo jak chcemy dać dostęp do nowej drukarki, to dajemy go całej grupie jednym kliknięciem, zamiast wyklikiwać 50 nazwisk.</li>
-                    <li><strong>Jednostki Organizacyjne (OU):</strong> To są wirtualne "pokoje" w serwerze. Informatyk tworzy OU o nazwie <code>Pracownia_32</code> i wrzuca tam 20 komputerów. Tworzy OU <code>Sekretariat</code> i wrzuca tam komputer pani Basi. Dzięki temu ma porządek.</li>
-                </ul>
-            </div>
-        <!-- WIZUALIZACJA DO ROZDZIAŁU 3 -->
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node server">
-                                    <span class="node-icon">🌐</span>
-                                    <span class="node-name">Domena</span>
-                                    <span class="node-ip">zs1.local</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node vlan10">
-                                            <span class="node-icon">📁</span>
-                                            <span class="node-name">OU: Pracownie</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">💻</span>
-                                                    <span class="node-name">PC-Sala32-01</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="node vlan10">
-                                            <span class="node-icon">📁</span>
-                                            <span class="node-name">OU: Administracja</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">👨‍💼</span>
-                                                    <span class="node-name">dyrektor_nowak</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">👩‍💼</span>
-                                                    <span class="node-name">sekretariat_basia</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="node switch">
-                                            <span class="node-icon">👥</span>
-                                            <span class="node-name">Grupy</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-name">Nauczyciele</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-name">Uczniowie</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-        </div>
-
-        <!-- ROZDZIAŁ 4 -->
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Rozdział 4: Magia GPO – Dlaczego nie możecie zmienić tapety?</h3>
-                <span class="time-badge">Zasady Grupy</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Zrozumienie Zasad Grupy (GPO) na własnej skórze.
-                </div>
-                <p style="margin-bottom: 15px;"><strong>Czym jest GPO?</strong> To zbiór zakazów i nakazów. To narzędzie, którym informatyk psuje wam zabawę na lekcjach.</p>
-                <ul class="task-list">
-                    <li>Informatyk tworzy zasadę GPO: <em>"Zablokuj Wiersz Poleceń (CMD) i Panel Sterowania"</em>.</li>
-                    <li>Następnie "przypina" tę zasadę <strong>tylko</strong> do grupy <code>Uczniowie</code> albo do OU <code>Pracownia_32</code>.</li>
-                    <li><strong>Efekt?</strong> Wy siadacie do komputera i dostajecie komunikat "Zablokowane przez administratora". Ale gdy do tego samego komputera zaloguje się nauczyciel – u niego wszystko działa, bo GPO go nie dotyczy!</li>
-                    <li><strong>Inny przykład:</strong> GPO wymusza, że na komputerze Dyrektora i w Sekretariacie po 5 minutach bezczynności włącza się wygaszacz ekranu z hasłem (żeby uczeń nie podejrzał ocen, gdy nauczyciel wyjdzie na korytarz).</li>
-                </ul>
+        <!-- KROK 1 -->
+        <div class="card win-gpo">
+            <div class="step-number">Krok 1</div>
+            <h2>Koszmar informatyka</h2>
+            <span class="tag win-gpo">🚨 Problem braku centralizacji</span>
+            <ul class="tech-list">
+                <li><strong>W domu:</strong> Masz swój komputer, swoje konto, instalujesz co chcesz.</li>
+                <li><strong>W szkole (bez serwera):</strong> 80 komputerów w różnych salach.</li>
+                <li><strong>Nowy uczeń:</strong> Informatyk musi biegać z pendrivem do 80 maszyn, by założyć mu konto.</li>
+                <li><strong>Nowy program:</strong> Instalacja Pythona w sali 32 to klikanie "Dalej" na 20 stanowiskach.</li>
+            </ul>
+            <div class="analogy-box">
+                <strong>💡 Rozwiązanie: Windows Server</strong>
+                To niewykonalne. Dlatego w piwnicy szkoły buczy potężna maszyna. Od teraz komputery w pracowniach są "głupimi końcówkami", które słuchają rozkazów z góry.
             </div>
         </div>
 
-        <!-- ROZDZIAŁ 5 -->
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Rozdział 5: Pliki, Sprawdziany i "Wędrujące Pulpity"</h3>
-                <span class="time-badge">Uprawnienia</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Zrozumienie uprawnień sieciowych i profili mobilnych.
-                </div>
-                <ul class="task-list">
-                    <li><strong>Dwa zamki w drzwiach (Share vs NTFS):</strong> Wyobraźcie sobie folder "Sprawdziany" na serwerze.
-                        <ul style="margin-top: 10px; margin-left: 20px; list-style-type: circle;">
-                            <li><strong>Udostępnianie (Share):</strong> Informatyk udostępnia folder w sieci. Wszyscy widzą, że on tam jest.</li>
-                            <li><strong>Zabezpieczenia (NTFS):</strong> Informatyk ustawia, że grupa <code>Nauczyciele</code> ma "Pełną kontrolę" (mogą dodawać i usuwać pliki), a grupa <code>Uczniowie</code> ma "Odmowę dostępu". Widzicie folder, ale jak klikniecie, wyskakuje błąd.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Ukryte udziały (Znak <code>$</code>):</strong> Jeśli informatyk nazwie folder <code>Sprawdziany$</code>, to wy go w ogóle nie zobaczycie w "Otoczeniu sieciowym". Żeby do niego wejść, nauczyciel musi znać tajną ścieżkę i wpisać ją ręcznie.</li>
-                    <li><strong>Profile Mobilne (Roaming Profiles):</strong> Zdarzyło wam się zapisać plik na pulpicie w sali 32, a na następnej lekcji w sali 33 ten plik tam na was czekał? To nie magia. Kiedy klikacie "Wyloguj", komputer pakuje wasz pulpit i wysyła go na serwer do piwnicy. Kiedy logujecie się w innej sali, serwer wysyła ten pulpit na nowy komputer.</li>
-                </ul>
-            </div>
-
-<!-- WIZUALIZACJA DO ROZDZIAŁU 5 -->
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node server">
-                                    <span class="node-icon">🗄️</span>
-                                    <span class="node-name">Serwer Plików</span>
-                                    <span class="node-ip">Udział: Sprawdziany$</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node vlan10">
-                                            <span class="node-icon">👩‍🏫</span>
-                                            <span class="node-name">Nauczyciel</span>
-                                            <span class="node-ip" style="color: #00b894; font-weight: bold;">Pełna kontrola</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="node isp">
-                                            <span class="node-icon">👦</span>
-                                            <span class="node-name">Uczeń</span>
-                                            <span class="node-ip" style="color: #d63031; font-weight: bold;">Odmowa dostępu</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-
-            <!-- WIZUALIZACJA DO ROZDZIAŁU 5: PROFILE MOBILNE -->
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node server">
-                                    <span class="node-icon">☁️</span>
-                                    <span class="node-name">Serwer (Piwnica)</span>
-                                    <span class="node-ip">Kopia zapasowa: Pulpit Maćka</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node vlan10">
-                                            <span class="node-icon">⬇️ ⬆️</span>
-                                            <span class="node-name">Synchronizacja</span>
-                                            <span class="node-ip">Logowanie / Wylogowanie</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">💻</span>
-                                                    <span class="node-name">PC-Sala32</span>
-                                                    <span class="node-ip">Lekcja 1 (8:00)</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <div class="node vlan10">
-                                            <span class="node-icon">⬇️ ⬆️</span>
-                                            <span class="node-name">Synchronizacja</span>
-                                            <span class="node-ip">Logowanie / Wylogowanie</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node">
-                                                    <span class="node-icon">💻</span>
-                                                    <span class="node-name">PC-Sala33</span>
-                                                    <span class="node-ip">Lekcja 2 (9:50)</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-        </div>
-
-        <!-- PODSUMOWANIE -->
-        <div class="conclusion-box" style="background: #fff3cd; border-color: #ffeeba;">
-            <div class="conclusion-icon">🎓</div>
-            <div class="conclusion-text">
-                <strong style="color: #856404;">Podsumowanie dla Was:</strong>
-                <span style="color: #856404;">Na egzaminie INF.02 to WY będziecie tym szkolnym informatykiem. Będziecie musieli postawić serwer, stworzyć dyrektora, zablokować uczniom notatnik i ukryć folder ze sprawdzianami. Teraz już wiecie, po co to robimy!</span>
+        <!-- KROK 2 -->
+        <div class="card win-ad">
+            <div class="step-number">Krok 2</div>
+            <h2>Kontroler Domeny i DNS</h2>
+            <span class="tag win-ad">🛡️ Logowanie</span>
+            <ul class="tech-list">
+                <li><strong>Domena (np. zs1.local):</strong> Wirtualna strefa, do której podłączone są szkolne komputery.</li>
+                <li><strong>Kontroler Domeny (DC):</strong> Serwer, który autoryzuje logowania. Komputer w sali sam nie sprawdza Twojego hasła!</li>
+                <li><strong>DNS:</strong> System tłumaczący nazwy na adresy IP. Niezbędny, by komputer znalazł serwer.</li>
+            </ul>
+            <div class="analogy-box">
+                <strong>💡 Analogia:</strong>
+                Kontroler Domeny to "Bramkarz" w klubie, który ma listę gości i sprawdza hasła. DNS to "GPS", który mówi komputerowi w sali 32, jak do tego bramkarza trafić.
             </div>
         </div>
 
+        <!-- KROK 3 -->
+        <div class="card win-ad">
+            <div class="step-number">Krok 3</div>
+            <h2>Active Directory (AD)</h2>
+            <span class="tag win-ad">🗂️ Struktura</span>
+            <ul class="tech-list">
+                <li><strong>Użytkownicy:</strong> Konta osób. Można wymusić zmianę hasła lub ustawić datę wygaśnięcia konta (np. dla praktykanta).</li>
+                <li><strong>Grupy:</strong> Zbiory użytkowników (np. <em>Nauczyciele</em>). Ułatwiają masowe nadawanie uprawnień.</li>
+                <li><strong>Jednostki Organizacyjne (OU):</strong> Wirtualne foldery do grupowania komputerów i ludzi (np. <em>Pracownia_32</em>).</li>
+            </ul>
+            <div class="analogy-box">
+                <strong>💡 Analogia:</strong>
+                AD to wielki, cyfrowy dziennik szkolny zbudowany z klocków Lego. Informatyk układa w nim całą strukturę szkoły, by mieć porządek.
+            </div>
+        </div>
+
+        <!-- KROK 4 -->
+        <div class="card win-gpo">
+            <div class="step-number">Krok 4</div>
+            <h2>Zasady Grupy (GPO)</h2>
+            <span class="tag win-gpo">🛑 Restrykcje</span>
+            <ul class="tech-list">
+                <li><strong>Czym jest GPO?</strong> Zbiór zakazów i nakazów wysyłanych z serwera na komputery.</li>
+                <li><strong>Przykłady:</strong> Blokada Wiersza Poleceń (CMD), blokada zmiany tapety, wymuszenie wygaszacza ekranu.</li>
+                <li><strong>Celowanie:</strong> GPO można przypiąć tylko do konkretnej grupy (np. <em>Uczniowie</em>). Nauczyciela te blokady nie dotyczą!</li>
+            </ul>
+            <div class="analogy-box">
+                <strong>💡 Analogia:</strong>
+                GPO to regulamin szkolny. To właśnie to narzędzie sprawia, że na lekcji widzisz komunikat: "Zablokowane przez administratora".
+            </div>
+        </div>
+
+        <!-- KROK 5 -->
+        <div class="card win-file">
+            <div class="step-number">Krok 5</div>
+            <h2>Pliki i Profile Mobilne</h2>
+            <span class="tag win-file">📁 Zasoby</span>
+            <ul class="tech-list">
+                <li><strong>Share vs NTFS:</strong> <em>Share</em> udostępnia folder w sieci. <em>NTFS</em> decyduje, kto może do niego wejść (np. Nauczyciele - tak, Uczniowie - Odmowa dostępu).</li>
+                <li><strong>Ukryte udziały ($):</strong> Folder nazwany <code>Sprawdziany$</code> jest niewidoczny w otoczeniu sieciowym.</li>
+                <li><strong>Profile Mobilne:</strong> Twój pulpit "wędruje" za Tobą. Zapisujesz plik w sali 32, a na kolejnej lekcji masz go w sali 33.</li>
+            </ul>
+            <div class="analogy-box">
+                <strong>💡 Analogia:</strong>
+                Profil mobilny działa tak: gdy klikasz "Wyloguj", komputer pakuje Twój pulpit do kartonu i wysyła do piwnicy (na serwer). Gdy logujesz się w innej sali, serwer wysyła ten karton na nowy komputer.
+            </div>
+        </div>
+
+    </main>
+
+    <!-- PODSUMOWANIE -->
+    <div class="conclusion-box" style="max-width: 1200px; margin: 30px auto; background: #fff3cd; border-color: #ffeeba;">
+        <div class="conclusion-icon">🎓</div>
+        <div class="conclusion-text">
+            <strong style="color: #856404;">Podsumowanie dla Was:</strong>
+            <span style="color: #856404;">Na egzaminie INF.02 to WY będziecie tym szkolnym informatykiem. Będziecie musieli postawić serwer, stworzyć dyrektora, zablokować uczniom notatnik i ukryć folder ze sprawdzianami. Teraz już wiecie, po co to robimy!</span>
+        </div>
     </div>
 
     <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
-    <section class="labs-section" style="max-width: 1200px; margin: 50px auto 20px auto; background: #2d3436; border-radius: 12px; padding: 30px; color: white; text-align: center;">
-        <h2 style="color: #55efc4; margin-bottom: 10px; font-size: 2rem;">💻 Czas na praktykę!</h2>
+    <section class="labs-section">
+        <h2>💻 Czas na praktykę!</h2>
         <p style="color: #b2bec3; margin-bottom: 20px;">Wybierz laboratorium do wykonania w VirtualBox:</p>
 
-        <div class="labs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px;">
-            <a href="lab1-domena.html" class="lab-link-card" style="background: #353b48; border: 2px solid #55efc4; border-radius: 8px; padding: 20px; text-decoration: none; color: white; display: flex; flex-direction: column;">
-                <span style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">Lab 1: Domena</span>
-                <span style="font-size: 0.9rem; opacity: 0.8;">Instalacja AD DS i podłączanie stacji</span>
+        <div class="labs-grid">
+            <a href="lab1-domena.html" class="lab-link-card">
+                <span class="lab-title">Lab 1: Domena</span>
+                <span class="lab-desc">Instalacja AD DS i podłączanie stacji</span>
             </a>
-            <a href="lab2-gpo-cli.html" class="lab-link-card" style="background: #353b48; border: 2px solid #55efc4; border-radius: 8px; padding: 20px; text-decoration: none; color: white; display: flex; flex-direction: column;">
-                <span style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">Lab 2: GPO i CLI</span>
-                <span style="font-size: 0.9rem; opacity: 0.8;">Zarządzanie AD i komendy 'net'</span>
+            <a href="lab2-gpo-cli.html" class="lab-link-card">
+                <span class="lab-title">Lab 2: GPO i CLI</span>
+                <span class="lab-desc">Zarządzanie AD i komendy 'net'</span>
             </a>
-            <a href="lab3-pliki.html" class="lab-link-card" style="background: #353b48; border: 2px solid #55efc4; border-radius: 8px; padding: 20px; text-decoration: none; color: white; display: flex; flex-direction: column;">
-                <span style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">Lab 3: Pliki</span>
-                <span style="font-size: 0.9rem; opacity: 0.8;">NTFS, udziały $, profile mobilne</span>
+            <a href="lab3-pliki.html" class="lab-link-card">
+                <span class="lab-title">Lab 3: Pliki</span>
+                <span class="lab-desc">NTFS, udziały $, profile mobilne</span>
             </a>
-            <a href="lab4-uslugi.html" class="lab-link-card" style="background: #353b48; border: 2px solid #55efc4; border-radius: 8px; padding: 20px; text-decoration: none; color: white; display: flex; flex-direction: column;">
-                <span style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">Lab 4: Usługi</span>
-                <span style="font-size: 0.9rem; opacity: 0.8;">DNS, IIS (Szkolny Intranet)</span>
+            <a href="lab4-uslugi.html" class="lab-link-card">
+                <span class="lab-title">Lab 4: Usługi</span>
+                <span class="lab-desc">DNS, IIS (Szkolny Intranet)</span>
             </a>
-            <a href="lab5-zaawansowane.html" class="lab-link-card" style="background: #353b48; border: 2px solid #55efc4; border-radius: 8px; padding: 20px; text-decoration: none; color: white; display: flex; flex-direction: column;">
-                <span style="font-size: 1.2rem; font-weight: bold; margin-bottom: 5px;">Lab 5: Zaawansowane</span>
-                <span style="font-size: 0.9rem; opacity: 0.8;">RRAS, NIC Teaming, Drukarki</span>
+            <a href="lab5-zaawansowane.html" class="lab-link-card">
+                <span class="lab-title">Lab 5: Zaawansowane</span>
+                <span class="lab-desc">RRAS, NIC Teaming, Drukarki</span>
             </a>
         </div>
     </section>
