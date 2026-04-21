@@ -5,109 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INF.02 - Baza Wiedzy</title>
     <link rel="stylesheet" href="common.css">
-    <style>
-        /* Additional styles for landing page */
-        .hero { 
-            text-align: center; 
-            padding: 60px 20px 40px 20px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-top: -70px; /* Compensate for navbar padding */
-            padding-top: 130px;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 50px;
-        }
-        .hero h1 { font-size: 3rem; margin-bottom: 15px; color: white; }
-        .hero p { font-size: 1.3rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
-        
-        .pillars-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto 50px auto;
-            padding: 0 20px;
-        }
-        
-        .pillar-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-            border-top: 5px solid #ccc;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .pillar-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-        }
-        
-        .pillar-card.sieci { border-top-color: #0984e3; }
-        .pillar-card.windows { border-top-color: #00b894; }
-        .pillar-card.linux { border-top-color: #fdcb6e; }
-        .pillar-card.sprzet { border-top-color: #e17055; }
-        .pillar-card.excel { border-top-color: #6c5ce7; }
-        
-        .pillar-icon { font-size: 3.5rem; margin-bottom: 15px; }
-        .pillar-card h2 { font-size: 1.6rem; margin-bottom: 10px; color: #2d3436; }
-        .pillar-card p { color: #636e72; font-size: 1rem; line-height: 1.5; flex-grow: 1; }
-        .pillar-meta { 
-            margin-top: 15px; 
-            padding-top: 15px; 
-            border-top: 1px solid #eee;
-            font-size: 0.85rem;
-            color: #b2bec3;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .quick-links {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            text-align: center;
-        }
-        
-        .quick-links h2 { margin-bottom: 20px; color: #2d3436; }
-        .quick-btns {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .quick-btn {
-            background: #f8f9fa;
-            border: 2px solid #dfe6e9;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #2d3436;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        
-        .quick-btn:hover {
-            border-color: #0984e3;
-            color: #0984e3;
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
 <body>
 
+    <!-- HERO SECTION (Z wyraźnym wezwaniem do działania) -->
     <div class="hero">
         <h1>🎓 INF.02 - Baza Wiedzy</h1>
         <p>Kompletne materiały do egzaminu zawodowego. Teoria, laboratoria i praktyka w jednym miejscu.</p>
+
+        <div class="hero-actions">
+            <a href="setup.html" class="btn-primary">🛠️ Zacznij tutaj: Dzień 0</a>
+            <a href="syllabus.html" class="btn-secondary">📋 Zobacz Sylabus</a>
+        </div>
     </div>
 
+    <!-- GŁÓWNE MODUŁY -->
     <section class="pillars-grid">
-        
+
         <a href="01-sieci/index.html" class="pillar-card sieci">
             <div class="pillar-icon">🟢</div>
             <h2>Filar 1: Sieci</h2>
@@ -115,6 +29,9 @@
             <div class="pillar-meta">
                 <span>📚 Teoria + 3 Labs</span>
                 <span>⏱️ ~8h</span>
+            </div>
+            <div class="pillar-meta" style="border-top: none; padding-top: 5px; margin-top: 0;">
+                <span class="go-text">Przejdź do modułu ➔</span>
             </div>
         </a>
 
@@ -126,6 +43,9 @@
                 <span>📚 Teoria + 5 Labs</span>
                 <span>⏱️ ~12h</span>
             </div>
+            <div class="pillar-meta" style="border-top: none; padding-top: 5px; margin-top: 0;">
+                <span class="go-text">Przejdź do modułu ➔</span>
+            </div>
         </a>
 
         <a href="03-linux/index.html" class="pillar-card linux">
@@ -135,6 +55,9 @@
             <div class="pillar-meta">
                 <span>📚 Teoria + 3 Labs</span>
                 <span>⏱️ ~6h</span>
+            </div>
+            <div class="pillar-meta" style="border-top: none; padding-top: 5px; margin-top: 0;">
+                <span class="go-text">Przejdź do modułu ➔</span>
             </div>
         </a>
 
@@ -146,6 +69,9 @@
                 <span>📚 Teoria + 2 Labs</span>
                 <span>⏱️ ~4h</span>
             </div>
+            <div class="pillar-meta" style="border-top: none; padding-top: 5px; margin-top: 0;">
+                <span class="go-text">Przejdź do modułu ➔</span>
+            </div>
         </a>
 
         <a href="05-excel/index.html" class="pillar-card excel">
@@ -156,16 +82,11 @@
                 <span>📚 Teoria + Ćwiczenia</span>
                 <span>⏱️ ~3h</span>
             </div>
+            <div class="pillar-meta" style="border-top: none; padding-top: 5px; margin-top: 0;">
+                <span class="go-text">Przejdź do modułu ➔</span>
+            </div>
         </a>
 
-    </section>
-
-    <section class="quick-links">
-        <h2>Szybkie linki</h2>
-        <div class="quick-btns">
-            <a href="setup.html" class="quick-btn">🛠️ Dzień 0: Instalacja środowisk</a>
-            <a href="syllabus.html" class="quick-btn">📋 Sylabus egzaminu</a>
-        </div>
     </section>
 
     <script src="menu.js"></script>

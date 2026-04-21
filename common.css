@@ -306,3 +306,123 @@ body { padding-top: 70px; }
             pointer-events: none; /* Nie da się kliknąć */
             border-style: dashed;
         }
+
+
+        /* --- STRONA GŁÓWNA (INDEX.HTML) --- */
+.hero {
+    text-align: center;
+    padding: 60px 20px 50px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin-top: -70px; /* Kompensacja za fixed navbar */
+    padding-top: 130px;
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 50px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.hero h1 { font-size: 3rem; margin-bottom: 15px; color: white; }
+.hero p { font-size: 1.2rem; opacity: 0.9; max-width: 700px; margin: 0 auto 30px auto; }
+
+/* Przyciski w Hero */
+.hero-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background: #55efc4;
+    color: #2d3436;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(85, 239, 196, 0.4);
+}
+
+.btn-primary:hover {
+    background: #00b894;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 10px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+/* Siatka Filarów */
+.pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 50px auto;
+    padding: 0 20px;
+}
+
+.pillar-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border-top: 5px solid #ccc;
+    display: flex;
+    flex-direction: column;
+}
+
+.pillar-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.pillar-card.sieci { border-top-color: #0984e3; }
+.pillar-card.windows { border-top-color: #00b894; }
+.pillar-card.linux { border-top-color: #fdcb6e; }
+.pillar-card.sprzet { border-top-color: #e17055; }
+.pillar-card.excel { border-top-color: #6c5ce7; }
+
+.pillar-icon { font-size: 3.5rem; margin-bottom: 15px; }
+.pillar-card h2 { font-size: 1.6rem; margin-bottom: 10px; color: #2d3436; }
+.pillar-card p { color: #636e72; font-size: 1rem; line-height: 1.5; flex-grow: 1; }
+
+.pillar-meta {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.85rem;
+    color: #b2bec3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.go-text {
+    color: #0984e3;
+    font-weight: bold;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.pillar-card:hover .go-text {
+    opacity: 1;
+}
