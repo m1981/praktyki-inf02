@@ -3,370 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filar 1: L2/L3</title>
+    <title>INF.02 - Baza Wiedzy</title>
+    <link rel="stylesheet" href="common.css">
     <style>
-        /* --- ZMIENNE CSS (Kolorystyka) --- */
-        :root {
-            --bg-color: #f4f7f6;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --card-bg: #ffffff;
-            --l2-color: #0984e3; /* Niebieski - Szkoła/LAN */
-            --l2-bg: #e3f2fd;
-            --l3-color: #e17055; /* Pomarańczowy - Poczta/WAN */
-            --l3-bg: #ffeaa7;
-            --bridge-color: #6c5ce7; /* Fioletowy - Most/ARP */
-            --bridge-bg: #f3e5f5;
+        /* Additional styles for landing page */
+        .hero { 
+            text-align: center; 
+            padding: 60px 20px 40px 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-top: -70px; /* Compensate for navbar padding */
+            padding-top: 130px;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 50px;
         }
-
-        /* --- RESET I BAZA --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px 0;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: #2d3436;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* --- UKŁAD KART (GRID) --- */
-        .roadmap-container {
+        .hero h1 { font-size: 3rem; margin-bottom: 15px; color: white; }
+        .hero p { font-size: 1.3rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+        
+        .pillars-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 0 auto 50px auto;
+            padding: 0 20px;
         }
-
-        /* --- STYL KARTY --- */
-        .card {
-            background: var(--card-bg);
+        
+        .pillar-card {
+            background: white;
             border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
             border-top: 5px solid #ccc;
             display: flex;
             flex-direction: column;
         }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        
+        .pillar-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
-
-        .card.l2 { border-top-color: var(--l2-color); }
-        .card.l3 { border-top-color: var(--l3-color); }
-        .card.bridge { border-top-color: var(--bridge-color); }
-
-        /* --- ELEMENTY WEWNĄTRZ KARTY --- */
-        .step-number {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+        
+        .pillar-card.sieci { border-top-color: #0984e3; }
+        .pillar-card.windows { border-top-color: #00b894; }
+        .pillar-card.linux { border-top-color: #fdcb6e; }
+        .pillar-card.sprzet { border-top-color: #e17055; }
+        .pillar-card.excel { border-top-color: #6c5ce7; }
+        
+        .pillar-icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .pillar-card h2 { font-size: 1.6rem; margin-bottom: 10px; color: #2d3436; }
+        .pillar-card p { color: #636e72; font-size: 1rem; line-height: 1.5; flex-grow: 1; }
+        .pillar-meta { 
+            margin-top: 15px; 
+            padding-top: 15px; 
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #b2bec3;
+            display: flex;
+            justify-content: space-between;
         }
-
-        .card h2 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            align-self: flex-start;
-        }
-        .tag.l2 { background: var(--l2-bg); color: var(--l2-color); }
-        .tag.l3 { background: var(--l3-bg); color: var(--l3-color); }
-        .tag.bridge { background: var(--bridge-bg); color: var(--bridge-color); }
-
-        .tech-list {
-            list-style-type: none;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .tech-list li {
-            margin-bottom: 10px;
-            padding-left: 15px;
-            position: relative;
-        }
-
-        .tech-list li::before {
-            content: "•";
-            color: var(--text-muted);
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-
-        .analogy-box {
-            background-color: #f8f9fa;
-            border-left: 4px solid #dfe6e9;
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.95rem;
-            color: #454545;
-        }
-
-        .analogy-box strong {
-            display: block;
-            margin-bottom: 5px;
-            color: #2d3436;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .roadmap-container { grid-template-columns: 1fr; }
-        }
-
-/* --- SEKCJA LABORATORIÓW (NAWIGACJA) --- */
-        .labs-section {
+        
+        .quick-links {
             max-width: 1200px;
-            margin: 50px auto 20px auto;
-            background: #2d3436; /* Ciemne tło dla kontrastu */
-            border-radius: 12px;
-            padding: 30px;
-            color: white;
+            margin: 0 auto;
+            padding: 40px 20px;
             text-align: center;
         }
-
-        .labs-section h2 {
-            color: #55efc4;
-            margin-bottom: 10px;
-            font-size: 2rem;
-        }
-
-        .labs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .lab-link-card {
-            background: #353b48;
-            border: 2px solid #55efc4;
-            border-radius: 8px;
-            padding: 20px;
-            text-decoration: none;
-            color: white;
+        
+        .quick-links h2 { margin-bottom: 20px; color: #2d3436; }
+        .quick-btns {
             display: flex;
-            flex-direction: column;
-            transition: all 0.2s ease;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-
-        .lab-link-card:hover {
-            background: #55efc4;
+        
+        .quick-btn {
+            background: #f8f9fa;
+            border: 2px solid #dfe6e9;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
             color: #2d3436;
-            transform: translateY(-3px);
-        }
-
-        .lab-link-card .lab-title {
-            font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            transition: all 0.2s;
         }
-
-        .lab-link-card .lab-desc {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        
+        .quick-btn:hover {
+            border-color: #0984e3;
+            color: #0984e3;
+            transform: translateY(-2px);
         }
-
-        /* Styl dla ćwiczeń, których jeszcze nie ma */
-        .lab-link-card.disabled {
-            border-color: #636e72;
-            background: transparent;
-            color: #636e72;
-            pointer-events: none; /* Nie da się kliknąć */
-            border-style: dashed;
-        }        
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Filar 1: L2/L3</h1>
-        <p class="subtitle">Zrozum sieci komputerowe krok po kroku. Od lokalnego podwórka po globalny internet.</p>
-    </header>
+    <div class="hero">
+        <h1>🎓 INF.02 - Baza Wiedzy</h1>
+        <p>Kompletne materiały do egzaminu zawodowego. Teoria, laboratoria i praktyka w jednym miejscu.</p>
+    </div>
 
-    <main class="roadmap-container">
-
-        <!-- KROK 1 -->
-        <div class="card l3">
-            <div class="step-number">Krok 1</div>
-            <h2>Fundamenty (OSI i TCP/IP)</h2>
-            <span class="tag l3">📦 Świat Poczty (Zasady)</span>
-            <ul class="tech-list">
-                <li><strong>L7 (Aplikacja):</strong> Tworzenie danych (pisanie listu).</li>
-                <li><strong>L4 (Transport):</strong> Wybór przesyłki (TCP - przesyłka polecona za pokwitowaniem, UDP - zwykła pocztówka).</li>
-                <li><strong>L3 (Sieć):</strong> Adres docelowy IP (Miasto i Ulica).</li>
-                <li><strong>L2 (Łącze Danych):</strong> Przekazanie do konkretnego auta (MAC).</li>
-                <li><strong>L1 (Fizyczna):</strong> Furgonetka, kable, fale Wi-Fi (fizyczny transport).</li>
-            </ul>
-        </div>
-
-        <!-- KROK 2 -->
-        <div class="card l2">
-            <div class="step-number">Krok 2</div>
-            <h2>Warstwa 2 (Łącze Danych)</h2>
-            <span class="tag l2">🏫 Świat Szkoły (LAN)</span>
-            <ul class="tech-list">
-                <li><strong>Adres MAC:</strong> Fizyczny, niezmienny adres karty sieciowej.</li>
-                <li><strong>Switch (Przełącznik):</strong> Łączy urządzenia w jednej sieci lokalnej.</li>
-            </ul>
-            <div class="analogy-box">
-                <strong>💡 Analogia:</strong>
-                Adres MAC to Twój numer PESEL lub numer w dzienniku. Switch to Gospodarz Klasy, który wie, kto ma jaki numer i podaje karteczki tylko do właściwej ławki, nie przeszkadzając reszcie.
-            </div>
-        </div>
-
-        <!-- KROK 3 -->
-        <div class="card l3">
-            <div class="step-number">Krok 3</div>
-            <h2>Warstwa 3 (Sieć)</h2>
-            <span class="tag l3">🌍 Świat Poczty (WAN)</span>
-            <ul class="tech-list">
-                <li><strong>Adres IP:</strong> Logiczny adres urządzenia w sieci.</li>
-                <li><strong>Router:</strong> Łączy różne sieci i wyznacza trasy.</li>
-            </ul>
-            <div class="analogy-box">
-                <strong>💡 Analogia:</strong>
-                Adres IP to Twój adres zamieszkania (zmienia się, gdy zmieniasz szkołę/miasto). Router to Główny Urząd Pocztowy, który patrzy na adres i wysyła paczkę autostradą do innego miasta.
-            </div>
-        </div>
-
-        <!-- KROK 4 -->
-        <div class="card bridge">
-            <div class="step-number">Krok 4</div>
-            <h2>Protokół ARP</h2>
-            <span class="tag bridge">🌉 Most (L2 ↔ L3)</span>
-            <ul class="tech-list">
-                <li><strong>Zadanie ARP:</strong> Tłumaczenie znanego adresu IP na nieznany adres MAC w sieci lokalnej.</li>
-            </ul>
-            <div class="analogy-box">
-                <strong>💡 Analogia:</strong>
-                Nauczyciel ma paczkę dla "Jana Kowalskiego" (IP), ale nie wie, gdzie on siedzi. Krzyczy na całą klasę: "Kto ma IP 192.168.1.5?!". Janek odpowiada: "To ja, mój numer w dzienniku (MAC) to 00:1A...".
-            </div>
-        </div>
-
-        <!-- KROK 5 -->
-        <div class="card l3">
-            <div class="step-number">Krok 5</div>
-            <h2>Subnetting (L3)</h2>
-            <span class="tag l3">🌍 Świat Poczty (WAN)</span>
-            <ul class="tech-list">
-                <li><strong>Maska podsieci:</strong> Dzieli dużą sieć IP na mniejsze, łatwiejsze do zarządzania fragmenty.</li>
-            </ul>
-            <div class="analogy-box">
-                <strong>💡 Analogia:</strong>
-                Wyobraź sobie ogromne miasto (wielka sieć IP). Żeby listonosz (router) nie zwariował, dzielisz je na dzielnice i ulice (podsieci). Maska podsieci mówi: "Pierwsze cyfry to kod pocztowy dzielnicy, reszta to konkretny dom".
-            </div>
-        </div>
-
-        <!-- KROK 6 -->
-        <div class="card l2">
-            <div class="step-number">Krok 6</div>
-            <h2>VLANy (Zaawansowane L2)</h2>
-            <span class="tag l2">🏫 Świat Szkoły (LAN)</span>
-            <ul class="tech-list">
-                <li><strong>VLAN:</strong> Wirtualny LAN. Dzieli jeden fizyczny switch na kilka odizolowanych sieci.</li>
-            </ul>
-            <div class="analogy-box">
-                <strong>💡 Analogia:</strong>
-                Wielka sala gimnastyczna (Switch). Spuszczasz z sufitu dźwiękoszczelną kurtynę. Po jednej stronie grają siatkarze (VLAN 10), po drugiej koszykarze (VLAN 20). Nikt sobie nie przeszkadza.
-            </div>
-        </div>
-
-        <!-- KROK 7 -->
-        <div class="card l3">
-            <div class="step-number">Krok 7</div>
-            <h2>Routing (Zaawansowane L3)</h2>
-            <span class="tag l3">🌍 Świat Poczty (WAN)</span>
-            <ul class="tech-list">
-                <li><strong>Statyczny:</strong> Trasy wpisane ręcznie przez administratora.</li>
-                <li><strong>Dynamiczny:</strong> Routery same uczą się tras (np. OSPF).</li>
-            </ul>
-            <div class="analogy-box">
-            <strong>💡 Analogia:</strong>
-            Routing statyczny to postawione na stałe znaki drogowe. Routing dynamiczny to Google Maps – routery gadają ze sobą o korkach i same wyznaczają najszybszą trasę.
-            </div>
-        </div>
-
-    </main>
-<!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
-<section class="labs-section">
-        <h2>💻 Czas na praktykę!</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Wybierz laboratorium do wykonania w Cisco Packet Tracer:</p>
+    <section class="pillars-grid">
         
-        <div class="labs-grid">
-            <!-- KAFELEK 1 -->
-            <a href="cwiczenia.html" class="lab-link-card">
-                <div class="lab-icon">🟢</div>
-                <div class="lab-content">
-                    <span class="lab-title">Lab 1: Podstawy LAN i Routing</span>
-                    <span class="lab-desc">Switch, IP, Brama domyślna (Kroki 1-3)</span>
-                </div>
-            </a>
+        <a href="01-sieci/index.html" class="pillar-card sieci">
+            <div class="pillar-icon">🟢</div>
+            <h2>Filar 1: Sieci</h2>
+            <p>Packet Tracer, adresacja IP, VLANy, routing, DHCP, DNS. Od podstaw L2/L3 do zaawansowanych topologii.</p>
+            <div class="pillar-meta">
+                <span>📚 Teoria + 3 Labs</span>
+                <span>⏱️ ~8h</span>
+            </div>
+        </a>
 
-            <!-- KAFELEK 2 -->
-            <a href="cwiczenia2.html" class="lab-link-card">
-                <div class="lab-icon">🔵</div>
-                <div class="lab-content">
-                    <span class="lab-title">Lab 2: VLANy i RoaS</span>
-                    <span class="lab-desc">Segmentacja sieci i Router-on-a-Stick</span>
-                </div>
-            </a>
+        <a href="02-windows/index.html" class="pillar-card windows">
+            <div class="pillar-icon">🪟</div>
+            <h2>Filar 2: Windows Server</h2>
+            <p>Active Directory, GPO, NTFS, udziały, DNS, DHCP, IIS. Wszystko o zarządzaniu siecią domenową.</p>
+            <div class="pillar-meta">
+                <span>📚 Teoria + 5 Labs</span>
+                <span>⏱️ ~12h</span>
+            </div>
+        </a>
 
-            <!-- KAFELEK 3 -->
-            <a href="cwiczenia3.html" class="lab-link-card">
-                <div class="lab-icon">🟠</div>
-                <div class="lab-content">
-                    <span class="lab-title">Lab 3: DHCP i Internet (GUI)</span>
-                    <span class="lab-desc">Automatyzacja IP i Routing statyczny</span>
-                </div>
-            </a>
+        <a href="03-linux/index.html" class="pillar-card linux">
+            <div class="pillar-icon">🐧</div>
+            <h2>Filar 3: Linux SysOps</h2>
+            <p>Terminal, uprawnienia, dowiązania, diagnostyka sprzętu. Niezbędne komendy dla administratora.</p>
+            <div class="pillar-meta">
+                <span>📚 Teoria + 3 Labs</span>
+                <span>⏱️ ~6h</span>
+            </div>
+        </a>
 
-            <!-- KAFELEK 4 -->
-            <a href="cwiczenia4.html" class="lab-link-card">
-                <div class="lab-icon">🟣</div>
-                <div class="lab-content">
-                    <span class="lab-title">Lab 4: DNS i NAT</span>
-                    <span class="lab-desc">Prawdziwy internet, translacja adresów</span>
-                </div>
-            </a>
+        <a href="04-sprzet/index.html" class="pillar-card sprzet">
+            <div class="pillar-icon">🔌</div>
+            <h2>Filar 4: Warstwa Fizyczna</h2>
+            <p>Okablowanie strukturalne, RACK, diagnostyka SMART, GPU-Z. Praktyczne umiejętności techniczne.</p>
+            <div class="pillar-meta">
+                <span>📚 Teoria + 2 Labs</span>
+                <span>⏱️ ~4h</span>
+            </div>
+        </a>
+
+        <a href="05-excel/index.html" class="pillar-card excel">
+            <div class="pillar-icon">📊</div>
+            <h2>Filar 5: Excel & Logika</h2>
+            <p>Formuły, funkcje JEŻELI, formatowanie warunkowe, kosztorysy. Praktyczne arkusze dla biznesu.</p>
+            <div class="pillar-meta">
+                <span>📚 Teoria + Ćwiczenia</span>
+                <span>⏱️ ~3h</span>
+            </div>
+        </a>
+
+    </section>
+
+    <section class="quick-links">
+        <h2>Szybkie linki</h2>
+        <div class="quick-btns">
+            <a href="setup.html" class="quick-btn">🛠️ Dzień 0: Instalacja środowisk</a>
+            <a href="syllabus.html" class="quick-btn">📋 Sylabus egzaminu</a>
         </div>
     </section>
+
+    <script src="menu.js"></script>
 </body>
 </html>

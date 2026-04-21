@@ -77,3 +77,24 @@ code { background: #dfe6e9; color: #2d3436; padding: 2px 6px; border-radius: 4px
 .node-name { font-weight: bold; font-size: 0.85rem; color: #2d3436; display: block; }
 .node-ip { font-family: 'Consolas', monospace; font-size: 0.75rem; color: #636e72; display: block; margin-top: 3px; }
 .node-port { font-size: 0.65rem; color: #e17055; font-weight: bold; background: #ffeaa7; padding: 2px 4px; border-radius: 4px; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+
+/* --- GLOBALNA NAWIGACJA (STICKY NAVBAR) --- */
+body { padding-top: 70px; }
+#global-nav { position: fixed; top: 0; left: 0; width: 100%; background: #2d3436; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.nav-brand { font-weight: bold; font-size: 1.2rem; color: #55efc4; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.nav-links { display: flex; gap: 15px; flex-wrap: wrap; }
+.nav-links a { color: white; text-decoration: none; font-size: 0.9rem; padding: 5px 10px; border-radius: 5px; transition: background 0.2s; }
+.nav-links a:hover { background: #636e72; }
+
+/* --- BREADCRUMBS --- */
+#breadcrumbs { max-width: 1200px; margin: 0 auto 20px auto; font-size: 0.9rem; color: #636e72; background: #e3f2fd; padding: 10px 15px; border-radius: 8px; }
+#breadcrumbs a { color: #0984e3; text-decoration: none; font-weight: bold; }
+#breadcrumbs a:hover { text-decoration: underline; }
+
+/* --- COURSE NAVIGATION (Previous/Next) --- */
+.course-nav { max-width: 900px; margin: 40px auto; display: flex; justify-content: space-between; border-top: 2px solid #dfe6e9; padding-top: 20px; }
+.course-btn { background: #ffffff; border: 2px solid #b2bec3; color: #2d3436; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.2s; }
+.course-btn:hover { border-color: #0984e3; color: #0984e3; transform: translateY(-2px); }
+.course-btn.next { background: #0984e3; color: white; border-color: #0984e3; }
+.course-btn.next:hover { background: #076bb8; }
+.course-btn.disabled { opacity: 0.3; pointer-events: none; }

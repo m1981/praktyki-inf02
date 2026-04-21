@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 2: VLANy</title>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+    <header>
+        <h1>💻 Laboratorium Packet Tracer</h1>
+        <p style="color: var(--text-muted);">Praktyczne ćwiczenia z Filaru 1. Zbuduj to, o czym czytałeś!</p>
+
+    </header>
+
+    <main class="lab-container">
+        <h2 style="text-align: center; margin-bottom: 10px;">Ćwiczenie 2: Dziel i Rządź (VLAN & Trunking)</h2>
+        
+        <!-- FAZA 1 -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Faza 1: Wirtualne Ściany (VLAN)</h3>
+                <div class="time-badge">⏱️ Czas: 45 minut</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Podzielenie jednego fizycznego switcha na dwie odizolowane sieci (Dział IT i Dział HR).</div>
+                
+                <div class="topology-box">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <div class="node switch">
+                                    <span class="node-icon">🖧</span>
+                                    <span class="node-name">Switch 1</span>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node vlan10">
+                                            <span class="node-port">F0/1</span>
+                                            <span class="node-icon">👨‍💻</span>
+                                            <span class="node-name">PC1 (IT)</span>
+                                            <span class="node-ip">192.168.10.10</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="node vlan10">
+                                            <span class="node-port">F0/2</span>
+                                            <span class="node-icon">👨‍💻</span>
+                                            <span class="node-name">PC2 (IT)</span>
+                                            <span class="node-ip">192.168.10.11</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="node vlan20">
+                                            <span class="node-port">F0/11</span>
+                                            <span class="node-icon">📁</span>
+                                            <span class="node-name">PC3 (HR)</span>
+                                            <span class="node-ip">192.168.20.10</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="node vlan20">
+                                            <span class="node-port">F0/12</span>
+                                            <span class="node-icon">📁</span>
+                                            <span class="node-name">PC4 (HR)</span>
+                                            <span class="node-ip">192.168.20.11</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ol class="task-list">
+                    <li><strong>Zadanie:</strong> Zbuduj topologię. Zwróć uwagę na numery portów (F0/1, F0/2 dla IT oraz F0/11, F0/12 dla HR). Ustaw adresy IP i maski <code>255.255.255.0</code>.</li>
+                    <li><strong>Konfiguracja CLI (Switch):</strong> Wejdź w zakładkę CLI na Switchu i wpisz poniższe komendy, aby stworzyć VLANy i przypisać do nich porty:</li>
+                </ol>
+
+<div class="cli-block">
+<span class="cli-comment">! Tworzymy VLANy</span>
+enable
+configure terminal
+vlan 10
+ name IT
+vlan 20
+ name HR
+exit
+
+<span class="cli-comment">! Przypisujemy porty do VLAN 10 (IT)</span>
+interface range fastEthernet 0/1 - 2
+ switchport mode access
+ switchport access vlan 10
+exit
+
+<span class="cli-comment">! Przypisujemy porty do VLAN 20 (HR)</span>
+interface range fastEthernet 0/11 - 12
+ switchport mode access
+ switchport access vlan 20
+exit
+</div>
+
+                <ol class="task-list" start="3">
+                    <li><strong>Testowanie:</strong> Spinguj PC2 z PC1 (Działa!). Teraz spróbuj spingować PC3 z PC1 (Nie działa!).</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🧱</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> Spuściliśmy "dźwiękoszczelną kurtynę" na sali gimnastycznej. Mimo że komputery są wpięte do tego samego urządzenia, Switch traktuje je tak, jakby były podłączone do dwóch osobnych, fizycznych switchy. Ruch z VLAN 10 nigdy nie przejdzie do VLAN 20 bez pomocy routera!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAZA 2 -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Faza 2: Router-on-a-Stick (RoaS)</h3>
+                <div class="time-badge">⏱️ Czas: 45 minut</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Umożliwienie komunikacji między VLAN 10 a VLAN 20 przy użyciu jednego kabla i routera.</div>
+                
+                <div class="topology-box">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <div class="node router">
+                                    <span class="node-port">G0/0 (Trunk)</span>
+                                    <span class="node-icon">🌐</span>
+                                    <span class="node-name">Router 1</span>
+                                    <span class="node-ip">.10 -> 192.168.10.1</span>
+                                    <span class="node-ip">.20 -> 192.168.20.1</span>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node switch">
+                                            <span class="node-port">G0/1 (Trunk)</span>
+                                            <span class="node-icon">🖧</span>
+                                            <span class="node-name">Switch 1</span>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="node vlan10">
+                                                    <span class="node-icon">👨‍💻</span>
+                                                    <span class="node-name">VLAN 10 (IT)</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="node vlan20">
+                                                    <span class="node-icon">📁</span>
+                                                    <span class="node-name">VLAN 20 (HR)</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ol class="task-list">
+                    <li><strong>Zadanie:</strong> Dodaj Router. Połącz port <code>GigabitEthernet0/1</code> na Switchu z portem <code>GigabitEthernet0/0</code> na Routerze.</li>
+                    <li><strong>Konfiguracja Switcha (Trunk):</strong> Port łączący Switch z Routerem musi przenosić ruch z OBU VLANów. Nazywamy to portem Trunk.</li>
+                </ol>
+
+<div class="cli-block">
+<span class="cli-comment">! Na Switchu:</span>
+interface gigabitEthernet 0/1
+ switchport mode trunk
+</div>
+
+                <ol class="task-list" start="3">
+                    <li><strong>Konfiguracja Routera (Subinterfejsy):</strong> Ponieważ mamy tylko jeden kabel, musimy podzielić fizyczny port routera na "wirtualne" porty (subinterfejsy).</li>
+                </ol>
+
+<div class="cli-block">
+<span class="cli-comment">! Na Routerze:</span>
+enable
+configure terminal
+interface gigabitEthernet 0/0
+ no shutdown
+exit
+
+<span class="cli-comment">! Tworzymy wirtualne drzwi dla VLAN 10</span>
+interface gigabitEthernet 0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+exit
+
+<span class="cli-comment">! Tworzymy wirtualne drzwi dla VLAN 20</span>
+interface gigabitEthernet 0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+exit
+</div>
+
+                <ol class="task-list" start="4">
+                    <li><strong>Bramy domyślne:</strong> Wróć do komputerów PC. Ustaw im Bramy Domyślne (Default Gateway). Dla PC z IT będzie to <code>192.168.10.1</code>, a dla HR <code>192.168.20.1</code>.</li>
+                    <li><strong>Wielki Test:</strong> Spinguj PC3 (HR) z PC1 (IT). Pierwszy pakiet przepadnie (ARP), ale kolejne przejdą!</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🍡</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> Zbudowałeś "Router-on-a-Stick" (Router na patyku). Pakiet z działu IT leci do Switcha, Switch oznacza go tagiem "VLAN10" i wysyła Trunkiem do Routera. Router zdejmuje tag, patrzy w tablicę routingu, nakłada tag "VLAN20" i odsyła z powrotem do Switcha. Magia L2 i L3 w jednym kablu!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- COURSE NAVIGATION -->
+    <div class="course-nav">
+        <a href="lab1-podstawy.html" class="course-btn">⬅️ Poprzedni: Lab 1</a>
+        <a href="lab3-routing.html" class="course-btn next">Następny: Lab 3 (DHCP/DNS) ➡️</a>
+    </div>
+
+    <script src="../menu.js"></script>
+</body>
+</html>

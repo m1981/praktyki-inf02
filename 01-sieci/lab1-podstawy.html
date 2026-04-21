@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1: Podstawy LAN</title>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+    <header>
+        <h1>💻 Laboratorium Packet Tracer</h1>
+        <p style="color: var(--text-muted);">Praktyczne ćwiczenia z Filaru 1. Zbuduj to, o czym czytałeś!</p>
+
+    </header>
+
+    <main class="lab-container">
+        <h2 style="text-align: center; margin-bottom: 10px;">Ćwiczenie 1: Płaska sieć</h2>
+
+        <!-- FAZA 1 (Domyślny kolor: l2-color) -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Faza 1: Płaska sieć LAN</h3>
+                <div class="time-badge">⏱️ Czas: 1 godzina</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Zrozumienie, że urządzenia w tej samej podsieci nie potrzebują routera.</div>
+                
+                <!-- SCHEMAT FAZA 1 -->
+                <div class="topology-box">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <div class="node switch">
+                                    <span class="node-icon">🖧</span>
+                                    <span class="node-name">Switch 0</span>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node">
+                                            <span class="node-icon">💻</span>
+                                            <span class="node-name">PC1</span>
+                                            <span class="node-ip">192.168.1.10</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="node">
+                                            <span class="node-icon">💻</span>
+                                            <span class="node-name">PC2</span>
+                                            <span class="node-ip">192.168.1.20</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="node" style="border-color: #d63031;">
+                                            <span class="node-icon">💻</span>
+                                            <span class="node-name">PC3 (Błąd!)</span>
+                                            <span class="node-ip">192.168.2.30</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ol class="task-list">
+                    <li><strong>Zadanie:</strong> Zbuduj topologię widoczną na schemacie powyżej.</li>
+                    <li><strong>Konfiguracja:</strong> Przypisz komputerom statyczne adresy IP i maskę <code>255.255.255.0</code>.</li>
+                    <li><strong>Testowanie:</strong> Wejdź w <em>Command Prompt</em> na PC1 i wpisz <code>ping 192.168.1.20</code>. Działa. Następnie spinguj PC3: <code>ping 192.168.2.30</code>. Nie działa.</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🧠</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> Switch łączy urządzenia fizycznie, ale to <b>maska podsieci</b> decyduje o tym, kto z kim może rozmawiać. PC3 jest w innej "wiosce".
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAZA 2 (Kolor modyfikowany: l3-color) -->
+        <div class="lab-card border-l3">
+            <div class="lab-header">
+                <h3>Faza 2: Wprowadzenie Routera</h3>
+                <div class="time-badge">⏱️ Czas: 1 godzina</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Zrozumienie roli bramy domyślnej (Default Gateway).</div>
+                
+                <!-- SCHEMAT FAZA 2 -->
+                <div class="topology-box">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <div class="node router">
+                                    <span class="node-port">G0/0</span>
+                                    <span class="node-icon">🌐</span>
+                                    <span class="node-name">Router 0</span>
+                                    <span class="node-ip">192.168.1.1 (Brama)</span>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node switch">
+                                            <span class="node-icon">🖧</span>
+                                            <span class="node-name">Switch 0</span>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="node">
+                                                    <span class="node-icon">💻</span>
+                                                    <span class="node-name">PC1</span>
+                                                    <span class="node-ip">192.168.1.10</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="node">
+                                                    <span class="node-icon">💻</span>
+                                                    <span class="node-name">PC2</span>
+                                                    <span class="node-ip">192.168.1.20</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ol class="task-list">
+                    <li><strong>Zadanie:</strong> Dodaj Router do topologii.</li>
+                    <li><strong>Konfiguracja Routera:</strong> Ustaw IP na interfejsie <em>GigabitEthernet0/0</em> na <code>192.168.1.1</code> (maska <code>255.255.255.0</code>). Włącz port (No Shutdown).</li>
+                    <li><strong>Konfiguracja PC:</strong> Na PC1 i PC2 w polu <em>Default Gateway</em> wpisz adres routera: <code>192.168.1.1</code>.</li>
+                    <li><strong>Testowanie:</strong> Wykonaj ping z PC1 do Routera (<code>ping 192.168.1.1</code>).</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🚪</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong> Router to "drzwi wyjściowe". Jeśli komputer chce wysłać pakiet poza swoją podsieć, wysyła go do Bramy Domyślnej.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAZA 3 (Kolor modyfikowany: l3-color) -->
+        <div class="lab-card border-l3">
+            <div class="lab-header">
+                <h3>Faza 3: Dwie różne sieci (Routing)</h3>
+                <div class="time-badge">⏱️ Czas: 1.5 godziny</div>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box"><strong>Cel:</strong> Zrozumienie routingu między dwiema podsieciami.</div>
+                
+                <!-- SCHEMAT FAZA 3 -->
+                <div class="topology-box">
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <div class="node router">
+                                    <span class="node-icon">🌐</span>
+                                    <span class="node-name">Router 0</span>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node switch">
+                                            <span class="node-port">G0/0: 192.168.1.1</span>
+                                            <span class="node-icon">🖧</span>
+                                            <span class="node-name">Sieć Lewa</span>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="node">
+                                                    <span class="node-icon">💻</span>
+                                                    <span class="node-name">PC1</span>
+                                                    <span class="node-ip">192.168.1.10</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node switch">
+                                            <span class="node-port">G0/1: 10.0.0.1</span>
+                                            <span class="node-icon">🖧</span>
+                                            <span class="node-name">Sieć Prawa</span>
+                                        </div>
+                                        <ul>
+                                            <li>
+                                                <div class="node">
+                                                    <span class="node-icon">💻</span>
+                                                    <span class="node-name">PC4</span>
+                                                    <span class="node-ip">10.0.0.10</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ol class="task-list">
+                    <li><strong>Zadanie:</strong> Zbuduj drugą sieć po prawej stronie routera.</li>
+                    <li><strong>Konfiguracja:</strong> Na routerze ustaw IP dla portu G0/1: <code>10.0.0.1</code>. Na PC4 ustaw IP: <code>10.0.0.10</code> oraz Bramę: <code>10.0.0.1</code>.</li>
+                    <li><strong>Testowanie:</strong> Ping z PC1 do PC4 (<code>ping 10.0.0.10</code>). Pierwszy pakiet może przepaść (<em>Request timed out</em>), ale kolejne przejdą!</li>
+                </ol>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🗺️</div>
+                    <div class="conclusion-text">
+                        <strong>Wniosek:</strong>
+                        Router połączył dwie różne "wioski". Kiedy PC1 wysyła pakiet do PC4, widzi, że to inna sieć, więc przekazuje go do Bramy. <br>
+                        <b>Ważne:</b> Pierwszy ping często kończy się błędem (<em>Request timed out</em>), ponieważ urządzenia muszą najpierw użyć protokołu <b>ARP</b>, aby poznać swoje adresy MAC na nowej trasie. Dopiero gdy tablice ARP się wypełnią, pakiety ping (ICMP) mogą swobodnie latać!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- COURSE NAVIGATION -->
+    <div class="course-nav">
+        <a href="index.html" class="course-btn">⬅️ Poprzedni: Teoria</a>
+        <a href="lab2-vlany.html" class="course-btn next">Następny: Lab 2 (VLANy) ➡️</a>
+    </div>
+
+    <script src="../menu.js"></script>
+</body>
+</html>
