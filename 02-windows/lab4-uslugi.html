@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4: Usługi Sieciowe</title>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+    <header>
+        <h1>💻 Laboratoria: Windows Server</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">DNS i IIS</p>
+    </header>
+
+    <main class="lab-container">
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Lab 4: Szkolny Intranet (DNS i IIS)</h3>
+                <span class="time-badge">Czas: 60 min</span>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">
+                    Cel: Uruchomienie szkolnej strony WWW i konfiguracja serwera nazw (DNS).
+                </div>
+                <ul class="task-list">
+                    <li><strong>Krok 1: Instalacja ról</strong>
+                        <p>Zainstaluj role: <strong>Serwer DNS</strong> oraz <strong>Serwer sieci Web (IIS)</strong>.</p>
+                    </li>
+                    <li><strong>Krok 2: Konfiguracja DNS</strong>
+                        <div class="gui-path">Menedżer DNS <span class="gui-arrow">➔</span> Strefy wyszukiwania do przodu <span class="gui-arrow">➔</span> Nowa strefa</div>
+                        <p>Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień <em>Interwał odświeżania</em> na 10 minut.</p>
+                        <p>Utwórz <strong>Rekord A</strong> (nazwa: <code>www</code>, adres IP: adres Twojego serwera).</p>
+                    </li>
+                    <li><strong>Krok 3: Konfiguracja IIS (Host Headers)</strong>
+                        <p>Utwórz prosty plik <code>index.html</code> z napisem "Witaj w szkole" i wrzuć go do folderu <code>C:\inetpub\wwwroot\szkola</code>.</p>
+                        <div class="gui-path">Menedżer IIS <span class="gui-arrow">➔</span> Witryny <span class="gui-arrow">➔</span> Dodaj witrynę sieci Web</div>
+                        <p>Wskaż ścieżkę fizyczną. W sekcji <strong>Wiązania (Bindings)</strong> wpisz w polu <em>Nazwa hosta</em>: <code>www.intranet.local</code>.</p>
+                    </li>
+                </ul>
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🌍</div>
+                    <div class="conclusion-text">
+                        <strong>Sprawdź się:</strong>
+                        Otwórz przeglądarkę na stacji roboczej Windows 10 i wpisz <code>http://www.intranet.local</code>. Jeśli widzisz swoją stronę, to znaczy, że DNS poprawnie przetłumaczył nazwę na IP!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="course-nav">
+        <a href="lab3-pliki.html" class="course-btn">⬅️ Poprzedni: Lab 3</a>
+        <a href="lab5-zaawansowane.html" class="course-btn next">Następny: Lab 5 (Zaawansowane) ➡️</a>
+    </div>
+    <script src="../menu.js"></script>
+</body>
+</html>

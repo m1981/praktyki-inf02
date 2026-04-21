@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 5: Zaawansowana Infrastruktura</title>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+    <header>
+        <h1>🚀 Laboratoria: Windows Server</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">Routing, Niezawodność i Drukarki</p>
+    </header>
+
+    <main class="lab-container">
+        <!-- LAB: RRAS -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Część 1: Serwer jako Router (RRAS i NAT)</h3>
+            </div>
+            <div class="lab-body">
+                <ul class="task-list">
+                    <li><strong>Krok 1: Dwie karty sieciowe</strong>
+                        <p>Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em>. Pierwsza karta zostaje na <em>Sieć wewnętrzna</em>.</p>
+                    </li>
+                    <li><strong>Krok 2: Instalacja roli RRAS</strong>
+                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Dodaj role i funkcje <span class="gui-arrow">➔</span> Dostęp zdalny (Remote Access) <span class="gui-arrow">➔</span> Routing</div>
+                    </li>
+                    <li><strong>Krok 3: Konfiguracja Translacji Adresów (NAT)</strong>
+                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Routing i dostęp zdalny</div>
+                        <p>Kliknij prawym przyciskiem na nazwę serwera i wybierz <em>"Konfiguruj i włącz routing..."</em>. Wybierz <strong>Translacja adresów sieciowych (NAT)</strong>. Wskaż interfejs publiczny.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LAB: NIC Teaming -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Część 2: Niezawodność (NIC Teaming)</h3>
+            </div>
+            <div class="lab-body">
+                <ul class="task-list">
+                    <li><strong>Krok 1: Zespół kart sieciowych</strong>
+                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Serwer lokalny <span class="gui-arrow">➔</span> Zespół kart interfejsu sieciowego</div>
+                        <p>Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym -> <strong>Dodaj do nowego zespołu</strong>. Nazwij go <code>LAN_Zespol</code>. Tryb: <em>Niezależny od przełącznika</em>.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LAB: Drukarki -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Część 3: Szkolna Drukarka (Print Server)</h3>
+            </div>
+            <div class="lab-body">
+                <ul class="task-list">
+                    <li><strong>Krok 1: Instalacja portu TCP/IP</strong>
+                        <div class="gui-path">Panel Sterowania <span class="gui-arrow">➔</span> Urządzenia i drukarki <span class="gui-arrow">➔</span> Dodaj drukarkę</div>
+                        <p>Wybierz "Dodaj drukarkę używając adresu TCP/IP". Wpisz adres, np. <code>192.168.1.200</code>. Zainstaluj sterownik Generic / Text Only.</p>
+                    </li>
+                    <li><strong>Krok 2: Udostępnianie i restrykcje</strong>
+                        <p>Wejdź we właściwości nowej drukarki. W zakładce <strong>Zaawansowane</strong> zmień opcję na <strong>Dostępna od 08:00 do 15:00</strong>.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <div class="course-nav">
+        <a href="lab4-uslugi.html" class="course-btn">⬅️ Poprzedni: Lab 4</a>
+        <a href="index.html" class="course-btn next">Zakończ Filar 2 ➡️</a>
+    </div>
+    <script src="../menu.js"></script>
+</body>
+</html>

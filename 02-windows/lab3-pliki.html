@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 3: Pliki i Uprawnienia</title>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+    <header>
+        <h1>💻 Laboratoria: Windows Server</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">Zarządzanie zasobami</p>
+    </header>
+
+    <main class="lab-container">
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Lab 3: Tajne Akta i Wędrujące Pulpity</h3>
+                <span class="time-badge">Czas: 60 min</span>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">
+                    Cel: Konfiguracja uprawnień do plików (NTFS), ukrytych udziałów sieciowych oraz profili mobilnych.
+                </div>
+                <ul class="task-list">
+                    <li><strong>Krok 1: Ukryty udział dla profili</strong>
+                        <p>Utwórz na dysku C: folder <code>Profile</code>. Udostępnij go w sieci, ale dodaj znak <code>$</code> na końcu nazwy udziału (<code>Profile$</code>). Dzięki temu będzie niewidoczny dla wścibskich uczniów.</p>
+                    </li>
+                    <li><strong>Krok 2: Profil Mobilny (Roaming Profile)</strong>
+                        <div class="gui-path">Właściwości użytkownika 'maciek' w AD <span class="gui-arrow">➔</span> Zakładka: Profil <span class="gui-arrow">➔</span> Ścieżka profilu</div>
+                        <p>Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>. Zaloguj się jako maciek na Windows 10, stwórz plik na pulpicie, wyloguj się i sprawdź na serwerze, czy plik się zsynchronizował!</p>
+                    </li>
+                    <li><strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
+                        <p>Utwórz folder <code>Sprawdziany</code>. W zakładce <strong>Zabezpieczenia</strong> (NTFS) ustaw:</p>
+                        <ul style="margin-left: 20px; margin-bottom: 10px;">
+                            <li>Administratorzy: <strong>Pełna kontrola</strong></li>
+                            <li>Użytkownicy: <strong>Odczyt i wykonywanie</strong></li>
+                        </ul>
+                        <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Właściwości pliku -> Zaawansowane -> Szyfruj zawartość). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <div class="course-nav">
+        <a href="lab2-gpo-cli.html" class="course-btn">⬅️ Poprzedni: Lab 2</a>
+        <a href="lab4-uslugi.html" class="course-btn next">Następny: Lab 4 (Usługi) ➡️</a>
+    </div>
+    <script src="../menu.js"></script>
+</body>
+</html>
