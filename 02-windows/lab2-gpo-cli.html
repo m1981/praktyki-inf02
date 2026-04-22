@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab 2: GPO i Komendy</title>
     <link rel="stylesheet" href="../common.css">
+    <style>
+        .pitfall-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
+        .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+    </style>
 </head>
 <body>
     <header>
@@ -29,8 +35,13 @@
                         <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Użytkownicy i komputery usługi Active Directory (dsa.msc)</div>
                         <p>Utwórz nową Jednostkę Organizacyjną (OU) o nazwie <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We właściwościach konta zaznacz opcję <strong>"Hasło nigdy nie wygasa"</strong>.</p>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Wpisywanie złego formatu daty w komendzie <code>/expires</code>. Zależnie od języka systemu, Windows może oczekiwać formatu DD/MM/RRRR lub MM/DD/RRRR. Jeśli komenda wyrzuca błąd, zamień dzień z miesiącem!
+                    </div>
+
                     <li><strong>Krok 2: Magia CLI (Wiersz poleceń)</strong>
-                        <p>Egzaminatorzy uwielbiają sprawdzać znajomość konsoli. Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
+                        <p>Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
                         <div class="cli-block">
 <span class="cli-comment"># 1. Utworzenie grupy lokalnej "Uczniowie"</span>
 net localgroup Uczniowie /add
@@ -42,6 +53,11 @@ net user uczen1 Zaq12345! /add /expires:25/06/2025
 net localgroup Uczniowie uczen1 /add</div>
                     </li>
                 </ul>
+
+                <div class="exam-verify-box">
+                    <h4>📝 Weryfikacja Egzaminacyjna (Papierowa!)</h4>
+                    <p>W przypadku zadań z wiersza poleceń (CLI), egzaminator nie zawsze prosi o zrzut ekranu. W arkuszu egzaminacyjnym znajduje się fizyczna tabela (np. <em>Tabela 2. Polecenia Windows</em>). Musisz w niej <strong>długopisem wpisać dokładną komendę</strong>, której użyłeś, wraz ze wszystkimi parametrami (np. <code>net user uczen1 haslo /add</code>).</p>
+                </div>
             </div>
         </div>
 
@@ -72,6 +88,11 @@ net localgroup Uczniowie uczen1 /add</div>
                         <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Zarządzanie zasadami grupy (gpmc.msc)</div>
                         <p>Rozwiń drzewo: Las -> Domeny -> zs1.local. Znajdź utworzoną wcześniej jednostkę organizacyjną (OU) o nazwie <code>Pracownia_32</code>.</p>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba przypięcia obiektu GPO do "Grupy Zabezpieczeń" (np. grupy Uczniowie). GPO można przypinać <strong>TYLKO</strong> do Jednostek Organizacyjnych (OU), Domen lub Lokat (Sites).
+                    </div>
+
                     <li><strong>Krok 2: Tworzenie i przypinanie GPO</strong>
                         <p>Kliknij prawym przyciskiem myszy na OU <code>Pracownia_32</code> i wybierz: <strong>Utwórz obiekt zasad grupy w tej domenie i umieść tu do niego łącze...</strong>. Nazwij go <code>Blokada_Notatnika</code>.</p>
                     </li>
@@ -81,17 +102,24 @@ net localgroup Uczniowie uczen1 /add</div>
                         <p>Kliknij prawym na "Zasady ograniczeń oprogramowania" i wybierz <strong>Nowe zasady...</strong>. Następnie wejdź w folder <em>Reguły dodatkowe</em>. Kliknij prawym w puste pole -> <strong>Nowa reguła ścieżki...</strong></p>
                         <p>W polu ścieżka wpisz: <code>notepad.exe</code>. Poziom zabezpieczeń: <strong>Niedozwolone</strong>.</p>
                     </li>
-                    <li><strong>Krok 4: Wymuszenie aktualizacji zasad</strong>
-                        <p>Otwórz CMD na serwerze i na stacji roboczej ucznia, a następnie wpisz:</p>
-                        <div class="cli-block">gpupdate /force</div>
-                    </li>
-                </ul>
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">🚫</div>
-                    <div class="conclusion-text">
-                        <strong>Sprawdź się:</strong>
-                        Zaloguj się na Windows 10 jako uczeń (który znajduje się w OU Pracownia_32). Spróbuj otworzyć Notatnik. Powinieneś zobaczyć komunikat o blokadzie przez administratora.
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera (Święta Trójca GPO):</strong> Zrobiłeś zmianę w GPO? Pamiętaj o 3 krokach: <br>
+                        1. Otwórz CMD na stacji roboczej i wpisz <code>gpupdate /force</code>.<br>
+                        2. Wyloguj się z konta użytkownika.<br>
+                        3. Zaloguj się ponownie. Dopiero wtedy testuj, czy blokada działa!
                     </div>
+
+                </ul>
+
+                <div class="exam-verify-box">
+                    <h4>📸 Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
+                    <p>W zadaniach z GPO (blokada programu, blokada tapety) arkusz często zawiera instrukcję: <em>"Zgłoś przewodniczącemu ZN – przez podniesienie ręki – gotowość do oceny"</em>.</p>
+                    <ol>
+                        <li>Zaloguj się na stacji roboczej jako zablokowany uczeń.</li>
+                        <li>Spróbuj uruchomić Notatnik.</li>
+                        <li>Gdy na ekranie pojawi się czerwony komunikat o blokadzie przez administratora – <strong>zostaw go na ekranie i podnieś rękę!</strong> Egzaminator podejdzie i odhaczy punkt w swoim arkuszu ocen.</li>
+                    </ol>
                 </div>
             </div>
         </div>

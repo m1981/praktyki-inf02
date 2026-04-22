@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab 1: Instalacja AD DS</title>
     <link rel="stylesheet" href="../common.css">
+    <style>
+        /* Dodatkowe style dla bloków trenerskich i egzaminacyjnych */
+        .pitfall-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
+        .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+    </style>
 </head>
 <body>
 
@@ -38,6 +45,15 @@
                             <li>Ustaw hasło przywracania usług katalogowych (DSRM) na <code>Zaq12345!</code></li>
                         </ul>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia Windowsa 10 do domeny kończy się błędem "Nie można odnaleźć domeny". Dzieje się tak, ponieważ stacja robocza nie wie, gdzie szukać domeny <code>zs1.local</code>.
+                    </div>
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera:</strong> Zanim klikniesz "Dołącz do domeny", wejdź w ustawienia karty sieciowej Windows 10 (ncpa.cpl) i w polu <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera! Następnie otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada – możesz dołączać!
+                    </div>
+
                     <li><strong>Krok 3: Podłączenie stacji roboczej (Windows 10)</strong>
                         <p>Uruchom drugą maszynę wirtualną (Windows 10). Upewnij się, że w ustawieniach karty sieciowej ma wpisany adres IP serwera jako swój serwer DNS!</p>
                         <div class="gui-path">Właściwości systemu <span class="gui-arrow">➔</span> Zmień nazwę komputera / Domenę <span class="gui-arrow">➔</span> Domena: zs1.local</div>
@@ -45,12 +61,15 @@
                     </li>
                 </ul>
 
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">✅</div>
-                    <div class="conclusion-text">
-                        <strong>Sprawdź się:</strong>
-                        Jeśli po restarcie Windows 10 na ekranie logowania widzisz napis "Zaloguj do: ZS1", to znaczy, że komputer jest już w "Klubie VIP"!
-                    </div>
+                <div class="exam-verify-box">
+                    <h4>📸 Weryfikacja Egzaminacyjna (Jak zdobyć punkty?)</h4>
+                    <p>Na egzaminie INF.02 nikt nie uwierzy Ci na słowo. Musisz to udowodnić:</p>
+                    <ol>
+                        <li>Na stacji roboczej (Windows 10) otwórz okno <strong>Właściwości systemu</strong> (tam, gdzie widać pełną nazwę komputera i nazwę domeny).</li>
+                        <li>Zrób zrzut ekranu (PrintScreen lub Narzędzie Wycinanie).</li>
+                        <li>Otwórz edytor tekstu (Word / LibreOffice Writer), wklej zrzut ekranu.</li>
+                        <li>Zapisz plik pod nazwą np. <code>stacja_testy.docx</code> na pendrive opisanym jako <strong>EGZAMIN-X</strong> (gdzie X to numer Twojego stanowiska).</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -71,6 +90,11 @@
                         <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Użytkownicy i komputery usługi Active Directory (dsa.msc)</div>
                         <p>Utwórz nową Jednostkę Organizacyjną (OU) o nazwie <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We właściwościach konta zaznacz opcję <strong>"Hasło nigdy nie wygasa"</strong>.</p>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Wpisywanie złego formatu daty w komendzie <code>/expires</code>. Zależnie od języka systemu, Windows może oczekiwać formatu DD/MM/RRRR lub MM/DD/RRRR. Jeśli komenda wyrzuca błąd, zamień dzień z miesiącem!
+                    </div>
+
                     <li><strong>Krok 2: Magia CLI (Wiersz poleceń)</strong>
                         <p>Egzaminatorzy uwielbiają sprawdzać znajomość konsoli. Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
                         <div class="cli-block">
@@ -84,6 +108,11 @@ net user uczen1 Zaq12345! /add /expires:25/06/2025
 net localgroup Uczniowie uczen1 /add</div>
                     </li>
                 </ul>
+
+                <div class="exam-verify-box">
+                    <h4>📝 Weryfikacja Egzaminacyjna (Papierowa!)</h4>
+                    <p>W przypadku zadań z wiersza poleceń (CLI), egzaminator nie zawsze prosi o zrzut ekranu. W arkuszu egzaminacyjnym znajduje się fizyczna tabela (np. <em>Tabela 2. Polecenia Windows</em>). Musisz w niej <strong>długopisem wpisać dokładną komendę</strong>, której użyłeś, wraz ze wszystkimi parametrami (np. <code>net user uczen1 haslo /add</code>).</p>
+                </div>
             </div>
         </div>
 
@@ -106,6 +135,11 @@ net localgroup Uczniowie uczen1 /add</div>
                         <div class="gui-path">Właściwości użytkownika 'maciek' w AD <span class="gui-arrow">➔</span> Zakładka: Profil <span class="gui-arrow">➔</span> Ścieżka profilu</div>
                         <p>Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>. Zaloguj się jako maciek na Windows 10, stwórz plik na pulpicie, wyloguj się i sprawdź na serwerze, czy plik się zsynchronizował!</p>
                     </li>
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong> Jeśli na zakładce <em>Udostępnianie</em> dasz "Pełną kontrolę", ale w <em>Zabezpieczeniach (NTFS)</em> dasz tylko "Odczyt", to użytkownik będzie miał tylko odczyt. Zawsze dawaj "Wszyscy - Pełna kontrola" w Udostępnianiu, a prawdziwe restrykcje ustawiaj w Zabezpieczeniach!
+                    </div>
+
                     <li><strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
                         <p>Utwórz folder <code>Sprawdziany</code>. W zakładce <strong>Zabezpieczenia</strong> (NTFS) ustaw:</p>
                         <ul style="margin-left: 20px; margin-bottom: 10px;">
@@ -114,7 +148,20 @@ net localgroup Uczniowie uczen1 /add</div>
                         </ul>
                         <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Właściwości pliku -> Zaawansowane -> Szyfruj zawartość). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów (EFS):</strong> Uczeń szyfruje plik będąc zalogowanym jako Administrator, a potem dziwi się, że zwykły użytkownik nie może go otworzyć. Pamiętaj: EFS szyfruje plik <strong>dla osoby, która aktualnie klika "Szyfruj"</strong>!
+                    </div>
                 </ul>
+
+                <div class="exam-verify-box">
+                    <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
+                    <p>Aby udowodnić poprawne uprawnienia i szyfrowanie:</p>
+                    <ol>
+                        <li>Zrób zrzut ekranu zakładki <strong>Zabezpieczenia</strong> folderu <code>Sprawdziany</code>, pokazując uprawnienia dla grupy Użytkownicy.</li>
+                        <li>Zrób zrzut ekranu okna Eksploratora, na którym widać, że nazwa zaszyfrowanego pliku zmieniła kolor na <strong>zielony</strong> (lub zrób zrzut okna "Atrybuty zaawansowane" z zaznaczonym ptaszkiem przy szyfrowaniu).</li>
+                    </ol>
+                </div>
             </div>
         </div>
 
@@ -138,6 +185,11 @@ net localgroup Uczniowie uczen1 /add</div>
                         <p>Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień <em>Interwał odświeżania</em> na 10 minut.</p>
                         <p>Utwórz <strong>Rekord A</strong> (nazwa: <code>www</code>, adres IP: adres Twojego serwera).</p>
                     </li>
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera (Testuj DNS przed IIS!):</strong> Zanim zaczniesz konfigurować stronę WWW, otwórz CMD na stacji roboczej i wpisz <code>ping www.intranet.local</code>. Jeśli ping nie rozwiązuje nazwy na IP serwera, to strona na pewno nie zadziała. Zawsze najpierw naprawiaj DNS!
+                    </div>
+
                     <li><strong>Krok 3: Konfiguracja IIS (Host Headers)</strong>
                         <p>Utwórz prosty plik <code>index.html</code> z napisem "Witaj w szkole" i wrzuć go do folderu <code>C:\inetpub\wwwroot\szkola</code>.</p>
                         <div class="gui-path">Menedżer IIS <span class="gui-arrow">➔</span> Witryny <span class="gui-arrow">➔</span> Dodaj witrynę sieci Web</div>
@@ -151,6 +203,20 @@ net localgroup Uczniowie uczen1 /add</div>
                         <strong>Sprawdź się:</strong>
                         Otwórz przeglądarkę na stacji roboczej Windows 10 i wpisz <code>http://www.intranet.local</code>. Jeśli widzisz swoją stronę, to znaczy, że DNS poprawnie przetłumaczył nazwę na IP, a IIS zaserwował odpowiedni plik!
                     </div>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów (Błąd 403 w IIS):</strong> Jeśli usuniesz domyślne uprawnienia z folderu <code>C:\inetpub\wwwroot\szkola</code>, serwer IIS nie będzie mógł odczytać pliku <code>index.html</code>. IIS używa specjalnej grupy <code>IIS_IUSRS</code> do czytania plików. Nie usuwaj jej!
+                    </div>
+                </ul>
+
+                <div class="exam-verify-box">
+                    <h4>🙋‍♂️ Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
+                    <p>W zadaniach z IIS i DNS egzaminator zazwyczaj chce zobaczyć efekt końcowy na żywo:</p>
+                    <ol>
+                        <li>Otwórz przeglądarkę na stacji roboczej (Windows 10 lub wirtualny Linux).</li>
+                        <li>Wpisz w pasku adresu: <code>http://www.intranet.local</code>.</li>
+                        <li>Gdy strona się załaduje, <strong>podnieś rękę</strong>. Egzaminator podejdzie i sprawdzi, czy strona ładuje się po nazwie domenowej, a nie po samym adresie IP.</li>
+                    </ol>
                 </div>
             </div>
         </div>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab: Windows - Ostatnie Szlify</title>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* Style dla rozwijanej teorii (jeśli nie masz ich jeszcze w common.css) */
+        details.theory-block {
+            background: #f8f9fa;
+            border: 1px solid #dfe4ea;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        details.theory-block summary {
+            background: #e3f2fd;
+            color: #0984e3;
+            padding: 12px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        details.theory-block summary::-webkit-details-marker {
+            display: none;
+        }
+        details.theory-block summary::before {
+            content: '📚 Pokaż Teorię ➔';
+            margin-right: 10px;
+        }
+        details.theory-block[open] summary::before {
+            content: '📖 Ukryj Teorię ⬇';
+        }
+        details.theory-block .theory-content {
+            padding: 15px;
+            color: #2d3436;
+            border-top: 1px solid #dfe4ea;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>💻 Laboratoria: Windows Server</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">Ostatnie Szlify: CLI, Właściciel i Diagnostyka Sprzętu</p>
+    </header>
+
+    <main class="lab-container">
+
+        <!-- CZĘŚĆ 1: NET SHARE I WŁAŚCICIEL -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Lab A: Zaawansowane Udziały i Własność</h3>
+                <span class="time-badge">Czas: 20 min</span>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">
+                    Cel: Udostępnienie folderu z poziomu wiersza poleceń (CLI) oraz zmiana Właściciela folderu.
+                </div>
+
+                <details class="theory-block">
+                    <summary>Właściciel vs Uprawnienia & Komenda "net share"</summary>
+                    <div class="theory-content">
+                        <p><strong>1. Dlaczego używamy CLI do udostępniania?</strong><br>
+                        Wyklikanie udostępniania folderu zajmuje 10 kliknięć. Wpisanie komendy <code>net share</code> zajmuje 5 sekund. Na egzaminie (i w pracy DevOpsa) skrypty to podstawa. Komenda pozwala od razu ustawić limit użytkowników i dodać opis.</p>
+                        <p><strong>2. Czym jest Właściciel (Owner) folderu?</strong><br>
+                        Uprawnienia NTFS mówią, <em>kto może wejść</em> do folderu. Ale co, jeśli ktoś usunie wszystkie uprawnienia i nikt nie może wejść (nawet Administrator)? Wtedy wkracza <strong>Właściciel</strong>. Właściciel to osoba, która ma absolutne prawo do zmiany uprawnień, nawet jeśli sama nie ma prawa do czytania plików. Zmiana właściciela to tzw. "Otwieranie zamka łomem".</p>
+                    </div>
+                </details>
+
+                <ul class="task-list">
+                    <li><strong>Krok 1: Udostępnianie przez CLI</strong>
+                        <p>Utwórz folder <code>C:\WSPOLNY</code>. Otwórz Wiersz poleceń (CMD) jako Administrator i wpisz dokładnie tę komendę:</p>
+                        <div class="cli-block">
+<span class="cli-comment"># Składnia: net share NAZWA_UDZIAŁU=ŚCIEŻKA /USERS:limit /REMARK:"Opis"</span>
+net share NASZ_EGZAMIN=C:\WSPOLNY /USERS:10 /REMARK:"Materiały egzaminacyjne"</div>
+                    </li>
+                    <li><strong>Krok 2: Zmiana Właściciela (GUI)</strong>
+                        <p>Wejdź we właściwości folderu <code>C:\WSPOLNY</code>.</p>
+                        <div class="gui-path">Zakładka Zabezpieczenia <span class="gui-arrow">➔</span> Zaawansowane <span class="gui-arrow">➔</span> Właściciel: Zmień</div>
+                        <p>Wpisz nazwę użytkownika (np. <code>maciek</code>), kliknij "Sprawdź nazwy" i zatwierdź. Zaznacz opcję <em>"Zmień właściciela dla podkontenerów i obiektów"</em> (aby zmiana objęła też pliki w środku).</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CZĘŚĆ 2: DIAGNOSTYKA SPRZĘTU -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Lab B: Diagnostyka Sprzętu (S.M.A.R.T. i GPU)</h3>
+                <span class="time-badge">Czas: 20 min</span>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">
+                    Cel: Odczytanie parametrów żywotności dysku twardego oraz parametrów karty graficznej za pomocą zewnętrznych narzędzi.
+                </div>
+
+                <details class="theory-block">
+                    <summary>Co to jest S.M.A.R.T. i system Szesnastkowy?</summary>
+                    <div class="theory-content">
+                        <p><strong>S.M.A.R.T.</strong> (Self-Monitoring, Analysis and Reporting Technology) to system wbudowany w dyski twarde. Dysk sam siebie diagnozuje i zapisuje błędy. Dzięki temu informatyk wie, że dysk umiera, ZANIM stracimy dane.</p>
+                        <p><strong>HEX vs DEC:</strong> Programy diagnostyczne często podają wartości w systemie szesnastkowym (HEX), np. <code>00000000000A</code>. Na egzaminie musisz umieć przełączyć program na system dziesiętny (DEC), żeby odczytać, że to po prostu liczba <code>10</code>.</p>
+                        <p><strong>Kluczowe parametry dysku:</strong>
+                        <ul>
+                            <li><code>05</code> - Ilość realokowanych sektorów (Dysk znalazł bad sector i przeniósł dane. Jeśli ta wartość rośnie, dysk umiera!)</li>
+                            <li><code>C5</code> - Liczba sektorów niestabilnych.</li>
+                        </ul></p>
+                    </div>
+                </details>
+
+                <ul class="task-list">
+                    <li><strong>Krok 1: CrystalDiskInfo (Diagnostyka Dysku)</strong>
+                        <p>Uruchom program CrystalDiskInfo (na egzaminie będzie na pendrive). Zmień wyświetlanie wartości na dziesiętne:</p>
+                        <div class="gui-path">Funkcje <span class="gui-arrow">➔</span> Funkcje zaawansowane <span class="gui-arrow">➔</span> Wartość Raw <span class="gui-arrow">➔</span> 10 [DEC]</div>
+                        <p>Odszukaj na liście atrybuty <strong>05</strong> oraz <strong>C5</strong> i odczytaj ich wartości w kolumnie "Wartość Raw".</p>
+                    </li>
+                    <li><strong>Krok 2: GPU-Z (Diagnostyka Grafiki)</strong>
+                        <p>Uruchom program GPU-Z. W zakładce <em>Graphics Card</em> odczytaj:</p>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>Wersję sterownika (Driver Version).</li>
+                            <li>Taktowanie procesora graficznego (GPU Clock).</li>
+                        </ul>
+                        <p>Przejdź do zakładki <em>Sensors</em> i odczytaj aktualną temperaturę (GPU Temperature).</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CZĘŚĆ 3: ARCHIWA -->
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Lab C: Oprogramowanie i Archiwa (7-Zip)</h3>
+                <span class="time-badge">Czas: 10 min</span>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">
+                    Cel: Instalacja oprogramowania firm trzecich i rozpakowanie niestandardowego archiwum.
+                </div>
+
+                <details class="theory-block">
+                    <summary>Dlaczego instalujemy 7-Zip?</summary>
+                    <div class="theory-content">
+                        <p>System Windows domyślnie potrafi otwierać tylko archiwa typu <code>.zip</code>. Jeśli na egzaminie (lub w pracy) dostaniesz plik z rozszerzeniem <code>.7z</code> lub <code>.rar</code>, system Windows go nie rozpozna. Musisz zainstalować darmowy program 7-Zip, który integruje się z menu kontekstowym (prawy przycisk myszy).</p>
+                    </div>
+                </details>
+
+                <ul class="task-list">
+                    <li><strong>Krok 1: Instalacja</strong>
+                        <p>Uruchom instalator <code>7z-x64.exe</code> (lub <code>.msi</code>) i przejdź przez proces instalacji.</p>
+                    </li>
+                    <li><strong>Krok 2: Rozpakowywanie</strong>
+                        <p>Znajdź plik egzaminacyjny z rozszerzeniem <code>.7z</code>.</p>
+                        <div class="gui-path">Prawy przycisk myszy na plik <span class="gui-arrow">➔</span> 7-Zip <span class="gui-arrow">➔</span> Wypakuj tutaj (Extract Here)</div>
+                    </li>
+                </ul>
+
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🏆</div>
+                    <div class="conclusion-text">
+                        <strong>Gratulacje!</strong>
+                        Właśnie ukończyłeś wszystkie zagadnienia z Filaru Windows Server, które kiedykolwiek pojawiły się na egzaminie INF.02. Jesteś gotowy na 100%!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="course-nav">
+        <a href="lab5-zaawansowane.html" class="course-btn">⬅️ Poprzedni: Lab 5 (Zaawansowane)</a>
+        <a href="lab-linux-diagnostyka.html" class="course-btn next">Następny: Linux - Diagnostyka ➡️</a>
+    </div>
+    <script src="../menu.js"></script>
+</body>
+</html>
