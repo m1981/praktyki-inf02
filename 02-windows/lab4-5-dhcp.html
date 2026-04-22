@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab 4.5: Serwer DHCP</title>
     <link rel="stylesheet" href="../common.css">
+    <style>
+        .pitfall-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
+        .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+    </style>
 </head>
 <body>
     <header>
@@ -38,38 +44,51 @@
 
                 <ul class="task-list">
                     <li><strong>Krok 1: Instalacja roli DHCP</strong>
-                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Dodaj role i funkcje <span class="gui-arrow">➔</span> Serwer DHCP</div>
-                        <p>Po instalacji kliknij żółty trójkąt i wybierz <em>"Zakończ konfigurację usługi DHCP"</em> (autoryzacja w domenie).</p>
+                        <div class="gui-path">Server Manager (Menedżer serwera) <span class="gui-arrow">➔</span> Add roles and features (Dodaj role i funkcje) <span class="gui-arrow">➔</span> DHCP Server (Serwer DHCP)</div>
+                        <p>Po instalacji kliknij żółty trójkąt i wybierz <em>"Complete DHCP configuration" (Zakończ konfigurację usługi DHCP)</em> (autoryzacja w domenie).</p>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Brak autoryzacji serwera DHCP w Active Directory. Jeśli pominiesz ten krok (żółty trójkąt), serwer DHCP w środowisku domenowym nie rozda ani jednego adresu IP!
+                    </div>
+
                     <li><strong>Krok 2: Tworzenie Zakresu (Puli adresów)</strong>
-                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> DHCP (dhcpmgmt.msc)</div>
-                        <p>Rozwiń nazwę serwera -> IPv4. Kliknij prawym na IPv4 i wybierz <strong>Nowy zakres...</strong></p>
+                        <div class="gui-path">DHCP Manager (Menedżer DHCP) <span class="gui-arrow">➔</span> IPv4 <span class="gui-arrow">➔</span> New Scope (Nowy zakres)</div>
+                        <p>Rozwiń nazwę serwera -> IPv4. Kliknij prawym na IPv4 i wybierz <strong>New Scope...</strong></p>
                         <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Nazwa: <code>Siec_Szkolna</code></li>
-                            <li>Początkowy adres IP: <code>192.168.1.100</code></li>
-                            <li>Końcowy adres IP: <code>192.168.1.150</code></li>
-                            <li>Maska podsieci: <code>255.255.255.0</code></li>
+                            <li>Name (Nazwa): <code>Siec_Szkolna</code></li>
+                            <li>Start IP address (Początkowy adres IP): <code>192.168.1.100</code></li>
+                            <li>End IP address (Końcowy adres IP): <code>192.168.1.150</code></li>
+                            <li>Subnet mask (Maska podsieci): <code>255.255.255.0</code></li>
                         </ul>
                     </li>
                     <li><strong>Krok 3: Opcje Zakresu (Brama i DNS)</strong>
                         <p>W kreatorze zostaniesz zapytany o opcje DHCP. To bardzo ważne!</p>
                         <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li><strong>Router (Brama domyślna):</strong> Wpisz adres IP Twojego routera.</li>
-                            <li><strong>Serwer DNS:</strong> Wpisz adres IP Twojego Windows Servera.</li>
+                            <li><strong>Router (Default Gateway / Brama domyślna):</strong> Wpisz adres IP Twojego routera.</li>
+                            <li><strong>DNS Server (Serwer DNS):</strong> Wpisz adres IP Twojego Windows Servera.</li>
                         </ul>
                     </li>
                     <li><strong>Krok 4: Rezerwacja adresu IP</strong>
-                        <p>Rozwiń swój nowy zakres. Kliknij prawym na <strong>Zastrzeżenia (Reservations)</strong> -> <strong>Nowe zastrzeżenie...</strong></p>
-                        <p>Nazwa: <code>Komputer_Dyrektora</code>. Adres IP: <code>192.168.1.110</code>. Adres MAC: wpisz dowolny adres MAC (np. <code>00-11-22-33-44-55</code>).</p>
+                        <p>Rozwiń swój nowy zakres. Kliknij prawym na <strong>Reservations (Zastrzeżenia)</strong> -> <strong>New Reservation (Nowe zastrzeżenie)...</strong></p>
+                        <p>Reservation name (Nazwa): <code>Komputer_Dyrektora</code>. IP address: <code>192.168.1.110</code>. MAC address: wpisz dowolny adres MAC (np. <code>00-11-22-33-44-55</code>).</p>
                     </li>
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera (Wymuszanie DHCP):</strong> Jeśli stacja robocza nie chce pobrać nowego adresu, otwórz na niej CMD i wpisz kolejno: <br>
+                        <code>ipconfig /release</code> (oddaje stary adres)<br>
+                        <code>ipconfig /renew</code> (prosi o nowy adres)
+                    </div>
                 </ul>
 
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">🔄</div>
-                    <div class="conclusion-text">
-                        <strong>Sprawdź się:</strong>
-                        Wejdź na stację roboczą Windows 10. Zmień ustawienia karty sieciowej na "Uzyskaj adres IP automatycznie". Otwórz CMD i wpisz <code>ipconfig /all</code>. Powinieneś zobaczyć adres z puli .100-.150!
-                    </div>
+                <div class="exam-verify-box">
+                    <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
+                    <p>Egzaminator musi widzieć, że stacja robocza faktycznie pobrała adres z Twojego serwera:</p>
+                    <ol>
+                        <li>Na stacji roboczej (Windows 10) otwórz CMD i wpisz <code>ipconfig /all</code>.</li>
+                        <li>Zrób zrzut ekranu tak, aby było widać linijki: <strong>IPv4 Address</strong> oraz <strong>DHCP Server</strong> (musi tam być IP Twojego serwera!).</li>
+                        <li>Wklej zrzut do pliku tekstowego na pendrive.</li>
+                    </ol>
                 </div>
             </div>
         </div>

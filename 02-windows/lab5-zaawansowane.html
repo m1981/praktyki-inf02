@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab 5: Zaawansowana Infrastruktura</title>
     <link rel="stylesheet" href="../common.css">
+    <style>
+        .pitfall-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
+        .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+    </style>
 </head>
 <body>
     <header>
@@ -21,15 +27,19 @@
             <div class="lab-body">
                 <ul class="task-list">
                     <li><strong>Krok 1: Dwie karty sieciowe</strong>
-                        <p>Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em>. Pierwsza karta zostaje na <em>Sieć wewnętrzna</em>.</p>
+                        <p>Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em> (to będzie nasz WAN). Pierwsza karta zostaje na <em>Internal Network (Sieć wewnętrzna)</em> (to nasz LAN).</p>
                     </li>
                     <li><strong>Krok 2: Instalacja roli RRAS</strong>
-                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Dodaj role i funkcje <span class="gui-arrow">➔</span> Dostęp zdalny (Remote Access) <span class="gui-arrow">➔</span> Routing</div>
+                        <div class="gui-path">Server Manager (Menedżer serwera) <span class="gui-arrow">➔</span> Add roles and features (Dodaj role i funkcje) <span class="gui-arrow">➔</span> Remote Access (Dostęp zdalny) <span class="gui-arrow">➔</span> Routing</div>
                     </li>
                     <li><strong>Krok 3: Konfiguracja Translacji Adresów (NAT)</strong>
-                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Routing i dostęp zdalny</div>
-                        <p>Kliknij prawym przyciskiem na nazwę serwera i wybierz <em>"Konfiguruj i włącz routing..."</em>. Wybierz <strong>Translacja adresów sieciowych (NAT)</strong>. Wskaż interfejs publiczny.</p>
+                        <div class="gui-path">Routing and Remote Access (Routing i dostęp zdalny)</div>
+                        <p>Kliknij prawym przyciskiem na nazwę serwera i wybierz <em>"Configure and Enable Routing and Remote Access" (Konfiguruj i włącz routing...)</em>. Wybierz <strong>Network Address Translation (NAT) (Translacja adresów sieciowych (NAT))</strong>.</p>
                     </li>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów (RRAS):</strong> W kreatorze NAT system zapyta, który interfejs jest podłączony do Internetu (Publiczny). Jeśli wskażesz kartę LAN zamiast WAN, odetniesz całą sieć od świata! Zawsze nazywaj karty sieciowe w systemie (np. "Karta_LAN", "Karta_WAN") przed konfiguracją RRAS.
+                    </div>
                 </ul>
             </div>
         </div>
@@ -42,9 +52,13 @@
             <div class="lab-body">
                 <ul class="task-list">
                     <li><strong>Krok 1: Zespół kart sieciowych</strong>
-                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Serwer lokalny <span class="gui-arrow">➔</span> Zespół kart interfejsu sieciowego</div>
-                        <p>Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym -> <strong>Dodaj do nowego zespołu</strong>. Nazwij go <code>LAN_Zespol</code>. Tryb: <em>Niezależny od przełącznika</em>.</p>
+                        <div class="gui-path">Server Manager (Menedżer serwera) <span class="gui-arrow">➔</span> Local Server (Serwer lokalny) <span class="gui-arrow">➔</span> NIC Teaming (Zespół kart interfejsu sieciowego)</div>
+                        <p>Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym -> <strong>Add to New Team (Dodaj do nowego zespołu)</strong>. Nazwij go <code>LAN_Zespol</code>. Teaming mode (Tryb): <em>Switch Independent (Niezależny od przełącznika)</em>.</p>
                     </li>
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera:</strong> Po utworzeniu zespołu (Team), Twoje dwie fizyczne karty tracą swoje adresy IP! Musisz wejść w ustawienia sieciowe (ncpa.cpl) i nadać adres IP nowej, wirtualnej karcie o nazwie <code>LAN_Zespol</code>.
+                    </div>
                 </ul>
             </div>
         </div>
@@ -57,13 +71,23 @@
             <div class="lab-body">
                 <ul class="task-list">
                     <li><strong>Krok 1: Instalacja portu TCP/IP</strong>
-                        <div class="gui-path">Panel Sterowania <span class="gui-arrow">➔</span> Urządzenia i drukarki <span class="gui-arrow">➔</span> Dodaj drukarkę</div>
-                        <p>Wybierz "Dodaj drukarkę używając adresu TCP/IP". Wpisz adres, np. <code>192.168.1.200</code>. Zainstaluj sterownik Generic / Text Only.</p>
+                        <div class="gui-path">Control Panel (Panel Sterowania) <span class="gui-arrow">➔</span> Devices and Printers (Urządzenia i drukarki) <span class="gui-arrow">➔</span> Add a printer (Dodaj drukarkę)</div>
+                        <p>Wybierz "Add a printer using a TCP/IP address or hostname" (Dodaj drukarkę używając adresu TCP/IP). Wpisz adres, np. <code>192.168.1.200</code>. Zainstaluj sterownik Generic / Text Only.</p>
                     </li>
                     <li><strong>Krok 2: Udostępnianie i restrykcje</strong>
-                        <p>Wejdź we właściwości nowej drukarki. W zakładce <strong>Zaawansowane</strong> zmień opcję na <strong>Dostępna od 08:00 do 15:00</strong>.</p>
+                        <p>Wejdź we właściwości nowej drukarki. W zakładce <strong>Advanced (Zaawansowane)</strong> zmień opcję na <strong>Available from (Dostępna od) 08:00 to 15:00</strong>.</p>
                     </li>
                 </ul>
+
+                <div class="exam-verify-box">
+                    <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
+                    <p>W przypadku zaawansowanych usług, egzaminator wymaga twardych dowodów:</p>
+                    <ol>
+                        <li><strong>RRAS:</strong> Zrób zrzut ekranu ze stacji roboczej (Windows 10), na którym widać udany <code>ping 8.8.8.8</code> (dowód, że NAT działa).</li>
+                        <li><strong>NIC Teaming:</strong> Zrób zrzut okna Menedżera Serwera, gdzie widać Twój zespół kart ze statusem <strong>OK</strong> na zielono.</li>
+                        <li><strong>Drukarka:</strong> Zrób zrzut zakładki "Zaawansowane" we właściwościach drukarki, pokazujący ustawione godziny dostępności.</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </main>

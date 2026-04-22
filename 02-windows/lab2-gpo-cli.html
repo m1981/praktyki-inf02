@@ -32,8 +32,8 @@
                 </div>
                 <ul class="task-list">
                     <li><strong>Krok 1: Struktura (GUI)</strong>
-                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Użytkownicy i komputery usługi Active Directory (dsa.msc)</div>
-                        <p>Utwórz nową Jednostkę Organizacyjną (OU) o nazwie <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We właściwościach konta zaznacz opcję <strong>"Hasło nigdy nie wygasa"</strong>.</p>
+                        <div class="gui-path">Tools (Narzędzia) <span class="gui-arrow">➔</span> Active Directory Users and Computers (Użytkownicy i komputery usługi Active Directory)</div>
+                        <p>Utwórz nową Jednostkę Organizacyjną (OU) o nazwie <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We właściwościach konta zaznacz opcję <strong>"Password never expires" (Hasło nigdy nie wygasa)</strong>.</p>
                     </li>
 
                     <div class="pitfall-box">
@@ -42,6 +42,11 @@
 
                     <li><strong>Krok 2: Magia CLI (Wiersz poleceń)</strong>
                         <p>Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
+
+                        <div class="golden-rule-box" style="border-left-color: #6c5ce7; background: #f3f0ff;">
+                            <strong>💡 Mrugnięcie okiem do inżyniera:</strong> Pamiętasz "Sekret Inżyniera" z teorii? Właśnie teraz używamy komend <code>net</code> (papierowy notes), bo tak każe CKE. W prawdziwej pracy użylibyśmy komendy PowerShell: <code>New-ADUser</code>. Ale ciii... wpisujemy to, co daje punkty na egzaminie!
+                        </div>
+
                         <div class="cli-block">
 <span class="cli-comment"># 1. Utworzenie grupy lokalnej "Uczniowie"</span>
 net localgroup Uczniowie /add
@@ -85,8 +90,8 @@ net localgroup Uczniowie uczen1 /add</div>
 
                 <ul class="task-list">
                     <li><strong>Krok 1: Uruchomienie konsoli GPO</strong>
-                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Zarządzanie zasadami grupy (gpmc.msc)</div>
-                        <p>Rozwiń drzewo: Las -> Domeny -> zs1.local. Znajdź utworzoną wcześniej jednostkę organizacyjną (OU) o nazwie <code>Pracownia_32</code>.</p>
+                        <div class="gui-path">Tools (Narzędzia) <span class="gui-arrow">➔</span> Group Policy Management (Zarządzanie zasadami grupy)</div>
+                        <p>Rozwiń drzewo: Forest (Las) -> Domains (Domeny) -> zs1.local. Znajdź utworzoną wcześniej jednostkę organizacyjną (OU) o nazwie <code>Pracownia_32</code>.</p>
                     </li>
 
                     <div class="pitfall-box">
@@ -94,13 +99,13 @@ net localgroup Uczniowie uczen1 /add</div>
                     </div>
 
                     <li><strong>Krok 2: Tworzenie i przypinanie GPO</strong>
-                        <p>Kliknij prawym przyciskiem myszy na OU <code>Pracownia_32</code> i wybierz: <strong>Utwórz obiekt zasad grupy w tej domenie i umieść tu do niego łącze...</strong>. Nazwij go <code>Blokada_Notatnika</code>.</p>
+                        <p>Kliknij prawym przyciskiem myszy na OU <code>Pracownia_32</code> i wybierz: <strong>Create a GPO in this domain, and Link it here... (Utwórz obiekt zasad grupy w tej domenie i umieść tu do niego łącze...)</strong>. Nazwij go <code>Blokada_Notatnika</code>.</p>
                     </li>
                     <li><strong>Krok 3: Edycja Zasad (Blokowanie programu)</strong>
-                        <p>Kliknij prawym na nowo utworzony obiekt <code>Blokada_Notatnika</code> i wybierz <strong>Edytuj</strong>.</p>
-                        <div class="gui-path">Konfiguracja użytkownika <span class="gui-arrow">➔</span> Zasady <span class="gui-arrow">➔</span> Ustawienia systemu Windows <span class="gui-arrow">➔</span> Ustawienia zabezpieczeń <span class="gui-arrow">➔</span> Zasady ograniczeń oprogramowania</div>
-                        <p>Kliknij prawym na "Zasady ograniczeń oprogramowania" i wybierz <strong>Nowe zasady...</strong>. Następnie wejdź w folder <em>Reguły dodatkowe</em>. Kliknij prawym w puste pole -> <strong>Nowa reguła ścieżki...</strong></p>
-                        <p>W polu ścieżka wpisz: <code>notepad.exe</code>. Poziom zabezpieczeń: <strong>Niedozwolone</strong>.</p>
+                        <p>Kliknij prawym na nowo utworzony obiekt <code>Blokada_Notatnika</code> i wybierz <strong>Edit (Edytuj)</strong>.</p>
+                        <div class="gui-path">User Configuration (Konfiguracja użytkownika) <span class="gui-arrow">➔</span> Policies (Zasady) <span class="gui-arrow">➔</span> Windows Settings (Ustawienia systemu Windows) <span class="gui-arrow">➔</span> Security Settings (Ustawienia zabezpieczeń) <span class="gui-arrow">➔</span> Software Restriction Policies (Zasady ograniczeń oprogramowania)</div>
+                        <p>Kliknij prawym na "Software Restriction Policies" i wybierz <strong>New Software Restriction Policies (Nowe zasady...)</strong>. Następnie wejdź w folder <em>Additional Rules (Reguły dodatkowe)</em>. Kliknij prawym w puste pole -> <strong>New Path Rule... (Nowa reguła ścieżki...)</strong></p>
+                        <p>W polu ścieżka wpisz: <code>notepad.exe</code>. Security level (Poziom zabezpieczeń): <strong>Disallowed (Niedozwolone)</strong>.</p>
                     </li>
 
                     <div class="golden-rule-box">

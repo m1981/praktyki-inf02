@@ -35,13 +35,13 @@
 
                 <ul class="task-list">
                     <li><strong>Krok 1: Instalacja roli AD DS</strong>
-                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Dodaj role i funkcje <span class="gui-arrow">➔</span> Usługi domenowe Active Directory</div>
+                        <div class="gui-path">Server Manager (Menedżer serwera) <span class="gui-arrow">➔</span> Add roles and features (Dodaj role i funkcje) <span class="gui-arrow">➔</span> Active Directory Domain Services (Usługi domenowe Active Directory)</div>
                     </li>
                     <li><strong>Krok 2: Promowanie serwera</strong>
-                        <p>Po instalacji kliknij żółty trójkąt ostrzegawczy w Menedżerze serwera i wybierz "Podnieś poziom tego serwera do poziomu kontrolera domeny".</p>
+                        <p>Po instalacji kliknij żółty trójkąt ostrzegawczy w Menedżerze serwera i wybierz <strong>"Promote this server to a domain controller" (Podnieś poziom tego serwera do poziomu kontrolera domeny)</strong>.</p>
                         <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Wybierz: <strong>Dodaj nowy las</strong>.</li>
-                            <li>Nazwa domeny głównej: <code>zs1.local</code></li>
+                            <li>Wybierz: <strong>Add a new forest (Dodaj nowy las)</strong>.</li>
+                            <li>Root domain name (Nazwa domeny głównej): <code>zs1.local</code></li>
                             <li>Ustaw hasło przywracania usług katalogowych (DSRM) na <code>Zaq12345!</code></li>
                         </ul>
                     </li>
@@ -56,7 +56,7 @@
 
                     <li><strong>Krok 3: Podłączenie stacji roboczej (Windows 10)</strong>
                         <p>Uruchom drugą maszynę wirtualną (Windows 10). Upewnij się, że w ustawieniach karty sieciowej ma wpisany adres IP serwera jako swój serwer DNS!</p>
-                        <div class="gui-path">Właściwości systemu <span class="gui-arrow">➔</span> Zmień nazwę komputera / Domenę <span class="gui-arrow">➔</span> Domena: zs1.local</div>
+                        <div class="gui-path">System Properties (Właściwości systemu) <span class="gui-arrow">➔</span> Change settings (Zmień ustawienia) <span class="gui-arrow">➔</span> Domain (Domena): zs1.local</div>
                         <p>Podaj login i hasło Administratora domeny, aby autoryzować podłączenie.</p>
                     </li>
                 </ul>
