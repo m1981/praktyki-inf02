@@ -11,6 +11,17 @@
         .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
         .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
         .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+
+        /* Style dla akordeonu z referencjami do egzaminów */
+        .exam-reference { background: #fdfbf7; border: 1px solid #e0d6ff; border-radius: 6px; margin: 15px 0; overflow: hidden; }
+        .exam-reference summary { background: #e0d6ff; color: #4a3b9c; padding: 10px 15px; font-weight: bold; cursor: pointer; list-style: none; display: flex; align-items: center; }
+        .exam-reference summary::before { content: '📄'; margin-right: 10px; }
+        .exam-reference summary:hover { background: #d1c4e9; }
+        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
+        .exam-content blockquote { border-left: 4px solid #a29bfe; margin: 10px 0; padding-left: 15px; background: #fff; padding-top: 10px; padding-bottom: 10px; }
+        .exam-content a { color: #0984e3; text-decoration: none; font-weight: bold; }
+        .exam-content a:hover { text-decoration: underline; }
+        .exam-content hr { border: 0; border-top: 1px dashed #dfe6e9; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -32,10 +43,39 @@
                 <ul class="task-list">
                     <li><strong>Krok 1: Ukryty udział dla profili</strong>
                         <p>Utwórz na dysku C: folder <code>Profile</code>. Udostępnij go w sieci, ale dodaj znak <code>$</code> na końcu nazwy udziału (<code>Profile$</code>). Dzięki temu będzie niewidoczny dla wścibskich uczniów.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Kontekst: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...) utwórz w domenie jednostkę organizacyjną Serwisanci (...) w jednostce organizacyjnej Serwisanci utwórz konto użytkownika Adam Abacki (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ utwórz folder C:\Profile i udostępnij go pod nazwą profile$<br>
+                                    ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko dla Wszyscy – Pełna kontrola</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                     <li><strong>Krok 2: Profil Mobilny (Roaming Profile)</strong>
                         <div class="gui-path">Properties (Właściwości) użytkownika 'maciek' w AD <span class="gui-arrow">➔</span> Profile (Profil) tab <span class="gui-arrow">➔</span> Profile path (Ścieżka profilu)</div>
                         <p>Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>. Zaloguj się jako maciek na Windows 10, stwórz plik na pulpicie, wyloguj się i sprawdź na serwerze, czy plik się zsynchronizował!</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Kontekst: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ dla użytkownika Adam Abacki ustaw ścieżkę profilu mobilnego, który będzie zlokalizowany w udostępnionym folderze</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="golden-rule-box">
@@ -49,6 +89,30 @@
                             <li>Users (Użytkownicy): <strong>Read & execute (Odczyt i wykonywanie)</strong></li>
                         </ul>
                         <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Properties (Właściwości) pliku -> Advanced (Zaawansowane) -> <strong>Encrypt contents to secure data (Szyfruj zawartość, aby zabezpieczyć dane)</strong>). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin 1 (Uprawnienia NTFS):</strong> Czerwiec 2022 (INF.02-01-22.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2022-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Kontekst: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...) utwórz folder C:\www (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ ustaw zabezpieczenia utworzonego folderu dla:<br>
+                                    ‒ Administratorzy – Pełna kontrola<br>
+                                    ‒ Użytkownicy – Odczyt i wykonywanie</p>
+                                </blockquote>
+                                <hr>
+                                <p><strong>Egzamin 2 (Szyfrowanie EFS):</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Kontekst: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...) utwórz na dysku C:\ folder o nazwie PLIKI (...) skopiuj do folderu C:\PLIKI plik tapeta.jpg (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="pitfall-box">
