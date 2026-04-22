@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4.5: Serwer DHCP</title>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+    <header>
+        <h1>💻 Laboratoria: Windows Server</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">Automatyzacja Adresacji IP</p>
+    </header>
+
+    <main class="lab-container">
+        <div class="lab-card">
+            <div class="lab-header">
+                <h3>Lab 4.5: Automatyzacja IP (Serwer DHCP)</h3>
+                <span class="time-badge">Czas: 45 min</span>
+            </div>
+            <div class="lab-body">
+                <div class="goal-box">
+                    Cel: Uruchomienie serwera DHCP na Windows Serverze, utworzenie puli adresów oraz rezerwacji dla konkretnego komputera.
+                </div>
+
+                <details class="theory-block">
+                    <summary>Jak działa DHCP (Proces DORA)?</summary>
+                    <div class="theory-content">
+                        <p><strong>DHCP (Dynamic Host Configuration Protocol)</strong> to usługa, która automatycznie rozdaje adresy IP komputerom w sieci. Proces ten nazywa się <strong>DORA</strong>:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>D (Discover):</strong> Komputer krzyczy: <em>"Halo! Potrzebuję adresu IP!"</em></li>
+                            <li><strong>O (Offer):</strong> Serwer odpowiada: <em>"Mam wolny adres 192.168.1.50."</em></li>
+                            <li><strong>R (Request):</strong> Komputer mówi: <em>"Biorę go! Zarezerwuj go dla mnie."</em></li>
+                            <li><strong>A (Acknowledge):</strong> Serwer potwierdza: <em>"Zapisane. Adres jest twój."</em></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <ul class="task-list">
+                    <li><strong>Krok 1: Instalacja roli DHCP</strong>
+                        <div class="gui-path">Menedżer serwera <span class="gui-arrow">➔</span> Dodaj role i funkcje <span class="gui-arrow">➔</span> Serwer DHCP</div>
+                        <p>Po instalacji kliknij żółty trójkąt i wybierz <em>"Zakończ konfigurację usługi DHCP"</em> (autoryzacja w domenie).</p>
+                    </li>
+                    <li><strong>Krok 2: Tworzenie Zakresu (Puli adresów)</strong>
+                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> DHCP (dhcpmgmt.msc)</div>
+                        <p>Rozwiń nazwę serwera -> IPv4. Kliknij prawym na IPv4 i wybierz <strong>Nowy zakres...</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li>Nazwa: <code>Siec_Szkolna</code></li>
+                            <li>Początkowy adres IP: <code>192.168.1.100</code></li>
+                            <li>Końcowy adres IP: <code>192.168.1.150</code></li>
+                            <li>Maska podsieci: <code>255.255.255.0</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Krok 3: Opcje Zakresu (Brama i DNS)</strong>
+                        <p>W kreatorze zostaniesz zapytany o opcje DHCP. To bardzo ważne!</p>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li><strong>Router (Brama domyślna):</strong> Wpisz adres IP Twojego routera.</li>
+                            <li><strong>Serwer DNS:</strong> Wpisz adres IP Twojego Windows Servera.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Krok 4: Rezerwacja adresu IP</strong>
+                        <p>Rozwiń swój nowy zakres. Kliknij prawym na <strong>Zastrzeżenia (Reservations)</strong> -> <strong>Nowe zastrzeżenie...</strong></p>
+                        <p>Nazwa: <code>Komputer_Dyrektora</code>. Adres IP: <code>192.168.1.110</code>. Adres MAC: wpisz dowolny adres MAC (np. <code>00-11-22-33-44-55</code>).</p>
+                    </li>
+                </ul>
+
+                <div class="conclusion-box">
+                    <div class="conclusion-icon">🔄</div>
+                    <div class="conclusion-text">
+                        <strong>Sprawdź się:</strong>
+                        Wejdź na stację roboczą Windows 10. Zmień ustawienia karty sieciowej na "Uzyskaj adres IP automatycznie". Otwórz CMD i wpisz <code>ipconfig /all</code>. Powinieneś zobaczyć adres z puli .100-.150!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="course-nav">
+        <a href="lab4-uslugi.html" class="course-btn">⬅️ Poprzedni: Lab 4 (DNS i IIS)</a>
+        <a href="lab5-zaawansowane.html" class="course-btn next">Następny: Lab 5 (Zaawansowane) ➡️</a>
+    </div>
+    <script src="../menu.js"></script>
+</body>
+</html>
