@@ -6,22 +6,7 @@
     <title>Lab 3: Pliki i Uprawnienia</title>
     <link rel="stylesheet" href="../common.css">
     <style>
-        /* Dodatkowe style dla bloków trenerskich i egzaminacyjnych */
-        .pitfall-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
-        .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
-        .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
-        .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
 
-        /* Style dla akordeonu z referencjami do egzaminów */
-        .exam-reference { background: #fdfbf7; border: 1px solid #e0d6ff; border-radius: 6px; margin: 15px 0; overflow: hidden; }
-        .exam-reference summary { background: #e0d6ff; color: #4a3b9c; padding: 10px 15px; font-weight: bold; cursor: pointer; list-style: none; display: flex; align-items: center; }
-        .exam-reference summary::before { content: '📄'; margin-right: 10px; }
-        .exam-reference summary:hover { background: #d1c4e9; }
-        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
-        .exam-content blockquote { border-left: 4px solid #a29bfe; margin: 10px 0; padding-left: 15px; background: #fff; padding-top: 10px; padding-bottom: 10px; }
-        .exam-content a { color: #0984e3; text-decoration: none; font-weight: bold; }
-        .exam-content a:hover { text-decoration: underline; }
-        .exam-content hr { border: 0; border-top: 1px dashed #dfe6e9; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -51,7 +36,7 @@
                                 <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
                                 <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
                                 <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...) utwórz w domenie jednostkę organizacyjną Serwisanci (...) w jednostce organizacyjnej Serwisanci utwórz konto użytkownika Adam Abacki (...)</em></p>
+                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
                                     <p><strong>Treść zadania:</strong><br>
                                     ‒ utwórz folder C:\Profile i udostępnij go pod nazwą profile$<br>
                                     ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko dla Wszyscy – Pełna kontrola</p>
@@ -90,24 +75,24 @@
                         </ul>
                         <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Properties (Właściwości) pliku -> Advanced (Zaawansowane) -> <strong>Encrypt contents to secure data (Szyfruj zawartość, aby zabezpieczyć dane)</strong>). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
 
-                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <!-- REFERENCJA EGZAMINACYJNA (Dwa arkusze!) -->
                         <details class="exam-reference">
-                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <summary>   Zobacz oryginalne zadania z egzaminów</summary>
                             <div class="exam-content">
-                                <p><strong>Egzamin 1 (Uprawnienia NTFS):</strong> Czerwiec 2022 (INF.02-01-22.06-SG)</p>
+                                <p><strong>Egzamin (Uprawnienia NTFS):</strong> Czerwiec 2022 (INF.02-01-22.06-SG)</p>
                                 <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2022-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
                                 <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...) utwórz folder C:\www (...)</em></p>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
                                     <p><strong>Treść zadania:</strong><br>
                                     ‒ ustaw zabezpieczenia utworzonego folderu dla:<br>
                                     ‒ Administratorzy – Pełna kontrola<br>
                                     ‒ Użytkownicy – Odczyt i wykonywanie</p>
                                 </blockquote>
-                                <hr>
-                                <p><strong>Egzamin 2 (Szyfrowanie EFS):</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <hr style="border: 0; border-top: 1px solid #dfe6e9; margin: 15px 0;">
+                                <p><strong>Egzamin (Szyfrowanie EFS):</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
                                 <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
                                 <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...) utwórz na dysku C:\ folder o nazwie PLIKI (...) skopiuj do folderu C:\PLIKI plik tapeta.jpg (...)</em></p>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em></p>
                                     <p><strong>Treść zadania:</strong><br>
                                     ‒ zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku</p>
                                 </blockquote>
