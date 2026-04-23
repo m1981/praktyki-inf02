@@ -17,14 +17,14 @@
         <h2 style="text-align: center; margin-bottom: 10px;">Lab 3: DHCP, DNS, Routing i NAT</h2>
         
         <!-- FAZA 1: DHCP -->
-        <div class="lab-card border-success">
+        <div class="lab-card" style="border-left-color: var(--success-color);">
             <div class="lab-header">
                 <h3>Faza 1: Serwer DHCP (Tryb Graficzny)</h3>
-                <div class="time-badge">⏱️ Czas: 45 minut</div>
+                <span class="time-badge">⏱️ Czas: 45 minut</span>
             </div>
             <div class="lab-body">
                 <div class="goal-box"><strong>Cel:</strong> Skonfigurowanie dedykowanego serwera, aby automatycznie rozdawał adresy IP komputerom w dziale IT (VLAN 10). Koniec z ręcznym wpisywaniem!</div>
-                
+
                 <div class="topology-box">
                     <div class="tree">
                         <ul>
@@ -84,14 +84,14 @@
         </div>
 
         <!-- FAZA 2: ROUTING -->
-        <div class="lab-card border-l3">
+        <div class="lab-card" style="border-left-color: var(--l3-color);">
             <div class="lab-header">
                 <h3>Faza 2: Wyjście w Świat (Routing w GUI)</h3>
-                <div class="time-badge">⏱️ Czas: 1 godzina 15 minut</div>
+                <span class="time-badge">⏱️ Czas: 1 godzina 15 minut</span>
             </div>
             <div class="lab-body">
                 <div class="goal-box"><strong>Cel:</strong> Podłączenie naszej firmy do Dostawcy Internetu (ISP) i wyklikanie tras tak, aby pakiety trafiały do serwera Google (8.8.8.8) i WRACAŁY.</div>
-                
+
                 <div class="topology-box">
                     <div class="tree">
                         <ul>
@@ -137,7 +137,7 @@
                         </ul>
                     </li>
                     <li><strong>Konfiguracja Serwera Google:</strong> Wejdź w jego zakładkę Desktop -> IP Config. Ustaw IP: <code>8.8.8.8</code>, Maska <code>255.255.255.0</code>, Brama <code>8.8.8.1</code>.</li>
-                    
+
                     <li><strong>Routing Domyślny (Nasz Router):</strong> Mówimy routerowi: <em>"Wszystko, czego nie znasz, wysyłaj do ISP"</em>.
                         <div class="gui-path">🖱️ Kliknij Nasz Router <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej sekcja Routing: <strong>Static</strong></div>
                         Wpisz Network: <code>0.0.0.0</code>, Mask: <code>0.0.0.0</code>, Next Hop: <code>200.0.0.2</code>. Kliknij przycisk <strong>Add</strong>.
@@ -160,14 +160,14 @@
         </div>
 
         <!-- FAZA 3: DNS -->
-        <div class="lab-card border-success">
+        <div class="lab-card" style="border-left-color: var(--success-color);">
             <div class="lab-header">
                 <h3>Faza 3: DNS (Książka Telefoniczna)</h3>
-                <div class="time-badge">⏱️ Czas: 30 minut</div>
+                <span class="time-badge">⏱️ Czas: 30 minut</span>
             </div>
             <div class="lab-body">
                 <div class="goal-box"><strong>Cel:</strong> Sprawić, by użytkownicy mogli wpisywać w przeglądarce <code>www.google.com</code> zamiast trudnego do zapamiętania adresu IP <code>8.8.8.8</code>.</div>
-                
+
                 <ol class="task-list">
                     <li><strong>Baza:</strong> Rozbudowujemy topologię z Fazy 2. Użyjemy Serwera Google (8.8.8.8) również jako serwera DNS.</li>
                     <li><strong>Konfiguracja usługi DNS:</strong> Uczymy serwer, jak tłumaczyć nazwy na IP.
@@ -196,14 +196,14 @@
         </div>
 
         <!-- FAZA 4: NAT -->
-        <div class="lab-card border-nat">
+        <div class="lab-card" style="border-left-color: var(--nat-color);">
             <div class="lab-header">
                 <h3>Faza 4: NAT (Magiczna Peleryna)</h3>
-                <div class="time-badge">⏱️ Czas: 1 godzina</div>
+                <span class="time-badge">⏱️ Czas: 1 godzina</span>
             </div>
             <div class="lab-body">
                 <div class="goal-box"><strong>Cel:</strong> Ukrycie całej naszej prywatnej sieci (192.168.x.x) pod jednym publicznym adresem IP. Tak działa każdy domowy router!</div>
-                
+
                 <div class="topology-box">
                     <div class="tree">
                         <ul>
@@ -236,7 +236,7 @@
                 </div>
 
                 <ol class="task-list">
-                    <li><strong>Symulacja prawdziwego świata:</strong> W Fazie 2 dodaliśmy na routerze ISP trasę powrotną do naszej sieci. W prawdziwym świecie ISP tego NIE ZROBI (adresy 192.168.x.x są zablokowane w internecie). 
+                    <li><strong>Symulacja prawdziwego świata:</strong> W Fazie 2 dodaliśmy na routerze ISP trasę powrotną do naszej sieci. W prawdziwym świecie ISP tego NIE ZROBI (adresy 192.168.x.x są zablokowane w internecie).
                         <div class="gui-path">🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> <strong>Static</strong></div>
                         Zaznacz trasę <code>192.168.10.0</code> i kliknij <strong>Remove</strong>. Zrób to samo dla <code>192.168.20.0</code>. <br>
                         <em>Spróbuj teraz spingować 8.8.8.8 z PC1. Przestało działać! Pakiet tam dociera, ale nie potrafi wrócić.</em>
@@ -279,7 +279,7 @@ ip nat inside source list 1 interface gigabitEthernet 0/1 overload
 </div>
 
                 <ol class="task-list" start="5">
-                    <li><strong>Wielki Test:</strong> Wejdź na PC1 i ponownie spinguj <code>8.8.8.8</code>. Działa! 
+                    <li><strong>Wielki Test:</strong> Wejdź na PC1 i ponownie spinguj <code>8.8.8.8</code>. Działa!
                     <li><strong>Zajrzyj pod maskę:</strong> Na Naszym Routerze w CLI wpisz komendę: <br><code>show ip nat translations</code>. Zobaczysz tabelkę, w której router zapisuje, jak podmienił prywatny adres PC1 na swój publiczny adres 200.0.0.1!</li>
                 </ol>
                 <div class="conclusion-box">
