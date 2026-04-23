@@ -1,304 +1,461 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 3: DHCP, DNS i NAT</title>
-    <link rel="stylesheet" href="../common.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 3: DHCP, DNS i NAT</title>
+        <link rel="stylesheet" href="../common.css" />
+    </head>
+    <body>
+        <header>
+            <h1>💻 Laboratorium Packet Tracer</h1>
+            <p style="color: var(--text-muted)">
+                Automatyzacja i prawdziwy Internet - kompletny przewodnik
+            </p>
+        </header>
 
-    <header>
-        <h1>💻 Laboratorium Packet Tracer</h1>
-        <p style="color: var(--text-muted);">Automatyzacja i prawdziwy Internet - kompletny przewodnik</p>
-    </header>
+        <main class="lab-container">
+            <h2 style="text-align: center; margin-bottom: 10px">Lab 3: DHCP, DNS, Routing i NAT</h2>
 
-    <main class="lab-container">
-        <h2 style="text-align: center; margin-bottom: 10px;">Lab 3: DHCP, DNS, Routing i NAT</h2>
-        
-        <!-- FAZA 1: DHCP -->
-        <div class="lab-card" style="border-left-color: var(--success-color);">
-            <div class="lab-header">
-                <h3>Faza 1: Serwer DHCP (Tryb Graficzny)</h3>
-                <span class="time-badge">⏱️ Czas: 45 minut</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box"><strong>Cel:</strong> Skonfigurowanie dedykowanego serwera, aby automatycznie rozdawał adresy IP komputerom w dziale IT (VLAN 10). Koniec z ręcznym wpisywaniem!</div>
+            <!-- FAZA 1: DHCP -->
+            <div class="lab-card" style="border-left-color: var(--success-color)">
+                <div class="lab-header">
+                    <h3>Faza 1: Serwer DHCP (Tryb Graficzny)</h3>
+                    <span class="time-badge">⏱️ Czas: 45 minut</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        <strong>Cel:</strong> Skonfigurowanie dedykowanego serwera, aby
+                        automatycznie rozdawał adresy IP komputerom w dziale IT (VLAN 10). Koniec z
+                        ręcznym wpisywaniem!
+                    </div>
 
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node switch">
-                                    <span class="node-icon">🖧</span>
-                                    <span class="node-name">Switch 1</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node vlan10">
-                                            <span class="node-icon">👨‍💻</span>
-                                            <span class="node-name">PC1 (IT)</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="node server">
-                                            <span class="node-port">F0/3</span>
-                                            <span class="node-icon">🗄️</span>
-                                            <span class="node-name">Serwer DHCP</span>
-                                            <span class="node-ip">192.168.10.2</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                    <div class="topology-box">
+                        <div class="tree">
+                            <ul>
+                                <li>
+                                    <div class="node switch">
+                                        <span class="node-icon">🖧</span>
+                                        <span class="node-name">Switch 1</span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <div class="node vlan10">
+                                                <span class="node-icon">👨‍💻</span>
+                                                <span class="node-name">PC1 (IT)</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="node server">
+                                                <span class="node-port">F0/3</span>
+                                                <span class="node-icon">🗄️</span>
+                                                <span class="node-name">Serwer DHCP</span>
+                                                <span class="node-ip">192.168.10.2</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ol class="task-list">
+                        <li>
+                            <strong>Baza:</strong> Używamy topologii z Lab 2. Dodaj urządzenie
+                            <strong>Server-PT</strong> i podłącz je kablem do portu
+                            <code>FastEthernet0/3</code> na Switchu (ten port musi być w VLAN 10!).
+                        </li>
+                        <li>
+                            <strong>Adres IP Serwera:</strong> Serwer musi mieć stały adres, żeby
+                            komputery mogły go znaleźć.
+                            <div class="gui-path">
+                                🖱️ Kliknij Serwer <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Desktop</strong> <span class="gui-arrow">➔</span>
+                                <strong>IP Configuration</strong>
+                            </div>
+                            Ustaw: IP <code>192.168.10.2</code>, Maska <code>255.255.255.0</code>,
+                            Default Gateway <code>192.168.10.1</code>.
+                        </li>
+                        <li>
+                            <strong>Konfiguracja usługi DHCP:</strong> Włączamy rozdawanie adresów.
+                            <div class="gui-path">
+                                🖱️ Kliknij Serwer <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Services</strong> <span class="gui-arrow">➔</span> Po lewej
+                                wybierz <strong>DHCP</strong>
+                            </div>
+                            <ul>
+                                <li>Zaznacz Service: <strong>On</strong></li>
+                                <li>Default Gateway: wpisz <code>192.168.10.1</code></li>
+                                <li>
+                                    Start IP Address: zmień końcówkę na <code>100</code> (czyli
+                                    192.168.10.100)
+                                </li>
+                                <li>Kliknij przycisk <strong>Save</strong> (zapisz pulę).</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Testowanie:</strong> Wejdź na PC1 (Dział IT).
+                            <div class="gui-path">
+                                🖱️ Kliknij PC1 <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Desktop</strong> <span class="gui-arrow">➔</span>
+                                <strong>IP Configuration</strong>
+                            </div>
+                            Zmień kropkę ze <em>Static</em> na <em>DHCP</em>. Komputer powinien
+                            błyskawicznie pobrać adres <code>192.168.10.100</code>!
+                        </li>
+                    </ol>
+                    <div class="conclusion-box">
+                        <div class="conclusion-icon">🤖</div>
+                        <div class="conclusion-text">
+                            <strong>Wniosek:</strong> Serwer DHCP to "urzędnik", który automatycznie
+                            przydziela adresy zamieszkania (IP) nowym komputerom w sieci. Dzięki
+                            temu administrator nie musi biegać od komputera do komputera!
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <ol class="task-list">
-                    <li><strong>Baza:</strong> Używamy topologii z Lab 2. Dodaj urządzenie <strong>Server-PT</strong> i podłącz je kablem do portu <code>FastEthernet0/3</code> na Switchu (ten port musi być w VLAN 10!).</li>
-                    <li><strong>Adres IP Serwera:</strong> Serwer musi mieć stały adres, żeby komputery mogły go znaleźć.
-                        <div class="gui-path">🖱️ Kliknij Serwer <span class="gui-arrow">➔</span> Zakładka <strong>Desktop</strong> <span class="gui-arrow">➔</span> <strong>IP Configuration</strong></div>
-                        Ustaw: IP <code>192.168.10.2</code>, Maska <code>255.255.255.0</code>, Default Gateway <code>192.168.10.1</code>.
-                    </li>
-                    <li><strong>Konfiguracja usługi DHCP:</strong> Włączamy rozdawanie adresów.
-                        <div class="gui-path">🖱️ Kliknij Serwer <span class="gui-arrow">➔</span> Zakładka <strong>Services</strong> <span class="gui-arrow">➔</span> Po lewej wybierz <strong>DHCP</strong></div>
-                        <ul>
-                            <li>Zaznacz Service: <strong>On</strong></li>
-                            <li>Default Gateway: wpisz <code>192.168.10.1</code></li>
-                            <li>Start IP Address: zmień końcówkę na <code>100</code> (czyli 192.168.10.100)</li>
-                            <li>Kliknij przycisk <strong>Save</strong> (zapisz pulę).</li>
-                        </ul>
-                    </li>
-                    <li><strong>Testowanie:</strong> Wejdź na PC1 (Dział IT).
-                        <div class="gui-path">🖱️ Kliknij PC1 <span class="gui-arrow">➔</span> Zakładka <strong>Desktop</strong> <span class="gui-arrow">➔</span> <strong>IP Configuration</strong></div>
-                        Zmień kropkę ze <em>Static</em> na <em>DHCP</em>. Komputer powinien błyskawicznie pobrać adres <code>192.168.10.100</code>!
-                    </li>
-                </ol>
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">🤖</div>
-                    <div class="conclusion-text">
-                        <strong>Wniosek:</strong> Serwer DHCP to "urzędnik", który automatycznie przydziela adresy zamieszkania (IP) nowym komputerom w sieci. Dzięki temu administrator nie musi biegać od komputera do komputera!
+            <!-- FAZA 2: ROUTING -->
+            <div class="lab-card" style="border-left-color: var(--l3-color)">
+                <div class="lab-header">
+                    <h3>Faza 2: Wyjście w Świat (Routing w GUI)</h3>
+                    <span class="time-badge">⏱️ Czas: 1 godzina 15 minut</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        <strong>Cel:</strong> Podłączenie naszej firmy do Dostawcy Internetu (ISP) i
+                        wyklikanie tras tak, aby pakiety trafiały do serwera Google (8.8.8.8) i
+                        WRACAŁY.
+                    </div>
+
+                    <div class="topology-box">
+                        <div class="tree">
+                            <ul>
+                                <li>
+                                    <div class="node isp">
+                                        <span class="node-port">G0/0: 200.0.0.2</span>
+                                        <span class="node-icon">🏢</span>
+                                        <span class="node-name">Router ISP (Dostawca)</span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <div class="node router">
+                                                <span class="node-port">G0/1: 200.0.0.1</span>
+                                                <span class="node-icon">🌐</span>
+                                                <span class="node-name">Nasz Router (Firma)</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="node server">
+                                                <span class="node-port">G0/1: 8.8.8.1</span>
+                                                <span class="node-icon">🌍</span>
+                                                <span class="node-name">Serwer Google</span>
+                                                <span class="node-ip">8.8.8.8</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ol class="task-list">
+                        <li>
+                            <strong>Zadanie:</strong> Dodaj nowy Router (nazwij go ISP) oraz Serwer
+                            (nazwij go Google). Połącz Nasz Router (port G0/1) z Routerem ISP (port
+                            G0/0). Połącz Router ISP (port G0/1) z Serwerem Google.
+                        </li>
+                        <li>
+                            <strong>Włączanie portów i adresacja (Nasz Router):</strong>
+                            <div class="gui-path">
+                                🖱️ Kliknij Nasz Router <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej
+                                <strong>GigabitEthernet0/1</strong>
+                            </div>
+                            Zaznacz <strong>Port Status: On</strong>. Wpisz IP:
+                            <code>200.0.0.1</code>, Maska: <code>255.255.255.252</code>.
+                        </li>
+                        <li>
+                            <strong>Włączanie portów i adresacja (Router ISP):</strong>
+                            <div class="gui-path">
+                                🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Config</strong>
+                            </div>
+                            <ul>
+                                <li>
+                                    Dla <strong>GigabitEthernet0/0</strong>: Port Status On, IP:
+                                    <code>200.0.0.2</code>, Maska: <code>255.255.255.252</code>.
+                                </li>
+                                <li>
+                                    Dla <strong>GigabitEthernet0/1</strong>: Port Status On, IP:
+                                    <code>8.8.8.1</code>, Maska: <code>255.255.255.0</code>.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Konfiguracja Serwera Google:</strong> Wejdź w jego zakładkę
+                            Desktop -> IP Config. Ustaw IP: <code>8.8.8.8</code>, Maska
+                            <code>255.255.255.0</code>, Brama <code>8.8.8.1</code>.
+                        </li>
+
+                        <li>
+                            <strong>Routing Domyślny (Nasz Router):</strong> Mówimy routerowi:
+                            <em>"Wszystko, czego nie znasz, wysyłaj do ISP"</em>.
+                            <div class="gui-path">
+                                🖱️ Kliknij Nasz Router <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej
+                                sekcja Routing: <strong>Static</strong>
+                            </div>
+                            Wpisz Network: <code>0.0.0.0</code>, Mask: <code>0.0.0.0</code>, Next
+                            Hop: <code>200.0.0.2</code>. Kliknij przycisk <strong>Add</strong>.
+                        </li>
+
+                        <li>
+                            <strong>Routing Powrotny (ISP):</strong> Uczymy dostawcę drogi powrotnej
+                            do naszej firmy (do VLAN 10).
+                            <div class="gui-path">
+                                🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej
+                                sekcja Routing: <strong>Static</strong>
+                            </div>
+                            Wpisz Network: <code>192.168.10.0</code>, Mask:
+                            <code>255.255.255.0</code>, Next Hop: <code>200.0.0.1</code>. Kliknij
+                            przycisk <strong>Add</strong>.
+                        </li>
+
+                        <li>
+                            <strong>Wielki Test:</strong> Wejdź na PC1. Otwórz Command Prompt i
+                            wpisz <code>ping 8.8.8.8</code>. Działa! Właśnie podłączyłeś firmę do
+                            Internetu.
+                        </li>
+                    </ol>
+                    <div class="conclusion-box">
+                        <div class="conclusion-icon">🛣️</div>
+                        <div class="conclusion-text">
+                            <strong>Wniosek:</strong> Routing to ulica dwukierunkowa! Trasa domyślna
+                            (<code>0.0.0.0</code>) to genialne narzędzie – wypycha cały nieznany
+                            ruch do dostawcy. Ale pamiętaj: dostawca (ISP) musi mieć wpisane trasy
+                            statyczne, aby wiedzieć, jak odesłać pakiety z powrotem do Twojej sieci
+                            lokalnej.
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- FAZA 3: DNS -->
+            <div class="lab-card" style="border-left-color: var(--success-color)">
+                <div class="lab-header">
+                    <h3>Faza 3: DNS (Książka Telefoniczna)</h3>
+                    <span class="time-badge">⏱️ Czas: 30 minut</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        <strong>Cel:</strong> Sprawić, by użytkownicy mogli wpisywać w przeglądarce
+                        <code>www.google.com</code> zamiast trudnego do zapamiętania adresu IP
+                        <code>8.8.8.8</code>.
+                    </div>
+
+                    <ol class="task-list">
+                        <li>
+                            <strong>Baza:</strong> Rozbudowujemy topologię z Fazy 2. Użyjemy Serwera
+                            Google (8.8.8.8) również jako serwera DNS.
+                        </li>
+                        <li>
+                            <strong>Konfiguracja usługi DNS:</strong> Uczymy serwer, jak tłumaczyć
+                            nazwy na IP.
+                            <div class="gui-path">
+                                🖱️ Kliknij Serwer Google <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Services</strong> <span class="gui-arrow">➔</span> Po lewej
+                                <strong>DNS</strong>
+                            </div>
+                            <ul>
+                                <li>Zaznacz DNS Service: <strong>On</strong></li>
+                                <li>W polu Name wpisz: <code>www.google.com</code></li>
+                                <li>W polu Address wpisz: <code>8.8.8.8</code></li>
+                                <li>Kliknij przycisk <strong>Add</strong>.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Aktualizacja DHCP:</strong> Komputery w naszej firmie muszą
+                            wiedzieć, kogo pytać o nazwy stron!
+                            <div class="gui-path">
+                                🖱️ Kliknij Serwer DHCP (w naszej firmie)
+                                <span class="gui-arrow">➔</span> Zakładka <strong>Services</strong>
+                                <span class="gui-arrow">➔</span> <strong>DHCP</strong>
+                            </div>
+                            W polu <strong>DNS Server</strong> wpisz <code>8.8.8.8</code> i kliknij
+                            <strong>Save</strong>.
+                        </li>
+                        <li>
+                            <strong>Odświeżenie IP na PC:</strong> Wejdź na PC1, przełącz IP na
+                            <em>Static</em> i z powrotem na <em>DHCP</em>. Sprawdź, czy w polu DNS
+                            Server pojawiło się 8.8.8.8.
+                        </li>
+                        <li>
+                            <strong>Wielki Test:</strong> Na PC1 otwórz zakładkę
+                            <strong>Desktop</strong>, wybierz
+                            <strong>Web Browser</strong> (Przeglądarka). W pasku adresu wpisz
+                            <code>www.google.com</code> i wciśnij Enter. Powinna załadować się
+                            strona!
+                        </li>
+                    </ol>
+                    <div class="conclusion-box">
+                        <div class="conclusion-icon">📖</div>
+                        <div class="conclusion-text">
+                            <strong>Wniosek:</strong> DNS to książka telefoniczna internetu.
+                            Komputery komunikują się TYLKO za pomocą adresów IP. Kiedy wpisujesz
+                            nazwę strony, Twój komputer najpierw pyta serwera DNS: "Jaki IP ma
+                            www.google.com?", a dopiero potem wysyła tam właściwe dane.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAZA 4: NAT -->
+            <div class="lab-card" style="border-left-color: var(--nat-color)">
+                <div class="lab-header">
+                    <h3>Faza 4: NAT (Magiczna Peleryna)</h3>
+                    <span class="time-badge">⏱️ Czas: 1 godzina</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        <strong>Cel:</strong> Ukrycie całej naszej prywatnej sieci (192.168.x.x) pod
+                        jednym publicznym adresem IP. Tak działa każdy domowy router!
+                    </div>
+
+                    <div class="topology-box">
+                        <div class="tree">
+                            <ul>
+                                <li>
+                                    <div class="node isp">
+                                        <span class="node-icon">🏢</span>
+                                        <span class="node-name">Internet (ISP)</span>
+                                        <span class="node-ip">Odrzuca prywatne IP!</span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <div class="node nat">
+                                                <span class="node-icon">🎭</span>
+                                                <span class="node-name">Nasz Router (NAT)</span>
+                                                <span class="node-ip"
+                                                    >Tłumaczy 192.168.x.x na 200.0.0.1</span
+                                                >
+                                            </div>
+                                            <ul>
+                                                <li>
+                                                    <div class="node server">
+                                                        <span class="node-icon">🖧</span>
+                                                        <span class="node-name"
+                                                            >Nasza Sieć Prywatna</span
+                                                        >
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ol class="task-list">
+                        <li>
+                            <strong>Symulacja prawdziwego świata:</strong> W Fazie 2 dodaliśmy na
+                            routerze ISP trasę powrotną do naszej sieci. W prawdziwym świecie ISP
+                            tego NIE ZROBI (adresy 192.168.x.x są zablokowane w internecie).
+                            <div class="gui-path">
+                                🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka
+                                <strong>Config</strong> <span class="gui-arrow">➔</span>
+                                <strong>Static</strong>
+                            </div>
+                            Zaznacz trasę <code>192.168.10.0</code> i kliknij
+                            <strong>Remove</strong>. Zrób to samo dla <code>192.168.20.0</code>.
+                            <br />
+                            <em
+                                >Spróbuj teraz spingować 8.8.8.8 z PC1. Przestało działać! Pakiet
+                                tam dociera, ale nie potrafi wrócić.</em
+                            >
+                        </li>
+                        <li>
+                            <strong>Konfiguracja NAT (CLI):</strong> Musimy włączyć NAT na Naszym
+                            Routerze. Zrobimy to w CLI, bo to zadanie dla prawdziwych inżynierów.
+                            Najpierw określamy, który port jest "wewnątrz" firmy, a który "na
+                            zewnątrz".
+                        </li>
+                    </ol>
+
+                    <div class="cli-block">
+                        <span class="cli-comment">! Na Naszym Routerze (Firma):</span>
+                        enable configure terminal
+
+                        <span class="cli-comment">! Port w stronę naszej firmy (Inside)</span>
+                        interface gigabitEthernet 0/0 ip nat inside exit
+
+                        <span class="cli-comment">! Port w stronę Internetu (Outside)</span>
+                        interface gigabitEthernet 0/1 ip nat outside exit
+                    </div>
+
+                    <ol class="task-list" start="3">
+                        <li>
+                            <strong>Lista dostępu (ACL):</strong> Mówimy routerowi, komu pozwalamy
+                            na wyjście do internetu. Pozwolimy wszystkim z naszej sieci.
+                        </li>
+                    </ol>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            >! Tworzymy listę nr 1, która pozwala na wszystko</span
+                        >
+                        access-list 1 permit any
+                    </div>
+
+                    <ol class="task-list" start="4">
+                        <li>
+                            <strong>Uruchomienie magii (PAT / NAT Overload):</strong> Łączymy listę
+                            z portem wyjściowym.
+                        </li>
+                    </ol>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            >! Tłumacz adresy z listy 1 na publiczny adres portu G0/1</span
+                        >
+                        ip nat inside source list 1 interface gigabitEthernet 0/1 overload
+                    </div>
+
+                    <ol class="task-list" start="5">
+                        <li>
+                            <strong>Wielki Test:</strong> Wejdź na PC1 i ponownie spinguj
+                            <code>8.8.8.8</code>. Działa!
+                        </li>
+                        <li>
+                            <strong>Zajrzyj pod maskę:</strong> Na Naszym Routerze w CLI wpisz
+                            komendę: <br /><code>show ip nat translations</code>. Zobaczysz tabelkę,
+                            w której router zapisuje, jak podmienił prywatny adres PC1 na swój
+                            publiczny adres 200.0.0.1!
+                        </li>
+                    </ol>
+                    <div class="conclusion-box">
+                        <div class="conclusion-icon">🎭</div>
+                        <div class="conclusion-text">
+                            <strong>Wniosek:</strong> NAT (Network Address Translation) to tłumacz.
+                            Kiedy PC1 wysyła pakiet do Google, Nasz Router zdejmuje z niego prywatny
+                            adres (192.168.10.100), nakleja swój publiczny (200.0.0.1) i wysyła w
+                            świat. Google odpowiada do routera, a router2 pamięta, kto o to pytał, i
+                            przekazuje odpowiedź do PC1. Dzięki temu cała szkoła/firma może
+                            korzystać z internetu, mając wykupiony tylko JEDEN publiczny adres IP!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- COURSE NAVIGATION -->
+        <div class="course-nav">
+            <a href="lab2-vlany.html" class="course-btn">⬅️ Poprzedni: Lab 2 (VLANy)</a>
+            <a href="index.html" class="course-btn next">Zakończ: Filar 1 ➡️</a>
         </div>
 
-        <!-- FAZA 2: ROUTING -->
-        <div class="lab-card" style="border-left-color: var(--l3-color);">
-            <div class="lab-header">
-                <h3>Faza 2: Wyjście w Świat (Routing w GUI)</h3>
-                <span class="time-badge">⏱️ Czas: 1 godzina 15 minut</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box"><strong>Cel:</strong> Podłączenie naszej firmy do Dostawcy Internetu (ISP) i wyklikanie tras tak, aby pakiety trafiały do serwera Google (8.8.8.8) i WRACAŁY.</div>
-
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node isp">
-                                    <span class="node-port">G0/0: 200.0.0.2</span>
-                                    <span class="node-icon">🏢</span>
-                                    <span class="node-name">Router ISP (Dostawca)</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node router">
-                                            <span class="node-port">G0/1: 200.0.0.1</span>
-                                            <span class="node-icon">🌐</span>
-                                            <span class="node-name">Nasz Router (Firma)</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="node server">
-                                            <span class="node-port">G0/1: 8.8.8.1</span>
-                                            <span class="node-icon">🌍</span>
-                                            <span class="node-name">Serwer Google</span>
-                                            <span class="node-ip">8.8.8.8</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <ol class="task-list">
-                    <li><strong>Zadanie:</strong> Dodaj nowy Router (nazwij go ISP) oraz Serwer (nazwij go Google). Połącz Nasz Router (port G0/1) z Routerem ISP (port G0/0). Połącz Router ISP (port G0/1) z Serwerem Google.</li>
-                    <li><strong>Włączanie portów i adresacja (Nasz Router):</strong>
-                        <div class="gui-path">🖱️ Kliknij Nasz Router <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej <strong>GigabitEthernet0/1</strong></div>
-                        Zaznacz <strong>Port Status: On</strong>. Wpisz IP: <code>200.0.0.1</code>, Maska: <code>255.255.255.252</code>.
-                    </li>
-                    <li><strong>Włączanie portów i adresacja (Router ISP):</strong>
-                        <div class="gui-path">🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong></div>
-                        <ul>
-                            <li>Dla <strong>GigabitEthernet0/0</strong>: Port Status On, IP: <code>200.0.0.2</code>, Maska: <code>255.255.255.252</code>.</li>
-                            <li>Dla <strong>GigabitEthernet0/1</strong>: Port Status On, IP: <code>8.8.8.1</code>, Maska: <code>255.255.255.0</code>.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Konfiguracja Serwera Google:</strong> Wejdź w jego zakładkę Desktop -> IP Config. Ustaw IP: <code>8.8.8.8</code>, Maska <code>255.255.255.0</code>, Brama <code>8.8.8.1</code>.</li>
-
-                    <li><strong>Routing Domyślny (Nasz Router):</strong> Mówimy routerowi: <em>"Wszystko, czego nie znasz, wysyłaj do ISP"</em>.
-                        <div class="gui-path">🖱️ Kliknij Nasz Router <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej sekcja Routing: <strong>Static</strong></div>
-                        Wpisz Network: <code>0.0.0.0</code>, Mask: <code>0.0.0.0</code>, Next Hop: <code>200.0.0.2</code>. Kliknij przycisk <strong>Add</strong>.
-                    </li>
-
-                    <li><strong>Routing Powrotny (ISP):</strong> Uczymy dostawcę drogi powrotnej do naszej firmy (do VLAN 10).
-                        <div class="gui-path">🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> Po lewej sekcja Routing: <strong>Static</strong></div>
-                        Wpisz Network: <code>192.168.10.0</code>, Mask: <code>255.255.255.0</code>, Next Hop: <code>200.0.0.1</code>. Kliknij przycisk <strong>Add</strong>.
-                    </li>
-
-                    <li><strong>Wielki Test:</strong> Wejdź na PC1. Otwórz Command Prompt i wpisz <code>ping 8.8.8.8</code>. Działa! Właśnie podłączyłeś firmę do Internetu.</li>
-                </ol>
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">🛣️</div>
-                    <div class="conclusion-text">
-                        <strong>Wniosek:</strong> Routing to ulica dwukierunkowa! Trasa domyślna (<code>0.0.0.0</code>) to genialne narzędzie – wypycha cały nieznany ruch do dostawcy. Ale pamiętaj: dostawca (ISP) musi mieć wpisane trasy statyczne, aby wiedzieć, jak odesłać pakiety z powrotem do Twojej sieci lokalnej.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- FAZA 3: DNS -->
-        <div class="lab-card" style="border-left-color: var(--success-color);">
-            <div class="lab-header">
-                <h3>Faza 3: DNS (Książka Telefoniczna)</h3>
-                <span class="time-badge">⏱️ Czas: 30 minut</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box"><strong>Cel:</strong> Sprawić, by użytkownicy mogli wpisywać w przeglądarce <code>www.google.com</code> zamiast trudnego do zapamiętania adresu IP <code>8.8.8.8</code>.</div>
-
-                <ol class="task-list">
-                    <li><strong>Baza:</strong> Rozbudowujemy topologię z Fazy 2. Użyjemy Serwera Google (8.8.8.8) również jako serwera DNS.</li>
-                    <li><strong>Konfiguracja usługi DNS:</strong> Uczymy serwer, jak tłumaczyć nazwy na IP.
-                        <div class="gui-path">🖱️ Kliknij Serwer Google <span class="gui-arrow">➔</span> Zakładka <strong>Services</strong> <span class="gui-arrow">➔</span> Po lewej <strong>DNS</strong></div>
-                        <ul>
-                            <li>Zaznacz DNS Service: <strong>On</strong></li>
-                            <li>W polu Name wpisz: <code>www.google.com</code></li>
-                            <li>W polu Address wpisz: <code>8.8.8.8</code></li>
-                            <li>Kliknij przycisk <strong>Add</strong>.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Aktualizacja DHCP:</strong> Komputery w naszej firmie muszą wiedzieć, kogo pytać o nazwy stron!
-                        <div class="gui-path">🖱️ Kliknij Serwer DHCP (w naszej firmie) <span class="gui-arrow">➔</span> Zakładka <strong>Services</strong> <span class="gui-arrow">➔</span> <strong>DHCP</strong></div>
-                        W polu <strong>DNS Server</strong> wpisz <code>8.8.8.8</code> i kliknij <strong>Save</strong>.
-                    </li>
-                    <li><strong>Odświeżenie IP na PC:</strong> Wejdź na PC1, przełącz IP na <em>Static</em> i z powrotem na <em>DHCP</em>. Sprawdź, czy w polu DNS Server pojawiło się 8.8.8.8.</li>
-                    <li><strong>Wielki Test:</strong> Na PC1 otwórz zakładkę <strong>Desktop</strong>, wybierz <strong>Web Browser</strong> (Przeglądarka). W pasku adresu wpisz <code>www.google.com</code> i wciśnij Enter. Powinna załadować się strona!</li>
-                </ol>
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">📖</div>
-                    <div class="conclusion-text">
-                        <strong>Wniosek:</strong> DNS to książka telefoniczna internetu. Komputery komunikują się TYLKO za pomocą adresów IP. Kiedy wpisujesz nazwę strony, Twój komputer najpierw pyta serwera DNS: "Jaki IP ma www.google.com?", a dopiero potem wysyła tam właściwe dane.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- FAZA 4: NAT -->
-        <div class="lab-card" style="border-left-color: var(--nat-color);">
-            <div class="lab-header">
-                <h3>Faza 4: NAT (Magiczna Peleryna)</h3>
-                <span class="time-badge">⏱️ Czas: 1 godzina</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box"><strong>Cel:</strong> Ukrycie całej naszej prywatnej sieci (192.168.x.x) pod jednym publicznym adresem IP. Tak działa każdy domowy router!</div>
-
-                <div class="topology-box">
-                    <div class="tree">
-                        <ul>
-                            <li>
-                                <div class="node isp">
-                                    <span class="node-icon">🏢</span>
-                                    <span class="node-name">Internet (ISP)</span>
-                                    <span class="node-ip">Odrzuca prywatne IP!</span>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <div class="node nat">
-                                            <span class="node-icon">🎭</span>
-                                            <span class="node-name">Nasz Router (NAT)</span>
-                                            <span class="node-ip">Tłumaczy 192.168.x.x na 200.0.0.1</span>
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <div class="node server">
-                                                    <span class="node-icon">🖧</span>
-                                                    <span class="node-name">Nasza Sieć Prywatna</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <ol class="task-list">
-                    <li><strong>Symulacja prawdziwego świata:</strong> W Fazie 2 dodaliśmy na routerze ISP trasę powrotną do naszej sieci. W prawdziwym świecie ISP tego NIE ZROBI (adresy 192.168.x.x są zablokowane w internecie).
-                        <div class="gui-path">🖱️ Kliknij Router ISP <span class="gui-arrow">➔</span> Zakładka <strong>Config</strong> <span class="gui-arrow">➔</span> <strong>Static</strong></div>
-                        Zaznacz trasę <code>192.168.10.0</code> i kliknij <strong>Remove</strong>. Zrób to samo dla <code>192.168.20.0</code>. <br>
-                        <em>Spróbuj teraz spingować 8.8.8.8 z PC1. Przestało działać! Pakiet tam dociera, ale nie potrafi wrócić.</em>
-                    </li>
-                    <li><strong>Konfiguracja NAT (CLI):</strong> Musimy włączyć NAT na Naszym Routerze. Zrobimy to w CLI, bo to zadanie dla prawdziwych inżynierów. Najpierw określamy, który port jest "wewnątrz" firmy, a który "na zewnątrz".</li>
-                </ol>
-
-<div class="cli-block">
-<span class="cli-comment">! Na Naszym Routerze (Firma):</span>
-enable
-configure terminal
-
-<span class="cli-comment">! Port w stronę naszej firmy (Inside)</span>
-interface gigabitEthernet 0/0
- ip nat inside
-exit
-
-<span class="cli-comment">! Port w stronę Internetu (Outside)</span>
-interface gigabitEthernet 0/1
- ip nat outside
-exit
-</div>
-
-                <ol class="task-list" start="3">
-                    <li><strong>Lista dostępu (ACL):</strong> Mówimy routerowi, komu pozwalamy na wyjście do internetu. Pozwolimy wszystkim z naszej sieci.</li>
-                </ol>
-
-<div class="cli-block">
-<span class="cli-comment">! Tworzymy listę nr 1, która pozwala na wszystko</span>
-access-list 1 permit any
-</div>
-
-                <ol class="task-list" start="4">
-                    <li><strong>Uruchomienie magii (PAT / NAT Overload):</strong> Łączymy listę z portem wyjściowym.</li>
-                </ol>
-
-<div class="cli-block">
-<span class="cli-comment">! Tłumacz adresy z listy 1 na publiczny adres portu G0/1</span>
-ip nat inside source list 1 interface gigabitEthernet 0/1 overload
-</div>
-
-                <ol class="task-list" start="5">
-                    <li><strong>Wielki Test:</strong> Wejdź na PC1 i ponownie spinguj <code>8.8.8.8</code>. Działa!
-                    <li><strong>Zajrzyj pod maskę:</strong> Na Naszym Routerze w CLI wpisz komendę: <br><code>show ip nat translations</code>. Zobaczysz tabelkę, w której router zapisuje, jak podmienił prywatny adres PC1 na swój publiczny adres 200.0.0.1!</li>
-                </ol>
-                <div class="conclusion-box">
-                    <div class="conclusion-icon">🎭</div>
-                    <div class="conclusion-text">
-                        <strong>Wniosek:</strong> NAT (Network Address Translation) to tłumacz. Kiedy PC1 wysyła pakiet do Google, Nasz Router zdejmuje z niego prywatny adres (192.168.10.100), nakleja swój publiczny (200.0.0.1) i wysyła w świat. Google odpowiada do routera, a router pamięta, kto o to pytał, i przekazuje odpowiedź do PC1. Dzięki temu cała szkoła/firma może korzystać z internetu, mając wykupiony tylko JEDEN publiczny adres IP!
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- COURSE NAVIGATION -->
-    <div class="course-nav">
-        <a href="lab2-vlany.html" class="course-btn">⬅️ Poprzedni: Lab 2 (VLANy)</a>
-        <a href="index.html" class="course-btn next">Zakończ: Filar 1 ➡️</a>
-    </div>
-
-    <script src="../menu.js"></script>
-</body>
+        <script src="../menu.js"></script>
+    </body>
 </html>
