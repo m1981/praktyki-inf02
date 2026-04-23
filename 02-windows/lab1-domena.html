@@ -65,15 +65,15 @@
                                 </blockquote>
                             </div>
                         </details>
+
+                        <div class="pitfall-box">
+                            <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia Windowsa 10 do domeny kończy się błędem "Nie można odnaleźć domeny". Dzieje się tak, ponieważ stacja robocza nie wie, gdzie szukać domeny <code>zs1.local</code>.
+                        </div>
+
+                        <div class="golden-rule-box">
+                            <strong>💡 Złota Rada Trenera:</strong> Zanim klikniesz "Dołącz do domeny", wejdź w ustawienia karty sieciowej Windows 10 (ncpa.cpl) i w polu <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera! Następnie otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada – możesz dołączać!
+                        </div>
                     </li>
-
-                    <div class="pitfall-box">
-                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia Windowsa 10 do domeny kończy się błędem "Nie można odnaleźć domeny". Dzieje się tak, ponieważ stacja robocza nie wie, gdzie szukać domeny <code>zs1.local</code>.
-                    </div>
-
-                    <div class="golden-rule-box">
-                        <strong>💡 Złota Rada Trenera:</strong> Zanim klikniesz "Dołącz do domeny", wejdź w ustawienia karty sieciowej Windows 10 (ncpa.cpl) i w polu <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera! Następnie otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada – możesz dołączać!
-                    </div>
 
                     <li><strong>Krok 3: Podłączenie stacji roboczej (Windows 10)</strong>
                         <p>Uruchom drugą maszynę wirtualną (Windows 10). Upewnij się, że w ustawieniach karty sieciowej ma wpisany adres IP serwera jako swój serwer DNS!</p>
@@ -142,11 +142,11 @@
                                 </blockquote>
                             </div>
                         </details>
-                    </li>
 
-                    <div class="pitfall-box">
-                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Wpisywanie złego formatu daty w komendzie <code>/expires</code>. Zależnie od języka systemu, Windows może oczekiwać formatu DD/MM/RRRR lub MM/DD/RRRR. Jeśli komenda wyrzuca błąd, zamień dzień z miesiącem!
-                    </div>
+                        <div class="pitfall-box">
+                            <strong>🚨 Najczęstszy błąd uczniów:</strong> Wpisywanie złego formatu daty w komendzie <code>/expires</code>. Zależnie od języka systemu, Windows może oczekiwać formatu DD/MM/RRRR lub MM/DD/RRRR. Jeśli komenda wyrzuca błąd, zamień dzień z miesiącem!
+                        </div>
+                    </li>
 
                     <li><strong>Krok 2: Magia CLI (Wiersz poleceń)</strong>
                         <p>Egzaminatorzy uwielbiają sprawdzać znajomość konsoli. Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
@@ -232,11 +232,11 @@ net localgroup Uczniowie uczen1 /add</div>
                                 </blockquote>
                             </div>
                         </details>
-                    </li>
 
-                    <div class="golden-rule-box">
-                        <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong> Jeśli na zakładce <em>Sharing (Udostępnianie)</em> dasz "Full control (Pełną kontrolę)", ale w <em>Security (Zabezpieczeniach NTFS)</em> dasz tylko "Read (Odczyt)", to użytkownik będzie miał tylko odczyt. Zawsze dawaj "Wszyscy - Pełna kontrola" w Udostępnianiu, a prawdziwe restrykcje ustawiaj w Zabezpieczeniach!
-                    </div>
+                        <div class="golden-rule-box">
+                            <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong> Jeśli na zakładce <em>Sharing (Udostępnianie)</em> dasz "Full control (Pełną kontrolę)", ale w <em>Security (Zabezpieczeniach NTFS)</em> dasz tylko "Read (Odczyt)", to użytkownik będzie miał tylko odczyt. Zawsze dawaj "Wszyscy - Pełna kontrola" w Udostępnianiu, a prawdziwe restrykcje ustawiaj w Zabezpieczeniach!
+                        </div>
+                    </li>
 
                     <li><strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
                         <p>Utwórz folder <code>Sprawdziany</code>. W zakładce <strong>Security (Zabezpieczenia)</strong> ustaw:</p>
@@ -269,11 +269,11 @@ net localgroup Uczniowie uczen1 /add</div>
                                 </blockquote>
                             </div>
                         </details>
-                    </li>
 
-                    <div class="pitfall-box">
-                        <strong>🚨 Najczęstszy błąd uczniów (EFS):</strong> Uczeń szyfruje plik będąc zalogowanym jako Administrator, a potem dziwi się, że zwykły użytkownik nie może go otworzyć. Pamiętaj: EFS szyfruje plik <strong>dla osoby, która aktualnie klika "Szyfruj"</strong>!
-                    </div>
+                        <div class="pitfall-box">
+                            <strong>🚨 Najczęstszy błąd uczniów (EFS):</strong> Uczeń szyfruje plik będąc zalogowanym jako Administrator, a potem dziwi się, że zwykły użytkownik nie może go otworzyć. Pamiętaj: EFS szyfruje plik <strong>dla osoby, która aktualnie klika "Szyfruj"</strong>!
+                        </div>
+                    </li>
                 </ul>
 
                 <div class="exam-verify-box">
@@ -306,11 +306,11 @@ net localgroup Uczniowie uczen1 /add</div>
                         <div class="gui-path">DNS Manager (Menedżer DNS) <span class="gui-arrow">➔</span> Forward Lookup Zones (Strefy wyszukiwania do przodu) <span class="gui-arrow">➔</span> New Zone (Nowa strefa)</div>
                         <p>Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień <em>Refresh interval (Interwał odświeżania)</em> na 10 minut.</p>
                         <p>Utwórz <strong>New Host (A) (Nowy rekord hosta A)</strong> (nazwa: <code>www</code>, adres IP: adres Twojego serwera).</p>
-                    </li>
 
-                    <div class="golden-rule-box">
-                        <strong>💡 Złota Rada Trenera (Testuj DNS przed IIS!):</strong> Zanim zaczniesz konfigurować stronę WWW, otwórz CMD na stacji roboczej i wpisz <code>ping www.intranet.local</code>. Jeśli ping nie rozwiązuje nazwy na IP serwera, to strona na pewno nie zadziała. Zawsze najpierw naprawiaj DNS!
-                    </div>
+                        <div class="golden-rule-box">
+                            <strong>💡 Złota Rada Trenera (Testuj DNS przed IIS!):</strong> Zanim zaczniesz konfigurować stronę WWW, otwórz CMD na stacji roboczej i wpisz <code>ping www.intranet.local</code>. Jeśli ping nie rozwiązuje nazwy na IP serwera, to strona na pewno nie zadziała. Zawsze najpierw naprawiaj DNS!
+                        </div>
+                    </li>
 
                     <li><strong>Krok 3: Konfiguracja IIS (Host Headers)</strong>
                         <p>Utwórz prosty plik <code>index.html</code> z napisem "Witaj w szkole" i wrzuć go do folderu <code>C:\inetpub\wwwroot\szkola</code>.</p>
@@ -344,11 +344,10 @@ net localgroup Uczniowie uczen1 /add</div>
                         <strong>Sprawdź się:</strong>
                         Otwórz przeglądarkę na stacji roboczej Windows 10 i wpisz <code>http://www.intranet.local</code>. Jeśli widzisz swoją stronę, to znaczy, że DNS poprawnie przetłumaczył nazwę na IP, a IIS zaserwował odpowiedni plik!
                     </div>
-
+                </div>
                     <div class="pitfall-box">
                         <strong>🚨 Najczęstszy błąd uczniów (Błąd 403 w IIS):</strong> Jeśli usuniesz domyślne uprawnienia z folderu <code>C:\inetpub\wwwroot\szkola</code>, serwer IIS nie będzie mógł odczytać pliku <code>index.html</code>. IIS używa specjalnej grupy <code>IIS_IUSRS</code> do czytania plików. Nie usuwaj jej!
                     </div>
-                </ul>
 
                 <div class="exam-verify-box">
                     <h4>🙋‍♂️ Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
