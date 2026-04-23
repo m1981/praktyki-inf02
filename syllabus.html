@@ -1,206 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sylabus Egzaminu INF.02</title>
-    <link rel="stylesheet" href="common.css">
-    <style>
-        .syllabus-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 40px auto;
-        }
-        .syllabus-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            border-left: 5px solid #0984e3;
-        }
-        .syllabus-card h3 {
-            color: #0984e3;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        .syllabus-card ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .syllabus-card li {
-            padding: 8px 0;
-            border-bottom: 1px solid #f1f2f6;
-        }
-        .syllabus-card li:last-child {
-            border-bottom: none;
-        }
-        .percentage {
-            display: inline-block;
-            background: #e3f2fd;
-            color: #0984e3;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin-left: 10px;
-        }
-        .exam-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 12px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .exam-info h2 {
-            color: white;
-            margin-bottom: 15px;
-        }
-        .exam-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .stat-box {
-            background: rgba(255,255,255,0.15);
-            padding: 20px;
-            border-radius: 8px;
-            min-width: 150px;
-        }
-        .stat-box .number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .stat-box .label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-    </style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sylabus Egzaminu INF.02</title>
+        <link rel="stylesheet" href="common.css" />
+        <style>
+            .syllabus-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 25px;
+                max-width: 1200px;
+                margin: 40px auto;
+            }
+            .syllabus-card {
+                background: white;
+                padding: 25px;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+                border-left: 5px solid #0984e3;
+            }
+            .syllabus-card h3 {
+                color: #0984e3;
+                margin-bottom: 15px;
+                font-size: 1.3rem;
+            }
+            .syllabus-card ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+            .syllabus-card li {
+                padding: 8px 0;
+                border-bottom: 1px solid #f1f2f6;
+            }
+            .syllabus-card li:last-child {
+                border-bottom: none;
+            }
+            .percentage {
+                display: inline-block;
+                background: #e3f2fd;
+                color: #0984e3;
+                padding: 3px 8px;
+                border-radius: 4px;
+                font-weight: bold;
+                font-size: 0.85rem;
+                margin-left: 10px;
+            }
+            .exam-info {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 40px;
+                border-radius: 12px;
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            .exam-info h2 {
+                color: white;
+                margin-bottom: 15px;
+            }
+            .exam-stats {
+                display: flex;
+                justify-content: space-around;
+                margin-top: 30px;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            .stat-box {
+                background: rgba(255, 255, 255, 0.15);
+                padding: 20px;
+                border-radius: 8px;
+                min-width: 150px;
+            }
+            .stat-box .number {
+                font-size: 2.5rem;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .stat-box .label {
+                font-size: 0.9rem;
+                opacity: 0.9;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>📋 Sylabus Egzaminu INF.02</h1>
+            <p style="color: var(--text-muted); text-align: center">
+                Administracja Systemami i Sieciami Komputerowymi
+            </p>
+        </header>
 
-    <header>
-        <h1>📋 Sylabus Egzaminu INF.02</h1>
-        <p style="color: var(--text-muted); text-align: center;">Administracja Systemami i Sieciami Komputerowymi</p>
-    </header>
+        <main style="max-width: 1200px; margin: 0 auto; padding: 0 20px">
+            <div class="exam-info">
+                <h2>Informacje o egzaminie</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 0">
+                    Egzamin zawodowy dla kwalifikacji INF.02 składa się z części praktycznej i
+                    teoretycznej
+                </p>
 
-    <main style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        
-        <div class="exam-info">
-            <h2>Informacje o egzaminie</h2>
-            <p style="font-size: 1.1rem; margin-bottom: 0;">Egzamin zawodowy dla kwalifikacji INF.02 składa się z części praktycznej i teoretycznej</p>
-            
-            <div class="exam-stats">
-                <div class="stat-box">
-                    <div class="number">40</div>
-                    <div class="label">Pytań testowych</div>
+                <div class="exam-stats">
+                    <div class="stat-box">
+                        <div class="number">40</div>
+                        <div class="label">Pytań testowych</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">60 min</div>
+                        <div class="label">Czas na test</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">50%</div>
+                        <div class="label">Próg zdawalności</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">120 min</div>
+                        <div class="label">Część praktyczna</div>
+                    </div>
                 </div>
-                <div class="stat-box">
-                    <div class="number">60 min</div>
-                    <div class="label">Czas na test</div>
+            </div>
+
+            <h2 style="text-align: center; margin-bottom: 30px">Proporcje tematów na egzaminie</h2>
+
+            <div class="syllabus-grid">
+                <div class="syllabus-card">
+                    <h3>🟢 Sieci Komputerowe <span class="percentage">~35%</span></h3>
+                    <ul>
+                        <li>Adresacja IP (IPv4, IPv6)</li>
+                        <li>Maski podsieci i subnetting</li>
+                        <li>VLANy i segmentacja sieci</li>
+                        <li>Routing (statyczny i dynamiczny)</li>
+                        <li>Protokoły: TCP, UDP, ICMP, ARP</li>
+                        <li>DHCP, DNS, NAT</li>
+                        <li>Cisco Packet Tracer</li>
+                    </ul>
                 </div>
-                <div class="stat-box">
-                    <div class="number">50%</div>
-                    <div class="label">Próg zdawalności</div>
+
+                <div class="syllabus-card">
+                    <h3>🪟 Windows Server <span class="percentage">~30%</span></h3>
+                    <ul>
+                        <li>Active Directory Domain Services</li>
+                        <li>Zasady grupy (GPO)</li>
+                        <li>Uprawnienia NTFS</li>
+                        <li>Udostępnianie plików (SMB/CIFS)</li>
+                        <li>Profile użytkowników (lokalne, mobilne)</li>
+                        <li>Usługi: DNS, DHCP, IIS, RRAS</li>
+                        <li>Komendy CMD: net user, net group, ipconfig</li>
+                    </ul>
                 </div>
-                <div class="stat-box">
-                    <div class="number">120 min</div>
-                    <div class="label">Część praktyczna</div>
+
+                <div class="syllabus-card">
+                    <h3>🐧 Linux <span class="percentage">~15%</span></h3>
+                    <ul>
+                        <li>Nawigacja w terminalu (cd, ls, pwd)</li>
+                        <li>Operacje na plikach (cp, mv, rm, touch)</li>
+                        <li>Uprawnienia (chmod, chown)</li>
+                        <li>Dowiązania (ln, ln -s)</li>
+                        <li>Archiwizacja (tar, gzip)</li>
+                        <li>Diagnostyka: lshw, lsblk, df, top</li>
+                        <li>Przekierowania wyjścia (>, >>)</li>
+                    </ul>
+                </div>
+
+                <div class="syllabus-card">
+                    <h3>🔌 Warstwa Fizyczna <span class="percentage">~10%</span></h3>
+                    <ul>
+                        <li>Okablowanie strukturalne (T568A/B)</li>
+                        <li>Moduły Keystone Jack</li>
+                        <li>Szafy serwerowe (RACK 19")</li>
+                        <li>Diagnostyka dysków (SMART)</li>
+                        <li>Monitorowanie GPU (GPU-Z)</li>
+                        <li>Kategorie kabli (Cat5e, Cat6, Cat6a)</li>
+                    </ul>
+                </div>
+
+                <div class="syllabus-card">
+                    <h3>📊 Excel & Logika <span class="percentage">~10%</span></h3>
+                    <ul>
+                        <li>Formuły i funkcje podstawowe</li>
+                        <li>Funkcja JEŻELI i zagnieżdżenia</li>
+                        <li>Formatowanie warunkowe</li>
+                        <li>Odwołania względne i bezwzględne ($)</li>
+                        <li>Kosztorysy i obliczenia biznesowe</li>
+                        <li>Wykresy i wizualizacje</li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <h2 style="text-align: center; margin-bottom: 30px;">Proporcje tematów na egzaminie</h2>
-
-        <div class="syllabus-grid">
-            
-            <div class="syllabus-card">
-                <h3>🟢 Sieci Komputerowe <span class="percentage">~35%</span></h3>
-                <ul>
-                    <li>Adresacja IP (IPv4, IPv6)</li>
-                    <li>Maski podsieci i subnetting</li>
-                    <li>VLANy i segmentacja sieci</li>
-                    <li>Routing (statyczny i dynamiczny)</li>
-                    <li>Protokoły: TCP, UDP, ICMP, ARP</li>
-                    <li>DHCP, DNS, NAT</li>
-                    <li>Cisco Packet Tracer</li>
-                </ul>
+            <div class="conclusion-box" style="max-width: 900px; margin: 50px auto">
+                <div class="conclusion-icon">💡</div>
+                <div class="conclusion-text">
+                    <strong>Strategia nauki:</strong>
+                    Skoncentruj się na Sieciach i Windows Server (razem ~65% egzaminu). Linux i
+                    warstwa fizyczna to mniejsze części, ale często pojawiają się w zadaniach
+                    praktycznych. Excel jest zazwyczaj najłatwiejszą częścią - nie zaniedbuj jej, to
+                    łatwe punkty!
+                </div>
             </div>
 
-            <div class="syllabus-card">
-                <h3>🪟 Windows Server <span class="percentage">~30%</span></h3>
-                <ul>
-                    <li>Active Directory Domain Services</li>
-                    <li>Zasady grupy (GPO)</li>
-                    <li>Uprawnienia NTFS</li>
-                    <li>Udostępnianie plików (SMB/CIFS)</li>
-                    <li>Profile użytkowników (lokalne, mobilne)</li>
-                    <li>Usługi: DNS, DHCP, IIS, RRAS</li>
-                    <li>Komendy CMD: net user, net group, ipconfig</li>
-                </ul>
+            <div class="course-nav">
+                <a href="index.html" class="course-btn">⬅️ Powrót do strony głównej</a>
+                <a href="setup.html" class="course-btn next">Dzień 0: Instalacja ➡️</a>
             </div>
+        </main>
 
-            <div class="syllabus-card">
-                <h3>🐧 Linux <span class="percentage">~15%</span></h3>
-                <ul>
-                    <li>Nawigacja w terminalu (cd, ls, pwd)</li>
-                    <li>Operacje na plikach (cp, mv, rm, touch)</li>
-                    <li>Uprawnienia (chmod, chown)</li>
-                    <li>Dowiązania (ln, ln -s)</li>
-                    <li>Archiwizacja (tar, gzip)</li>
-                    <li>Diagnostyka: lshw, lsblk, df, top</li>
-                    <li>Przekierowania wyjścia (>, >>)</li>
-                </ul>
-            </div>
-
-            <div class="syllabus-card">
-                <h3>🔌 Warstwa Fizyczna <span class="percentage">~10%</span></h3>
-                <ul>
-                    <li>Okablowanie strukturalne (T568A/B)</li>
-                    <li>Moduły Keystone Jack</li>
-                    <li>Szafy serwerowe (RACK 19")</li>
-                    <li>Diagnostyka dysków (SMART)</li>
-                    <li>Monitorowanie GPU (GPU-Z)</li>
-                    <li>Kategorie kabli (Cat5e, Cat6, Cat6a)</li>
-                </ul>
-            </div>
-
-            <div class="syllabus-card">
-                <h3>📊 Excel & Logika <span class="percentage">~10%</span></h3>
-                <ul>
-                    <li>Formuły i funkcje podstawowe</li>
-                    <li>Funkcja JEŻELI i zagnieżdżenia</li>
-                    <li>Formatowanie warunkowe</li>
-                    <li>Odwołania względne i bezwzględne ($)</li>
-                    <li>Kosztorysy i obliczenia biznesowe</li>
-                    <li>Wykresy i wizualizacje</li>
-                </ul>
-            </div>
-
-        </div>
-
-        <div class="conclusion-box" style="max-width: 900px; margin: 50px auto;">
-            <div class="conclusion-icon">💡</div>
-            <div class="conclusion-text">
-                <strong>Strategia nauki:</strong> 
-                Skoncentruj się na Sieciach i Windows Server (razem ~65% egzaminu). 
-                Linux i warstwa fizyczna to mniejsze części, ale często pojawiają się w zadaniach praktycznych. 
-                Excel jest zazwyczaj najłatwiejszą częścią - nie zaniedbuj jej, to łatwe punkty!
-            </div>
-        </div>
-
-<div class="course-nav">
-            <a href="index.html" class="course-btn">⬅️ Powrót do strony głównej</a>
-            <a href="setup.html" class="course-btn next">Dzień 0: Instalacja ➡️</a>
-        </div>
-
-    </main>
-
-    <script src="menu.js"></script>
-</body>
+        <script src="menu.js"></script>
+    </body>
 </html>

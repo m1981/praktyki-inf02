@@ -1,127 +1,257 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 3: Pliki i Uprawnienia</title>
-    <link rel="stylesheet" href="../common.css">
-    <style>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 3: Pliki i Uprawnienia</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style></style>
+    </head>
+    <body>
+        <header>
+            <h1>💻 Laboratoria: Windows Server</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">Zarządzanie zasobami</p>
+        </header>
 
-    </style>
-</head>
-<body>
-    <header>
-        <h1>💻 Laboratoria: Windows Server</h1>
-        <p style="color: var(--text-muted); font-size: 1.2rem;">Zarządzanie zasobami</p>
-    </header>
-
-    <main class="lab-container">
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Lab 3: Tajne Akta i Wędrujące Pulpity</h3>
-                <span class="time-badge">Czas: 60 min</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Konfiguracja uprawnień do plików (NTFS), ukrytych udziałów sieciowych oraz profili mobilnych.
+        <main class="lab-container">
+            <div class="lab-card">
+                <div class="lab-header">
+                    <h3>Lab 3: Tajne Akta i Wędrujące Pulpity</h3>
+                    <span class="time-badge">Czas: 60 min</span>
                 </div>
-                <ul class="task-list">
-                    <li><strong>Krok 1: Ukryty udział dla profili</strong>
-                        <p>Utwórz na dysku C: folder <code>Profile</code>. Udostępnij go w sieci, ale dodaj znak <code>$</code> na końcu nazwy udziału (<code>Profile$</code>). Dzięki temu będzie niewidoczny dla wścibskich uczniów.</p>
-
-                        <!-- REFERENCJA EGZAMINACYJNA -->
-                        <details class="exam-reference">
-                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                            <div class="exam-content">
-                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
-                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
-                                <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
-                                    <p><strong>Treść zadania:</strong><br>
-                                    ‒ utwórz folder C:\Profile i udostępnij go pod nazwą profile$<br>
-                                    ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko dla Wszyscy – Pełna kontrola</p>
-                                </blockquote>
-                            </div>
-                        </details>
-                    </li>
-                    <li><strong>Krok 2: Profil Mobilny (Roaming Profile)</strong>
-                        <div class="gui-path">Properties (Właściwości) użytkownika 'maciek' w AD <span class="gui-arrow">➔</span> Profile (Profil) tab <span class="gui-arrow">➔</span> Profile path (Ścieżka profilu)</div>
-                        <p>Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>. Zaloguj się jako maciek na Windows 10, stwórz plik na pulpicie, wyloguj się i sprawdź na serwerze, czy plik się zsynchronizował!</p>
-
-                        <!-- REFERENCJA EGZAMINACYJNA -->
-                        <details class="exam-reference">
-                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                            <div class="exam-content">
-                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
-                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
-                                <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
-                                    <p><strong>Treść zadania:</strong><br>
-                                    ‒ dla użytkownika Adam Abacki ustaw ścieżkę profilu mobilnego, który będzie zlokalizowany w udostępnionym folderze</p>
-                                </blockquote>
-                            </div>
-                        </details>
-                    </li>
-
-                    <div class="golden-rule-box">
-                        <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong> Jeśli na zakładce <em>Sharing (Udostępnianie)</em> dasz "Full control (Pełną kontrolę)", ale w <em>Security (Zabezpieczeniach NTFS)</em> dasz tylko "Read (Odczyt)", to użytkownik będzie miał tylko odczyt. Zawsze dawaj "Everyone - Full control" w Udostępnianiu, a prawdziwe restrykcje ustawiaj w Zabezpieczeniach!
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Konfiguracja uprawnień do plików (NTFS), ukrytych udziałów sieciowych
+                        oraz profili mobilnych.
                     </div>
+                    <ul class="task-list">
+                        <li>
+                            <strong>Krok 1: Ukryty udział dla profili</strong>
+                            <p>
+                                Utwórz na dysku C: folder <code>Profile</code>. Udostępnij go w
+                                sieci, ale dodaj znak <code>$</code> na końcu nazwy udziału
+                                (<code>Profile$</code>). Dzięki temu będzie niewidoczny dla
+                                wścibskich uczniów.
+                            </p>
 
-                    <li><strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
-                        <p>Utwórz folder <code>Sprawdziany</code>. W zakładce <strong>Security (Zabezpieczenia)</strong> ustaw:</p>
-                        <ul style="margin-left: 20px; margin-bottom: 10px;">
-                            <li>Administrators (Administratorzy): <strong>Full control (Pełna kontrola)</strong></li>
-                            <li>Users (Użytkownicy): <strong>Read & execute (Odczyt i wykonywanie)</strong></li>
-                        </ul>
-                        <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Properties (Właściwości) pliku -> Advanced (Zaawansowane) -> <strong>Encrypt contents to secure data (Szyfruj zawartość, aby zabezpieczyć dane)</strong>). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
-
-                        <!-- REFERENCJA EGZAMINACYJNA (Dwa arkusze!) -->
-                        <details class="exam-reference">
-                            <summary>   Zobacz oryginalne zadania z egzaminów</summary>
-                            <div class="exam-content">
-                                <p><strong>Egzamin (Uprawnienia NTFS):</strong> Czerwiec 2022 (INF.02-01-22.06-SG)</p>
-                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2022-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
-                                <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
-                                    <p><strong>Treść zadania:</strong><br>
-                                    ‒ ustaw zabezpieczenia utworzonego folderu dla:<br>
-                                    ‒ Administratorzy – Pełna kontrola<br>
-                                    ‒ Użytkownicy – Odczyt i wykonywanie</p>
-                                </blockquote>
-                                <hr style="border: 0; border-top: 1px solid #dfe6e9; margin: 15px 0;">
-                                <p><strong>Egzamin (Szyfrowanie EFS):</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
-                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
-                                <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em></p>
-                                    <p><strong>Treść zadania:</strong><br>
-                                    ‒ zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku</p>
-                                </blockquote>
+                            <!-- REFERENCJA EGZAMINACYJNA -->
+                            <details class="exam-reference">
+                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                                <div class="exam-content">
+                                    <p>
+                                        <strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)
+                                    </p>
+                                    <p>
+                                        <strong>Arkusz:</strong>
+                                        <a
+                                            href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf"
+                                            target="_blank"
+                                            >Pobierz PDF</a
+                                        >
+                                    </p>
+                                    <blockquote>
+                                        <p>
+                                            <em style="color: #636e72"
+                                                >Zadanie: 6. Skonfiguruj serwer z zainstalowanym
+                                                systemem Windows: (...)</em
+                                            >
+                                        </p>
+                                        <p>
+                                            <strong>Treść zadania:</strong><br />
+                                            ‒ utwórz folder C:\Profile i udostępnij go pod nazwą
+                                            profile$<br />
+                                            ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko
+                                            dla Wszyscy – Pełna kontrola
+                                        </p>
+                                    </blockquote>
+                                </div>
+                            </details>
+                        </li>
+                        <li>
+                            <strong>Krok 2: Profil Mobilny (Roaming Profile)</strong>
+                            <div class="gui-path">
+                                Properties (Właściwości) użytkownika 'maciek' w AD
+                                <span class="gui-arrow">➔</span> Profile (Profil) tab
+                                <span class="gui-arrow">➔</span> Profile path (Ścieżka profilu)
                             </div>
-                        </details>
-                    </li>
+                            <p>
+                                Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>.
+                                Zaloguj się jako maciek na Windows 10, stwórz plik na pulpicie,
+                                wyloguj się i sprawdź na serwerze, czy plik się zsynchronizował!
+                            </p>
 
-                    <div class="pitfall-box">
-                        <strong>🚨 Najczęstszy błąd uczniów (EFS):</strong> Uczeń szyfruje plik będąc zalogowanym jako Administrator, a potem dziwi się, że zwykły użytkownik nie może go otworzyć. Pamiętaj: EFS szyfruje plik <strong>dla osoby, która aktualnie klika "Szyfruj"</strong>!
+                            <!-- REFERENCJA EGZAMINACYJNA -->
+                            <details class="exam-reference">
+                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                                <div class="exam-content">
+                                    <p>
+                                        <strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)
+                                    </p>
+                                    <p>
+                                        <strong>Arkusz:</strong>
+                                        <a
+                                            href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf"
+                                            target="_blank"
+                                            >Pobierz PDF</a
+                                        >
+                                    </p>
+                                    <blockquote>
+                                        <p>
+                                            <em style="color: #636e72"
+                                                >Zadanie: 6. Skonfiguruj serwer z zainstalowanym
+                                                systemem Windows: (...)</em
+                                            >
+                                        </p>
+                                        <p>
+                                            <strong>Treść zadania:</strong><br />
+                                            ‒ dla użytkownika Adam Abacki ustaw ścieżkę profilu
+                                            mobilnego, który będzie zlokalizowany w udostępnionym
+                                            folderze
+                                        </p>
+                                    </blockquote>
+                                </div>
+                            </details>
+                        </li>
+
+                        <div class="golden-rule-box">
+                            <strong
+                                >💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong
+                            >
+                            Jeśli na zakładce <em>Sharing (Udostępnianie)</em> dasz "Full control
+                            (Pełną kontrolę)", ale w <em>Security (Zabezpieczeniach NTFS)</em> dasz
+                            tylko "Read (Odczyt)", to użytkownik będzie miał tylko odczyt. Zawsze
+                            dawaj "Everyone - Full control" w Udostępnianiu, a prawdziwe restrykcje
+                            ustawiaj w Zabezpieczeniach!
+                        </div>
+
+                        <li>
+                            <strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
+                            <p>
+                                Utwórz folder <code>Sprawdziany</code>. W zakładce
+                                <strong>Security (Zabezpieczenia)</strong> ustaw:
+                            </p>
+                            <ul style="margin-left: 20px; margin-bottom: 10px">
+                                <li>
+                                    Administrators (Administratorzy):
+                                    <strong>Full control (Pełna kontrola)</strong>
+                                </li>
+                                <li>
+                                    Users (Użytkownicy):
+                                    <strong>Read & execute (Odczyt i wykonywanie)</strong>
+                                </li>
+                            </ul>
+                            <p>
+                                Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go
+                                (Properties (Właściwości) pliku -> Advanced (Zaawansowane) ->
+                                <strong
+                                    >Encrypt contents to secure data (Szyfruj zawartość, aby
+                                    zabezpieczyć dane)</strong
+                                >). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).
+                            </p>
+
+                            <!-- REFERENCJA EGZAMINACYJNA (Dwa arkusze!) -->
+                            <details class="exam-reference">
+                                <summary>Zobacz oryginalne zadania z egzaminów</summary>
+                                <div class="exam-content">
+                                    <p>
+                                        <strong>Egzamin (Uprawnienia NTFS):</strong> Czerwiec 2022
+                                        (INF.02-01-22.06-SG)
+                                    </p>
+                                    <p>
+                                        <strong>Arkusz:</strong>
+                                        <a
+                                            href="../egzaminy/inf02-2022-czerwiec-egzamin-zawodowy-praktyczny.pdf"
+                                            target="_blank"
+                                            >Pobierz PDF</a
+                                        >
+                                    </p>
+                                    <blockquote>
+                                        <p>
+                                            <em style="color: #636e72"
+                                                >Zadanie: 7. Skonfiguruj serwer z zainstalowanym
+                                                systemem Windows: (...)</em
+                                            >
+                                        </p>
+                                        <p>
+                                            <strong>Treść zadania:</strong><br />
+                                            ‒ ustaw zabezpieczenia utworzonego folderu dla:<br />
+                                            ‒ Administratorzy – Pełna kontrola<br />
+                                            ‒ Użytkownicy – Odczyt i wykonywanie
+                                        </p>
+                                    </blockquote>
+                                    <hr
+                                        style="
+                                            border: 0;
+                                            border-top: 1px solid #dfe6e9;
+                                            margin: 15px 0;
+                                        "
+                                    />
+                                    <p>
+                                        <strong>Egzamin (Szyfrowanie EFS):</strong> Czerwiec 2025
+                                        (INF.02-01-25.06-SG)
+                                    </p>
+                                    <p>
+                                        <strong>Arkusz:</strong>
+                                        <a
+                                            href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf"
+                                            target="_blank"
+                                            >Pobierz PDF</a
+                                        >
+                                    </p>
+                                    <blockquote>
+                                        <p>
+                                            <em style="color: #636e72"
+                                                >Zadanie: 7. Skonfiguruj stację roboczą z
+                                                zainstalowanym systemem Windows: (...)</em
+                                            >
+                                        </p>
+                                        <p>
+                                            <strong>Treść zadania:</strong><br />
+                                            ‒ zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku
+                                        </p>
+                                    </blockquote>
+                                </div>
+                            </details>
+                        </li>
+
+                        <div class="pitfall-box">
+                            <strong>🚨 Najczęstszy błąd uczniów (EFS):</strong> Uczeń szyfruje plik
+                            będąc zalogowanym jako Administrator, a potem dziwi się, że zwykły
+                            użytkownik nie może go otworzyć. Pamiętaj: EFS szyfruje plik
+                            <strong>dla osoby, która aktualnie klika "Szyfruj"</strong>!
+                        </div>
+                    </ul>
+
+                    <div class="exam-verify-box">
+                        <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
+                        <p>Aby udowodnić egzaminatorowi poprawne uprawnienia i szyfrowanie:</p>
+                        <ol>
+                            <li>
+                                Zrób zrzut ekranu zakładki
+                                <strong>Security (Zabezpieczenia)</strong> folderu
+                                <code>Sprawdziany</code>, pokazując uprawnienia dla grupy Users
+                                (Użytkownicy).
+                            </li>
+                            <li>
+                                Zrób zrzut ekranu okna Eksploratora, na którym widać, że nazwa
+                                zaszyfrowanego pliku zmieniła kolor na <strong>zielony</strong> (lub
+                                zrób zrzut okna "Advanced Attributes" z zaznaczonym ptaszkiem przy
+                                szyfrowaniu).
+                            </li>
+                            <li>
+                                Wklej zrzuty do pliku tekstowego i zapisz na pendrive
+                                egzaminacyjnym.
+                            </li>
+                        </ol>
                     </div>
-                </ul>
-
-                <div class="exam-verify-box">
-                    <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
-                    <p>Aby udowodnić egzaminatorowi poprawne uprawnienia i szyfrowanie:</p>
-                    <ol>
-                        <li>Zrób zrzut ekranu zakładki <strong>Security (Zabezpieczenia)</strong> folderu <code>Sprawdziany</code>, pokazując uprawnienia dla grupy Users (Użytkownicy).</li>
-                        <li>Zrób zrzut ekranu okna Eksploratora, na którym widać, że nazwa zaszyfrowanego pliku zmieniła kolor na <strong>zielony</strong> (lub zrób zrzut okna "Advanced Attributes" z zaznaczonym ptaszkiem przy szyfrowaniu).</li>
-                        <li>Wklej zrzuty do pliku tekstowego i zapisz na pendrive egzaminacyjnym.</li>
-                    </ol>
                 </div>
             </div>
+        </main>
+
+        <div class="course-nav">
+            <a href="lab2-gpo-cli.html" class="course-btn">⬅️ Poprzedni: Lab 2 (GPO i CLI)</a>
+            <a href="lab4-uslugi.html" class="course-btn next">Następny: Lab 4 (Usługi) ➡️</a>
         </div>
-    </main>
-
-    <div class="course-nav">
-        <a href="lab2-gpo-cli.html" class="course-btn">⬅️ Poprzedni: Lab 2 (GPO i CLI)</a>
-        <a href="lab4-uslugi.html" class="course-btn next">Następny: Lab 4 (Usługi) ➡️</a>
-    </div>
-    <script src="../menu.js"></script>
-</body>
+        <script src="../menu.js"></script>
+    </body>
 </html>

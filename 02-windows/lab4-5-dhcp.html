@@ -1,126 +1,273 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 4.5: Serwer DHCP</title>
-    <link rel="stylesheet" href="../common.css">
-    <style>
-        .pitfall-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; border-radius: 4px; }
-        .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
-        .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
-        .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 4.5: Serwer DHCP</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            .pitfall-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .golden-rule-box {
+                background: #e8f4f8;
+                border-left: 4px solid #00a8ff;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .exam-verify-box {
+                background: #f8d7da;
+                border: 2px dashed #dc3545;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+            .exam-verify-box h4 {
+                color: #dc3545;
+                margin-top: 0;
+            }
 
-        /* Style dla referencji egzaminacyjnej */
-        .exam-reference { margin-top: 15px; margin-bottom: 15px; background: #f1f2f6; border: 1px solid #dfe6e9; border-radius: 6px; overflow: hidden; }
-        .exam-reference summary { padding: 10px 15px; background: #dfe6e9; font-weight: bold; cursor: pointer; color: #2d3436; outline: none; }
-        .exam-reference summary:hover { background: #b2bec3; }
-        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
-        .exam-content blockquote { border-left: 4px solid #636e72; margin: 10px 0 0 0; padding-left: 15px; background: #ffffff; padding-top: 10px; padding-bottom: 10px; }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>💻 Laboratoria: Windows Server</h1>
-        <p style="color: var(--text-muted); font-size: 1.2rem;">Automatyzacja Adresacji IP</p>
-    </header>
+            /* Style dla referencji egzaminacyjnej */
+            .exam-reference {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                background: #f1f2f6;
+                border: 1px solid #dfe6e9;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+            .exam-reference summary {
+                padding: 10px 15px;
+                background: #dfe6e9;
+                font-weight: bold;
+                cursor: pointer;
+                color: #2d3436;
+                outline: none;
+            }
+            .exam-reference summary:hover {
+                background: #b2bec3;
+            }
+            .exam-content {
+                padding: 15px;
+                font-size: 0.95rem;
+                color: #2d3436;
+            }
+            .exam-content blockquote {
+                border-left: 4px solid #636e72;
+                margin: 10px 0 0 0;
+                padding-left: 15px;
+                background: #ffffff;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>💻 Laboratoria: Windows Server</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">Automatyzacja Adresacji IP</p>
+        </header>
 
-    <main class="lab-container">
-        <div class="lab-card">
-            <div class="lab-header">
-                <h3>Lab 4.5: Automatyzacja IP (Serwer DHCP)</h3>
-                <span class="time-badge">Czas: 45 min</span>
-            </div>
-            <div class="lab-body">
-                <div class="goal-box">
-                    Cel: Uruchomienie serwera DHCP na Windows Serverze, utworzenie puli adresów oraz rezerwacji dla konkretnego komputera.
+        <main class="lab-container">
+            <div class="lab-card">
+                <div class="lab-header">
+                    <h3>Lab 4.5: Automatyzacja IP (Serwer DHCP)</h3>
+                    <span class="time-badge">Czas: 45 min</span>
                 </div>
-
-                <details class="theory-block">
-                    <summary>Jak działa DHCP (Proces DORA)?</summary>
-                    <div class="theory-content">
-                        <p><strong>DHCP (Dynamic Host Configuration Protocol)</strong> to usługa, która automatycznie rozdaje adresy IP komputerom w sieci. Proces ten nazywa się <strong>DORA</strong>:</p>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li><strong>D (Discover):</strong> Komputer krzyczy: <em>"Halo! Potrzebuję adresu IP!"</em></li>
-                            <li><strong>O (Offer):</strong> Serwer odpowiada: <em>"Mam wolny adres 192.168.1.50."</em></li>
-                            <li><strong>R (Request):</strong> Komputer mówi: <em>"Biorę go! Zarezerwuj go dla mnie."</em></li>
-                            <li><strong>A (Acknowledge):</strong> Serwer potwierdza: <em>"Zapisane. Adres jest twój."</em></li>
-                        </ul>
-                    </div>
-                </details>
-
-                <ul class="task-list">
-                    <li><strong>Krok 1: Instalacja roli DHCP</strong>
-                        <div class="gui-path">Server Manager (Menedżer serwera) <span class="gui-arrow">➔</span> Add roles and features (Dodaj role i funkcje) <span class="gui-arrow">➔</span> DHCP Server (Serwer DHCP)</div>
-                        <p>Po instalacji kliknij żółty trójkąt i wybierz <em>"Complete DHCP configuration" (Zakończ konfigurację usługi DHCP)</em> (autoryzacja w domenie).</p>
-                    </li>
-
-                    <div class="pitfall-box">
-                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Brak autoryzacji serwera DHCP w Active Directory. Jeśli pominiesz ten krok (żółty trójkąt), serwer DHCP w środowisku domenowym nie rozda ani jednego adresu IP!
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Uruchomienie serwera DHCP na Windows Serverze, utworzenie puli adresów
+                        oraz rezerwacji dla konkretnego komputera.
                     </div>
 
-                    <li><strong>Krok 2: Tworzenie Zakresu (Puli adresów)</strong>
-                        <div class="gui-path">DHCP Manager (Menedżer DHCP) <span class="gui-arrow">➔</span> IPv4 <span class="gui-arrow">➔</span> New Scope (Nowy zakres)</div>
-                        <p>Rozwiń nazwę serwera -> IPv4. Kliknij prawym na IPv4 i wybierz <strong>New Scope...</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li>Name (Nazwa): <code>Siec_Szkolna</code></li>
-                            <li>Start IP address (Początkowy adres IP): <code>192.168.1.100</code></li>
-                            <li>End IP address (Końcowy adres IP): <code>192.168.1.150</code></li>
-                            <li>Subnet mask (Maska podsieci): <code>255.255.255.0</code></li>
-                        </ul>
-                    </li>
-                    <li><strong>Krok 3: Opcje Zakresu (Brama i DNS)</strong>
-                        <p>W kreatorze zostaniesz zapytany o opcje DHCP. To bardzo ważne!</p>
-                        <ul style="margin-left: 20px; margin-top: 5px;">
-                            <li><strong>Router (Default Gateway / Brama domyślna):</strong> Wpisz adres IP Twojego routera.</li>
-                            <li><strong>DNS Server (Serwer DNS):</strong> Wpisz adres IP Twojego Windows Servera.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Krok 4: Rezerwacja adresu IP</strong>
-                        <p>Rozwiń swój nowy zakres. Kliknij prawym na <strong>Reservations (Zastrzeżenia)</strong> -> <strong>New Reservation (Nowe zastrzeżenie)...</strong></p>
-                        <p>Reservation name (Nazwa): <code>Komputer_Dyrektora</code>. IP address: <code>192.168.1.110</code>. MAC address: wpisz dowolny adres MAC (np. <code>00-11-22-33-44-55</code>).</p>
+                    <details class="theory-block">
+                        <summary>Jak działa DHCP (Proces DORA)?</summary>
+                        <div class="theory-content">
+                            <p>
+                                <strong>DHCP (Dynamic Host Configuration Protocol)</strong> to
+                                usługa, która automatycznie rozdaje adresy IP komputerom w sieci.
+                                Proces ten nazywa się <strong>DORA</strong>:
+                            </p>
+                            <ul style="margin-left: 20px; margin-top: 10px">
+                                <li>
+                                    <strong>D (Discover):</strong> Komputer krzyczy:
+                                    <em>"Halo! Potrzebuję adresu IP!"</em>
+                                </li>
+                                <li>
+                                    <strong>O (Offer):</strong> Serwer odpowiada:
+                                    <em>"Mam wolny adres 192.168.1.50."</em>
+                                </li>
+                                <li>
+                                    <strong>R (Request):</strong> Komputer mówi:
+                                    <em>"Biorę go! Zarezerwuj go dla mnie."</em>
+                                </li>
+                                <li>
+                                    <strong>A (Acknowledge):</strong> Serwer potwierdza:
+                                    <em>"Zapisane. Adres jest twój."</em>
+                                </li>
+                            </ul>
+                        </div>
+                    </details>
 
-                        <!-- REFERENCJA EGZAMINACYJNA -->
-                        <details class="exam-reference">
-                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                            <div class="exam-content">
-                                <p><strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)</p>
-                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2021-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
-                                <blockquote>
-                                    <p><em style="color: #636e72;">Zadanie: 2. Skonfiguruj ruter według następujących zaleceń: (...)</em></p>
-                                    <p><strong>Treść zadania:</strong><br>
-                                    ‒ serwer DHCP włączony, zakres adresów 172.20.0.100 ÷ 172.20.0.149<br>
-                                    ‒ adres IP 172.20.0.110 zarezerwowany dla karty WiFi stacji roboczej</p>
-                                    <p><em>Uwaga Trenera: Na egzaminie INF.02 DHCP najczęściej konfiguruje się na Routerze, ale zasada działania (Pula, Rezerwacja po MAC) jest identyczna jak na Windows Serverze!</em></p>
-                                </blockquote>
+                    <ul class="task-list">
+                        <li>
+                            <strong>Krok 1: Instalacja roli DHCP</strong>
+                            <div class="gui-path">
+                                Server Manager (Menedżer serwera)
+                                <span class="gui-arrow">➔</span> Add roles and features (Dodaj role
+                                i funkcje) <span class="gui-arrow">➔</span> DHCP Server (Serwer
+                                DHCP)
                             </div>
-                        </details>
-                    </li>
+                            <p>
+                                Po instalacji kliknij żółty trójkąt i wybierz
+                                <em
+                                    >"Complete DHCP configuration" (Zakończ konfigurację usługi
+                                    DHCP)</em
+                                >
+                                (autoryzacja w domenie).
+                            </p>
+                        </li>
 
-                    <div class="golden-rule-box">
-                        <strong>💡 Złota Rada Trenera (Wymuszanie DHCP):</strong> Jeśli stacja robocza nie chce pobrać nowego adresu, otwórz na niej CMD i wpisz kolejno: <br>
-                        <code>ipconfig /release</code> (oddaje stary adres)<br>
-                        <code>ipconfig /renew</code> (prosi o nowy adres)
+                        <div class="pitfall-box">
+                            <strong>🚨 Najczęstszy błąd uczniów:</strong> Brak autoryzacji serwera
+                            DHCP w Active Directory. Jeśli pominiesz ten krok (żółty trójkąt),
+                            serwer DHCP w środowisku domenowym nie rozda ani jednego adresu IP!
+                        </div>
+
+                        <li>
+                            <strong>Krok 2: Tworzenie Zakresu (Puli adresów)</strong>
+                            <div class="gui-path">
+                                DHCP Manager (Menedżer DHCP) <span class="gui-arrow">➔</span> IPv4
+                                <span class="gui-arrow">➔</span> New Scope (Nowy zakres)
+                            </div>
+                            <p>
+                                Rozwiń nazwę serwera -> IPv4. Kliknij prawym na IPv4 i wybierz
+                                <strong>New Scope...</strong>
+                            </p>
+                            <ul style="margin-left: 20px; margin-top: 5px">
+                                <li>Name (Nazwa): <code>Siec_Szkolna</code></li>
+                                <li>
+                                    Start IP address (Początkowy adres IP):
+                                    <code>192.168.1.100</code>
+                                </li>
+                                <li>
+                                    End IP address (Końcowy adres IP): <code>192.168.1.150</code>
+                                </li>
+                                <li>Subnet mask (Maska podsieci): <code>255.255.255.0</code></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Krok 3: Opcje Zakresu (Brama i DNS)</strong>
+                            <p>W kreatorze zostaniesz zapytany o opcje DHCP. To bardzo ważne!</p>
+                            <ul style="margin-left: 20px; margin-top: 5px">
+                                <li>
+                                    <strong>Router (Default Gateway / Brama domyślna):</strong>
+                                    Wpisz adres IP Twojego routera.
+                                </li>
+                                <li>
+                                    <strong>DNS Server (Serwer DNS):</strong> Wpisz adres IP Twojego
+                                    Windows Servera.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Krok 4: Rezerwacja adresu IP</strong>
+                            <p>
+                                Rozwiń swój nowy zakres. Kliknij prawym na
+                                <strong>Reservations (Zastrzeżenia)</strong> ->
+                                <strong>New Reservation (Nowe zastrzeżenie)...</strong>
+                            </p>
+                            <p>
+                                Reservation name (Nazwa): <code>Komputer_Dyrektora</code>. IP
+                                address: <code>192.168.1.110</code>. MAC address: wpisz dowolny
+                                adres MAC (np. <code>00-11-22-33-44-55</code>).
+                            </p>
+
+                            <!-- REFERENCJA EGZAMINACYJNA -->
+                            <details class="exam-reference">
+                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                                <div class="exam-content">
+                                    <p>
+                                        <strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)
+                                    </p>
+                                    <p>
+                                        <strong>Arkusz:</strong>
+                                        <a
+                                            href="../egzaminy/inf02-2021-czerwiec-egzamin-zawodowy-praktyczny.pdf"
+                                            target="_blank"
+                                            >Pobierz PDF</a
+                                        >
+                                    </p>
+                                    <blockquote>
+                                        <p>
+                                            <em style="color: #636e72"
+                                                >Zadanie: 2. Skonfiguruj ruter według następujących
+                                                zaleceń: (...)</em
+                                            >
+                                        </p>
+                                        <p>
+                                            <strong>Treść zadania:</strong><br />
+                                            ‒ serwer DHCP włączony, zakres adresów 172.20.0.100 ÷
+                                            172.20.0.149<br />
+                                            ‒ adres IP 172.20.0.110 zarezerwowany dla karty WiFi
+                                            stacji roboczej
+                                        </p>
+                                        <p>
+                                            <em
+                                                >Uwaga Trenera: Na egzaminie INF.02 DHCP najczęściej
+                                                konfiguruje się na Routerze, ale zasada działania
+                                                (Pula, Rezerwacja po MAC) jest identyczna jak na
+                                                Windows Serverze!</em
+                                            >
+                                        </p>
+                                    </blockquote>
+                                </div>
+                            </details>
+                        </li>
+
+                        <div class="golden-rule-box">
+                            <strong>💡 Złota Rada Trenera (Wymuszanie DHCP):</strong> Jeśli stacja
+                            robocza nie chce pobrać nowego adresu, otwórz na niej CMD i wpisz
+                            kolejno: <br />
+                            <code>ipconfig /release</code> (oddaje stary adres)<br />
+                            <code>ipconfig /renew</code> (prosi o nowy adres)
+                        </div>
+                    </ul>
+
+                    <div class="exam-verify-box">
+                        <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
+                        <p>
+                            Egzaminator musi widzieć, że stacja robocza faktycznie pobrała adres z
+                            Twojego serwera:
+                        </p>
+                        <ol>
+                            <li>
+                                Na stacji roboczej (Windows 10) otwórz CMD i wpisz
+                                <code>ipconfig /all</code>.
+                            </li>
+                            <li>
+                                Zrób zrzut ekranu tak, aby było widać linijki:
+                                <strong>IPv4 Address</strong> oraz
+                                <strong>DHCP Server</strong> (musi tam być IP Twojego serwera!).
+                            </li>
+                            <li>Wklej zrzut do pliku tekstowego na pendrive.</li>
+                        </ol>
                     </div>
-                </ul>
-
-                <div class="exam-verify-box">
-                    <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
-                    <p>Egzaminator musi widzieć, że stacja robocza faktycznie pobrała adres z Twojego serwera:</p>
-                    <ol>
-                        <li>Na stacji roboczej (Windows 10) otwórz CMD i wpisz <code>ipconfig /all</code>.</li>
-                        <li>Zrób zrzut ekranu tak, aby było widać linijki: <strong>IPv4 Address</strong> oraz <strong>DHCP Server</strong> (musi tam być IP Twojego serwera!).</li>
-                        <li>Wklej zrzut do pliku tekstowego na pendrive.</li>
-                    </ol>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <div class="course-nav">
-        <a href="lab4-uslugi.html" class="course-btn">⬅️ Poprzedni: Lab 4 (DNS i IIS)</a>
-        <a href="lab5-zaawansowane.html" class="course-btn next">Następny: Lab 5 (Zaawansowane) ➡️</a>
-    </div>
-    <script src="../menu.js"></script>
-</body>
+        <div class="course-nav">
+            <a href="lab4-uslugi.html" class="course-btn">⬅️ Poprzedni: Lab 4 (DNS i IIS)</a>
+            <a href="lab5-zaawansowane.html" class="course-btn next"
+                >Następny: Lab 5 (Zaawansowane) ➡️</a
+            >
+        </div>
+        <script src="../menu.js"></script>
+    </body>
 </html>

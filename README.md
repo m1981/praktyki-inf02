@@ -48,6 +48,7 @@ Kompletne materiały do egzaminu zawodowego **INF.02 - Administracja Systemami i
 ### 🚀 System Nawigacji
 
 Plik `menu.js` automatycznie:
+
 1. Wykrywa, czy jesteś w głównym katalogu czy podfolderze
 2. Generuje sticky navbar z linkami do wszystkich filarów
 3. Tworzy breadcrumbs pokazujące aktualną lokalizację
