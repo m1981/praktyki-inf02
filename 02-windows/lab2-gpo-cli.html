@@ -10,6 +10,13 @@
         .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
         .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
         .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+
+        /* Style dla referencji egzaminacyjnej */
+        .exam-reference { margin-top: 15px; margin-bottom: 15px; background: #f1f2f6; border: 1px solid #dfe6e9; border-radius: 6px; overflow: hidden; }
+        .exam-reference summary { padding: 10px 15px; background: #dfe6e9; font-weight: bold; cursor: pointer; color: #2d3436; outline: none; }
+        .exam-reference summary:hover { background: #b2bec3; }
+        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
+        .exam-content blockquote { border-left: 4px solid #636e72; margin: 10px 0 0 0; padding-left: 15px; background: #ffffff; padding-top: 10px; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -56,6 +63,22 @@ net user uczen1 Zaq12345! /add /expires:25/06/2025
 
 <span class="cli-comment"># 3. Dodanie użytkownika do grupy</span>
 net localgroup Uczniowie uczen1 /add</div>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2023-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ za pomocą poleceń systemowych dodaj użytkownika uczen1 z hasłem zaq1@WSX z ustawionym czasem wygaśnięcia konta na 25.11.2025 r. W arkuszu egzaminacyjnym w tabeli 2 zapisz użyte polecenie z wszystkimi wymaganymi parametrami<br>
+                                    ‒ za pomocą poleceń systemowych utwórz grupę użytkowników o nazwie uczniowie<br>
+                                    ‒ dodaj konto uczen1 do grupy uczniowie</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                 </ul>
 
@@ -106,6 +129,20 @@ net localgroup Uczniowie uczen1 /add</div>
                         <div class="gui-path">User Configuration (Konfiguracja użytkownika) <span class="gui-arrow">➔</span> Policies (Zasady) <span class="gui-arrow">➔</span> Windows Settings (Ustawienia systemu Windows) <span class="gui-arrow">➔</span> Security Settings (Ustawienia zabezpieczeń) <span class="gui-arrow">➔</span> Software Restriction Policies (Zasady ograniczeń oprogramowania)</div>
                         <p>Kliknij prawym na "Software Restriction Policies" i wybierz <strong>New Software Restriction Policies (Nowe zasady...)</strong>. Następnie wejdź w folder <em>Additional Rules (Reguły dodatkowe)</em>. Kliknij prawym w puste pole -> <strong>New Path Rule... (Nowa reguła ścieżki...)</strong></p>
                         <p>W polu ścieżka wpisz: <code>notepad.exe</code>. Security level (Poziom zabezpieczeń): <strong>Disallowed (Niedozwolone)</strong>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2021-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Na stacji roboczej skonfiguruj system Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ skonfiguruj system tak, aby użytkownicy systemu nie mieli możliwości uruchamiania programu Notatnik.</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="golden-rule-box">

@@ -11,6 +11,13 @@
         .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
         .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
         .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+
+        /* Style dla referencji egzaminacyjnej */
+        .exam-reference { margin-top: 15px; margin-bottom: 15px; background: #f1f2f6; border: 1px solid #dfe6e9; border-radius: 6px; overflow: hidden; }
+        .exam-reference summary { padding: 10px 15px; background: #dfe6e9; font-weight: bold; cursor: pointer; color: #2d3436; outline: none; }
+        .exam-reference summary:hover { background: #b2bec3; }
+        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
+        .exam-content blockquote { border-left: 4px solid #636e72; margin: 10px 0 0 0; padding-left: 15px; background: #ffffff; padding-top: 10px; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -30,7 +37,7 @@
             </div>
             <div class="lab-body">
                 <div class="goal-box">
-                    Cel: Przekształcenie zwykłego Windows Servera w Kontroler Domeny i podłączenie do niego stacji roboczej ucznia. (Z arkuszy: v1.1, v1.7)
+                    Cel: Przekształcenie zwykłego Windows Servera w Kontroler Domeny i podłączenie do niego stacji roboczej ucznia.
                 </div>
 
                 <ul class="task-list">
@@ -44,6 +51,20 @@
                             <li>Root domain name (Nazwa domeny głównej): <code>zs1.local</code></li>
                             <li>Ustaw hasło przywracania usług katalogowych (DSRM) na <code>Zaq12345!</code></li>
                         </ul>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Styczeń 2022 (INF.02-01-22.01-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2022-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ promuj serwer do roli kontrolera domeny. Utwórz nową domenę o nazwie egzamin.local w nowym lesie. Jako hasło konta Administrator dla trybu przywracania usług katalogowych ustaw Egzamin08!@</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="pitfall-box">
@@ -58,6 +79,21 @@
                         <p>Uruchom drugą maszynę wirtualną (Windows 10). Upewnij się, że w ustawieniach karty sieciowej ma wpisany adres IP serwera jako swój serwer DNS!</p>
                         <div class="gui-path">System Properties (Właściwości systemu) <span class="gui-arrow">➔</span> Change settings (Zmień ustawienia) <span class="gui-arrow">➔</span> Domain (Domena): zs1.local</div>
                         <p>Podaj login i hasło Administratora domeny, aby autoryzować podłączenie.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ dodaj stację roboczą do utworzonej domeny<br>
+                                    ‒ zaloguj się do domeny na konto abackia, a następnie wyloguj się</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                 </ul>
 
@@ -68,7 +104,7 @@
                         <li>Na stacji roboczej (Windows 10) otwórz okno <strong>Właściwości systemu</strong> (tam, gdzie widać pełną nazwę komputera i nazwę domeny).</li>
                         <li>Zrób zrzut ekranu (PrintScreen lub Narzędzie Wycinanie).</li>
                         <li>Otwórz edytor tekstu (Word / LibreOffice Writer), wklej zrzut ekranu.</li>
-                        <li>Zapisz plik pod nazwą np. <code>stacja_testy.docx</code> na pendrive opisanym jako <strong>EGZAMIN-X</strong> (gdzie X to numer Twojego stanowiska).</li>
+                        <li>Zapisz plik pod nazwą np. <code>stacja_testy.docx</code> na pendrive opisanym jako <strong>EGZAMIN-X</strong>.</li>
                     </ol>
                 </div>
             </div>
@@ -82,13 +118,30 @@
             </div>
             <div class="lab-body">
                 <div class="goal-box">
-                    Cel: Zbudowanie struktury szkoły w Active Directory używając zarówno myszki (GUI), jak i wiersza poleceń (CLI). (Z arkuszy: v1.1, v1.3, v1.4)
+                    Cel: Zbudowanie struktury szkoły w Active Directory używając zarówno myszki (GUI), jak i wiersza poleceń (CLI).
                 </div>
 
                 <ul class="task-list">
                     <li><strong>Krok 1: Struktura (GUI)</strong>
-                        <div class="gui-path">Narzędzia <span class="gui-arrow">➔</span> Użytkownicy i komputery usługi Active Directory (dsa.msc)</div>
-                        <p>Utwórz nową Jednostkę Organizacyjną (OU) o nazwie <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We właściwościach konta zaznacz opcję <strong>"Hasło nigdy nie wygasa"</strong>.</p>
+                        <div class="gui-path">Tools (Narzędzia) <span class="gui-arrow">➔</span> Active Directory Users and Computers (Użytkownicy i komputery usługi Active Directory)</div>
+                        <p>Utwórz nową Jednostkę Organizacyjną (OU) o nazwie <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We właściwościach konta zaznacz opcję <strong>"Password never expires" (Hasło nigdy nie wygasa)</strong>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Styczeń 2022 (INF.02-01-22.01-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2022-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ w domenie egzamin.local utwórz jednostkę organizacyjną o nazwie Prawnicy, a w niej utwórz konto użytkownika z następującymi ustawieniami:<br>
+                                    ‒ pełna nazwa: Adam Kowalski<br>
+                                    ‒ nazwa logowania: prawnik<br>
+                                    ‒ hasło: Pr@wnik1!</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="pitfall-box">
@@ -106,12 +159,28 @@ net user uczen1 Zaq12345! /add /expires:25/06/2025
 
 <span class="cli-comment"># 3. Dodanie użytkownika do grupy</span>
 net localgroup Uczniowie uczen1 /add</div>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2023-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ za pomocą poleceń systemowych dodaj użytkownika uczen1 z hasłem zaq1@WSX z ustawionym czasem wygaśnięcia konta na 25.11.2025 r. W arkuszu egzaminacyjnym w tabeli 2 zapisz użyte polecenie z wszystkimi wymaganymi parametrami<br>
+                                    ‒ za pomocą poleceń systemowych utwórz grupę użytkowników o nazwie uczniowie<br>
+                                    ‒ dodaj konto uczen1 do grupy uczniowie</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                 </ul>
 
                 <div class="exam-verify-box">
                     <h4>📝 Weryfikacja Egzaminacyjna (Papierowa!)</h4>
-                    <p>W przypadku zadań z wiersza poleceń (CLI), egzaminator nie zawsze prosi o zrzut ekranu. W arkuszu egzaminacyjnym znajduje się fizyczna tabela (np. <em>Tabela 2. Polecenia Windows</em>). Musisz w niej <strong>długopisem wpisać dokładną komendę</strong>, której użyłeś, wraz ze wszystkimi parametrami (np. <code>net user uczen1 haslo /add</code>).</p>
+                    <p>W przypadku zadań z wiersza poleceń (CLI), egzaminator nie zawsze prosi o zrzut ekranu. W arkuszu egzaminacyjnym znajduje się fizyczna tabela (np. <em>Tabela 2. Polecenia Windows</em>). Musisz w niej <strong>długopisem wpisać dokładną komendę</strong>, której użyłeś, wraz ze wszystkimi parametrami.</p>
                 </div>
             </div>
         </div>
@@ -124,29 +193,82 @@ net localgroup Uczniowie uczen1 /add</div>
             </div>
             <div class="lab-body">
                 <div class="goal-box">
-                    Cel: Konfiguracja uprawnień do plików (NTFS), ukrytych udziałów sieciowych oraz profili mobilnych. (Z arkuszy: v1.2, v1.4, v1.7)
+                    Cel: Konfiguracja uprawnień do plików (NTFS), ukrytych udziałów sieciowych oraz profili mobilnych.
                 </div>
 
                 <ul class="task-list">
                     <li><strong>Krok 1: Ukryty udział dla profili</strong>
                         <p>Utwórz na dysku C: folder <code>Profile</code>. Udostępnij go w sieci, ale dodaj znak <code>$</code> na końcu nazwy udziału (<code>Profile$</code>). Dzięki temu będzie niewidoczny dla wścibskich uczniów.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ utwórz folder C:\Profile i udostępnij go pod nazwą profile$<br>
+                                    ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko dla Wszyscy – Pełna kontrola</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                     <li><strong>Krok 2: Profil Mobilny (Roaming Profile)</strong>
-                        <div class="gui-path">Właściwości użytkownika 'maciek' w AD <span class="gui-arrow">➔</span> Zakładka: Profil <span class="gui-arrow">➔</span> Ścieżka profilu</div>
+                        <div class="gui-path">Properties (Właściwości) użytkownika 'maciek' w AD <span class="gui-arrow">➔</span> Profile (Profil) tab <span class="gui-arrow">➔</span> Profile path (Ścieżka profilu)</div>
                         <p>Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>. Zaloguj się jako maciek na Windows 10, stwórz plik na pulpicie, wyloguj się i sprawdź na serwerze, czy plik się zsynchronizował!</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ dla użytkownika Adam Abacki ustaw ścieżkę profilu mobilnego, który będzie zlokalizowany w udostępnionym folderze</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="golden-rule-box">
-                        <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong> Jeśli na zakładce <em>Udostępnianie</em> dasz "Pełną kontrolę", ale w <em>Zabezpieczeniach (NTFS)</em> dasz tylko "Odczyt", to użytkownik będzie miał tylko odczyt. Zawsze dawaj "Wszyscy - Pełna kontrola" w Udostępnianiu, a prawdziwe restrykcje ustawiaj w Zabezpieczeniach!
+                        <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong> Jeśli na zakładce <em>Sharing (Udostępnianie)</em> dasz "Full control (Pełną kontrolę)", ale w <em>Security (Zabezpieczeniach NTFS)</em> dasz tylko "Read (Odczyt)", to użytkownik będzie miał tylko odczyt. Zawsze dawaj "Wszyscy - Pełna kontrola" w Udostępnianiu, a prawdziwe restrykcje ustawiaj w Zabezpieczeniach!
                     </div>
 
                     <li><strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
-                        <p>Utwórz folder <code>Sprawdziany</code>. W zakładce <strong>Zabezpieczenia</strong> (NTFS) ustaw:</p>
+                        <p>Utwórz folder <code>Sprawdziany</code>. W zakładce <strong>Security (Zabezpieczenia)</strong> ustaw:</p>
                         <ul style="margin-left: 20px; margin-bottom: 10px;">
-                            <li>Administratorzy: <strong>Pełna kontrola</strong></li>
-                            <li>Użytkownicy: <strong>Odczyt i wykonywanie</strong></li>
+                            <li>Administrators (Administratorzy): <strong>Full control (Pełna kontrola)</strong></li>
+                            <li>Users (Użytkownicy): <strong>Read & execute (Odczyt i wykonywanie)</strong></li>
                         </ul>
-                        <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Właściwości pliku -> Zaawansowane -> Szyfruj zawartość). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
+                        <p>Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Properties (Właściwości) pliku -> Advanced (Zaawansowane) -> <strong>Encrypt contents to secure data (Szyfruj zawartość, aby zabezpieczyć dane)</strong>). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadania z egzaminów</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin (Uprawnienia NTFS):</strong> Czerwiec 2022 (INF.02-01-22.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2022-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ ustaw zabezpieczenia utworzonego folderu dla:<br>
+                                    ‒ Administratorzy – Pełna kontrola<br>
+                                    ‒ Użytkownicy – Odczyt i wykonywanie</p>
+                                </blockquote>
+                                <hr style="border: 0; border-top: 1px solid #dfe6e9; margin: 15px 0;">
+                                <p><strong>Egzamin (Szyfrowanie EFS):</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="pitfall-box">
@@ -158,8 +280,8 @@ net localgroup Uczniowie uczen1 /add</div>
                     <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
                     <p>Aby udowodnić poprawne uprawnienia i szyfrowanie:</p>
                     <ol>
-                        <li>Zrób zrzut ekranu zakładki <strong>Zabezpieczenia</strong> folderu <code>Sprawdziany</code>, pokazując uprawnienia dla grupy Użytkownicy.</li>
-                        <li>Zrób zrzut ekranu okna Eksploratora, na którym widać, że nazwa zaszyfrowanego pliku zmieniła kolor na <strong>zielony</strong> (lub zrób zrzut okna "Atrybuty zaawansowane" z zaznaczonym ptaszkiem przy szyfrowaniu).</li>
+                        <li>Zrób zrzut ekranu zakładki <strong>Security (Zabezpieczenia)</strong> folderu <code>Sprawdziany</code>, pokazując uprawnienia dla grupy Users (Użytkownicy).</li>
+                        <li>Zrób zrzut ekranu okna Eksploratora, na którym widać, że nazwa zaszyfrowanego pliku zmieniła kolor na <strong>zielony</strong> (lub zrób zrzut okna "Advanced Attributes" z zaznaczonym ptaszkiem przy szyfrowaniu).</li>
                     </ol>
                 </div>
             </div>
@@ -173,7 +295,7 @@ net localgroup Uczniowie uczen1 /add</div>
             </div>
             <div class="lab-body">
                 <div class="goal-box">
-                    Cel: Uruchomienie szkolnej strony WWW i konfiguracja serwera nazw (DNS), aby strona odpowiadała na przyjazny adres. (Z arkuszy: v1.2, v1.5, v1.6, v1.8)
+                    Cel: Uruchomienie szkolnej strony WWW i konfiguracja serwera nazw (DNS), aby strona odpowiadała na przyjazny adres.
                 </div>
 
                 <ul class="task-list">
@@ -181,9 +303,9 @@ net localgroup Uczniowie uczen1 /add</div>
                         <p>Zainstaluj role: <strong>Serwer DNS</strong> oraz <strong>Serwer sieci Web (IIS)</strong>.</p>
                     </li>
                     <li><strong>Krok 2: Konfiguracja DNS</strong>
-                        <div class="gui-path">Menedżer DNS <span class="gui-arrow">➔</span> Strefy wyszukiwania do przodu <span class="gui-arrow">➔</span> Nowa strefa</div>
-                        <p>Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień <em>Interwał odświeżania</em> na 10 minut.</p>
-                        <p>Utwórz <strong>Rekord A</strong> (nazwa: <code>www</code>, adres IP: adres Twojego serwera).</p>
+                        <div class="gui-path">DNS Manager (Menedżer DNS) <span class="gui-arrow">➔</span> Forward Lookup Zones (Strefy wyszukiwania do przodu) <span class="gui-arrow">➔</span> New Zone (Nowa strefa)</div>
+                        <p>Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień <em>Refresh interval (Interwał odświeżania)</em> na 10 minut.</p>
+                        <p>Utwórz <strong>New Host (A) (Nowy rekord hosta A)</strong> (nazwa: <code>www</code>, adres IP: adres Twojego serwera).</p>
                     </li>
 
                     <div class="golden-rule-box">
@@ -192,8 +314,27 @@ net localgroup Uczniowie uczen1 /add</div>
 
                     <li><strong>Krok 3: Konfiguracja IIS (Host Headers)</strong>
                         <p>Utwórz prosty plik <code>index.html</code> z napisem "Witaj w szkole" i wrzuć go do folderu <code>C:\inetpub\wwwroot\szkola</code>.</p>
-                        <div class="gui-path">Menedżer IIS <span class="gui-arrow">➔</span> Witryny <span class="gui-arrow">➔</span> Dodaj witrynę sieci Web</div>
-                        <p>Wskaż ścieżkę fizyczną. W sekcji <strong>Wiązania (Bindings)</strong> wpisz w polu <em>Nazwa hosta</em>: <code>www.intranet.local</code>.</p>
+                        <div class="gui-path">IIS Manager (Menedżer IIS) <span class="gui-arrow">➔</span> Sites (Witryny) <span class="gui-arrow">➔</span> Add Website (Dodaj witrynę sieci Web)</div>
+                        <p>Wskaż ścieżkę fizyczną. W sekcji <strong>Bindings (Wiązania)</strong> wpisz w polu <em>Host name (Nazwa hosta)</em>: <code>www.intranet.local</code>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2024 (INF.02-01-24.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2024-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ zainstaluj na serwerze usługę DNS i IIS oraz skonfiguruj według zaleceń:<br>
+                                    ‒ utwórz nową strefę wyszukiwania do przodu: egzamin.local<br>
+                                    ‒ ustaw w strefie egzamin.local nowy rekord hosta o nazwie www, powiązany z adresem IP interfejsu sieciowego LAN 1<br>
+                                    ‒ dodaj i skonfiguruj witrynę internetową:<br>
+                                    ‒ nazwa witryny: strona_testowa<br>
+                                    ‒ powiązanie tylko z protokołem HTTP, interfejsem sieciowym LAN 1 na porcie 80 i nazwą hosta www.egzamin.local</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                 </ul>
 
