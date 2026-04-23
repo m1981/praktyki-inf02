@@ -10,6 +10,13 @@
         .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
         .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
         .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+
+        /* Style dla referencji egzaminacyjnej */
+        .exam-reference { margin-top: 15px; margin-bottom: 15px; background: #f1f2f6; border: 1px solid #dfe6e9; border-radius: 6px; overflow: hidden; }
+        .exam-reference summary { padding: 10px 15px; background: #dfe6e9; font-weight: bold; cursor: pointer; color: #2d3436; outline: none; }
+        .exam-reference summary:hover { background: #b2bec3; }
+        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
+        .exam-content blockquote { border-left: 4px solid #636e72; margin: 10px 0 0 0; padding-left: 15px; background: #ffffff; padding-top: 10px; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -36,6 +43,25 @@
                         <div class="gui-path">DNS Manager (Menedżer DNS) <span class="gui-arrow">➔</span> Forward Lookup Zones (Strefy wyszukiwania do przodu) <span class="gui-arrow">➔</span> New Zone (Nowa strefa)</div>
                         <p>Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień <em>Refresh interval (Interwał odświeżania)</em> na 10 minut.</p>
                         <p>Utwórz <strong>New Host (A) (Nowy rekord hosta A)</strong> (nazwa: <code>www</code>, adres IP: adres Twojego serwera).</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Styczeń 2024 (INF.02-01-24.01-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2024-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ zainstaluj usługę DNS i skonfiguruj ją zgodnie z zaleceniami:<br>
+                                    ‒ utworzona strefa wyszukiwania do przodu o nazwie: pracownia.local<br>
+                                    ‒ skonfigurowane właściwości strefy:<br>
+                                    ‒ interwał odświeżania: 10 minut<br>
+                                    ‒ interwał ponawiania prób: 5 minut<br>
+                                    ‒ wygasanie po: 12 godzinach</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="golden-rule-box">
@@ -46,6 +72,24 @@
                         <p>Utwórz prosty plik <code>index.html</code> z napisem "Witaj w szkole" i wrzuć go do folderu <code>C:\inetpub\wwwroot\szkola</code>.</p>
                         <div class="gui-path">IIS Manager (Menedżer IIS) <span class="gui-arrow">➔</span> Sites (Witryny) <span class="gui-arrow">➔</span> Add Website (Dodaj witrynę sieci Web)</div>
                         <p>Wskaż ścieżkę fizyczną. W sekcji <strong>Bindings (Wiązania)</strong> wpisz w polu <em>Host name (Nazwa hosta)</em>: <code>www.intranet.local</code>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2024 (INF.02-01-24.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2024-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ dodaj i skonfiguruj witrynę internetową:<br>
+                                    ‒ nazwa witryny: strona_testowa<br>
+                                    ‒ ścieżka do plików strony: C:\www<br>
+                                    ‒ powiązanie tylko z protokołem HTTP, interfejsem sieciowym LAN 1 na porcie 80 i nazwą hosta www.egzamin.local<br>
+                                    ‒ dokument domyślny: strona_testowa.html</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="pitfall-box">

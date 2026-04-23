@@ -10,6 +10,13 @@
         .golden-rule-box { background: #e8f4f8; border-left: 4px solid #00a8ff; padding: 15px; margin: 15px 0; border-radius: 4px; }
         .exam-verify-box { background: #f8d7da; border: 2px dashed #dc3545; padding: 15px; margin: 20px 0; border-radius: 8px; }
         .exam-verify-box h4 { color: #dc3545; margin-top: 0; }
+
+        /* Style dla referencji egzaminacyjnej */
+        .exam-reference { margin-top: 15px; margin-bottom: 15px; background: #f1f2f6; border: 1px solid #dfe6e9; border-radius: 6px; overflow: hidden; }
+        .exam-reference summary { padding: 10px 15px; background: #dfe6e9; font-weight: bold; cursor: pointer; color: #2d3436; outline: none; }
+        .exam-reference summary:hover { background: #b2bec3; }
+        .exam-content { padding: 15px; font-size: 0.95rem; color: #2d3436; }
+        .exam-content blockquote { border-left: 4px solid #636e72; margin: 10px 0 0 0; padding-left: 15px; background: #ffffff; padding-top: 10px; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -35,6 +42,20 @@
                     <li><strong>Krok 3: Konfiguracja Translacji Adresów (NAT)</strong>
                         <div class="gui-path">Routing and Remote Access (Routing i dostęp zdalny)</div>
                         <p>Kliknij prawym przyciskiem na nazwę serwera i wybierz <em>"Configure and Enable Routing and Remote Access" (Konfiguruj i włącz routing...)</em>. Wybierz <strong>Network Address Translation (NAT) (Translacja adresów sieciowych (NAT))</strong>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Styczeń 2024 (INF.02-01-24.01-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2024-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem operacyjnym Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ włącz usługę rutingu oraz NAT dla adresu 172.31.0.2 jako interfejsu publicznego</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="pitfall-box">
@@ -54,6 +75,23 @@
                     <li><strong>Krok 1: Zespół kart sieciowych</strong>
                         <div class="gui-path">Server Manager (Menedżer serwera) <span class="gui-arrow">➔</span> Local Server (Serwer lokalny) <span class="gui-arrow">➔</span> NIC Teaming (Zespół kart interfejsu sieciowego)</div>
                         <p>Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym -> <strong>Add to New Team (Dodaj do nowego zespołu)</strong>. Nazwij go <code>LAN_Zespol</code>. Teaming mode (Tryb): <em>Switch Independent (Niezależny od przełącznika)</em>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ utworzony zespół kart interfejsu sieciowego na serwerze lokalnym (NIC Teaming)<br>
+                                    ‒ nazwa interfejsu: LAN12<br>
+                                    ‒ zgrupowane interfejsy sieciowe LAN1 i LAN2<br>
+                                    ‒ niezależny od przełącznika, dynamiczne równoważenie obciążenia</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
 
                     <div class="golden-rule-box">
@@ -76,6 +114,23 @@
                     </li>
                     <li><strong>Krok 2: Udostępnianie i restrykcje</strong>
                         <p>Wejdź we właściwości nowej drukarki. W zakładce <strong>Advanced (Zaawansowane)</strong> zmień opcję na <strong>Available from (Dostępna od) 08:00 to 15:00</strong>.</p>
+
+                        <!-- REFERENCJA EGZAMINACYJNA -->
+                        <details class="exam-reference">
+                            <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                            <div class="exam-content">
+                                <p><strong>Egzamin:</strong> Styczeń 2023 (INF.02-01-23.01-SG)</p>
+                                <p><strong>Arkusz:</strong> <a href="../egzaminy/inf02-2023-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank">Pobierz PDF</a></p>
+                                <blockquote>
+                                    <p><em style="color: #636e72;">Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows zgodnie z zaleceniami: (...)</em></p>
+                                    <p><strong>Treść zadania:</strong><br>
+                                    ‒ zainstaluj drukarkę sieciową. Drukarka jest dostępna przez port TCP/IP pod adresem 192.168.0.200, z protokołem RAW.<br>
+                                    ‒ udostępnij drukarkę pod nazwą Drukarka-X<br>
+                                    ‒ skonfiguruj domyślne ustawienia drukowania dla zainstalowanej drukarki:<br>
+                                    ‒ dostępność od godziny 8:00 do godziny 21:00</p>
+                                </blockquote>
+                            </div>
+                        </details>
                     </li>
                 </ul>
 
