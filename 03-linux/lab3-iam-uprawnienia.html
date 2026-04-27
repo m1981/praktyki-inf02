@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 3: IAM i Uprawnienia</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            /* Lokalne kolory tagów dla Filaru 3 (Linux/Ubuntu) */
+            :root {
+                --ubu-orange: #e95420;
+                --ubu-orange-bg: #fdf3f0;
+                --ubu-purple: #77216f;
+                --ubu-purple-bg: #f5eef5;
+                --ubu-dark: #2c001e;
+            }
+            .card.ubu-orange {
+                border-top-color: var(--ubu-orange);
+            }
+            .card.ubu-purple {
+                border-top-color: var(--ubu-purple);
+            }
+            .tag.ubu-orange {
+                background: var(--ubu-orange-bg);
+                color: var(--ubu-orange);
+            }
+            .tag.ubu-purple {
+                background: var(--ubu-purple-bg);
+                color: var(--ubu-purple);
+            }
+
+            /* Bloki trenerskie */
+            .pitfall-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .golden-rule-box {
+                background: #e8f4f8;
+                border-left: 4px solid #00a8ff;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .exam-verify-box {
+                background: #f8d7da;
+                border: 2px dashed #dc3545;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+            .exam-verify-box h4 {
+                color: #dc3545;
+                margin-top: 0;
+            }
+
+            /* Style dla referencji egzaminacyjnej */
+            .exam-reference {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                background: #f1f2f6;
+                border: 1px solid #dfe6e9;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+            .exam-reference summary {
+                padding: 10px 15px;
+                background: #dfe6e9;
+                font-weight: bold;
+                cursor: pointer;
+                color: #2d3436;
+                outline: none;
+            }
+            .exam-reference summary:hover {
+                background: #b2bec3;
+            }
+            .exam-content {
+                padding: 15px;
+                font-size: 0.95rem;
+                color: #2d3436;
+            }
+            .exam-content blockquote {
+                border-left: 4px solid #636e72;
+                margin: 10px 0 0 0;
+                padding-left: 15px;
+                background: #ffffff;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            /* Tabela uprawnień */
+            .chmod-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+                text-align: center;
+            }
+            .chmod-table th,
+            .chmod-table td {
+                border: 1px solid #dfe6e9;
+                padding: 10px;
+            }
+            .chmod-table th {
+                background-color: var(--ubu-purple-bg);
+                color: var(--ubu-purple);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>🐧 Lab 3: Bramkarz w klubie</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">
+                Zarządzanie użytkownikami (IAM) i matematyka uprawnień (chmod)
+            </p>
+        </header>
+
+        <main class="lab-container">
+            <div class="goal-box">
+                Cel: Nauczyć się tworzyć konta użytkowników, przydzielać ich do grup oraz
+                zabezpieczać pliki i katalogi za pomocą uprawnień oktalnych (cyfrowych).
+            </div>
+
+            <div
+                class="golden-rule-box"
+                style="border-left-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+            >
+                <strong>💡 Złota Rada Trenera (Magiczne słowo SUDO):</strong>
+                W poprzednich laboratoriach pracowaliśmy we własnym katalogu domowym. Teraz będziemy
+                modyfikować system (dodawać użytkowników). Zwykły użytkownik nie ma do tego prawa.
+                Przed każdą komendą w Kroku 1 musisz użyć słowa <code>sudo</code> (SuperUser DO),
+                aby wykonać ją z uprawnieniami administratora!
+            </div>
+
+            <!-- KROK 1 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 1: Użytkownicy i Grupy (IAM)</h3>
+                    <span class="time-badge">Czas: 15 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>Zbudujmy strukturę personalną na naszym serwerze:</p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># 1. Utwórz nową grupę o nazwie "Kierownictwo"</span
+                        >
+                        sudo groupadd Kierownictwo
+
+                        <span class="cli-comment"
+                            ># 2. Utwórz użytkownika "kierownik" (flaga -m tworzy mu katalog
+                            domowy!)</span
+                        >
+                        sudo useradd -m kierownik
+
+                        <span class="cli-comment"
+                            ># 3. Ustaw hasło dla nowego użytkownika (system poprosi o wpisanie go 2
+                            razy)</span
+                        >
+                        sudo passwd kierownik
+
+                        <span class="cli-comment"
+                            ># 4. Dodaj użytkownika "kierownik" do grupy "Kierownictwo"</span
+                        >
+                        sudo usermod -aG Kierownictwo kierownik
+                    </div>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów (Flaga -aG):</strong>
+                        Przy dodawaniu do grupy komendą <code>usermod</code>,
+                        <strong>ZAWSZE</strong> używaj flagi <code>-aG</code> (Append to Group).
+                        Jeśli użyjesz samego <code>-G</code>, system doda użytkownika do nowej
+                        grupy, ale jednocześnie
+                        <strong>wyrzuci go ze wszystkich innych grup</strong>, w których był
+                        wcześniej! To klasyczny błąd, który potrafi zepsuć cały serwer.
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.01-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ utwórz grupę użytkowników o nazwie Kierownictwo<br />
+                                    ‒ utwórz konto użytkownika o nazwie Kierownik z hasłem
+                                    Kier0wnik1<br />
+                                    ‒ dodaj użytkownika Kierownik do grupy użytkowników Kierownictwo
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="lab-card ubu-purple">
+                <div class="lab-header">
+                    <h3>Krok 2: Matematyka Uprawnień (Teoria)</h3>
+                    <span class="time-badge">Czas: 10 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        W Linuxie uprawnienia do pliku dzielą się na 3 kategorie osób:
+                        <strong>Właściciel (User)</strong>, <strong>Grupa (Group)</strong> oraz
+                        <strong>Reszta świata (Others)</strong>.
+                    </p>
+                    <p>
+                        Każda z tych osób może mieć 3 rodzaje praw, którym przypisano wartości
+                        liczbowe:
+                    </p>
+
+                    <table class="chmod-table">
+                        <tr>
+                            <th>Prawo</th>
+                            <th>Symbol</th>
+                            <th>Wartość liczbowa</th>
+                            <th>Co to znaczy dla pliku?</th>
+                            <th>Co to znaczy dla katalogu?</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Odczyt</strong> (Read)</td>
+                            <td><code>r</code></td>
+                            <td><strong>4</strong></td>
+                            <td>Możesz przeczytać zawartość pliku</td>
+                            <td>Możesz wylistować pliki (zrobić <code>ls</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Zapis</strong> (Write)</td>
+                            <td><code>w</code></td>
+                            <td><strong>2</strong></td>
+                            <td>Możesz edytować/usunąć plik</td>
+                            <td>Możesz tworzyć/usuwać pliki w środku</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Wykonywanie</strong> (eXecute)</td>
+                            <td><code>x</code></td>
+                            <td><strong>1</strong></td>
+                            <td>Możesz uruchomić plik (jak program .exe)</td>
+                            <td>
+                                <strong>Możesz wejść do katalogu (zrobić <code>cd</code>)</strong>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div
+                        class="card"
+                        style="
+                            border-top-color: #2c001e;
+                            background-color: #f8f9fa;
+                            margin-top: 20px;
+                            padding: 15px;
+                        "
+                    >
+                        <h4 style="color: #2c001e; margin-top: 0">
+                            🕵️‍♂️ Sekret Inżyniera: Jak to policzyć?
+                        </h4>
+                        <p>Uprawnienia po prostu się do siebie dodaje!</p>
+                        <ul>
+                            <li>
+                                Chcesz dać komuś <strong>Pełną kontrolę</strong> (Odczyt + Zapis +
+                                Wykonywanie)? Liczysz: 4 + 2 + 1 = <strong>7</strong>.
+                            </li>
+                            <li>
+                                Chcesz dać komuś <strong>Odczyt i Zapis</strong> (bez wykonywania)?
+                                Liczysz: 4 + 2 = <strong>6</strong>.
+                            </li>
+                            <li>
+                                Chcesz dać komuś <strong>Tylko odczyt</strong>? Liczysz:
+                                <strong>4</strong>.
+                            </li>
+                            <li>Chcesz zabrać wszystkie prawa? Wpisujesz: <strong>0</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 3: Nadawanie uprawnień (chmod)</h3>
+                    <span class="time-badge">Czas: 15 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>Przećwiczmy to w praktyce na zadaniach prosto z arkuszy egzaminacyjnych!</p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># Przygotowanie: Utwórz katalog i plik do testów</span
+                        >
+                        cd ~ mkdir testowy_katalog touch konfiguracja.txt
+                    </div>
+
+                    <p>
+                        <strong>Zadanie A (Arkusz 2023):</strong> Ustaw do katalogu
+                        <code>testowy_katalog</code> prawa o wartości <strong>711</strong>.
+                    </p>
+                    <div class="cli-block">
+                        <span class="cli-comment"># 7 (Właściciel: 4+2+1 = pełna kontrola)</span>
+                        <span class="cli-comment"
+                            ># 1 (Grupa: 1 = tylko wchodzenie do katalogu)</span
+                        >
+                        <span class="cli-comment"
+                            ># 1 (Reszta: 1 = tylko wchodzenie do katalogu)</span
+                        >
+                        chmod 711 testowy_katalog
+                    </div>
+
+                    <p>
+                        <strong>Zadanie B (Arkusz 2024):</strong> Ustaw do pliku
+                        <code>konfiguracja.txt</code> prawa
+                        <strong
+                            >tylko do odczytu i zapisu dla właściciela, grupy i innych
+                            użytkowników</strong
+                        >.
+                    </p>
+                    <div class="cli-block">
+                        <span class="cli-comment"># Odczyt (4) + Zapis (2) = 6.</span>
+                        <span class="cli-comment"
+                            ># Dla wszystkich trzech grup (Właściciel, Grupa, Inni) dajemy 6.</span
+                        >
+                        chmod 666 konfiguracja.txt
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadania z egzaminów</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin 1:</strong> Czerwiec 2023 (INF.02-01-23.01-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ utwórz w katalogu domowym użytkownika administrator katalog
+                                    test<br />
+                                    ‒ ustaw do katalogu test prawa o wartości 711
+                                </p>
+                            </blockquote>
+                            <hr style="border: 0; border-top: 1px solid #dfe6e9; margin: 15px 0" />
+                            <p><strong>Egzamin 2:</strong> Styczeń 2024 (INF.02-01-24.01-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ ustaw do pliku konfiguracja prawa tylko do odczytu i zapisu
+                                    dla właściciela, grupy i innych użytkowników
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- WERYFIKACJA EGZAMINACYJNA -->
+            <div
+                class="exam-verify-box"
+                style="border-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+            >
+                <h4 style="color: var(--ubu-purple)">
+                    📸 Weryfikacja Egzaminacyjna: Jak udowodnić, że działa?
+                </h4>
+                <p>
+                    Egzaminator nie uwierzy Ci na słowo, że wpisałeś komendę <code>chmod</code>.
+                    Musisz pokazać mu efekt. Służy do tego komenda <code>ls -l</code> (long format).
+                </p>
+
+                <div class="cli-block">
+                    <span class="cli-comment"># Sprawdź uprawnienia do swoich plików</span>
+                    ls -l
+                </div>
+
+                <p>Na ekranie zobaczysz coś takiego:</p>
+                <ul>
+                    <li>
+                        <code>-rw-rw-rw- 1 administrator administrator 0 konfiguracja.txt</code> (To
+                        jest Twoje 666!)
+                    </li>
+                    <li>
+                        <code>drwx--x--x 2 administrator administrator 4096 testowy_katalog</code>
+                        (To jest Twoje 711! Literka 'd' na początku oznacza Directory/Katalog).
+                    </li>
+                </ul>
+                <p>Zrób zrzut ekranu tego wyniku i wklej do dokumentacji egzaminacyjnej.</p>
+            </div>
+        </main>
+
+        <!-- COURSE NAVIGATION -->
+        <div class="course-nav">
+            <a href="lab2-pliki-archiwa.html" class="course-btn"
+                >⬅️ Poprzedni: Lab 2 (Pliki i Archiwa)</a
+            >
+            <a
+                href="lab4-siec.html"
+                class="course-btn next"
+                style="background-color: var(--ubu-orange); color: white"
+                >Następny: Lab 4 (Sieci w CLI) ➡️</a
+            >
+        </div>
+
+        <script src="../menu.js"></script>
+    </body>
+</html>

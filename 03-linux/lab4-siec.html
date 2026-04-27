@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 4: Sieci w CLI</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            /* Lokalne kolory tagów dla Filaru 3 (Linux/Ubuntu) */
+            :root {
+                --ubu-orange: #e95420;
+                --ubu-orange-bg: #fdf3f0;
+                --ubu-purple: #77216f;
+                --ubu-purple-bg: #f5eef5;
+                --ubu-dark: #2c001e;
+            }
+            .card.ubu-orange {
+                border-top-color: var(--ubu-orange);
+            }
+            .card.ubu-purple {
+                border-top-color: var(--ubu-purple);
+            }
+            .tag.ubu-orange {
+                background: var(--ubu-orange-bg);
+                color: var(--ubu-orange);
+            }
+            .tag.ubu-purple {
+                background: var(--ubu-purple-bg);
+                color: var(--ubu-purple);
+            }
+
+            /* Bloki trenerskie */
+            .pitfall-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .golden-rule-box {
+                background: #e8f4f8;
+                border-left: 4px solid #00a8ff;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .exam-verify-box {
+                background: #f8d7da;
+                border: 2px dashed #dc3545;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+            .exam-verify-box h4 {
+                color: #dc3545;
+                margin-top: 0;
+            }
+
+            /* Style dla referencji egzaminacyjnej */
+            .exam-reference {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                background: #f1f2f6;
+                border: 1px solid #dfe6e9;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+            .exam-reference summary {
+                padding: 10px 15px;
+                background: #dfe6e9;
+                font-weight: bold;
+                cursor: pointer;
+                color: #2d3436;
+                outline: none;
+            }
+            .exam-reference summary:hover {
+                background: #b2bec3;
+            }
+            .exam-content {
+                padding: 15px;
+                font-size: 0.95rem;
+                color: #2d3436;
+            }
+            .exam-content blockquote {
+                border-left: 4px solid #636e72;
+                margin: 10px 0 0 0;
+                padding-left: 15px;
+                background: #ffffff;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>🐧 Lab 4: Gdzie jest Internet?</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">
+                Konfiguracja interfejsów sieciowych, adresacji IP i Netplan
+            </p>
+        </header>
+
+        <main class="lab-container">
+            <div class="goal-box">
+                Cel: Nauczyć się diagnozować połączenie sieciowe, zmieniać nazwę hosta oraz
+                konfigurować statyczny adres IP w nowoczesnym systemie Ubuntu.
+            </div>
+
+            <!-- KROK 1 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 1: Rozpoznanie (Recon)</h3>
+                    <span class="time-badge">Czas: 5 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        Zanim cokolwiek zmienisz, musisz wiedzieć, jak nazywa się Twoja karta
+                        sieciowa i jaki ma obecnie adres IP.
+                    </p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># 1. Wyświetl wszystkie karty sieciowe i ich adresy IP</span
+                        >
+                        ip a
+
+                        <span class="cli-comment"
+                            ># 2. Sprawdź tablicę routingu (gdzie jest brama domyślna / default
+                            gateway?)</span
+                        >
+                        ip route
+
+                        <span class="cli-comment"
+                            ># 3. Sprawdź, czy masz wyjście na świat (przerwij wciskając
+                            Ctrl+C!)</span
+                        >
+                        ping 8.8.8.8
+                    </div>
+
+                    <div
+                        class="golden-rule-box"
+                        style="
+                            border-left-color: var(--ubu-orange);
+                            background: var(--ubu-orange-bg);
+                        "
+                    >
+                        <strong>💡 Złota Rada Trenera (Nazwy interfejsów):</strong>
+                        W starych Linuxach karta sieciowa zawsze nazywała się <code>eth0</code>. W
+                        nowoczesnym Ubuntu nazwy są generowane na podstawie portu na płycie głównej,
+                        np. <code>enp0s3</code> lub <code>ens33</code>. Zawsze najpierw wpisz
+                        <code>ip a</code>, aby poznać dokładną nazwę swojej karty!
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="lab-card ubu-purple">
+                <div class="lab-header">
+                    <h3>Krok 2: Zmiana nazwy komputera (Hostname)</h3>
+                    <span class="time-badge">Czas: 5 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        To jedno z najczęstszych zadań na egzaminie. Egzaminator prosi o zmianę
+                        nazwy stacji roboczej.
+                    </p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"># 1. Sprawdź obecną nazwę komputera</span>
+                        hostname
+
+                        <span class="cli-comment"
+                            ># 2. Zmień nazwę na STACJAX (wymaga uprawnień root!)</span
+                        >
+                        sudo hostnamectl set-hostname STACJAX
+
+                        <span class="cli-comment"
+                            ># 3. Wyloguj się i zaloguj ponownie, aby zobaczyć zmianę w znaku
+                            zachęty</span
+                        >
+                        exit
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin:</strong> Styczeń 2022 (INF.02-01-22.01-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ zmień nazwę komputera na STACJAX, gdzie X to numer Twojego
+                                    stanowiska egzaminacyjnego
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 3: Konfiguracja IP (Netplan) - BOSS FIGHT 🐉</h3>
+                    <span class="time-badge">Czas: 20 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        W Ubuntu od wersji 18.04 sieć konfiguruje się za pomocą narzędzia
+                        <strong>Netplan</strong>. Używa ono plików w formacie YAML. Format ten jest
+                        <strong>niezwykle wrażliwy na spacje</strong>.
+                    </p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># 1. Znajdź plik konfiguracyjny (zazwyczaj nazywa się
+                            00-installer-config.yaml lub 50-cloud-init.yaml)</span
+                        >
+                        ls /etc/netplan/
+
+                        <span class="cli-comment"
+                            ># 2. Edytuj ten plik w nano (podmień nazwę pliku na tę, którą znalazłeś
+                            wyżej!)</span
+                        >
+                        sudo nano /etc/netplan/50-cloud-init.yaml
+                    </div>
+
+                    <p>
+                        W edytorze <code>nano</code> zmień konfigurację tak, aby ustawić statyczny
+                        adres IP (np. <code>10.100.100.3/24</code>). Wzór wygląda tak:
+                    </p>
+
+                    <div class="cli-block" style="background-color: #2d3436; color: #f8f8f2">
+                        <pre style="margin: 0; font-family: monospace">
+network:
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses: [10.100.100.3/24]
+      routes:
+        - to: default
+          via: 10.100.100.1
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+  version: 2
+</pre
+                        >
+                    </div>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 KRYTYCZNY BŁĄD (Spacje vs TAB):</strong>
+                        W plikach YAML <strong>NIE WOLNO UŻYWAĆ KLAWISZA TAB!</strong> Wciśnięcie
+                        TABa zepsuje cały plik i sieć nie wstanie. Wcięcia robimy
+                        <strong>wyłącznie spacjami</strong> (zazwyczaj po 2 spacje na każdy poziom
+                        wcięcia). Zwróć uwagę na to, jak równo ułożone są linijki w przykładzie
+                        powyżej.
+                    </div>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"># 3. Zapisz plik (Ctrl+O, Enter, Ctrl+X)</span>
+
+                        <span class="cli-comment"># 4. Zastosuj nową konfigurację sieci</span>
+                        sudo netplan apply
+
+                        <span class="cli-comment"
+                            ># 5. Sprawdź, czy karta dostała nowy adres IP</span
+                        >
+                        ip a
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin:</strong> Czerwiec 2024 (INF.02-01-24.06-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ skonfiguruj przewodowy interfejs sieciowy stacji roboczej
+                                    według zaleceń:<br />
+                                    ‒ adres IP: 10.100.100.3/24<br />
+                                    ‒ brama domyślna: adres interfejsu LAN_switch na serwerze<br />
+                                    ‒ serwer DNS: adres interfejsu LAN_switch na serwerze
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- WERYFIKACJA EGZAMINACYJNA -->
+            <div
+                class="exam-verify-box"
+                style="border-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+            >
+                <h4 style="color: var(--ubu-purple)">
+                    📸 Weryfikacja Egzaminacyjna: Zrzut konfiguracji do pliku
+                </h4>
+                <p>
+                    Egzaminatorzy często proszą o zapisanie aktualnej konfiguracji sieciowej do
+                    pliku tekstowego, aby mogli ją później sprawdzić.
+                </p>
+
+                <div class="cli-block">
+                    <span class="cli-comment"
+                        ># Zapisz wynik komendy 'ip a' do pliku o nazwie 'konfiguracja' w swoim
+                        katalogu domowym</span
+                    >
+                    ip a > ~/konfiguracja
+
+                    <span class="cli-comment"># Sprawdź, czy plik zawiera poprawne dane</span>
+                    cat ~/konfiguracja
+                </div>
+
+                <p>
+                    <strong>Gratulacje!</strong> Ukończyłeś wszystkie laboratoria z Linuxa.
+                    Potrafisz już diagnozować sprzęt, zarządzać plikami, dodawać użytkowników i
+                    konfigurować sieć w czarnej konsoli. Jesteś gotowy na egzamin INF.02!
+                </p>
+            </div>
+        </main>
+
+        <!-- COURSE NAVIGATION -->
+        <div class="course-nav">
+            <a href="lab3-iam-uprawnienia.html" class="course-btn"
+                >⬅️ Poprzedni: Lab 3 (IAM i Uprawnienia)</a
+            >
+            <a
+                href="../index.html"
+                class="course-btn next"
+                style="background-color: #2d3436; color: white"
+                >🏠 Wróć do Menu Głównego</a
+            >
+        </div>
+
+        <script src="../menu.js"></script>
+    </body>
+</html>
