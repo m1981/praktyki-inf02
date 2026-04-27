@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 2: Pliki i Archiwa</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            /* Lokalne kolory tagów dla Filaru 3 (Linux/Ubuntu) */
+            :root {
+                --ubu-orange: #e95420;
+                --ubu-orange-bg: #fdf3f0;
+                --ubu-purple: #77216f;
+                --ubu-purple-bg: #f5eef5;
+                --ubu-dark: #2c001e;
+            }
+            .card.ubu-orange {
+                border-top-color: var(--ubu-orange);
+            }
+            .card.ubu-purple {
+                border-top-color: var(--ubu-purple);
+            }
+            .tag.ubu-orange {
+                background: var(--ubu-orange-bg);
+                color: var(--ubu-orange);
+            }
+            .tag.ubu-purple {
+                background: var(--ubu-purple-bg);
+                color: var(--ubu-purple);
+            }
+
+            /* Bloki trenerskie */
+            .pitfall-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .golden-rule-box {
+                background: #e8f4f8;
+                border-left: 4px solid #00a8ff;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .exam-verify-box {
+                background: #f8d7da;
+                border: 2px dashed #dc3545;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+            .exam-verify-box h4 {
+                color: #dc3545;
+                margin-top: 0;
+            }
+
+            /* Style dla referencji egzaminacyjnej */
+            .exam-reference {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                background: #f1f2f6;
+                border: 1px solid #dfe6e9;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+            .exam-reference summary {
+                padding: 10px 15px;
+                background: #dfe6e9;
+                font-weight: bold;
+                cursor: pointer;
+                color: #2d3436;
+                outline: none;
+            }
+            .exam-reference summary:hover {
+                background: #b2bec3;
+            }
+            .exam-content {
+                padding: 15px;
+                font-size: 0.95rem;
+                color: #2d3436;
+            }
+            .exam-content blockquote {
+                border-left: 4px solid #636e72;
+                margin: 10px 0 0 0;
+                padding-left: 15px;
+                background: #ffffff;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>🐧 Lab 2: Papierkowa robota</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">
+                Ukryte katalogi, dowiązania symboliczne i archiwa TAR
+            </p>
+        </header>
+
+        <main class="lab-container">
+            <div class="goal-box">
+                Cel: Opanowanie zarządzania plikami w terminalu. Nauczysz się ukrywać dane, tworzyć
+                skróty i rozpakowywać linuxowe archiwa.
+            </div>
+
+            <!-- KROK 1 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 1: Zabawa w chowanego (Ukryte katalogi)</h3>
+                    <span class="time-badge">Czas: 10 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        W Windowsie, aby ukryć folder, klikasz prawym przyciskiem myszy ->
+                        Właściwości -> Ukryty. W Linuxie jest to o wiele prostsze.
+                        <strong>Wystarczy dodać kropkę na początku nazwy!</strong>
+                    </p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># 1. Upewnij się, że jesteś w swoim katalogu domowym (tylda ~)</span
+                        >
+                        cd ~
+
+                        <span class="cli-comment"># 2. Utwórz ukryty katalog o nazwie INF02</span>
+                        mkdir .INF02
+
+                        <span class="cli-comment"
+                            ># 3. Wylistuj pliki zwykłą komendą (katalogu nie będzie widać!)</span
+                        >
+                        ls
+
+                        <span class="cli-comment"
+                            ># 4. Wylistuj pliki z flagą -a (all), aby zobaczyć ukryte pliki</span
+                        >
+                        ls -la
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin:</strong> Styczeń 2022 (INF.02-01-22.01-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ utwórz w katalogu domowym użytkownika administrator ukryty
+                                    katalog o nazwie INF02
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+
+                    <div
+                        class="golden-rule-box"
+                        style="
+                            border-left-color: var(--ubu-orange);
+                            background: var(--ubu-orange-bg);
+                        "
+                    >
+                        <strong>💡 Złota Rada Trenera (Katalog domowy):</strong>
+                        Egzaminatorzy często piszą:
+                        <em>"utwórz w katalogu domowym użytkownika..."</em>. Pamiętaj, że skrótem do
+                        Twojego katalogu domowego jest tylda <code>~</code>. Komenda
+                        <code>cd ~</code> zawsze zabierze Cię bezpiecznie do domu, niezależnie od
+                        tego, gdzie zgubiłeś się w systemie!
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="lab-card ubu-purple">
+                <div class="lab-header">
+                    <h3>Krok 2: Skróty, czyli Dowiązania Symboliczne (Symlinks)</h3>
+                    <span class="time-badge">Czas: 10 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        W Windowsie robisz "Utwórz skrót". W Linuxie tworzysz
+                        <strong>Dowiązanie symboliczne (Symbolic Link)</strong>. Służy do tego
+                        komenda <code>ln</code> (od słowa <em>link</em>) z flagą
+                        <code>-s</code> (symbolic).
+                    </p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># 1. Utwórz dowiązanie symboliczne do katalogu /dev w swoim katalogu
+                            domowym</span
+                        >
+                        <span class="cli-comment"
+                            ># Składnia: ln -s [CO_CHCESZ_PODLINKOWAĆ] [NAZWA_SKRÓTU]</span
+                        >
+                        ln -s /dev ~/dowiazanie_dev
+
+                        <span class="cli-comment"
+                            ># 2. Sprawdź, czy skrót działa (powinieneś zobaczyć zawartość katalogu
+                            /dev)</span
+                        >
+                        ls -la ~/dowiazanie_dev
+                    </div>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów (Kolejność):</strong>
+                        Uczniowie często mylą kolejność w komendzie <code>ln -s</code>. Pamiętaj
+                        zasadę: najpierw podajesz <strong>CEL</strong> (to, co już istnieje i jest
+                        ważne), a dopiero potem <strong>NAZWĘ SKRÓTU</strong> (to, co tworzysz).
+                        Jeśli zrobisz odwrotnie, system wyrzuci błąd lub stworzy zepsuty link!
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin:</strong> Styczeń 2023 (INF.02-01-23.01-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ utwórz w katalogu domowym użytkownika administrator dowiązanie
+                                    symboliczne do katalogu /dev o nazwie dowiazanie_dev
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 3: Rozpakowywanie archiwów (Tarballs)</h3>
+                    <span class="time-badge">Czas: 15 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        W świecie Windowsa królują pliki <code>.zip</code> i <code>.rar</code>. W
+                        świecie Linuxa absolutnym standardem jest <code>.tar</code> (Tape Archive)
+                        oraz jego skompresowana wersja <code>.tar.gz</code>.
+                    </p>
+
+                    <p>Najpierw stwórzmy sobie plik do testów:</p>
+                    <div class="cli-block">
+                        <span class="cli-comment"># 1. Stwórz pusty plik testowy</span>
+                        touch wazny_plik.txt
+
+                        <span class="cli-comment"
+                            ># 2. Spakuj go do archiwum o nazwie inf02.tar</span
+                        >
+                        tar -cvf inf02.tar wazny_plik.txt
+
+                        <span class="cli-comment"
+                            ># 3. Usuń oryginalny plik (żeby udowodnić, że rozpakowanie
+                            działa)</span
+                        >
+                        rm wazny_plik.txt
+                    </div>
+
+                    <p>Teraz wykonajmy zadanie egzaminacyjne – rozpakowanie archiwum:</p>
+                    <div class="cli-block">
+                        <span class="cli-comment"># 4. Rozpakuj archiwum inf02.tar</span>
+                        tar -xvf inf02.tar
+
+                        <span class="cli-comment"># 5. Sprawdź, czy plik wrócił!</span>
+                        ls
+                    </div>
+
+                    <div
+                        class="card"
+                        style="
+                            border-top-color: #2c001e;
+                            background-color: #f8f9fa;
+                            margin-top: 20px;
+                            padding: 15px;
+                        "
+                    >
+                        <h4 style="color: #2c001e; margin-top: 0">
+                            🕵️‍♂️ Sekret Inżyniera: Jak zapamiętać flagi TAR?
+                        </h4>
+                        <p>
+                            Komenda <code>tar</code> ma mnóstwo flag, które wyglądają jak czarna
+                            magia. Oto mnemotechnika, której używają profesjonaliści:
+                        </p>
+                        <ul>
+                            <li>
+                                <strong>-c</strong> (<strong>C</strong>reate) – Tworzy nowe
+                                archiwum.
+                            </li>
+                            <li>
+                                <strong>-x</strong> (e<strong>X</strong>tract) – Wypakowuje
+                                archiwum.
+                            </li>
+                            <li>
+                                <strong>-v</strong> (<strong>V</strong>erbose) – Gadatliwy. Pokazuje
+                                na ekranie, jakie pliki są aktualnie pakowane/rozpakowywane.
+                            </li>
+                            <li>
+                                <strong>-f</strong> (<strong>F</strong>ile) – Informuje, że zaraz
+                                podasz nazwę pliku archiwum (ta flaga <strong>zawsze</strong> musi
+                                być na końcu bloku flag!).
+                            </li>
+                        </ul>
+                        <p>
+                            Czyli: <code>tar -xvf</code> = e<strong>X</strong>tract
+                            <strong>V</strong>erbose <strong>F</strong>ile!
+                        </p>
+                    </div>
+
+                    <!-- REFERENCJA EGZAMINACYJNA -->
+                    <details class="exam-reference">
+                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+                        <div class="exam-content">
+                            <p><strong>Egzamin:</strong> Czerwiec 2024 (INF.02-01-24.06-SG)</p>
+                            <blockquote>
+                                <p>
+                                    <strong>Treść zadania:</strong><br />
+                                    ‒ w katalogu domowym użytkownika administrator utwórz katalog
+                                    egzamin<br />
+                                    ‒ do katalogu egzamin skopiuj z nośnika (...) plik inf02.tar<br />
+                                    ‒ rozpakuj w katalogu egzamin plik inf02.tar<br />
+                                    ‒ wyświetl w terminalu zawartość rozpakowanego pliku.
+                                </p>
+                            </blockquote>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- WERYFIKACJA EGZAMINACYJNA -->
+            <div
+                class="exam-verify-box"
+                style="border-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+            >
+                <h4 style="color: var(--ubu-purple)">
+                    📸 Weryfikacja Egzaminacyjna: Zrzuty ekranu z terminala
+                </h4>
+                <p>
+                    W zadaniach z plikami i archiwami egzaminatorzy często proszą o zrzuty ekranu
+                    (zamiast przekierowania do pliku). Jak to zrobić dobrze?
+                </p>
+                <ol>
+                    <li>Wpisz komendę (np. <code>tar -xvf inf02.tar</code>) i wciśnij Enter.</li>
+                    <li><strong>Nie czyść ekranu! (Nie używaj komendy clear).</strong></li>
+                    <li>
+                        Zrób zrzut ekranu tak, aby było widać
+                        <strong
+                            >zarówno wpisaną przez Ciebie komendę, jak i wynik jej działania</strong
+                        >
+                        (np. listę rozpakowanych plików).
+                    </li>
+                    <li>Wklej zrzut do edytora tekstu w Windowsie.</li>
+                </ol>
+            </div>
+        </main>
+
+        <!-- COURSE NAVIGATION -->
+        <div class="course-nav">
+            <a href="lab1-diagnostyka.html" class="course-btn">⬅️ Poprzedni: Lab 1 (Diagnostyka)</a>
+            <a
+                href="lab3-iam-uprawnienia.html"
+                class="course-btn next"
+                style="background-color: var(--ubu-orange); color: white"
+                >Następny: Lab 3 (IAM i Uprawnienia) ➡️</a
+            >
+        </div>
+
+        <script src="../menu.js"></script>
+    </body>
+</html>
