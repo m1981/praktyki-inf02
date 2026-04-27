@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>INF.02 - Interakcje Windows ↔ Linux</title>
+        <!-- FontAwesome dla ikon -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            :root {
+                --bg-color: #1e1e2f;
+                --card-bg: #2a2a40;
+                --win-color: #00a8ff;
+                --lin-color: #fbc531;
+                --text-main: #f5f6fa;
+                --text-muted: #a4b0be;
+                --accent: #e84118;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-main);
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            h1 {
+                color: var(--win-color);
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                text-shadow: 0 0 10px rgba(0, 168, 255, 0.3);
+            }
+
+            header p {
+                color: var(--text-muted);
+                font-size: 1.2rem;
+            }
+
+            .container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+                gap: 30px;
+                width: 100%;
+                max-width: 1200px;
+            }
+
+            .card {
+                background-color: var(--card-bg);
+                border-radius: 15px;
+                padding: 25px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                transition:
+                    transform 0.3s ease,
+                    box-shadow 0.3s ease;
+                border-top: 4px solid #444;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            }
+
+            .card.win-server {
+                border-top-color: var(--win-color);
+            }
+            .card.lin-server {
+                border-top-color: var(--lin-color);
+            }
+            .card.mixed {
+                border-top-color: #9c88ff;
+            }
+
+            .card-title {
+                font-size: 1.4rem;
+                margin-top: 0;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                border-bottom: 1px solid #444;
+                padding-bottom: 10px;
+            }
+
+            .interaction-box {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            .system {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                width: 40%;
+            }
+
+            .system i {
+                font-size: 3rem;
+                margin-bottom: 10px;
+            }
+
+            .sys-win {
+                color: var(--win-color);
+            }
+            .sys-lin {
+                color: var(--lin-color);
+            }
+
+            .system-name {
+                font-weight: bold;
+                font-size: 1.1rem;
+                margin-bottom: 5px;
+            }
+
+            .system-role {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+            }
+
+            .arrow {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: var(--text-muted);
+                width: 20%;
+            }
+
+            .arrow i {
+                font-size: 2rem;
+                color: #4cd137;
+            }
+
+            .arrow span {
+                font-size: 0.8rem;
+                margin-top: 5px;
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .details ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .details li {
+                margin-bottom: 10px;
+                font-size: 0.95rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .details li i {
+                color: var(--accent);
+                margin-top: 3px;
+            }
+
+            .haczyk {
+                background: rgba(232, 65, 24, 0.1);
+                border-left: 3px solid var(--accent);
+                padding: 10px;
+                margin-top: 15px;
+                font-size: 0.9rem;
+                border-radius: 0 5px 5px 0;
+            }
+
+            .haczyk strong {
+                color: var(--accent);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1><i class="fas fa-network-wired"></i> Egzamin INF.02 - Poligon Doświadczalny</h1>
+            <p>Najczęstsze scenariusze współpracy między systemami Windows i Linux</p>
+        </header>
+
+        <div class="container">
+            <!-- Scenariusz 1 -->
+            <div class="card win-server">
+                <h2 class="card-title">
+                    <i class="fas fa-globe"></i> 1. Usługi Sieciowe (Web & DNS)
+                </h2>
+                <div class="interaction-box">
+                    <div class="system sys-lin">
+                        <i class="fab fa-linux"></i>
+                        <div class="system-name">Linux</div>
+                        <div class="system-role">Klient (Przeglądarka)</div>
+                    </div>
+                    <div class="arrow">
+                        <span>HTTP / DNS</span>
+                        <i class="fas fa-long-arrow-alt-right"></i>
+                    </div>
+                    <div class="system sys-win">
+                        <i class="fab fa-windows"></i>
+                        <div class="system-name">Windows</div>
+                        <div class="system-role">Serwer (IIS + DNS)</div>
+                    </div>
+                </div>
+                <div class="details">
+                    <ul>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Windows:</b> Hostuje stronę WWW
+                            (IIS) i rozwiązuje nazwy (Strefa DNS).
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Linux:</b> Wpisuje w przeglądarkę
+                            np. <code>www.egzamin.local</code>.
+                        </li>
+                    </ul>
+                    <div class="haczyk">
+                        <strong>🔥 Haczyk egzaminacyjny:</strong> Jeśli strona się nie ładuje,
+                        sprawdź czy Zapora Windows przepuszcza port 80 oraz czy Linux ma ustawiony
+                        adres IP Windowsa jako swój serwer DNS!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenariusz 2 -->
+            <div class="card win-server">
+                <h2 class="card-title">
+                    <i class="fas fa-route"></i> 2. Windows jako Router (NAT)
+                </h2>
+                <div class="interaction-box">
+                    <div class="system sys-lin">
+                        <i class="fab fa-linux"></i>
+                        <div class="system-name">Linux</div>
+                        <div class="system-role">Host w sieci LAN</div>
+                    </div>
+                    <div class="arrow">
+                        <span>Ruch do WAN</span>
+                        <i class="fas fa-long-arrow-alt-right"></i>
+                    </div>
+                    <div class="system sys-win">
+                        <i class="fab fa-windows"></i>
+                        <div class="system-name">Windows</div>
+                        <div class="system-role">Brama (RRAS / NAT)</div>
+                    </div>
+                </div>
+                <div class="details">
+                    <ul>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Windows:</b> Ma 2 karty sieciowe.
+                            Działa jako router z włączonym NAT.
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Linux:</b> Ma ustawiony adres IP
+                            Windowsa jako swoją Bramę Domyślną.
+                        </li>
+                    </ul>
+                    <div class="haczyk">
+                        <strong>🔥 Haczyk egzaminacyjny:</strong> Linux musi umieć spingować adres w
+                        sieci zewnętrznej (WAN). Bez poprawnego NAT na Windowsie, pakiety nie wrócą
+                        do Linuxa.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenariusz 3 -->
+            <div class="card mixed">
+                <h2 class="card-title">
+                    <i class="fas fa-server"></i> 3. Wirtualizacja (VirtualBox)
+                </h2>
+                <div class="interaction-box">
+                    <div class="system sys-win">
+                        <i class="fab fa-windows"></i>
+                        <div class="system-name">Windows</div>
+                        <div class="system-role">Gospodarz (Host)</div>
+                    </div>
+                    <div class="arrow">
+                        <span>Mostek (Bridged)</span>
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="system sys-lin">
+                        <i class="fab fa-linux"></i>
+                        <div class="system-name">Linux</div>
+                        <div class="system-role">Maszyna Wirtualna</div>
+                    </div>
+                </div>
+                <div class="details">
+                    <ul>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Windows:</b> Udostępnia zasoby
+                            sprzętowe przez VirtualBox.
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Linux:</b> Działa w oknie, ale
+                            musi być widoczny w fizycznej sieci.
+                        </li>
+                    </ul>
+                    <div class="haczyk">
+                        <strong>🔥 Haczyk egzaminacyjny:</strong> Domyślnie VirtualBox ustawia sieć
+                        na "NAT". Musisz zmienić to na "Karta Mostkowana" (Bridged), aby Linux
+                        dostał IP z tej samej podsieci co fizyczny Windows!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenariusz 4 -->
+            <div class="card lin-server">
+                <h2 class="card-title">
+                    <i class="fas fa-shield-alt"></i> 4. Diagnostyka i Zapora (Ping)
+                </h2>
+                <div class="interaction-box">
+                    <div class="system sys-lin">
+                        <i class="fab fa-linux"></i>
+                        <div class="system-name">Linux</div>
+                        <div class="system-role">Wysyła Ping</div>
+                    </div>
+                    <div class="arrow">
+                        <span>ICMP Echo</span>
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="system sys-win">
+                        <i class="fab fa-windows"></i>
+                        <div class="system-name">Windows</div>
+                        <div class="system-role">Odbiera Ping</div>
+                    </div>
+                </div>
+                <div class="details">
+                    <ul>
+                        <li>
+                            <i class="fas fa-check-circle"></i> <b>Oba systemy:</b> Muszą się
+                            wzajemnie "widzieć" w sieci (ping).
+                        </li>
+                    </ul>
+                    <div class="haczyk">
+                        <strong>🔥 Haczyk egzaminacyjny:</strong> Linux domyślnie odpowie na ping od
+                        Windowsa. Ale Windows domyślnie zablokuje ping od Linuxa! Musisz wejść w
+                        Zaporę Windows i włączyć regułę dla "Udostępnianie plików i drukarek
+                        (żądanie echa - ICMPv4-In)".
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
