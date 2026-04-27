@@ -9,28 +9,228 @@
     <body>
         <header>
             <h1>🐧 Filar 3: Linux SysOps</h1>
-            <p style="color: var(--text-muted)">Terminal, uprawnienia i diagnostyka systemu</p>
+            <p class="subtitle">Czarny ekran, biały tekst i absolutna władza nad serwerem</p>
         </header>
 
-        <main class="lab-container">
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>W przygotowaniu...</h3>
+        <main class="roadmap-container">
+            <!-- KROK 1 -->
+            <div class="card ubu-orange">
+                <div class="step-number" style="background-color: var(--ubu-orange)">Krok 1</div>
+                <h2>Wszystko jest plikiem</h2>
+                <span class="tag ubu-orange">📄 Filozofia UNIX</span>
+                <ul class="tech-list">
+                    <li>
+                        <strong>W Windowsie:</strong> Aby zmienić adres IP, otwierasz Panel
+                        Sterowania, klikasz właściwości karty, wpisujesz cyferki w okienka i klikasz
+                        "Zastosuj".
+                    </li>
+                    <li>
+                        <strong>W Linuxie:</strong> Nie ma okienek. Aby zmienić adres IP, otwierasz
+                        plik tekstowy, wpisujesz adres i zapisujesz plik.
+                    </li>
+                    <li><strong>Dysk twardy?</strong> To plik (np. <code>/dev/sda</code>).</li>
+                    <li><strong>Klawiatura?</strong> To plik.</li>
+                </ul>
+                <div
+                    class="analogy-box"
+                    style="border-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+                >
+                    <strong>💡 Co to oznacza dla Ciebie?</strong>
+                    Jako administrator Linuxa (SysOps) Twoim głównym narzędziem pracy nie będzie
+                    myszka, ale <strong>edytor tekstu</strong> (np. <code>nano</code>). Jeśli umiesz
+                    edytować tekst, umiesz zarządzać Linuxem!
                 </div>
-                <div class="lab-body">
-                    <p>Zawartość tego modułu jest obecnie w fazie opracowywania.</p>
-                    <p>Tematyka:</p>
-                    <ul class="task-list">
-                        <li>Nawigacja w terminalu (cd, ls, pwd)</li>
-                        <li>Operacje na plikach i katalogach</li>
-                        <li>System uprawnień (chmod, chown)</li>
-                        <li>Dowiązania symboliczne i twarde</li>
-                        <li>Archiwizacja (tar, gzip)</li>
-                        <li>Diagnostyka sprzętu (lshw, lsblk, df)</li>
-                    </ul>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="card ubu-purple">
+                <div class="step-number" style="background-color: var(--ubu-purple)">Krok 2</div>
+                <h2>Gdzie jest mój dysk C:\?</h2>
+                <span class="tag ubu-purple">🌳 Drzewo katalogów</span>
+                <ul class="tech-list">
+                    <li>
+                        <strong>Brak liter dysków:</strong> W Linuxie nie ma dysku
+                        <code>C:\</code> ani <code>D:\</code>. Wszystko zaczyna się od jednego
+                        miejsca zwanego <strong>Root (Korzeń)</strong>, oznaczanego znakiem
+                        ukośnika: <code>/</code>.
+                    </li>
+                    <li>
+                        <strong><code>/etc</code></strong> – Tutaj leżą wszystkie pliki
+                        konfiguracyjne (ustawienia programów).
+                    </li>
+                    <li>
+                        <strong><code>/home</code></strong> – Tutaj znajdują się foldery
+                        użytkowników (odpowiednik <code>C:\Users</code>).
+                    </li>
+                    <li>
+                        <strong><code>/dev</code></strong> – Tutaj system trzyma urządzenia (dyski,
+                        pendrive'y).
+                    </li>
+                </ul>
+                <div
+                    class="analogy-box"
+                    style="border-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+                >
+                    <strong>💡 Analogia:</strong>
+                    Wyobraź sobie drzewo, które rośnie do góry nogami. Zaczyna się od jednego
+                    korzenia (<code>/</code>), z którego wyrastają gałęzie (<code>/etc</code>,
+                    <code>/home</code>), a na nich rosną liście (pliki).
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="card ubu-orange">
+                <div class="step-number" style="background-color: var(--ubu-orange)">Krok 3</div>
+                <h2>Root vs Sudo</h2>
+                <span class="tag ubu-orange">👑 Uprawnienia</span>
+                <ul class="tech-list">
+                    <li>
+                        <strong>Root:</strong> To Bóg w systemie Linux. Może zrobić wszystko,
+                        łącznie ze skasowaniem całego systemu jedną komendą. Logowanie się na to
+                        konto na co dzień jest skrajnie niebezpieczne.
+                    </li>
+                    <li>
+                        <strong>Sudo (SuperUser DO):</strong> To magiczne słowo. Jesteś zwykłym
+                        użytkownikiem, ale jeśli przed komendą dopiszesz <code>sudo</code>, system
+                        poprosi Cię o Twoje hasło i wykona tę jedną komendę z uprawnieniami Roota.
+                    </li>
+                </ul>
+                <div
+                    class="analogy-box"
+                    style="border-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+                >
+                    <strong>💡 Analogia:</strong>
+                    Bycie <code>rootem</code> to jak chodzenie po mieście z odbezpieczonym granatem
+                    w ręku. Używanie <code>sudo</code> to trzymanie granatu w sejfie i wyciąganie go
+                    tylko wtedy, gdy naprawdę musisz wysadzić ścianę.
+                </div>
+            </div>
+
+            <!-- SEKRET INŻYNIERA -->
+            <div class="card" style="border-top-color: #2c001e; background-color: #f8f9fa">
+                <h2 style="color: #2c001e">🕵️‍♂️ Sekret Inżyniera: Reguła Ciszy</h2>
+                <span class="tag" style="background: #e2d9e0; color: #2c001e"
+                    >⚠️ Zmiana Mindsetu</span
+                >
+                <p style="margin-top: 15px">
+                    W Windowsie, gdy utworzysz nowy folder, system radośnie wyświetla nową żółtą
+                    ikonkę. Gdy skopiujesz plik, widzisz pasek postępu. Windows cały czas do Ciebie
+                    "mówi".
+                </p>
+                <p>
+                    <strong>Linux milczy.</strong> Zgodnie z filozofią UNIX:
+                    <em>"Brak wiadomości to dobra wiadomość" (No news is good news)</em>.
+                </p>
+                <ul class="tech-list">
+                    <li>Wpisujesz komendę: <code>mkdir nowy_folder</code></li>
+                    <li>Wciskasz Enter.</li>
+                    <li>Terminal przechodzi do nowej linijki i... nic się nie wyświetla.</li>
+                </ul>
+                <div
+                    class="analogy-box"
+                    style="background: #e2d9e0; border-color: #2c001e; color: #2c001e"
+                >
+                    <strong>💡 Pamiętaj na egzaminie:</strong>
+                    Uczniowie często wpadają w panikę: <em>"Nic się nie stało! Zepsuło się!"</em> i
+                    wpisują komendę jeszcze raz. BŁĄD! Jeśli Linux nie wyrzucił czerwonego błędu
+                    (Error/Warning), to znaczy, że
+                    <strong>komenda wykonała się w 100% poprawnie</strong>. Zaufaj systemowi.
                 </div>
             </div>
         </main>
+
+        <!-- PODSUMOWANIE -->
+        <div
+            class="conclusion-box"
+            style="
+                max-width: 1200px;
+                margin: 30px auto;
+                background: var(--ubu-purple-bg);
+                border-color: var(--ubu-purple);
+            "
+        >
+            <div class="conclusion-icon">🎓</div>
+            <div class="conclusion-text">
+                <strong style="color: var(--ubu-purple)">Podsumowanie dla Was:</strong>
+                <span style="color: var(--ubu-dark)">
+                    Na egzaminie INF.02 Linux nie będzie służył do przeglądania internetu. Będziecie
+                    musieli użyć go jako narzędzia diagnostycznego (sprawdzić RAM, dyski, procesy)
+                    oraz zarządzać plikami i uprawnieniami z poziomu czarnej konsoli. Nie bójcie się
+                    terminala – on robi dokładnie to, o co go poprosicie.
+                </span>
+            </div>
+        </div>
+
+        <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
+        <section class="labs-section">
+            <h2>💻 Czas na praktykę!</h2>
+            <p style="color: #b2bec3; margin-bottom: 20px">
+                Wybierz laboratorium do wykonania w VirtualBox:
+            </p>
+
+            <div class="labs-grid">
+                <a
+                    href="setup-ubuntu.html"
+                    class="lab-link-card"
+                    style="border-left-color: var(--ubu-orange)"
+                >
+                    <span class="lab-title" style="color: var(--ubu-orange)"
+                        >Setup: Instalacja</span
+                    >
+                    <span class="lab-desc">Przygotowanie maszyny wirtualnej</span>
+                </a>
+                <a
+                    href="lab0-przetrwanie.html"
+                    class="lab-link-card"
+                    style="border-left-color: var(--ubu-purple)"
+                >
+                    <span class="lab-title" style="color: var(--ubu-purple)"
+                        >Lab 0: Przetrwanie</span
+                    >
+                    <span class="lab-desc">Nawigacja, edytor nano i TAB</span>
+                </a>
+                <a
+                    href="lab1-diagnostyka.html"
+                    class="lab-link-card"
+                    style="border-left-color: var(--ubu-orange)"
+                >
+                    <span class="lab-title" style="color: var(--ubu-orange)"
+                        >Lab 1: Diagnostyka</span
+                    >
+                    <span class="lab-desc">Kim jestem? (CPU, RAM, Dyski)</span>
+                </a>
+                <a
+                    href="lab2-pliki-archiwa.html"
+                    class="lab-link-card"
+                    style="border-left-color: var(--ubu-purple)"
+                >
+                    <span class="lab-title" style="color: var(--ubu-purple)"
+                        >Lab 2: Pliki i Archiwa</span
+                    >
+                    <span class="lab-desc">Przekierowania (>), symlinki, tar</span>
+                </a>
+                <a
+                    href="lab3-iam-uprawnienia.html"
+                    class="lab-link-card"
+                    style="border-left-color: var(--ubu-orange)"
+                >
+                    <span class="lab-title" style="color: var(--ubu-orange)"
+                        >Lab 3: IAM i Uprawnienia</span
+                    >
+                    <span class="lab-desc">Użytkownicy, grupy i chmod 711</span>
+                </a>
+                <a
+                    href="lab4-siec.html"
+                    class="lab-link-card"
+                    style="border-left-color: var(--ubu-purple)"
+                >
+                    <span class="lab-title" style="color: var(--ubu-purple)"
+                        >Lab 4: Sieci w CLI</span
+                    >
+                    <span class="lab-desc">Adresacja IP i interfejsy</span>
+                </a>
+            </div>
+        </section>
 
         <script src="../menu.js"></script>
     </body>

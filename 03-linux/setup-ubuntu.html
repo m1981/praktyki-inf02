@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Setup: Instalacja Ubuntu Server</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            /* Lokalne kolory tagów dla Filaru 3 (Linux/Ubuntu) */
+            :root {
+                --ubu-orange: #e95420; /* Oficjalny pomarańczowy Ubuntu */
+                --ubu-orange-bg: #fdf3f0;
+                --ubu-purple: #77216f; /* Oficjalny fiolet/bakłażan Ubuntu */
+                --ubu-purple-bg: #f5eef5;
+                --ubu-dark: #2c001e;
+            }
+            .card.ubu-orange {
+                border-top-color: var(--ubu-orange);
+            }
+            .card.ubu-purple {
+                border-top-color: var(--ubu-purple);
+            }
+
+            .tag.ubu-orange {
+                background: var(--ubu-orange-bg);
+                color: var(--ubu-orange);
+            }
+            .tag.ubu-purple {
+                background: var(--ubu-purple-bg);
+                color: var(--ubu-purple);
+            }
+
+            /* Bloki trenerskie */
+            .pitfall-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .golden-rule-box {
+                background: #e8f4f8;
+                border-left: 4px solid #00a8ff;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .exam-verify-box {
+                background: #f8d7da;
+                border: 2px dashed #dc3545;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+            .exam-verify-box h4 {
+                color: #dc3545;
+                margin-top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>🐧 Setup: Fundamenty Linuxa</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">
+                Instalacja Ubuntu Server 24.04 LTS w VirtualBox
+            </p>
+        </header>
+
+        <main class="lab-container">
+            <div class="pitfall-box" style="border-left-color: #dc3545; background: #f8d7da">
+                <strong>🚨 UWAGA PRZED STARTEM:</strong> Pobieramy wersję
+                <strong>Ubuntu SERVER</strong>, a nie Ubuntu Desktop! Prawdziwe serwery nie mają
+                środowiska graficznego (okienek). Będziemy pracować wyłącznie w czarnym oknie
+                terminala. Witamy w świecie profesjonalistów!
+                <a
+                    href="https://releases.ubuntu.com/26.04/ubuntu-26.04-live-server-amd64.iso?_gl=1*1br84up*_gcl_au*MTgwNDgwNDEwLjE3NzcyNzEyODg."
+                    >ISO Ubuntu Server 26.04 (3GB)
+                </a>
+            </div>
+
+            <!-- KROK 1 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 1: Tworzenie "Żelaza" (VirtualBox)</h3>
+                    <span class="time-badge">Czas: 10 min</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Przygotowanie wirtualnego sprzętu, który będzie poprawnie komunikował
+                        się z naszą fizyczną siecią.
+                    </div>
+
+                    <ul class="task-list">
+                        <li>
+                            <strong>Parametry podstawowe:</strong>
+                            <p>
+                                W VirtualBox kliknij <strong>Nowa</strong>. Nazwij maszynę
+                                <code>Ubuntu-Serwer</code>. Przydziel jej minimum
+                                <strong>2048 MB RAM</strong> oraz
+                                <strong>2 procesory (CPU)</strong>. Dysk wirtualny: 25 GB.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Konfiguracja Sieci (KRYTYCZNE!):</strong>
+                            <div class="gui-path">
+                                Ustawienia maszyny <span class="gui-arrow">➔</span> Sieć
+                                <span class="gui-arrow">➔</span> Karta 1
+                            </div>
+                            <p>
+                                Zmień opcję "Podłączona do:" z <em>NAT</em> na
+                                <strong>Karta mostkowana (Bridged Adapter)</strong>. Poniżej wybierz
+                                swoją fizyczną kartę sieciową (Wi-Fi lub Ethernet).
+                            </p>
+                        </li>
+                    </ul>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów (NAT vs Bridged):</strong>
+                        Domyślnie VirtualBox ustawia sieć na NAT. W trybie NAT Twój Linux będzie
+                        miał internet, ale
+                        <strong>będzie niewidoczny dla innych komputerów w klasie</strong> (i dla
+                        Twojego Windowsa!). Na egzaminie INF.02 maszyny muszą się widzieć
+                        (pingować). Tryb "Karta mostkowana" sprawia, że wirtualny Linux staje się
+                        pełnoprawnym fizycznym komputerem w Waszej szkolnej sieci.
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="lab-card ubu-purple">
+                <div class="lab-header">
+                    <h3>Krok 2: Instalator (Myszka tu nie działa!)</h3>
+                    <span class="time-badge">Czas: 15 min</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Przejście przez tekstowy instalator Ubuntu Server.
+                    </div>
+
+                    <div class="golden-rule-box">
+                        <strong>💡 Złota Rada Trenera (Nawigacja):</strong>
+                        W instalatorze Ubuntu Server myszka jest martwa. Używaj klawiatury:<br />
+                        👉 <strong>Strzałki / TAB</strong> - przechodzenie między polami.<br />
+                        👉 <strong>Spacja</strong> - zaznaczanie opcji (stawianie krzyżyka
+                        <code>[X]</code>).<br />
+                        👉 <strong>Enter</strong> - zatwierdzanie (kliknięcie "Done").
+                    </div>
+
+                    <ul class="task-list">
+                        <li>
+                            <strong>Język:</strong> Wybierz <code>English</code> (Zawsze instalujemy
+                            serwery po angielsku, łatwiej potem szukać błędów w Google!).
+                        </li>
+                        <li><strong>Klawiatura:</strong> Zmień Layout na <code>Polish</code>.</li>
+                        <li>
+                            <strong>Sieć:</strong> Instalator powinien pokazać, że karta
+                            <code>enp0s3</code> dostała adres IP z Waszego szkolnego routera (np.
+                            192.168.x.x). Jeśli nie ma IP, źle ustawiłeś Kartę Mostkowaną w Kroku 1!
+                        </li>
+                        <li>
+                            <strong>Dysk:</strong> Zostaw domyślne ustawienia (Use an entire disk /
+                            LVM). Kliknij <em>Done</em> i potwierdź <em>Continue</em>.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 3: Konto Egzaminacyjne i SSH</h3>
+                    <span class="time-badge">Czas: 5 min</span>
+                </div>
+                <div class="lab-body">
+                    <ul class="task-list">
+                        <li>
+                            <strong>Konfiguracja profilu (Profile setup):</strong>
+                            <p>
+                                Na egzaminie INF.02 zawsze wymagane jest konkretne konto. Wypełnij
+                                formularz następująco:
+                            </p>
+                            <ul style="margin-left: 20px; margin-top: 5px">
+                                <li>Your name: <code>Administrator</code></li>
+                                <li>Your server's name: <code>serwer-linux</code></li>
+                                <li>
+                                    Pick a username: <code>administrator</code>
+                                    <em>(W Linuxie loginy piszemy małymi literami!)</em>
+                                </li>
+                                <li>Choose a password: <code>ZAQ!2wsx</code></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>OpenSSH (Bardzo ważne!):</strong>
+                            <p>
+                                Na ekranie "SSH Setup" koniecznie wciśnij Spację przy
+                                <strong>[X] Install OpenSSH server</strong>. Resztę opcji (Snaps)
+                                pomiń.
+                            </p>
+                        </li>
+                    </ul>
+
+                    <div
+                        class="card"
+                        style="
+                            border-top-color: #6c5ce7;
+                            background-color: #f8f9fa;
+                            margin-top: 20px;
+                            padding: 15px;
+                        "
+                    >
+                        <h4 style="color: #6c5ce7; margin-top: 0">
+                            🕵️‍♂️ Sekret Inżyniera: Po co nam to SSH?
+                        </h4>
+                        <p>
+                            Okno VirtualBoxa jest niewygodne. Nie da się w nim łatwo przewijać
+                            tekstu do góry, a co gorsza –
+                            <strong>nie działa kopiuj-wklej z Windowsa!</strong>
+                        </p>
+                        <p>
+                            Instalując OpenSSH, pozwalamy naszemu Windowsowi połączyć się z Linuxem
+                            w tle. Będziemy mogli otworzyć w Windowsie program
+                            <strong>PuTTY</strong> lub <strong>Wiersz poleceń (CMD)</strong>, wpisać
+                            <code>ssh administrator@IP_LINUXA</code> i pracować na serwerze w
+                            wygodnym oknie, gdzie działa wklejanie komend! Tak właśnie pracują
+                            prawdziwi SysOpsi.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WERYFIKACJA -->
+            <div
+                class="exam-verify-box"
+                style="border-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+            >
+                <h4 style="color: var(--ubu-orange)">✅ Weryfikacja: Czy system żyje?</h4>
+                <p>
+                    Po zakończeniu instalacji i restarcie maszyny, zobaczysz czarny ekran z napisem
+                    <code>serwer-linux login:</code>.
+                </p>
+                <ol>
+                    <li>Wpisz login: <code>administrator</code> i wciśnij Enter.</li>
+                    <li>
+                        Wpisz hasło: <code>ZAQ!2wsx</code>. <br /><strong
+                            >UWAGA: Podczas wpisywania hasła w Linuxie nie pojawiają się gwiazdki
+                            (***)! Pisz w ciemno i wciśnij Enter.</strong
+                        >
+                    </li>
+                    <li>
+                        Wpisz komendę <code>ip a</code> i znajdź swój adres IP (np. 192.168.1.50).
+                    </li>
+                    <li>
+                        Otwórz CMD na swoim fizycznym Windowsie i wpisz
+                        <code>ping 192.168.1.50</code>. Jeśli odpowiada – gratulacje, zbudowałeś
+                        swój pierwszy serwer!
+                    </li>
+                </ol>
+            </div>
+        </main>
+
+        <!-- COURSE NAVIGATION -->
+        <div class="course-nav">
+            <a href="index-linux.html" class="course-btn">⬅️ Poprzedni: Teoria Linux</a>
+            <a
+                href="lab0-przetrwanie.html"
+                class="course-btn next"
+                style="background-color: var(--ubu-purple); color: white"
+                >Następny: Lab 0 (Przetrwanie w CLI) ➡️</a
+            >
+        </div>
+
+        <script src="../menu.js"></script>
+    </body>
+</html>

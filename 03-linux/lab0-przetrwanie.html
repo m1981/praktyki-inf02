@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lab 0: Przetrwanie w CLI</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            /* Lokalne kolory tagów dla Filaru 3 (Linux/Ubuntu) */
+            :root {
+                --ubu-orange: #e95420;
+                --ubu-orange-bg: #fdf3f0;
+                --ubu-purple: #77216f;
+                --ubu-purple-bg: #f5eef5;
+                --ubu-dark: #2c001e;
+            }
+            .card.ubu-orange {
+                border-top-color: var(--ubu-orange);
+            }
+            .card.ubu-purple {
+                border-top-color: var(--ubu-purple);
+            }
+            .tag.ubu-orange {
+                background: var(--ubu-orange-bg);
+                color: var(--ubu-orange);
+            }
+            .tag.ubu-purple {
+                background: var(--ubu-purple-bg);
+                color: var(--ubu-purple);
+            }
+
+            /* Bloki trenerskie */
+            .pitfall-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+            .golden-rule-box {
+                background: #e8f4f8;
+                border-left: 4px solid #00a8ff;
+                padding: 15px;
+                margin: 15px 0;
+                border-radius: 4px;
+            }
+
+            /* Klawisze */
+            kbd {
+                background-color: #f8f9fa;
+                border: 1px solid #d1d5db;
+                border-radius: 4px;
+                box-shadow: 0 2px 0 #d1d5db;
+                color: #374151;
+                display: inline-block;
+                font-family: monospace;
+                font-size: 0.9em;
+                font-weight: bold;
+                padding: 2px 6px;
+                margin: 0 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>🐧 Lab 0: Przetrwanie w CLI</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">
+                Zanim zaczniesz biegać, musisz nauczyć się chodzić.
+            </p>
+        </header>
+
+        <main class="lab-container">
+            <div
+                class="golden-rule-box"
+                style="border-left-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+            >
+                <strong>💡 Złota Rada Trenera:</strong> Zaloguj się do swojego Ubuntu Servera
+                (login: <code>administrator</code>, hasło: <code>ZAQ!2wsx</code>). Widzisz tylko
+                znak zachęty (np. <code>administrator@serwer-linux:~$</code>). Nie ma myszki. Nie ma
+                okienek. Jesteś tylko Ty i klawiatura. Zaczynamy!
+            </div>
+
+            <!-- KROK 1 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 1: Gdzie ja jestem? (Nawigacja)</h3>
+                    <span class="time-badge">Czas: 10 min</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Nauczyć się poruszać po dysku bez użycia Eksploratora Windows.
+                    </div>
+
+                    <p>Wpisz poniższe komendy i obserwuj, co się dzieje:</p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"
+                            ># 1. PWD (Print Working Directory) - Gdzie aktualnie stoję?</span
+                        >
+                        pwd
+
+                        <span class="cli-comment"># 2. LS (List) - Co leży w tym folderze?</span>
+                        ls
+
+                        <span class="cli-comment"
+                            ># 3. LS z flagami - Pokaż mi WSZYSTKO (nawet ukryte pliki) i w formie
+                            listy</span
+                        >
+                        ls -la
+
+                        <span class="cli-comment"
+                            ># 4. CD (Change Directory) - Wejdź do głównego katalogu systemu
+                            (Korzenia)</span
+                        >
+                        cd /
+
+                        <span class="cli-comment"># Zobacz, co jest na samym dole systemu:</span>
+                        ls
+
+                        <span class="cli-comment"
+                            ># 5. Wróć do swojego katalogu domowego (tylda ~ oznacza Twój dom)</span
+                        >
+                        cd ~
+                    </div>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Spacje mają znaczenie! Komenda
+                        <code>cd/</code> (bez spacji) wyrzuci błąd "command not found". Musi być
+                        <code>cd /</code>. Komenda to czasownik (ZmieńKatalog), a ukośnik to
+                        rzeczownik (Korzeń). Musi być między nimi spacja!
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="lab-card ubu-purple">
+                <div class="lab-header">
+                    <h3>Krok 2: Magia Klawiatury (TAB i Strzałki)</h3>
+                    <span class="time-badge">Czas: 5 min</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Przestać pisać jak żółw i zacząć pracować jak prawdziwy SysOps.
+                    </div>
+
+                    <p>
+                        To najważniejsza lekcja w Twoim życiu. W Linuxie
+                        <strong>NIGDY nie wpisujemy całych nazw plików ani folderów</strong>.
+                        Używamy autouzupełniania.
+                    </p>
+
+                    <ul class="task-list">
+                        <li>
+                            <strong>Klawisz <kbd>TAB</kbd> (Autouzupełnianie):</strong>
+                            <p>
+                                Wpisz w konsoli: <code>cd /et</code> i wciśnij klawisz
+                                <kbd>TAB</kbd>. System sam dopisze literkę <code>c/</code> (zrobi
+                                się <code>cd /etc/</code>). Wciśnij Enter.
+                            </p>
+                            <p>
+                                Teraz wpisz <code>cd /etc/n</code> i wciśnij <kbd>TAB</kbd>
+                                <strong>dwa razy szybko</strong>. System pokaże Ci wszystkie foldery
+                                na literę "n" (np. nano, netplan, network). Dopiszesz
+                                <code>etp</code>, wciśniesz <kbd>TAB</kbd> i masz
+                                <code>/etc/netplan/</code>!
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Strzałki <kbd>↑</kbd> i <kbd>↓</kbd> (Historia):</strong>
+                            <p>
+                                Wciśnij strzałkę w górę. Zobaczysz poprzednią komendę. Wciśnij
+                                jeszcze raz – zobaczysz jeszcze starszą. Nie musisz wpisywać dwa
+                                razy tego samego!
+                            </p>
+                        </li>
+                    </ul>
+
+                    <div
+                        class="card"
+                        style="
+                            border-top-color: #2c001e;
+                            background-color: #f8f9fa;
+                            margin-top: 20px;
+                            padding: 15px;
+                        "
+                    >
+                        <h4 style="color: #2c001e; margin-top: 0">
+                            🕵️‍♂️ Sekret Inżyniera: Test na profesjonalistę
+                        </h4>
+                        <p>
+                            Kiedy rekrutuję młodych administratorów, patrzę im na ręce. Jeśli widzę,
+                            że ktoś mozolnie wpisuje <code>cd /var/log/apt/</code> literka po
+                            literce i robi literówkę, wiem, że to amator. Profesjonalista wpisuje
+                            <code>cd /v[TAB]lo[TAB]ap[TAB]</code>. <br /><br /><strong
+                                >Zasada: Jeśli wciskasz TAB i nic się nie uzupełnia, to znaczy, że
+                                zrobiłeś literówkę! Zatrzymaj się i popraw.</strong
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="lab-card ubu-orange">
+                <div class="lab-header">
+                    <h3>Krok 3: Edytor NANO (Notatnik Linuxa)</h3>
+                    <span class="time-badge">Czas: 10 min</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Nauczyć się edytować pliki tekstowe i bezpiecznie z nich wychodzić.
+                    </div>
+
+                    <p>
+                        W Linuxie nie ma programu "Notatnik". Mamy za to <code>nano</code>.
+                        Przećwiczmy to:
+                    </p>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"># 1. Upewnij się, że jesteś w domu</span>
+                        cd ~
+
+                        <span class="cli-comment"
+                            ># 2. Stwórz i otwórz nowy plik o nazwie "notatka.txt"</span
+                        >
+                        nano notatka.txt
+                    </div>
+
+                    <p>
+                        Ekran się zmienił. Jesteś w edytorze. Wpisz dowolny tekst, np.
+                        <em>"To jest mój pierwszy plik w Linuxie"</em>.
+                    </p>
+
+                    <p><strong>Jak to zapisać i wyjść? (Patrz na dół ekranu w nano):</strong></p>
+                    <ul class="task-list">
+                        <li>Znak <code>^</code> oznacza klawisz <kbd>Ctrl</kbd>.</li>
+                        <li>
+                            Aby zapisać (Write Out): Wciśnij <kbd>Ctrl</kbd> + <kbd>O</kbd> (litera
+                            O, nie zero). System zapyta o nazwę pliku. Wciśnij <kbd>Enter</kbd>, aby
+                            potwierdzić.
+                        </li>
+                        <li>
+                            Aby wyjść (Exit): Wciśnij <kbd>Ctrl</kbd> + <kbd>X</kbd>. Wrócisz do
+                            czarnej konsoli.
+                        </li>
+                    </ul>
+
+                    <div class="cli-block">
+                        <span class="cli-comment"># 3. Sprawdź, czy plik tam jest</span>
+                        ls
+
+                        <span class="cli-comment"
+                            ># 4. Wyświetl zawartość pliku na ekranie (bez wchodzenia do
+                            edytora)</span
+                        >
+                        cat notatka.txt
+                    </div>
+
+                    <div class="pitfall-box">
+                        <strong>🚨 Ostrzeżenie (VIM):</strong> W internecie znajdziesz poradniki
+                        każące używać edytora <code>vi</code> lub <code>vim</code>.
+                        <strong>Nie rób tego na egzaminie!</strong> VIM to potężne narzędzie dla
+                        zaawansowanych, ale jeśli wejdziesz do niego przypadkiem, nie będziesz
+                        wiedział, jak z niego wyjść (trzeba wpisać <code>:q!</code>). Używaj
+                        <code>nano</code> – jest prosty i bezpieczny.
+                    </div>
+                </div>
+            </div>
+
+            <!-- KROK 4 -->
+            <div class="lab-card ubu-purple">
+                <div class="lab-header">
+                    <h3>Krok 4: Koło ratunkowe (Jak przerwać?)</h3>
+                    <span class="time-badge">Czas: 5 min</span>
+                </div>
+                <div class="lab-body">
+                    <p>
+                        Czasami wpiszesz złą komendę, system zacznie coś robić w nieskończoność (np.
+                        pingować) albo terminal "zawiśnie". Co wtedy?
+                    </p>
+
+                    <ul class="task-list">
+                        <li>
+                            <strong>Zabijanie procesu: <kbd>Ctrl</kbd> + <kbd>C</kbd></strong>
+                            <p>
+                                Wpisz komendę <code>ping 8.8.8.8</code>. W Windowsie ping kończy się
+                                po 4 razach. W Linuxie będzie trwał w nieskończoność! Aby go
+                                brutalnie przerwać, wciśnij <kbd>Ctrl</kbd> +
+                                <kbd>C</kbd> (Cancel/Kill).
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Czyszczenie ekranu: <code>clear</code></strong>
+                            <p>
+                                Jeśli masz już bałagan na ekranie i nic nie widzisz, wpisz komendę
+                                <code>clear</code> (lub wciśnij <kbd>Ctrl</kbd> + <kbd>L</kbd>).
+                                Ekran stanie się czysty, a znak zachęty wróci na samą górę.
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- COURSE NAVIGATION -->
+        <div class="course-nav">
+            <a href="setup-ubuntu.html" class="course-btn">⬅️ Poprzedni: Setup (Instalacja)</a>
+            <a
+                href="lab1-diagnostyka.html"
+                class="course-btn next"
+                style="background-color: var(--ubu-orange); color: white"
+                >Następny: Lab 1 (Diagnostyka) ➡️</a
+            >
+        </div>
+
+        <script src="../menu.js"></script>
+    </body>
+</html>
