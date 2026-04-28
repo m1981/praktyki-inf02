@@ -176,6 +176,43 @@
                         </li>
                     </ul>
 
+                    <details class="theory-block" style="margin-bottom: 15px">
+                        <summary>🕵️‍♂️ Sekret Inżyniera: NAT vs Bridged vs Internal Network</summary>
+                        <div class="theory-content">
+                            <p>
+                                Dlaczego musimy zmienić ustawienia sieci w VirtualBox? Zobacz, jak
+                                działają 3 główne tryby:
+                            </p>
+                            <ul style="margin-left: 20px; margin-top: 10px">
+                                <li>
+                                    <strong>NAT (Domyślny):</strong> Maszyna ma internet, ale jest
+                                    "za murem". Nie widzi innych maszyn wirtualnych. To tak, jakbyś
+                                    siedział w pokoju bez okien i tylko podawał karteczki z prośbą o
+                                    stronę WWW przez szparę w drzwiach.
+                                </li>
+                                <li>
+                                    <strong>Bridged (Mostkowana):</strong> Maszyna wirtualna
+                                    podłącza się bezpośrednio do Twojego domowego routera Wi-Fi.
+                                    Dostaje adres IP z Twojego domu.
+                                    <em
+                                        >Uwaga: Jeśli uruchomisz serwer DHCP na maszynie w tym
+                                        trybie, możesz odciąć od internetu całą swoją rodzinę lub
+                                        szkołę!</em
+                                    >
+                                </li>
+                                <li>
+                                    <strong>Internal Network (Sieć wewnętrzna):</strong> Tworzy
+                                    całkowicie odizolowany, wirtualny kabel (switch) wewnątrz
+                                    Twojego laptopa. Maszyny widzą się nawzajem, ale nie mają
+                                    wyjścia do Internetu.
+                                    <strong>To nasz poligon doświadczalny!</strong> Tutaj możemy
+                                    bezpiecznie psuć, stawiać własne serwery DNS i DHCP bez ryzyka,
+                                    że zepsujemy prawdziwą sieć.
+                                </li>
+                            </ul>
+                        </div>
+                    </details>
+
                     <div class="conclusion-box">
                         <div class="conclusion-icon">🚀</div>
                         <div class="conclusion-text">
