@@ -1,234 +1,226 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Teoria: Active Directory</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>🏫 Filar 2: Windows Server</h1>
-            <p class="subtitle">Jak działa sieć w naszej szkole? (Czyli po co nam serwer)</p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teoria: Active Directory</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>🏫 Filar 2: Windows Server</h1>
+   <p class="subtitle">Jak działa sieć w naszej szkole? (Czyli po co nam serwer)</p>
+  </header>
 
-        <main class="roadmap-container">
-            <!-- KROK 1 -->
-            <div class="card win-gpo">
-                <div class="step-number">Krok 1</div>
-                <h2>Koszmar informatyka</h2>
-                <span class="tag win-gpo">🚨 Problem braku centralizacji</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>W domu:</strong> Masz swój komputer, swoje konto, instalujesz co
-                        chcesz.
-                    </li>
-                    <li>
-                        <strong>W szkole (bez serwera):</strong> 80 komputerów w różnych salach.
-                    </li>
-                    <li>
-                        <strong>Nowy uczeń:</strong> Informatyk musi biegać z pendrivem do 80
-                        maszyn, by założyć mu konto.
-                    </li>
-                    <li>
-                        <strong>Nowy program:</strong> Instalacja Pythona w sali 32 to klikanie
-                        "Dalej" na 20 stanowiskach.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Rozwiązanie: Windows Server</strong>
-                    To niewykonalne. Dlatego w piwnicy szkoły buczy potężna maszyna. Od teraz
-                    komputery w pracowniach są "głupimi końcówkami", które słuchają rozkazów z góry.
-                </div>
-            </div>
+  <main class="roadmap-container">
+   <!-- KROK 1 -->
+   <div class="card win-gpo">
+    <div class="step-number">Krok 1</div>
+    <h2>Koszmar informatyka</h2>
+    <span class="tag win-gpo">🚨 Problem braku centralizacji</span>
+    <ul class="tech-list">
+     <li><strong>W domu:</strong> Masz swój komputer, swoje konto, instalujesz co chcesz.</li>
+     <li><strong>W szkole (bez serwera):</strong> 80 komputerów w różnych salach.</li>
+     <li>
+      <strong>Nowy uczeń:</strong> Informatyk musi biegać z pendrivem do 80 maszyn, by założyć mu
+      konto.
+     </li>
+     <li>
+      <strong>Nowy program:</strong> Instalacja Pythona w sali 32 to klikanie "Dalej" na 20
+      stanowiskach.
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Rozwiązanie: Windows Server</strong>
+     To niewykonalne. Dlatego w piwnicy szkoły buczy potężna maszyna. Od teraz komputery w
+     pracowniach są "głupimi końcówkami", które słuchają rozkazów z góry.
+    </div>
+   </div>
 
-            <!-- KROK 2 -->
-            <div class="card win-ad">
-                <div class="step-number">Krok 2</div>
-                <h2>Kontroler Domeny i DNS</h2>
-                <span class="tag win-ad">🛡️ Logowanie</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Domena (np. zs1.local):</strong> Wirtualna strefa, do której
-                        podłączone są szkolne komputery.
-                    </li>
-                    <li>
-                        <strong>Kontroler Domeny (DC):</strong> Serwer, który autoryzuje logowania.
-                        Komputer w sali sam nie sprawdza Twojego hasła!
-                    </li>
-                    <li>
-                        <strong>DNS:</strong> System tłumaczący nazwy na adresy IP. Niezbędny, by
-                        komputer znalazł serwer.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Kontroler Domeny to "Bramkarz" w klubie, który ma listę gości i sprawdza hasła.
-                    DNS to "GPS", który mówi komputerowi w sali 32, jak do tego bramkarza trafić.
-                </div>
-            </div>
+   <!-- KROK 2 -->
+   <div class="card win-ad">
+    <div class="step-number">Krok 2</div>
+    <h2>Kontroler Domeny i DNS</h2>
+    <span class="tag win-ad">🛡️ Logowanie</span>
+    <ul class="tech-list">
+     <li>
+      <strong>Domena (np. zs1.local):</strong> Wirtualna strefa, do której podłączone są szkolne
+      komputery.
+     </li>
+     <li>
+      <strong>Kontroler Domeny (DC):</strong> Serwer, który autoryzuje logowania. Komputer w sali
+      sam nie sprawdza Twojego hasła!
+     </li>
+     <li>
+      <strong>DNS:</strong> System tłumaczący nazwy na adresy IP. Niezbędny, by komputer znalazł
+      serwer.
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Kontroler Domeny to "Bramkarz" w klubie, który ma listę gości i sprawdza hasła. DNS to "GPS",
+     który mówi komputerowi w sali 32, jak do tego bramkarza trafić.
+    </div>
+   </div>
 
-            <!-- KROK 3 -->
-            <div class="card win-ad">
-                <div class="step-number">Krok 3</div>
-                <h2>Active Directory (AD)</h2>
-                <span class="tag win-ad">🗂️ Struktura</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Użytkownicy:</strong> Konta osób. Można wymusić zmianę hasła lub
-                        ustawić datę wygaśnięcia konta (np. dla praktykanta).
-                    </li>
-                    <li>
-                        <strong>Grupy:</strong> Zbiory użytkowników (np. <em>Nauczyciele</em>).
-                        Ułatwiają masowe nadawanie uprawnień.
-                    </li>
-                    <li>
-                        <strong>Jednostki Organizacyjne (OU):</strong> Wirtualne foldery do
-                        grupowania komputerów i ludzi (np. <em>Pracownia_32</em>).
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    AD to wielki, cyfrowy dziennik szkolny zbudowany z klocków Lego. Informatyk
-                    układa w nim całą strukturę szkoły, by mieć porządek.
-                </div>
-            </div>
+   <!-- KROK 3 -->
+   <div class="card win-ad">
+    <div class="step-number">Krok 3</div>
+    <h2>Active Directory (AD)</h2>
+    <span class="tag win-ad">🗂️ Struktura</span>
+    <ul class="tech-list">
+     <li>
+      <strong>Użytkownicy:</strong> Konta osób. Można wymusić zmianę hasła lub ustawić datę
+      wygaśnięcia konta (np. dla praktykanta).
+     </li>
+     <li>
+      <strong>Grupy:</strong> Zbiory użytkowników (np. <em>Nauczyciele</em>). Ułatwiają masowe
+      nadawanie uprawnień.
+     </li>
+     <li>
+      <strong>Jednostki Organizacyjne (OU):</strong> Wirtualne foldery do grupowania komputerów i
+      ludzi (np. <em>Pracownia_32</em>).
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     AD to wielki, cyfrowy dziennik szkolny zbudowany z klocków Lego. Informatyk układa w nim całą
+     strukturę szkoły, by mieć porządek.
+    </div>
+   </div>
 
-            <!-- SEKRET INŻYNIERA (Pomiędzy Krokiem 3 a 4) -->
-            <div class="card" style="border-top-color: #6c5ce7; background-color: #f8f9fa">
-                <h2>🕵️‍♂️ Sekret Inżyniera: Dwa Światy (Egzamin vs Rzeczywistość)</h2>
-                <span class="tag" style="background: #e0d6ff; color: #6c5ce7"
-                    >⚠️ Ważne pojęcie</span
-                >
-                <p style="margin-top: 15px">
-                    W świecie Windows istnieją dwa rodzaje kont użytkowników. Musisz to zrozumieć,
-                    żeby nie zwariować na egzaminie!
-                </p>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Konto Lokalne (Komendy <code>net user</code>):</strong> To tak,
-                        jakby nauczyciel zapisał Twoje nazwisko w swoim
-                        <em>prywatnym, papierowym notesie</em>. Działa tylko w tej jednej sali.
-                    </li>
-                    <li>
-                        <strong>Konto Domenowe (Active Directory):</strong> To wpisanie ucznia do
-                        <em>Dziennika Elektronicznego (Librus/Vulcan)</em>. Działa w całej szkole. W
-                        prawdziwym IT używa się do tego myszki (GUI) lub potężnego narzędzia o
-                        nazwie PowerShell.
-                    </li>
-                </ul>
-                <div
-                    class="analogy-box"
-                    style="background: #e0d6ff; border-color: #6c5ce7; color: #4a3b9c"
-                >
-                    <strong>💡 Paradoks Egzaminu INF.02:</strong>
-                    Autorzy egzaminu często każą Wam używać starych komend
-                    <code>net user</code> (czyli pisać w papierowym notesie), oczekując, że zadziała
-                    to jak Dziennik Elektroniczny.
-                    <strong>W prawdziwej pracy w korporacji nikt tak nie robi!</strong> Ale na
-                    egzaminie... robimy dokładnie to, o co prosi arkusz, żeby zdobyć punkty.
-                </div>
-            </div>
+   <!-- SEKRET INŻYNIERA (Pomiędzy Krokiem 3 a 4) -->
+   <div class="card" style="border-top-color: #6c5ce7; background-color: #f8f9fa">
+    <h2>🕵️‍♂️ Sekret Inżyniera: Dwa Światy (Egzamin vs Rzeczywistość)</h2>
+    <span class="tag" style="background: #e0d6ff; color: #6c5ce7">⚠️ Ważne pojęcie</span>
+    <p style="margin-top: 15px">
+     W świecie Windows istnieją dwa rodzaje kont użytkowników. Musisz to zrozumieć, żeby nie
+     zwariować na egzaminie!
+    </p>
+    <ul class="tech-list">
+     <li>
+      <strong>Konto Lokalne (Komendy <code>net user</code>):</strong> To tak, jakby nauczyciel
+      zapisał Twoje nazwisko w swoim <em>prywatnym, papierowym notesie</em>. Działa tylko w tej
+      jednej sali.
+     </li>
+     <li>
+      <strong>Konto Domenowe (Active Directory):</strong> To wpisanie ucznia do
+      <em>Dziennika Elektronicznego (Librus/Vulcan)</em>. Działa w całej szkole. W prawdziwym IT
+      używa się do tego myszki (GUI) lub potężnego narzędzia o nazwie PowerShell.
+     </li>
+    </ul>
+    <div class="analogy-box" style="background: #e0d6ff; border-color: #6c5ce7; color: #4a3b9c">
+     <strong>💡 Paradoks Egzaminu INF.02:</strong>
+     Autorzy egzaminu często każą Wam używać starych komend
+     <code>net user</code> (czyli pisać w papierowym notesie), oczekując, że zadziała to jak
+     Dziennik Elektroniczny. <strong>W prawdziwej pracy w korporacji nikt tak nie robi!</strong> Ale
+     na egzaminie... robimy dokładnie to, o co prosi arkusz, żeby zdobyć punkty.
+    </div>
+   </div>
 
-            <!-- KROK 4 -->
-            <div class="card win-gpo">
-                <div class="step-number">Krok 4</div>
-                <h2>Zasady Grupy (GPO)</h2>
-                <span class="tag win-gpo">🛑 Restrykcje</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Czym jest GPO?</strong> Zbiór zakazów i nakazów wysyłanych z serwera
-                        na komputery.
-                    </li>
-                    <li>
-                        <strong>Przykłady:</strong> Blokada Wiersza Poleceń (CMD), blokada zmiany
-                        tapety, wymuszenie wygaszacza ekranu.
-                    </li>
-                    <li>
-                        <strong>Celowanie:</strong> GPO można przypiąć tylko do konkretnej grupy
-                        (np. <em>Uczniowie</em>). Nauczyciela te blokady nie dotyczą!
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    GPO to regulamin szkolny. To właśnie to narzędzie sprawia, że na lekcji widzisz
-                    komunikat: "Zablokowane przez administratora".
-                </div>
-            </div>
+   <!-- KROK 4 -->
+   <div class="card win-gpo">
+    <div class="step-number">Krok 4</div>
+    <h2>Zasady Grupy (GPO)</h2>
+    <span class="tag win-gpo">🛑 Restrykcje</span>
+    <ul class="tech-list">
+     <li>
+      <strong>Czym jest GPO?</strong> Zbiór zakazów i nakazów wysyłanych z serwera na komputery.
+     </li>
+     <li>
+      <strong>Przykłady:</strong> Blokada Wiersza Poleceń (CMD), blokada zmiany tapety, wymuszenie
+      wygaszacza ekranu.
+     </li>
+     <li>
+      <strong>Celowanie:</strong> GPO można przypiąć tylko do konkretnej grupy (np.
+      <em>Uczniowie</em>). Nauczyciela te blokady nie dotyczą!
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     GPO to regulamin szkolny. To właśnie to narzędzie sprawia, że na lekcji widzisz komunikat:
+     "Zablokowane przez administratora".
+    </div>
+   </div>
 
-            <!-- KROK 5 -->
-            <div class="card win-file">
-                <div class="step-number">Krok 5</div>
-                <h2>Pliki i Profile Mobilne</h2>
-                <span class="tag win-file">📁 Zasoby</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Share vs NTFS:</strong> <em>Share</em> udostępnia folder w sieci.
-                        <em>NTFS</em> decyduje, kto może do niego wejść (np. Nauczyciele - tak,
-                        Uczniowie - Odmowa dostępu).
-                    </li>
-                    <li>
-                        <strong>Ukryte udziały ($):</strong> Folder nazwany
-                        <code>Sprawdziany$</code> jest niewidoczny w otoczeniu sieciowym.
-                    </li>
-                    <li>
-                        <strong>Profile Mobilne:</strong> Twój pulpit "wędruje" za Tobą. Zapisujesz
-                        plik w sali 32, a na kolejnej lekcji masz go w sali 33.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Profil mobilny działa tak: gdy klikasz "Wyloguj", komputer pakuje Twój pulpit do
-                    kartonu i wysyła do piwnicy (na serwer). Gdy logujesz się w innej sali, serwer
-                    wysyła ten karton na nowy komputer.
-                </div>
-            </div>
-        </main>
+   <!-- KROK 5 -->
+   <div class="card win-file">
+    <div class="step-number">Krok 5</div>
+    <h2>Pliki i Profile Mobilne</h2>
+    <span class="tag win-file">📁 Zasoby</span>
+    <ul class="tech-list">
+     <li>
+      <strong>Share vs NTFS:</strong> <em>Share</em> udostępnia folder w sieci.
+      <em>NTFS</em> decyduje, kto może do niego wejść (np. Nauczyciele - tak, Uczniowie - Odmowa
+      dostępu).
+     </li>
+     <li>
+      <strong>Ukryte udziały ($):</strong> Folder nazwany <code>Sprawdziany$</code> jest niewidoczny
+      w otoczeniu sieciowym.
+     </li>
+     <li>
+      <strong>Profile Mobilne:</strong> Twój pulpit "wędruje" za Tobą. Zapisujesz plik w sali 32, a
+      na kolejnej lekcji masz go w sali 33.
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Profil mobilny działa tak: gdy klikasz "Wyloguj", komputer pakuje Twój pulpit do kartonu i
+     wysyła do piwnicy (na serwer). Gdy logujesz się w innej sali, serwer wysyła ten karton na nowy
+     komputer.
+    </div>
+   </div>
+  </main>
 
-        <!-- PODSUMOWANIE -->
-        <div class="conclusion-box">
-            <div class="conclusion-icon">🎓</div>
-            <div class="conclusion-text">
-                <strong>Podsumowanie dla Was:</strong>
-                <span
-                    >Na egzaminie INF.02 to WY będziecie tym szkolnym informatykiem. Będziecie
-                    musieli postawić serwer, stworzyć dyrektora, zablokować uczniom notatnik i ukryć
-                    folder ze sprawdzianami. Teraz już wiecie, po co to robimy!</span
-                >
-            </div>
-        </div>
+  <!-- PODSUMOWANIE -->
+  <div class="conclusion-box">
+   <div class="conclusion-icon">🎓</div>
+   <div class="conclusion-text">
+    <strong>Podsumowanie dla Was:</strong>
+    <span
+     >Na egzaminie INF.02 to WY będziecie tym szkolnym informatykiem. Będziecie musieli postawić
+     serwer, stworzyć dyrektora, zablokować uczniom notatnik i ukryć folder ze sprawdzianami. Teraz
+     już wiecie, po co to robimy!</span
+    >
+   </div>
+  </div>
 
-        <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
-        <section class="labs-section">
-            <h2>💻 Czas na praktykę!</h2>
-            <p style="color: #b2bec3; margin-bottom: 20px">
-                Wybierz laboratorium do wykonania w VirtualBox:
-            </p>
+  <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
+  <section class="labs-section">
+   <h2>💻 Czas na praktykę!</h2>
+   <p style="color: #b2bec3; margin-bottom: 20px">
+    Wybierz laboratorium do wykonania w VirtualBox:
+   </p>
 
-            <div class="labs-grid">
-                <a href="lab1-domena.html" class="lab-link-card">
-                    <span class="lab-title">Lab 1: Domena</span>
-                    <span class="lab-desc">Instalacja AD DS i podłączanie stacji</span>
-                </a>
-                <a href="lab2-gpo-cli.html" class="lab-link-card">
-                    <span class="lab-title">Lab 2: GPO i CLI</span>
-                    <span class="lab-desc">Zarządzanie AD i komendy 'net'</span>
-                </a>
-                <a href="lab3-pliki.html" class="lab-link-card">
-                    <span class="lab-title">Lab 3: Pliki</span>
-                    <span class="lab-desc">NTFS, udziały $, profile mobilne</span>
-                </a>
-                <a href="lab4-uslugi.html" class="lab-link-card">
-                    <span class="lab-title">Lab 4: Usługi</span>
-                    <span class="lab-desc">DNS, IIS (Szkolny Intranet)</span>
-                </a>
-                <a href="lab5-zaawansowane.html" class="lab-link-card">
-                    <span class="lab-title">Lab 5: Zaawansowane</span>
-                    <span class="lab-desc">RRAS, NIC Teaming, Drukarki</span>
-                </a>
-            </div>
-        </section>
+   <div class="labs-grid">
+    <a href="lab1-domena.html" class="lab-link-card">
+     <span class="lab-title">Lab 1: Domena</span>
+     <span class="lab-desc">Instalacja AD DS i podłączanie stacji</span>
+    </a>
+    <a href="lab2-gpo-cli.html" class="lab-link-card">
+     <span class="lab-title">Lab 2: GPO i CLI</span>
+     <span class="lab-desc">Zarządzanie AD i komendy 'net'</span>
+    </a>
+    <a href="lab3-pliki.html" class="lab-link-card">
+     <span class="lab-title">Lab 3: Pliki</span>
+     <span class="lab-desc">NTFS, udziały $, profile mobilne</span>
+    </a>
+    <a href="lab4-uslugi.html" class="lab-link-card">
+     <span class="lab-title">Lab 4: Usługi</span>
+     <span class="lab-desc">DNS, IIS (Szkolny Intranet)</span>
+    </a>
+    <a href="lab4-5-dhcp.html" class="lab-link-card">
+     <span class="lab-title">Lab 4.5: DHCP</span>
+     <span class="lab-desc">Automatyzacja adresacji IP (DORA)</span>
+    </a>
 
-        <script src="../menu.js"></script>
-    </body>
+    <a href="lab5-zaawansowane.html" class="lab-link-card">
+     <span class="lab-title">Lab 5: Zaawansowane</span>
+     <span class="lab-desc">RRAS, NIC Teaming, Drukarki</span>
+    </a>
+   </div>
+  </section>
+
+  <script src="../menu.js"></script>
+ </body>
 </html>

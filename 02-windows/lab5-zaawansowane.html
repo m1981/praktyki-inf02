@@ -1,271 +1,233 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Lab 5: Zaawansowana Infrastruktura</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>🚀 Laboratoria: Windows Server</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem">
-                Routing, Niezawodność i Drukarki
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 5: Zaawansowana Infrastruktura</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>💻 Laboratoria: Windows Server</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">Routing, Niezawodność i Drukarki</p>
+  </header>
 
-        <main class="lab-container">
-            <!-- LAB: RRAS -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Część 1: Serwer jako Router (RRAS i NAT)</h3>
-                </div>
-                <div class="lab-body">
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Dwie karty sieciowe</strong>
-                            <p>
-                                Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj
-                                <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em> (to
-                                będzie nasz WAN). Pierwsza karta zostaje na
-                                <em>Internal Network (Sieć wewnętrzna)</em> (to nasz LAN).
-                            </p>
-                        </li>
-                        <li>
-                            <strong>Krok 2: Instalacja roli RRAS</strong>
-                            <div class="gui-path">
-                                Server Manager (Menedżer serwera)
-                                <span class="gui-arrow">➔</span> Add roles and features (Dodaj role
-                                i funkcje) <span class="gui-arrow">➔</span> Remote Access (Dostęp
-                                zdalny) <span class="gui-arrow">➔</span> Routing
-                            </div>
-                        </li>
-                        <li>
-                            <strong>Krok 3: Konfiguracja Translacji Adresów (NAT)</strong>
-                            <div class="gui-path">
-                                Routing and Remote Access (Routing i dostęp zdalny)
-                            </div>
-                            <p>
-                                Kliknij prawym przyciskiem na nazwę serwera i wybierz
-                                <em
-                                    >"Configure and Enable Routing and Remote Access" (Konfiguruj i
-                                    włącz routing...)</em
-                                >. Wybierz
-                                <strong
-                                    >Network Address Translation (NAT) (Translacja adresów
-                                    sieciowych (NAT))</strong
-                                >.
-                            </p>
+  <main class="lab-container">
+   <!-- LAB: RRAS -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Lab 5a: Serwer jako Router (RRAS i NAT)</h3>
+    </div>
+    <div class="lab-body">
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Dwie karty sieciowe</strong>
+       <p>
+        Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj
+        <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em> (to będzie nasz WAN).
+        Pierwsza karta zostaje na <em>Internal Network (Sieć wewnętrzna)</em> (to nasz LAN).
+       </p>
+      </li>
+      <li>
+       <strong>Krok 2: Instalacja roli RRAS</strong>
+       <div class="gui-path">
+        Server Manager (Menedżer serwera)
+        <span class="gui-arrow">➔</span> Add roles and features (Dodaj role i funkcje)
+        <span class="gui-arrow">➔</span> Remote Access (Dostęp zdalny)
+        <span class="gui-arrow">➔</span> Routing
+       </div>
+      </li>
+      <li>
+       <strong>Krok 3: Konfiguracja Translacji Adresów (NAT)</strong>
+       <div class="gui-path">Routing and Remote Access (Routing i dostęp zdalny)</div>
+       <p>
+        Kliknij prawym przyciskiem na nazwę serwera i wybierz
+        <em>"Configure and Enable Routing and Remote Access" (Konfiguruj i włącz routing...)</em>.
+        Wybierz
+        <strong>Network Address Translation (NAT) (Translacja adresów sieciowych (NAT))</strong>.
+       </p>
 
-                            <!-- REFERENCJA EGZAMINACYJNA -->
-                            <details class="exam-reference">
-                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                                <div class="exam-content">
-                                    <p>
-                                        <strong>Egzamin:</strong> Styczeń 2024 (INF.02-01-24.01-SG)
-                                    </p>
-                                    <p>
-                                        <strong>Arkusz:</strong>
-                                        <a
-                                            href="../egzaminy/inf02-2024-styczen-egzamin-zawodowy-praktyczny.pdf"
-                                            target="_blank"
-                                            >Pobierz PDF</a
-                                        >
-                                    </p>
-                                    <blockquote>
-                                        <p>
-                                            <em style="color: #636e72"
-                                                >Zadanie: 7. Skonfiguruj serwer z zainstalowanym
-                                                systemem operacyjnym Windows: (...)</em
-                                            >
-                                        </p>
-                                        <p>
-                                            <strong>Treść zadania:</strong><br />
-                                            ‒ włącz usługę rutingu oraz NAT dla adresu 172.31.0.2
-                                            jako interfejsu publicznego
-                                        </p>
-                                    </blockquote>
-                                </div>
-                            </details>
-                        </li>
-
-                        <div class="pitfall-box">
-                            <strong>🚨 Najczęstszy błąd uczniów (RRAS):</strong> W kreatorze NAT
-                            system zapyta, który interfejs jest podłączony do Internetu (Publiczny).
-                            Jeśli wskażesz kartę LAN zamiast WAN, odetniesz całą sieć od świata!
-                            Zawsze nazywaj karty sieciowe w systemie (np. "Karta_LAN", "Karta_WAN")
-                            przed konfiguracją RRAS.
-                        </div>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- LAB: NIC Teaming -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Część 2: Niezawodność (NIC Teaming)</h3>
-                </div>
-                <div class="lab-body">
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Zespół kart sieciowych</strong>
-                            <div class="gui-path">
-                                Server Manager (Menedżer serwera)
-                                <span class="gui-arrow">➔</span> Local Server (Serwer lokalny)
-                                <span class="gui-arrow">➔</span> NIC Teaming (Zespół kart interfejsu
-                                sieciowego)
-                            </div>
-                            <p>
-                                Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym ->
-                                <strong>Add to New Team (Dodaj do nowego zespołu)</strong>. Nazwij
-                                go <code>LAN_Zespol</code>. Teaming mode (Tryb):
-                                <em>Switch Independent (Niezależny od przełącznika)</em>.
-                            </p>
-
-                            <!-- REFERENCJA EGZAMINACYJNA -->
-                            <details class="exam-reference">
-                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                                <div class="exam-content">
-                                    <p>
-                                        <strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)
-                                    </p>
-                                    <p>
-                                        <strong>Arkusz:</strong>
-                                        <a
-                                            href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf"
-                                            target="_blank"
-                                            >Pobierz PDF</a
-                                        >
-                                    </p>
-                                    <blockquote>
-                                        <p>
-                                            <em style="color: #636e72"
-                                                >Zadanie: 6. Skonfiguruj serwer z zainstalowanym
-                                                systemem Windows: (...)</em
-                                            >
-                                        </p>
-                                        <p>
-                                            <strong>Treść zadania:</strong><br />
-                                            ‒ utworzony zespół kart interfejsu sieciowego na
-                                            serwerze lokalnym (NIC Teaming)<br />
-                                            ‒ nazwa interfejsu: LAN12<br />
-                                            ‒ zgrupowane interfejsy sieciowe LAN1 i LAN2<br />
-                                            ‒ niezależny od przełącznika, dynamiczne równoważenie
-                                            obciążenia
-                                        </p>
-                                    </blockquote>
-                                </div>
-                            </details>
-                        </li>
-
-                        <div class="golden-rule-box">
-                            <strong>💡 Złota Rada Trenera:</strong> Po utworzeniu zespołu (Team),
-                            Twoje dwie fizyczne karty tracą swoje adresy IP! Musisz wejść w
-                            ustawienia sieciowe (ncpa.cpl) i nadać adres IP nowej, wirtualnej karcie
-                            o nazwie <code>LAN_Zespol</code>.
-                        </div>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- LAB: Drukarki -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Część 3: Szkolna Drukarka (Print Server)</h3>
-                </div>
-                <div class="lab-body">
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Instalacja portu TCP/IP</strong>
-                            <div class="gui-path">
-                                Control Panel (Panel Sterowania)
-                                <span class="gui-arrow">➔</span> Devices and Printers (Urządzenia i
-                                drukarki) <span class="gui-arrow">➔</span> Add a printer (Dodaj
-                                drukarkę)
-                            </div>
-                            <p>
-                                Wybierz "Add a printer using a TCP/IP address or hostname" (Dodaj
-                                drukarkę używając adresu TCP/IP). Wpisz adres, np.
-                                <code>192.168.1.200</code>. Zainstaluj sterownik Generic / Text
-                                Only.
-                            </p>
-                        </li>
-                        <li>
-                            <strong>Krok 2: Udostępnianie i restrykcje</strong>
-                            <p>
-                                Wejdź we właściwości nowej drukarki. W zakładce
-                                <strong>Advanced (Zaawansowane)</strong> zmień opcję na
-                                <strong>Available from (Dostępna od) 08:00 to 15:00</strong>.
-                            </p>
-
-                            <!-- REFERENCJA EGZAMINACYJNA -->
-                            <details class="exam-reference">
-                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                                <div class="exam-content">
-                                    <p>
-                                        <strong>Egzamin:</strong> Styczeń 2023 (INF.02-01-23.01-SG)
-                                    </p>
-                                    <p>
-                                        <strong>Arkusz:</strong>
-                                        <a
-                                            href="../egzaminy/inf02-2023-styczen-egzamin-zawodowy-praktyczny.pdf"
-                                            target="_blank"
-                                            >Pobierz PDF</a
-                                        >
-                                    </p>
-                                    <blockquote>
-                                        <p>
-                                            <em style="color: #636e72"
-                                                >Zadanie: 7. Skonfiguruj serwer z zainstalowanym
-                                                systemem Windows zgodnie z zaleceniami: (...)</em
-                                            >
-                                        </p>
-                                        <p>
-                                            <strong>Treść zadania:</strong><br />
-                                            ‒ zainstaluj drukarkę sieciową. Drukarka jest dostępna
-                                            przez port TCP/IP pod adresem 192.168.0.200, z
-                                            protokołem RAW.<br />
-                                            ‒ udostępnij drukarkę pod nazwą Drukarka-X<br />
-                                            ‒ skonfiguruj domyślne ustawienia drukowania dla
-                                            zainstalowanej drukarki:<br />
-                                            ‒ dostępność od godziny 8:00 do godziny 21:00
-                                        </p>
-                                    </blockquote>
-                                </div>
-                            </details>
-                        </li>
-                    </ul>
-
-                    <div class="exam-verify-box">
-                        <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
-                        <p>
-                            W przypadku zaawansowanych usług, egzaminator wymaga twardych dowodów:
-                        </p>
-                        <ol>
-                            <li>
-                                <strong>RRAS:</strong> Zrób zrzut ekranu ze stacji roboczej (Windows
-                                10), na którym widać udany <code>ping 8.8.8.8</code> (dowód, że NAT
-                                działa).
-                            </li>
-                            <li>
-                                <strong>NIC Teaming:</strong> Zrób zrzut okna Menedżera Serwera,
-                                gdzie widać Twój zespół kart ze statusem <strong>OK</strong> na
-                                zielono.
-                            </li>
-                            <li>
-                                <strong>Drukarka:</strong> Zrób zrzut zakładki "Zaawansowane" we
-                                właściwościach drukarki, pokazujący ustawione godziny dostępności.
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <div class="course-nav">
-            <a href="lab4-5-dhcp.html" class="course-btn">⬅️ Poprzedni: Lab 4.5 (DHCP)</a>
-            <a href="index.html" class="course-btn next">Zakończ Filar 2 ➡️</a>
+       <!-- REFERENCJA EGZAMINACYJNA -->
+       <details class="exam-reference">
+        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+        <div class="exam-content">
+         <p><strong>Egzamin:</strong> Styczeń 2024 (INF.02-01-24.01-SG)</p>
+         <p>
+          <strong>Arkusz:</strong>
+          <a href="../egzaminy/inf02-2024-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank"
+           >Pobierz PDF</a
+          >
+         </p>
+         <blockquote>
+          <p>
+           <em style="color: #636e72"
+            >Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem operacyjnym Windows: (...)</em
+           >
+          </p>
+          <p>
+           <strong>Treść zadania:</strong><br />
+           ‒ włącz usługę rutingu oraz NAT dla adresu 172.31.0.2 jako interfejsu publicznego
+          </p>
+         </blockquote>
         </div>
-        <script src="../menu.js"></script>
-    </body>
+       </details>
+      </li>
+
+      <div class="pitfall-box">
+       <strong>🚨 Najczęstszy błąd uczniów (RRAS):</strong> W kreatorze NAT system zapyta, który
+       interfejs jest podłączony do Internetu (Publiczny). Jeśli wskażesz kartę LAN zamiast WAN,
+       odetniesz całą sieć od świata! Zawsze nazywaj karty sieciowe w systemie (np. "Karta_LAN",
+       "Karta_WAN") przed konfiguracją RRAS.
+      </div>
+     </ul>
+    </div>
+   </div>
+
+   <!-- LAB: NIC Teaming -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Lab 5b: Niezawodność (NIC Teaming)</h3>
+    </div>
+    <div class="lab-body">
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Zespół kart sieciowych</strong>
+       <div class="gui-path">
+        Server Manager (Menedżer serwera)
+        <span class="gui-arrow">➔</span> Local Server (Serwer lokalny)
+        <span class="gui-arrow">➔</span> NIC Teaming (Zespół kart interfejsu sieciowego)
+       </div>
+       <p>
+        Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym ->
+        <strong>Add to New Team (Dodaj do nowego zespołu)</strong>. Nazwij go
+        <code>LAN_Zespol</code>. Teaming mode (Tryb):
+        <em>Switch Independent (Niezależny od przełącznika)</em>.
+       </p>
+
+       <!-- REFERENCJA EGZAMINACYJNA -->
+       <details class="exam-reference">
+        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+        <div class="exam-content">
+         <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
+         <p>
+          <strong>Arkusz:</strong>
+          <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
+           >Pobierz PDF</a
+          >
+         </p>
+         <blockquote>
+          <p>
+           <em style="color: #636e72"
+            >Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em
+           >
+          </p>
+          <p>
+           <strong>Treść zadania:</strong><br />
+           ‒ utworzony zespół kart interfejsu sieciowego na serwerze lokalnym (NIC Teaming)<br />
+           ‒ nazwa interfejsu: LAN12<br />
+           ‒ zgrupowane interfejsy sieciowe LAN1 i LAN2<br />
+           ‒ niezależny od przełącznika, dynamiczne równoważenie obciążenia
+          </p>
+         </blockquote>
+        </div>
+       </details>
+      </li>
+
+      <div class="golden-rule-box">
+       <strong>💡 Złota Rada Trenera:</strong> Po utworzeniu zespołu (Team), Twoje dwie fizyczne
+       karty tracą swoje adresy IP! Musisz wejść w ustawienia sieciowe (ncpa.cpl) i nadać adres IP
+       nowej, wirtualnej karcie o nazwie <code>LAN_Zespol</code>.
+      </div>
+     </ul>
+    </div>
+   </div>
+
+   <!-- LAB: Drukarki -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Lab 5c: Szkolna Drukarka (Print Server)</h3>
+    </div>
+    <div class="lab-body">
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Instalacja portu TCP/IP</strong>
+       <div class="gui-path">
+        Control Panel (Panel Sterowania)
+        <span class="gui-arrow">➔</span> Devices and Printers (Urządzenia i drukarki)
+        <span class="gui-arrow">➔</span> Add a printer (Dodaj drukarkę)
+       </div>
+       <p>
+        Wybierz "Add a printer using a TCP/IP address or hostname" (Dodaj drukarkę używając adresu
+        TCP/IP). Wpisz adres, np.
+        <code>192.168.1.200</code>. Zainstaluj sterownik Generic / Text Only.
+       </p>
+      </li>
+      <li>
+       <strong>Krok 2: Udostępnianie i restrykcje</strong>
+       <p>
+        Wejdź we właściwości nowej drukarki. W zakładce
+        <strong>Advanced (Zaawansowane)</strong> zmień opcję na
+        <strong>Available from (Dostępna od) 08:00 to 15:00</strong>.
+       </p>
+
+       <!-- REFERENCJA EGZAMINACYJNA -->
+       <details class="exam-reference">
+        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+        <div class="exam-content">
+         <p><strong>Egzamin:</strong> Styczeń 2023 (INF.02-01-23.01-SG)</p>
+         <p>
+          <strong>Arkusz:</strong>
+          <a href="../egzaminy/inf02-2023-styczen-egzamin-zawodowy-praktyczny.pdf" target="_blank"
+           >Pobierz PDF</a
+          >
+         </p>
+         <blockquote>
+          <p>
+           <em style="color: #636e72"
+            >Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows zgodnie z zaleceniami:
+            (...)</em
+           >
+          </p>
+          <p>
+           <strong>Treść zadania:</strong><br />
+           ‒ zainstaluj drukarkę sieciową. Drukarka jest dostępna przez port TCP/IP pod adresem
+           192.168.0.200, z protokołem RAW.<br />
+           ‒ udostępnij drukarkę pod nazwą Drukarka-X<br />
+           ‒ skonfiguruj domyślne ustawienia drukowania dla zainstalowanej drukarki:<br />
+           ‒ dostępność od godziny 8:00 do godziny 21:00
+          </p>
+         </blockquote>
+        </div>
+       </details>
+      </li>
+     </ul>
+
+     <div class="exam-verify-box">
+      <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
+      <p>W przypadku zaawansowanych usług, egzaminator wymaga twardych dowodów:</p>
+      <ol>
+       <li>
+        <strong>RRAS:</strong> Zrób zrzut ekranu ze stacji roboczej (Windows 10), na którym widać
+        udany <code>ping 8.8.8.8</code> (dowód, że NAT działa).
+       </li>
+       <li>
+        <strong>NIC Teaming:</strong> Zrób zrzut okna Menedżera Serwera, gdzie widać Twój zespół
+        kart ze statusem <strong>OK</strong> na zielono.
+       </li>
+       <li>
+        <strong>Drukarka:</strong> Zrób zrzut zakładki "Zaawansowane" we właściwościach drukarki,
+        pokazujący ustawione godziny dostępności.
+       </li>
+      </ol>
+     </div>
+    </div>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="lab4-5-dhcp.html" class="course-btn">⬅️ Poprzedni: Lab 4.5 (DHCP)</a>
+   <a href="index.html" class="course-btn next">Zakończ Filar 2 ➡️</a>
+  </div>
+  <script src="../menu.js"></script>
+ </body>
 </html>
