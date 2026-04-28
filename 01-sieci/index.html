@@ -1,190 +1,178 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Teoria: L2/L3</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>Filar 1: L2/L3</h1>
-            <p class="subtitle">
-                Zrozum sieci komputerowe krok po kroku. Od lokalnego podwórka po globalny internet.
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Filar 1: Sieci - Teoria</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>🌐 Filar 1: Sieci Komputerowe</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zrozum sieci komputerowe krok po kroku. Od lokalnego podwórka po globalny internet.
+   </p>
+  </header>
 
-        <main class="roadmap-container">
-            <!-- KROK 1 -->
-            <div class="card l3">
-                <div class="step-number">Krok 1</div>
-                <h2>Fundamenty (OSI i TCP/IP)</h2>
-                <span class="tag l3">📦 Świat Poczty (Zasady)</span>
-                <ul class="tech-list">
-                    <li><strong>L7 (Aplikacja):</strong> Tworzenie danych (pisanie listu).</li>
-                    <li>
-                        <strong>L4 (Transport):</strong> Wybór przesyłki (TCP - przesyłka polecona
-                        za pokwitowaniem, UDP - zwykła pocztówka).
-                    </li>
-                    <li><strong>L3 (Sieć):</strong> Adres docelowy IP (Miasto i Ulica).</li>
-                    <li>
-                        <strong>L2 (Łącze Danych):</strong> Przekazanie do konkretnego auta (MAC).
-                    </li>
-                    <li>
-                        <strong>L1 (Fizyczna):</strong> Furgonetka, kable, fale Wi-Fi (fizyczny
-                        transport).
-                    </li>
-                </ul>
-            </div>
+  <main class="roadmap-container">
+   <!-- KROK 1 -->
+   <div class="card l3">
+    <div class="step-number">Krok 1</div>
+    <h2>Fundamenty (OSI i TCP/IP)</h2>
+    <span class="tag l3">📦 Świat Poczty (Zasady)</span>
+    <ul class="tech-list">
+     <li><strong>L7 (Aplikacja):</strong> Tworzenie danych (pisanie listu).</li>
+     <li>
+      <strong>L4 (Transport):</strong> Wybór przesyłki (TCP - przesyłka polecona za pokwitowaniem,
+      UDP - zwykła pocztówka).
+     </li>
+     <li><strong>L3 (Sieć):</strong> Adres docelowy IP (Miasto i Ulica).</li>
+     <li><strong>L2 (Łącze Danych):</strong> Przekazanie do konkretnego auta (MAC).</li>
+     <li><strong>L1 (Fizyczna):</strong> Furgonetka, kable, fale Wi-Fi (fizyczny transport).</li>
+    </ul>
+   </div>
 
-            <!-- KROK 2 -->
-            <div class="card l2">
-                <div class="step-number">Krok 2</div>
-                <h2>Warstwa 2 (Łącze Danych)</h2>
-                <span class="tag l2">🏫 Świat Szkoły (LAN)</span>
-                <ul class="tech-list">
-                    <li><strong>Adres MAC:</strong> Fizyczny, niezmienny adres karty sieciowej.</li>
-                    <li>
-                        <strong>Switch (Przełącznik):</strong> Łączy urządzenia w jednej sieci
-                        lokalnej.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Adres MAC to Twój numer PESEL lub numer w dzienniku. Switch to Gospodarz Klasy,
-                    który wie, kto ma jaki numer i podaje karteczki tylko do właściwej ławki, nie
-                    przeszkadzając reszcie.
-                </div>
-            </div>
+   <!-- KROK 2 -->
+   <div class="card l2">
+    <div class="step-number">Krok 2</div>
+    <h2>Warstwa 2 (Łącze Danych)</h2>
+    <span class="tag l2">🏫 Świat Szkoły (LAN)</span>
+    <ul class="tech-list">
+     <li><strong>Adres MAC:</strong> Fizyczny, niezmienny adres karty sieciowej.</li>
+     <li><strong>Switch (Przełącznik):</strong> Łączy urządzenia w jednej sieci lokalnej.</li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Adres MAC to Twój numer PESEL lub numer w dzienniku. Switch to Gospodarz Klasy, który wie, kto
+     ma jaki numer i podaje karteczki tylko do właściwej ławki, nie przeszkadzając reszcie.
+    </div>
+   </div>
 
-            <!-- KROK 3 -->
-            <div class="card l3">
-                <div class="step-number">Krok 3</div>
-                <h2>Warstwa 3 (Sieć)</h2>
-                <span class="tag l3">🌍 Świat Poczty (WAN)</span>
-                <ul class="tech-list">
-                    <li><strong>Adres IP:</strong> Logiczny adres urządzenia w sieci.</li>
-                    <li><strong>Router:</strong> Łączy różne sieci i wyznacza trasy.</li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Adres IP to Twój adres zamieszkania (zmienia się, gdy zmieniasz szkołę/miasto).
-                    Router to Główny Urząd Pocztowy, który patrzy na adres i wysyła paczkę
-                    autostradą do innego miasta.
-                </div>
-            </div>
+   <!-- KROK 3 -->
+   <div class="card l3">
+    <div class="step-number">Krok 3</div>
+    <h2>Warstwa 3 (Sieć)</h2>
+    <span class="tag l3">🌍 Świat Poczty (WAN)</span>
+    <ul class="tech-list">
+     <li><strong>Adres IP:</strong> Logiczny adres urządzenia w sieci.</li>
+     <li><strong>Router:</strong> Łączy różne sieci i wyznacza trasy.</li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Adres IP to Twój adres zamieszkania (zmienia się, gdy zmieniasz szkołę/miasto). Router to
+     Główny Urząd Pocztowy, który patrzy na adres i wysyła paczkę autostradą do innego miasta.
+    </div>
+   </div>
 
-            <!-- KROK 4 -->
-            <div class="card bridge">
-                <div class="step-number">Krok 4</div>
-                <h2>Protokół ARP</h2>
-                <span class="tag bridge">🌉 Most (L2 ↔ L3)</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Zadanie ARP:</strong> Tłumaczenie znanego adresu IP na nieznany
-                        adres MAC w sieci lokalnej.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Nauczyciel ma paczkę dla "Jana Kowalskiego" (IP), ale nie wie, gdzie on siedzi.
-                    Krzyczy na całą klasę: "Kto ma IP 192.168.1.5?!". Janek odpowiada: "To ja, mój
-                    numer w dzienniku (MAC) to 00:1A...".
-                </div>
-            </div>
+   <!-- KROK 4 -->
+   <div class="card bridge">
+    <div class="step-number">Krok 4</div>
+    <h2>Protokół ARP</h2>
+    <span class="tag bridge">🌉 Most (L2 ↔ L3)</span>
+    <ul class="tech-list">
+     <li>
+      <strong>Zadanie ARP:</strong> Tłumaczenie znanego adresu IP na nieznany adres MAC w sieci
+      lokalnej.
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Nauczyciel ma paczkę dla "Jana Kowalskiego" (IP), ale nie wie, gdzie on siedzi. Krzyczy na całą
+     klasę: "Kto ma IP 192.168.1.5?!". Janek odpowiada: "To ja, mój numer w dzienniku (MAC) to
+     00:1A...".
+    </div>
+   </div>
 
-            <!-- KROK 5 -->
-            <div class="card l3">
-                <div class="step-number">Krok 5</div>
-                <h2>Subnetting (L3)</h2>
-                <span class="tag l3">🌍 Świat Poczty (WAN)</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>Maska podsieci:</strong> Dzieli dużą sieć IP na mniejsze, łatwiejsze
-                        do zarządzania fragmenty.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Wyobraź sobie ogromne miasto (wielka sieć IP). Żeby listonosz (router) nie
-                    zwariował, dzielisz je na dzielnice i ulice (podsieci). Maska podsieci mówi:
-                    "Pierwsze cyfry to kod pocztowy dzielnicy, reszta to konkretny dom".
-                </div>
-            </div>
+   <!-- KROK 5 -->
+   <div class="card l3">
+    <div class="step-number">Krok 5</div>
+    <h2>Subnetting (L3)</h2>
+    <span class="tag l3">🌍 Świat Poczty (WAN)</span>
+    <ul class="tech-list">
+     <li>
+      <strong>Maska podsieci:</strong> Dzieli dużą sieć IP na mniejsze, łatwiejsze do zarządzania
+      fragmenty.
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Wyobraź sobie ogromne miasto (wielka sieć IP). Żeby listonosz (router) nie zwariował, dzielisz
+     je na dzielnice i ulice (podsieci). Maska podsieci mówi: "Pierwsze cyfry to kod pocztowy
+     dzielnicy, reszta to konkretny dom".
+    </div>
+   </div>
 
-            <!-- KROK 6 -->
-            <div class="card l2">
-                <div class="step-number">Krok 6</div>
-                <h2>VLANy (Zaawansowane L2)</h2>
-                <span class="tag l2">🏫 Świat Szkoły (LAN)</span>
-                <ul class="tech-list">
-                    <li>
-                        <strong>VLAN:</strong> Wirtualny LAN. Dzieli jeden fizyczny switch na kilka
-                        odizolowanych sieci.
-                    </li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Wielka sala gimnastyczna (Switch). Spuszczasz z sufitu dźwiękoszczelną kurtynę.
-                    Po jednej stronie grają siatkarze (VLAN 10), po drugiej koszykarze (VLAN 20).
-                    Nikt sobie nie przeszkadza.
-                </div>
-            </div>
+   <!-- KROK 6 -->
+   <div class="card l2">
+    <div class="step-number">Krok 6</div>
+    <h2>VLANy (Zaawansowane L2)</h2>
+    <span class="tag l2">🏫 Świat Szkoły (LAN)</span>
+    <ul class="tech-list">
+     <li>
+      <strong>VLAN:</strong> Wirtualny LAN. Dzieli jeden fizyczny switch na kilka odizolowanych
+      sieci.
+     </li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Wielka sala gimnastyczna (Switch). Spuszczasz z sufitu dźwiękoszczelną kurtynę. Po jednej
+     stronie grają siatkarze (VLAN 10), po drugiej koszykarze (VLAN 20). Nikt sobie nie przeszkadza.
+    </div>
+   </div>
 
-            <!-- KROK 7 -->
-            <div class="card l3">
-                <div class="step-number">Krok 7</div>
-                <h2>Routing (Zaawansowane L3)</h2>
-                <span class="tag l3">🌍 Świat Poczty (WAN)</span>
-                <ul class="tech-list">
-                    <li><strong>Statyczny:</strong> Trasy wpisane ręcznie przez administratora.</li>
-                    <li><strong>Dynamiczny:</strong> Routery same uczą się tras (np. OSPF).</li>
-                </ul>
-                <div class="analogy-box">
-                    <strong>💡 Analogia:</strong>
-                    Routing statyczny to postawione na stałe znaki drogowe. Routing dynamiczny to
-                    Google Maps – routery gadają ze sobą o korkach i same wyznaczają najszybszą
-                    trasę.
-                </div>
-            </div>
-        </main>
-        <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
-        <section class="labs-section">
-            <h2>💻 Czas na praktykę!</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px">
-                Wybierz laboratorium do wykonania w Cisco Packet Tracer:
-            </p>
+   <!-- KROK 7 -->
+   <div class="card l3">
+    <div class="step-number">Krok 7</div>
+    <h2>Routing (Zaawansowane L3)</h2>
+    <span class="tag l3">🌍 Świat Poczty (WAN)</span>
+    <ul class="tech-list">
+     <li><strong>Statyczny:</strong> Trasy wpisane ręcznie przez administratora.</li>
+     <li><strong>Dynamiczny:</strong> Routery same uczą się tras (np. OSPF).</li>
+    </ul>
+    <div class="analogy-box">
+     <strong>💡 Analogia:</strong>
+     Routing statyczny to postawione na stałe znaki drogowe. Routing dynamiczny to Google Maps –
+     routery gadają ze sobą o korkach i same wyznaczają najszybszą trasę.
+    </div>
+   </div>
+  </main>
+  <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
+  <section class="labs-section">
+   <h2>💻 Czas na praktykę!</h2>
+   <p style="color: var(--text-muted); margin-bottom: 20px">
+    Wybierz laboratorium do wykonania w Cisco Packet Tracer:
+   </p>
 
-            <div class="labs-grid">
-                <!-- KAFELEK 1 -->
-                <a href="lab1-podstawy.html" class="lab-link-card">
-                    <div class="lab-icon">🟢</div>
-                    <div class="lab-content">
-                        <span class="lab-title">Lab 1: Podstawy LAN i Routing</span>
-                        <span class="lab-desc">Switch, IP, Brama domyślna (Kroki 1-3)</span>
-                    </div>
-                </a>
+   <div class="labs-grid">
+    <!-- KAFELEK 1 -->
+    <a href="lab1-podstawy.html" class="lab-link-card">
+     <div class="lab-icon">🟢</div>
+     <div class="lab-content">
+      <span class="lab-title">Lab 1: Podstawy LAN i Routing</span>
+      <span class="lab-desc">Switch, IP, Brama domyślna (Kroki 1-3)</span>
+     </div>
+    </a>
 
-                <!-- KAFELEK 2 -->
-                <a href="lab2-vlany.html" class="lab-link-card">
-                    <div class="lab-icon">🔵</div>
-                    <div class="lab-content">
-                        <span class="lab-title">Lab 2: VLANy i RoaS</span>
-                        <span class="lab-desc">Segmentacja sieci i Router-on-a-Stick</span>
-                    </div>
-                </a>
+    <!-- KAFELEK 2 -->
+    <a href="lab2-vlany.html" class="lab-link-card">
+     <div class="lab-icon">🔵</div>
+     <div class="lab-content">
+      <span class="lab-title">Lab 2: VLANy i RoaS</span>
+      <span class="lab-desc">Segmentacja sieci i Router-on-a-Stick</span>
+     </div>
+    </a>
 
-                <!-- KAFELEK 3 -->
-                <a href="lab3-routing.html" class="lab-link-card">
-                    <div class="lab-icon">🟠</div>
-                    <div class="lab-content">
-                        <span class="lab-title">Lab 3: DHCP, DNS i NAT</span>
-                        <span class="lab-desc">Automatyzacja IP i Internet</span>
-                    </div>
-                </a>
-            </div>
-        </section>
+    <!-- KAFELEK 3 -->
+    <a href="lab3-routing.html" class="lab-link-card">
+     <div class="lab-icon">🟠</div>
+     <div class="lab-content">
+      <span class="lab-title">Lab 3: DHCP, DNS, Routing i NAT</span>
+      <span class="lab-desc">Automatyzacja IP i Internet</span>
+     </div>
+    </a>
+   </div>
+  </section>
 
-        <script src="../menu.js"></script>
-    </body>
+  <script src="../menu.js"></script>
+ </body>
 </html>
