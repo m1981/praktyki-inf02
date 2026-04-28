@@ -159,10 +159,20 @@
                                 <span class="gui-arrow">➔</span> Karta 1
                             </div>
                             <p>
-                                Zmień "Podłączona do: NAT" na
-                                <strong>Sieć wewnętrzna (Internal Network)</strong>. Nazwij ją np.
-                                <code>szkola-lan</code>. Zrób to samo dla obu maszyn!
+                                Zmień "Attached to" (Podłączona do) na
+                                <strong>Internal Network (Sieć wewnętrzna)</strong>. Nazwij ją np.
+                                <code>szkola-lan</code>.
                             </p>
+                            <div class="golden-rule-box" style="margin-top: 10px">
+                                <strong>💡 Krytyczne ustawienie dla Labu 5 (NIC Teaming):</strong
+                                ><br />
+                                Kliknij <strong>Advanced (Zaawansowane)</strong> w ustawieniach
+                                karty sieciowej i zmień
+                                <strong>Promiscuous Mode (Tryb nasłuchiwania)</strong> na
+                                <strong>Allow All (Pozwól wszystkim)</strong>. Bez tego wirtualny
+                                switch zablokuje zaawansowane usługi sieciowe! Zrób to dla obu
+                                maszyn.
+                            </div>
                         </li>
                     </ul>
 
@@ -174,6 +184,41 @@
                             jesteś w 100% gotowy na zajęcia.
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- KROK 4: PIERWSZE URUCHOMIENIE -->
+            <div class="lab-card">
+                <div class="lab-header">
+                    <h3>Krok 4: Pierwsze uruchomienie (Statyczny IP)</h3>
+                    <span class="time-badge">Wymóg przed Labem 1!</span>
+                </div>
+                <div class="lab-body">
+                    <div class="pitfall-box">
+                        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba instalacji Active
+                        Directory na serwerze, który pobiera adres IP automatycznie (DHCP). Kreator
+                        wyrzuci błąd!
+                    </div>
+                    <p>
+                        Po zainstalowaniu Windows Server 2022, Twoim pierwszym zadaniem jako
+                        Administratora jest ustawienie stałego adresu IP.
+                    </p>
+                    <div class="gui-path">
+                        Uruchom: <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> Prawy klik
+                        na kartę sieciową <span class="gui-arrow">➔</span> Properties (Właściwości)
+                        <span class="gui-arrow">➔</span> Internet Protocol Version 4 (TCP/IPv4)
+                        <span class="gui-arrow">➔</span> Properties
+                    </div>
+                    <ul style="margin-left: 20px; margin-top: 10px">
+                        <li>Wybierz: <strong>Use the following IP address</strong></li>
+                        <li>IP address: <code>192.168.1.10</code></li>
+                        <li>Subnet mask: <code>255.255.255.0</code></li>
+                        <li>Default gateway: zostaw puste (na razie nie mamy routera)</li>
+                        <li>
+                            Preferred DNS server: <code>127.0.0.1</code> (Serwer będzie sam dla
+                            siebie DNS-em)
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
