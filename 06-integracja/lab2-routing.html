@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>LAB 2: Windows jako domowy router</title>
+
+        <!-- TWOJE GLOBALNE STYLE -->
+        <link rel="stylesheet" href="../common.css" />
+
+        <!-- FontAwesome dla ikon -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+
+        <style>
+            :root {
+                --bg-color: #1e1e2f;
+                --card-bg: #2a2a40;
+                --win-color: #00a8ff;
+                --lin-color: #fbc531;
+                --text-main: #f5f6fa;
+                --text-muted: #a4b0be;
+                --danger: #e84118;
+                --success: #4cd137;
+                --step-bg: #353550;
+                --internet-color: #9c88ff;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-main);
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 30px;
+                width: 100%;
+                max-width: 900px;
+                border-bottom: 2px solid #444;
+                padding-bottom: 20px;
+            }
+
+            h1 {
+                color: var(--text-main);
+                font-size: 2.2rem;
+                margin-bottom: 5px;
+            }
+
+            h1 span {
+                color: var(--win-color);
+            }
+
+            .goal {
+                color: var(--text-muted);
+                font-size: 1.1rem;
+                font-style: italic;
+            }
+
+            .topology {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: var(--card-bg);
+                width: 100%;
+                max-width: 900px;
+                padding: 20px 40px;
+                border-radius: 10px;
+                margin-bottom: 30px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                box-sizing: border-box;
+            }
+
+            .machine {
+                text-align: center;
+                width: 25%;
+            }
+
+            .machine i {
+                font-size: 3.5rem;
+                margin-bottom: 10px;
+            }
+
+            .machine.win i {
+                color: var(--win-color);
+            }
+            .machine.lin i {
+                color: var(--lin-color);
+            }
+            .machine.net i {
+                color: var(--internet-color);
+            }
+
+            .machine-title {
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+            .machine-ip {
+                color: var(--text-muted);
+                font-family: monospace;
+                background: #000;
+                padding: 2px 8px;
+                border-radius: 4px;
+                margin-top: 5px;
+                display: inline-block;
+                font-size: 0.85rem;
+            }
+
+            .connection {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: var(--text-muted);
+                width: 12%;
+            }
+
+            .connection i {
+                font-size: 2rem;
+                color: var(--success);
+            }
+            .connection span {
+                font-weight: bold;
+                margin-top: 5px;
+                letter-spacing: 1px;
+                font-size: 0.8rem;
+                text-align: center;
+            }
+
+            .steps-container {
+                width: 100%;
+                max-width: 900px;
+            }
+
+            .step {
+                background-color: var(--step-bg);
+                border-radius: 8px;
+                padding: 15px 20px;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: flex-start;
+                gap: 15px;
+                border-left: 5px solid transparent;
+                transition: transform 0.2s;
+            }
+
+            .step:hover {
+                transform: translateX(5px);
+            }
+
+            .step.win {
+                border-left-color: var(--win-color);
+            }
+            .step.lin {
+                border-left-color: var(--lin-color);
+            }
+
+            .step-icon {
+                font-size: 1.8rem;
+                margin-top: 5px;
+            }
+
+            .step.win .step-icon {
+                color: var(--win-color);
+            }
+            .step.lin .step-icon {
+                color: var(--lin-color);
+            }
+
+            .step-content h3 {
+                margin: 0 0 5px 0;
+                font-size: 1.1rem;
+            }
+
+            .step-content p {
+                margin: 0;
+                color: #dcdde1;
+                line-height: 1.5;
+            }
+
+            code {
+                background-color: #000;
+                color: #00d2d3;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-family: 'Courier New', Courier, monospace;
+                font-weight: bold;
+            }
+
+            .warning-box {
+                background: rgba(232, 65, 24, 0.15);
+                border: 2px dashed var(--danger);
+                border-radius: 10px;
+                padding: 20px;
+                width: 100%;
+                max-width: 860px;
+                margin-top: 30px;
+                box-sizing: border-box;
+            }
+
+            .warning-title {
+                color: var(--danger);
+                font-size: 1.3rem;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .warning-box ul {
+                margin: 0;
+                padding-left: 20px;
+                color: #f5f6fa;
+            }
+
+            .warning-box li {
+                margin-bottom: 10px;
+                line-height: 1.4;
+            }
+
+            .pro-tip {
+                background: rgba(76, 209, 55, 0.1);
+                border-left: 4px solid var(--success);
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 0 8px 8px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>LAB 2: <span>Windows jako domowy router</span></h1>
+            <div class="goal">
+                <i class="fas fa-bullseye"></i> Cel: Skonfigurować usługę RRAS (NAT), aby Linux mógł
+                połączyć się z Internetem przez Windows Server.
+            </div>
+        </header>
+
+        <!-- Topologia -->
+        <div class="topology">
+            <div class="machine net">
+                <i class="fas fa-cloud"></i>
+                <div class="machine-title">Internet</div>
+                <div class="machine-ip">8.8.8.8</div>
+            </div>
+
+            <div class="connection">
+                <span>WAN</span>
+                <i class="fas fa-arrows-alt-h"></i>
+            </div>
+
+            <div class="machine win">
+                <i class="fab fa-windows"></i>
+                <div class="machine-title">Windows Server</div>
+                <div class="machine-ip">LAN: 10.0.0.1</div>
+            </div>
+
+            <div class="connection">
+                <span>LAN</span>
+                <i class="fas fa-arrows-alt-h"></i>
+            </div>
+
+            <div class="machine lin">
+                <i class="fab fa-ubuntu"></i>
+                <div class="machine-title">Ubuntu Desktop</div>
+                <div class="machine-ip">LAN: 10.0.0.2</div>
+            </div>
+        </div>
+
+        <!-- Kroki -->
+        <div class="steps-container">
+            <div class="step win">
+                <div class="step-icon"><i class="fas fa-ethernet"></i></div>
+                <div class="step-content">
+                    <h3>Krok 1: Dwie karty sieciowe (Multihoming)</h3>
+                    <p>
+                        Upewnij się, że Windows Server ma <b>dwie karty sieciowe</b>. Karta 1 (WAN)
+                        ma dostęp do Internetu. Karta 2 (LAN) musi mieć ustawiony statyczny adres
+                        IP, np. <code>10.0.0.1</code>. <b>Ważne:</b> Karta LAN nie może mieć
+                        ustawionej bramy domyślnej!
+                    </p>
+                </div>
+            </div>
+
+            <div class="step win">
+                <div class="step-icon"><i class="fas fa-download"></i></div>
+                <div class="step-content">
+                    <h3>Krok 2: Instalacja Roli RRAS</h3>
+                    <p>
+                        W Menedżerze Serwera dodaj rolę: <b>Dostęp zdalny</b> (Remote Access), a w
+                        jej szczegółach zaznacz <b>Routing</b>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step win">
+                <div class="step-icon"><i class="fas fa-route"></i></div>
+                <div class="step-content">
+                    <h3>Krok 3: Konfiguracja NAT</h3>
+                    <p>
+                        Otwórz przystawkę
+                        <i>Routing i dostęp zdalny</i> (<code>rrasmgmt.msc</code>). Kliknij prawym
+                        przyciskiem myszy na nazwę serwera i wybierz <b>Konfiguruj i włącz...</b>. W
+                        kreatorze wybierz <b>Translacja adresów sieciowych (NAT)</b>. Następnie
+                        wskaż Kartę 1 (WAN) jako interfejs publiczny podłączony do Internetu.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step lin">
+                <div class="step-icon"><i class="fas fa-network-wired"></i></div>
+                <div class="step-content">
+                    <h3>Krok 4: Konfiguracja Klienta (Linux)</h3>
+                    <p>
+                        Na Ubuntu ustaw statyczny adres IP z tej samej podsieci, np.
+                        <code>10.0.0.2</code>. Jako <b>Bramę domyślną (Gateway)</b> wpisz adres LAN
+                        Windowsa: <code>10.0.0.1</code>. Jako DNS ustaw np. <code>8.8.8.8</code>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step lin">
+                <div class="step-icon"><i class="fas fa-terminal"></i></div>
+                <div class="step-content">
+                    <h3>Krok 5: Wielki Test (Ping w świat)</h3>
+                    <p>
+                        Otwórz terminal na Ubuntu i wpisz: <code>ping 8.8.8.8</code>. Jeśli pakiety
+                        wracają, oznacza to, że Windows Server poprawnie tłumaczy adresy (NAT) i
+                        wypuszcza Linuxa w świat!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Haczyki Egzaminacyjne -->
+        <div class="warning-box">
+            <div class="warning-title">
+                <i class="fas fa-exclamation-triangle"></i> HACZYKI EGZAMINACYJNE (Arkusz 24.01)
+            </div>
+            <ul>
+                <li>
+                    <b>Dwie Bramy Domyślne:</b> To najczęstszy błąd! Windows Server
+                    <b>nie może</b> mieć wpisanej bramy domyślnej na karcie LAN. Brama domyślna może
+                    być tylko jedna w całym systemie (na karcie WAN). Jeśli wpiszesz dwie, tablica
+                    routingu zwariuje i NAT nie zadziała.
+                </li>
+                <li>
+                    <b>Brak Bramy na Linuxie:</b> Jeśli zapomnisz wpisać <code>10.0.0.1</code> jako
+                    bramę w ustawieniach Ubuntu, Linux nie będzie wiedział, komu przekazać pakiety
+                    przeznaczone do Internetu. Zwróci błąd <i>Network is unreachable</i>.
+                </li>
+                <li>
+                    <b>Zły interfejs w kreatorze RRAS:</b> Kreator pyta o interfejs
+                    <i>publiczny</i> (podłączony do Internetu). Jeśli przez pomyłkę wskażesz tam
+                    kartę LAN, zablokujesz cały ruch.
+                </li>
+            </ul>
+
+            <div class="pro-tip">
+                <i class="fas fa-lightbulb"></i> <b>Pro-Tip od DevOpsa:</b> Chcesz zobaczyć magię
+                routingu na własne oczy? Na Linuxie wpisz komendę
+                <code>traceroute 8.8.8.8</code> (lub <code>tracepath 8.8.8.8</code>). Zobaczysz, że
+                pierwszym "przystankiem" (hop) Twoich pakietów jest adres IP Windows Servera
+                (10.0.0.1), a dopiero potem lecą one do dostawcy Internetu.
+            </div>
+        </div>
+
+        <!-- TWÓJ SKRYPT MENU -->
+        <script src="../menu.js"></script>
+    </body>
+</html>
