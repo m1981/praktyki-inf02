@@ -1,313 +1,277 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Lab 2: GPO i Komendy</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>💻 Laboratoria: Windows Server</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem">
-                Zarządzanie Active Directory i Zasady Grupy
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 2: GPO i Komendy</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>💻 Laboratoria: Windows Server</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zarządzanie Active Directory i Zasady Grupy
+   </p>
+  </header>
 
-        <main class="lab-container">
-            <!-- CZĘŚĆ 1: CLI -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Lab 2a: Władza z Klawiatury (Zarządzanie AD)</h3>
-                    <span class="time-badge">Czas: 20 min</span>
-                </div>
-                <div class="lab-body">
-                    <div class="goal-box">
-                        Cel: Zbudowanie struktury szkoły w Active Directory używając zarówno myszki
-                        (GUI), jak i wiersza poleceń (CLI).
-                    </div>
+  <main class="lab-container">
+   <!-- CZĘŚĆ 1: CLI -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Lab 2a: Władza z Klawiatury (Zarządzanie AD)</h3>
+     <span class="time-badge">Czas: 20 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Zbudowanie struktury szkoły w Active Directory używając zarówno myszki (GUI), jak i
+      wiersza poleceń (CLI).
+     </div>
+     wewew
+     <div
+      class="golden-rule-box"
+      style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
+     >
+      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Zanim zaczniesz, wejdź w ustawienia obu
+      maszyn (Serwer i Windows 10) w VirtualBox. Upewnij się, że w zakładce
+      <em>Network (Sieć)</em> karta jest ustawiona na
+      <strong>Internal Network (Sieć wewnętrzna)</strong>. Jeśli zostawisz NAT, maszyny się nie
+      zobaczą!
+     </div>
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Struktura (GUI)</strong>
+       <div class="gui-path">
+        Tools (Narzędzia) <span class="gui-arrow">➔</span> Active Directory Users and Computers
+        (Użytkownicy i komputery usługi Active Directory)
+       </div>
+       <p>
+        Utwórz nową Jednostkę Organizacyjną (OU) o nazwie
+        <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika <code>maciek</code>. We
+        właściwościach konta zaznacz opcję
+        <strong>"Password never expires" (Hasło nigdy nie wygasa)</strong>.
+       </p>
+      </li>
 
-                    <div
-                        class="golden-rule-box"
-                        style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
-                    >
-                        <strong>🌐 Pre-flight Check (VirtualBox):</strong> Zanim zaczniesz, wejdź w
-                        ustawienia obu maszyn (Serwer i Windows 10) w VirtualBox. Upewnij się, że w
-                        zakładce <em>Network (Sieć)</em> karta jest ustawiona na
-                        <strong>Internal Network (Sieć wewnętrzna)</strong>. Jeśli zostawisz NAT,
-                        maszyny się nie zobaczą!
-                    </div>
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Struktura (GUI)</strong>
-                            <div class="gui-path">
-                                Tools (Narzędzia) <span class="gui-arrow">➔</span> Active Directory
-                                Users and Computers (Użytkownicy i komputery usługi Active
-                                Directory)
-                            </div>
-                            <p>
-                                Utwórz nową Jednostkę Organizacyjną (OU) o nazwie
-                                <code>Pracownia_32</code>. Wewnątrz niej utwórz użytkownika
-                                <code>maciek</code>. We właściwościach konta zaznacz opcję
-                                <strong>"Password never expires" (Hasło nigdy nie wygasa)</strong>.
-                            </p>
-                        </li>
+      <div class="pitfall-box">
+       <strong>🚨 Najczęstszy błąd uczniów:</strong> Wpisywanie złego formatu daty w komendzie
+       <code>/expires</code>. Zależnie od języka systemu, Windows może oczekiwać formatu DD/MM/RRRR
+       lub MM/DD/RRRR. Jeśli komenda wyrzuca błąd, zamień dzień z miesiącem!
+      </div>
 
-                        <div class="pitfall-box">
-                            <strong>🚨 Najczęstszy błąd uczniów:</strong> Wpisywanie złego formatu
-                            daty w komendzie <code>/expires</code>. Zależnie od języka systemu,
-                            Windows może oczekiwać formatu DD/MM/RRRR lub MM/DD/RRRR. Jeśli komenda
-                            wyrzuca błąd, zamień dzień z miesiącem!
-                        </div>
+      <li>
+       <strong>Krok 2: Magia CLI (Wiersz poleceń)</strong>
+       <p>Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
 
-                        <li>
-                            <strong>Krok 2: Magia CLI (Wiersz poleceń)</strong>
-                            <p>Otwórz CMD jako Administrator i wykonaj poniższe polecenia:</p>
+       <div class="golden-rule-box" style="border-left-color: #6c5ce7; background: #f3f0ff">
+        <strong>💡 Mrugnięcie okiem do inżyniera:</strong> Pamiętasz "Sekret Inżyniera" z teorii?
+        Właśnie teraz używamy komend <code>net</code> (papierowy notes), bo tak każe CKE. W
+        prawdziwej pracy użylibyśmy komendy PowerShell: <code>New-ADUser</code>. Ale ciii...
+        wpisujemy to, co daje punkty na egzaminie!
+       </div>
 
-                            <div
-                                class="golden-rule-box"
-                                style="border-left-color: #6c5ce7; background: #f3f0ff"
-                            >
-                                <strong>💡 Mrugnięcie okiem do inżyniera:</strong> Pamiętasz "Sekret
-                                Inżyniera" z teorii? Właśnie teraz używamy komend
-                                <code>net</code> (papierowy notes), bo tak każe CKE. W prawdziwej
-                                pracy użylibyśmy komendy PowerShell: <code>New-ADUser</code>. Ale
-                                ciii... wpisujemy to, co daje punkty na egzaminie!
-                            </div>
+       <div class="cli-block">
+        <span class="cli-comment"># 1. Utworzenie grupy lokalnej "Uczniowie"</span>
+        net localgroup Uczniowie /add
 
-                            <div class="cli-block">
-                                <span class="cli-comment"
-                                    ># 1. Utworzenie grupy lokalnej "Uczniowie"</span
-                                >
-                                net localgroup Uczniowie /add
+        <span class="cli-comment"># 2. Utworzenie użytkownika z datą wygaśnięcia konta</span>
+        net user uczen1 Zaq12345! /add /expires:25/06/2025
 
-                                <span class="cli-comment"
-                                    ># 2. Utworzenie użytkownika z datą wygaśnięcia konta</span
-                                >
-                                net user uczen1 Zaq12345! /add /expires:25/06/2025
+        <span class="cli-comment"># 3. Dodanie użytkownika do grupy</span>
+        net localgroup Uczniowie uczen1 /add
+       </div>
 
-                                <span class="cli-comment"># 3. Dodanie użytkownika do grupy</span>
-                                net localgroup Uczniowie uczen1 /add
-                            </div>
-
-                            <!-- REFERENCJA EGZAMINACYJNA -->
-                            <details class="exam-reference">
-                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                                <div class="exam-content">
-                                    <p>
-                                        <strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.06-SG)
-                                    </p>
-                                    <p>
-                                        <strong>Arkusz:</strong>
-                                        <a
-                                            href="../egzaminy/inf02-2023-czerwiec-egzamin-zawodowy-praktyczny.pdf"
-                                            target="_blank"
-                                            >Pobierz PDF</a
-                                        >
-                                    </p>
-                                    <blockquote>
-                                        <p>
-                                            <em style="color: #636e72"
-                                                >Zadanie: 7. Skonfiguruj stację roboczą z
-                                                zainstalowanym systemem Windows: (...)</em
-                                            >
-                                        </p>
-                                        <p>
-                                            <strong>Treść zadania:</strong><br />
-                                            ‒ za pomocą poleceń systemowych dodaj użytkownika uczen1
-                                            z hasłem zaq1@WSX z ustawionym czasem wygaśnięcia konta
-                                            na 25.11.2025 r. W arkuszu egzaminacyjnym w tabeli 2
-                                            zapisz użyte polecenie z wszystkimi wymaganymi
-                                            parametrami<br />
-                                            ‒ za pomocą poleceń systemowych utwórz grupę
-                                            użytkowników o nazwie uczniowie<br />
-                                            ‒ dodaj konto uczen1 do grupy uczniowie
-                                        </p>
-                                    </blockquote>
-                                </div>
-                            </details>
-                        </li>
-                    </ul>
-
-                    <div class="exam-verify-box">
-                        <h4>📝 Weryfikacja Egzaminacyjna (Papierowa!)</h4>
-                        <p>
-                            W przypadku zadań z wiersza poleceń (CLI), egzaminator nie zawsze prosi
-                            o zrzut ekranu. W arkuszu egzaminacyjnym znajduje się fizyczna tabela
-                            (np. <em>Tabela 2. Polecenia Windows</em>). Musisz w niej
-                            <strong>długopisem wpisać dokładną komendę</strong>, której użyłeś, wraz
-                            ze wszystkimi parametrami (np. <code>net user uczen1 haslo /add</code>).
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CZĘŚĆ 2: GPO -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Lab 2b: Władza Absolutna (Zasady Grupy - GPO)</h3>
-                    <span class="time-badge">Czas: 25 min</span>
-                </div>
-                <div class="lab-body">
-                    <div class="goal-box">
-                        Cel: Zablokowanie uczniom możliwości uruchamiania systemowego Notatnika za
-                        pomocą Zasad Grupy.
-                    </div>
-
-                    <details class="theory-block">
-                        <summary>Czym są Zasady Grupy (GPO)?</summary>
-                        <div class="theory-content">
-                            <p>
-                                <strong>GPO (Group Policy Object)</strong> to "pilot zdalnego
-                                sterowania" dla administratora. Zamiast biegać do 100 komputerów,
-                                żeby zmienić tapetę albo zablokować Panel Sterowania, robisz to raz
-                                na serwerze.
-                            </p>
-                            <ul style="margin-left: 20px; margin-top: 10px">
-                                <li>
-                                    <strong>Jak to działa?</strong> Tworzysz obiekt GPO i
-                                    "przypinasz" go do konkretnego folderu (OU) w Active Directory,
-                                    np. do OU <code>Pracownia_32</code>.
-                                </li>
-                                <li>
-                                    <strong>Dlaczego to ważne?</strong> Na egzaminie zawsze jest
-                                    zadanie typu: "Zablokuj użytkownikom uruchamianie programu X".
-                                    Robimy to przez tzw. <em>Zasady ograniczeń oprogramowania</em>.
-                                </li>
-                            </ul>
-                        </div>
-                    </details>
-
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Uruchomienie konsoli GPO</strong>
-                            <div class="gui-path">
-                                Tools (Narzędzia) <span class="gui-arrow">➔</span> Group Policy
-                                Management (Zarządzanie zasadami grupy)
-                            </div>
-                            <p>
-                                Rozwiń drzewo: Forest (Las) -> Domains (Domeny) -> zs1.local. Znajdź
-                                utworzoną wcześniej jednostkę organizacyjną (OU) o nazwie
-                                <code>Pracownia_32</code>.
-                            </p>
-                        </li>
-
-                        <div class="pitfall-box">
-                            <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba przypięcia obiektu
-                            GPO do "Grupy Zabezpieczeń" (np. grupy Uczniowie). GPO można przypinać
-                            <strong>TYLKO</strong> do Jednostek Organizacyjnych (OU), Domen lub
-                            Lokat (Sites).
-                        </div>
-
-                        <li>
-                            <strong>Krok 2: Tworzenie i przypinanie GPO</strong>
-                            <p>
-                                Kliknij prawym przyciskiem myszy na OU <code>Pracownia_32</code> i
-                                wybierz:
-                                <strong
-                                    >Create a GPO in this domain, and Link it here... (Utwórz obiekt
-                                    zasad grupy w tej domenie i umieść tu do niego łącze...)</strong
-                                >. Nazwij go <code>Blokada_Notatnika</code>.
-                            </p>
-                        </li>
-                        <li>
-                            <strong>Krok 3: Edycja Zasad (Blokowanie programu)</strong>
-                            <p>
-                                Kliknij prawym na nowo utworzony obiekt
-                                <code>Blokada_Notatnika</code> i wybierz
-                                <strong>Edit (Edytuj)</strong>.
-                            </p>
-                            <div class="gui-path">
-                                User Configuration (Konfiguracja użytkownika)
-                                <span class="gui-arrow">➔</span> Policies (Zasady)
-                                <span class="gui-arrow">➔</span> Windows Settings (Ustawienia
-                                systemu Windows) <span class="gui-arrow">➔</span> Security Settings
-                                (Ustawienia zabezpieczeń) <span class="gui-arrow">➔</span> Software
-                                Restriction Policies (Zasady ograniczeń oprogramowania)
-                            </div>
-                            <p>
-                                Kliknij prawym na "Software Restriction Policies" i wybierz
-                                <strong>New Software Restriction Policies (Nowe zasady...)</strong>.
-                                Następnie wejdź w folder
-                                <em>Additional Rules (Reguły dodatkowe)</em>. Kliknij prawym w puste
-                                pole -> <strong>New Path Rule... (Nowa reguła ścieżki...)</strong>
-                            </p>
-                            <p>
-                                W polu ścieżka wpisz: <code>notepad.exe</code>. Security level
-                                (Poziom zabezpieczeń): <strong>Disallowed (Niedozwolone)</strong>.
-                            </p>
-
-                            <!-- REFERENCJA EGZAMINACYJNA -->
-                            <details class="exam-reference">
-                                <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                                <div class="exam-content">
-                                    <p>
-                                        <strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)
-                                    </p>
-                                    <p>
-                                        <strong>Arkusz:</strong>
-                                        <a
-                                            href="../egzaminy/inf02-2021-czerwiec-egzamin-zawodowy-praktyczny.pdf"
-                                            target="_blank"
-                                            >Pobierz PDF</a
-                                        >
-                                    </p>
-                                    <blockquote>
-                                        <p>
-                                            <em style="color: #636e72"
-                                                >Zadanie: 7. Na stacji roboczej skonfiguruj system
-                                                Windows: (...)</em
-                                            >
-                                        </p>
-                                        <p>
-                                            <strong>Treść zadania:</strong><br />
-                                            ‒ skonfiguruj system tak, aby użytkownicy systemu nie
-                                            mieli możliwości uruchamiania programu Notatnik.
-                                        </p>
-                                    </blockquote>
-                                </div>
-                            </details>
-                        </li>
-
-                        <div class="golden-rule-box">
-                            <strong>💡 Złota Rada Trenera (Święta Trójca GPO):</strong> Zrobiłeś
-                            zmianę w GPO? Pamiętaj o 3 krokach: <br />
-                            1. Otwórz CMD na stacji roboczej i wpisz
-                            <code>gpupdate /force</code>.<br />
-                            2. Wyloguj się z konta użytkownika.<br />
-                            3. Zaloguj się ponownie. Dopiero wtedy testuj, czy blokada działa!
-                        </div>
-                    </ul>
-
-                    <div class="exam-verify-box">
-                        <h4>📸 Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
-                        <p>
-                            W zadaniach z GPO (blokada programu, blokada tapety) arkusz często
-                            zawiera instrukcję:
-                            <em
-                                >"Zgłoś przewodniczącemu ZN – przez podniesienie ręki – gotowość do
-                                oceny"</em
-                            >.
-                        </p>
-                        <ol>
-                            <li>Zaloguj się na stacji roboczej jako zablokowany uczeń.</li>
-                            <li>Spróbuj uruchomić Notatnik.</li>
-                            <li>
-                                Gdy na ekranie pojawi się czerwony komunikat o blokadzie przez
-                                administratora –
-                                <strong>zostaw go na ekranie i podnieś rękę!</strong> Egzaminator
-                                podejdzie i odhaczy punkt w swoim arkuszu ocen.
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <div class="course-nav">
-            <a href="lab1-domena.html" class="course-btn">⬅️ Poprzedni: Lab 1 (Domena)</a>
-            <a href="lab3-pliki.html" class="course-btn next">Następny: Lab 3 (Pliki) ➡️</a>
+       <!-- REFERENCJA EGZAMINACYJNA -->
+       <details class="exam-reference">
+        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+        <div class="exam-content">
+         <p><strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.06-SG)</p>
+         <p>
+          <strong>Arkusz:</strong>
+          <a href="../egzaminy/inf02-2023-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
+           >Pobierz PDF</a
+          >
+         </p>
+         <blockquote>
+          <p>
+           <em style="color: #636e72"
+            >Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em
+           >
+          </p>
+          <p>
+           <strong>Treść zadania:</strong><br />
+           ‒ za pomocą poleceń systemowych dodaj użytkownika uczen1 z hasłem zaq1@WSX z ustawionym
+           czasem wygaśnięcia konta na 25.11.2025 r. W arkuszu egzaminacyjnym w tabeli 2 zapisz
+           użyte polecenie z wszystkimi wymaganymi parametrami<br />
+           ‒ za pomocą poleceń systemowych utwórz grupę użytkowników o nazwie uczniowie<br />
+           ‒ dodaj konto uczen1 do grupy uczniowie
+          </p>
+         </blockquote>
         </div>
-        <script src="../menu.js"></script>
-    </body>
+       </details>
+      </li>
+     </ul>
+
+     <div class="exam-verify-box">
+      <h4>📝 Weryfikacja Egzaminacyjna (Papierowa!)</h4>
+      <p>
+       W przypadku zadań z wiersza poleceń (CLI), egzaminator nie zawsze prosi o zrzut ekranu. W
+       arkuszu egzaminacyjnym znajduje się fizyczna tabela (np.
+       <em>Tabela 2. Polecenia Windows</em>). Musisz w niej
+       <strong>długopisem wpisać dokładną komendę</strong>, której użyłeś, wraz ze wszystkimi
+       parametrami (np. <code>net user uczen1 haslo /add</code>).
+      </p>
+     </div>
+    </div>
+   </div>
+
+   <!-- CZĘŚĆ 2: GPO -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Lab 2b: Władza Absolutna (Zasady Grupy - GPO)</h3>
+     <span class="time-badge">Czas: 25 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Zablokowanie uczniom możliwości uruchamiania systemowego Notatnika za pomocą Zasad Grupy.
+     </div>
+
+     <details class="theory-block">
+      <summary>Czym są Zasady Grupy (GPO)?</summary>
+      <div class="theory-content">
+       <p>
+        <strong>GPO (Group Policy Object)</strong> to "pilot zdalnego sterowania" dla
+        administratora. Zamiast biegać do 100 komputerów, żeby zmienić tapetę albo zablokować Panel
+        Sterowania, robisz to raz na serwerze.
+       </p>
+       <ul style="margin-left: 20px; margin-top: 10px">
+        <li>
+         <strong>Jak to działa?</strong> Tworzysz obiekt GPO i "przypinasz" go do konkretnego
+         folderu (OU) w Active Directory, np. do OU <code>Pracownia_32</code>.
+        </li>
+        <li>
+         <strong>Dlaczego to ważne?</strong> Na egzaminie zawsze jest zadanie typu: "Zablokuj
+         użytkownikom uruchamianie programu X". Robimy to przez tzw.
+         <em>Zasady ograniczeń oprogramowania</em>.
+        </li>
+       </ul>
+      </div>
+     </details>
+
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Uruchomienie konsoli GPO</strong>
+       <div class="gui-path">
+        Tools (Narzędzia) <span class="gui-arrow">➔</span> Group Policy Management (Zarządzanie
+        zasadami grupy)
+       </div>
+       <p>
+        Rozwiń drzewo: Forest (Las) -> Domains (Domeny) -> zs1.local. Znajdź utworzoną wcześniej
+        jednostkę organizacyjną (OU) o nazwie
+        <code>Pracownia_32</code>.
+       </p>
+      </li>
+
+      <div class="pitfall-box">
+       <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba przypięcia obiektu GPO do "Grupy
+       Zabezpieczeń" (np. grupy Uczniowie). GPO można przypinać <strong>TYLKO</strong> do Jednostek
+       Organizacyjnych (OU), Domen lub Lokat (Sites).
+      </div>
+
+      <li>
+       <strong>Krok 2: Tworzenie i przypinanie GPO</strong>
+       <p>
+        Kliknij prawym przyciskiem myszy na OU <code>Pracownia_32</code> i wybierz:
+        <strong
+         >Create a GPO in this domain, and Link it here... (Utwórz obiekt zasad grupy w tej domenie
+         i umieść tu do niego łącze...)</strong
+        >. Nazwij go <code>Blokada_Notatnika</code>.
+       </p>
+      </li>
+      <li>
+       <strong>Krok 3: Edycja Zasad (Blokowanie programu)</strong>
+       <p>
+        Kliknij prawym na nowo utworzony obiekt
+        <code>Blokada_Notatnika</code> i wybierz <strong>Edit (Edytuj)</strong>.
+       </p>
+       <div class="gui-path">
+        User Configuration (Konfiguracja użytkownika)
+        <span class="gui-arrow">➔</span> Policies (Zasady) <span class="gui-arrow">➔</span> Windows
+        Settings (Ustawienia systemu Windows) <span class="gui-arrow">➔</span> Security Settings
+        (Ustawienia zabezpieczeń) <span class="gui-arrow">➔</span> Software Restriction Policies
+        (Zasady ograniczeń oprogramowania)
+       </div>
+       <p>
+        Kliknij prawym na "Software Restriction Policies" i wybierz
+        <strong>New Software Restriction Policies (Nowe zasady...)</strong>. Następnie wejdź w
+        folder <em>Additional Rules (Reguły dodatkowe)</em>. Kliknij prawym w puste pole ->
+        <strong>New Path Rule... (Nowa reguła ścieżki...)</strong>
+       </p>
+       <p>
+        W polu ścieżka wpisz: <code>notepad.exe</code>. Security level (Poziom zabezpieczeń):
+        <strong>Disallowed (Niedozwolone)</strong>.
+       </p>
+
+       <!-- REFERENCJA EGZAMINACYJNA -->
+       <details class="exam-reference">
+        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+        <div class="exam-content">
+         <p><strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)</p>
+         <p>
+          <strong>Arkusz:</strong>
+          <a href="../egzaminy/inf02-2021-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
+           >Pobierz PDF</a
+          >
+         </p>
+         <blockquote>
+          <p>
+           <em style="color: #636e72"
+            >Zadanie: 7. Na stacji roboczej skonfiguruj system Windows: (...)</em
+           >
+          </p>
+          <p>
+           <strong>Treść zadania:</strong><br />
+           ‒ skonfiguruj system tak, aby użytkownicy systemu nie mieli możliwości uruchamiania
+           programu Notatnik.
+          </p>
+         </blockquote>
+        </div>
+       </details>
+      </li>
+
+      <div class="golden-rule-box">
+       <strong>💡 Złota Rada Trenera (Święta Trójca GPO):</strong> Zrobiłeś zmianę w GPO? Pamiętaj o
+       3 krokach: <br />
+       1. Otwórz CMD na stacji roboczej i wpisz
+       <code>gpupdate /force</code>.<br />
+       2. Wyloguj się z konta użytkownika.<br />
+       3. Zaloguj się ponownie. Dopiero wtedy testuj, czy blokada działa!
+      </div>
+     </ul>
+
+     <div class="exam-verify-box">
+      <h4>📸 Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
+      <p>
+       W zadaniach z GPO (blokada programu, blokada tapety) arkusz często zawiera instrukcję:
+       <em>"Zgłoś przewodniczącemu ZN – przez podniesienie ręki – gotowość do oceny"</em>.
+      </p>
+      <ol>
+       <li>Zaloguj się na stacji roboczej jako zablokowany uczeń.</li>
+       <li>Spróbuj uruchomić Notatnik.</li>
+       <li>
+        Gdy na ekranie pojawi się czerwony komunikat o blokadzie przez administratora –
+        <strong>zostaw go na ekranie i podnieś rękę!</strong> Egzaminator podejdzie i odhaczy punkt
+        w swoim arkuszu ocen.
+       </li>
+      </ol>
+     </div>
+    </div>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="lab1-domena.html" class="course-btn">⬅️ Poprzedni: Lab 1 (Domena)</a>
+   <a href="lab3-pliki.html" class="course-btn next">Następny: Lab 3 (Pliki) ➡️</a>
+  </div>
+  <script src="../menu.js"></script>
+ </body>
 </html>
