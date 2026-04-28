@@ -80,6 +80,25 @@
                         Internetem przez Windows Server.
                     </div>
 
+                    <div
+                        class="golden-rule-box"
+                        style="border-left-color: #d63031; background: #ffefef; margin-bottom: 20px"
+                    >
+                        <strong>🌐 Pre-flight Check (VirtualBox - Zmiana Architektury!):</strong>
+                        Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox musisz mieć
+                        włączone <strong>dwie karty sieciowe</strong>:
+                        <ul style="margin-top: 5px; margin-bottom: 0">
+                            <li>
+                                <strong>Adapter 1 (LAN):</strong> Internal Network (Sieć wewnętrzna)
+                                - <em>połączenie z uczniami</em>.
+                            </li>
+                            <li>
+                                <strong>Adapter 2 (WAN):</strong> NAT -
+                                <em>wyjście do prawdziwego Internetu</em>.
+                            </li>
+                        </ul>
+                        Windows 10 zostaje bez zmian (tylko Internal Network).
+                    </div>
                     <ul class="task-list">
                         <li>
                             <strong>Krok 1: Dwie karty sieciowe (Multihoming)</strong>
