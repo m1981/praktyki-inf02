@@ -11,80 +11,103 @@
 
 Każdy duży temat (Filar) składa się z dwóch rodzajów plików:
 
-1.  **Plik Teoretyczny (`index.html`):** Buduje kontekst biznesowy i architektoniczny. Odpowiada na pytanie _"Dlaczego to robimy?"_.
-2.  **Pliki Laboratoryjne (`labX-temat.html`):** Instrukcje krok po kroku. Odpowiadają na pytanie _"Jak to zrobić i jak zdać egzamin?"_.
+1. **Plik Teoretyczny (`index.html`):** Buduje kontekst biznesowy i architektoniczny. Odpowiada na pytanie _"Dlaczego to robimy?"_.
+2. **Pliki Laboratoryjne (`labX-temat.html`):** Instrukcje krok po kroku. Odpowiadają na pytanie _"Jak to zrobić i jak zdać egzamin?"_.
 
 ---
 
-## 3. Szablon Pliku Teoretycznego (`index.html`)
+## 3. Konwencje Stylistyczne i Nawigacyjne (Globalne)
+
+Każdy plik HTML musi bezwzględnie zawierać:
+
+- **Style i Skrypty:** Podpięcie `<link rel="stylesheet" href="../common.css" />` w sekcji `<head>` oraz `<script src="../menu.js"></script>` na końcu `<body>`.
+- **Zmienne Kolorystyczne (CSS Variables):** Definiowane w `<style>` w sekcji `<head>`. Każdy filar ma swój branding:
+    - _Windows:_ Zielony (`#00b894`), Czerwony (`#d63031`), Niebieski (`#0984e3`).
+    - _Linux:_ Pomarańczowy Ubuntu (`#E95420`), Fiolet Ubuntu (`#77216F`), Ciemny (`#2C001E`).
+- **Nawigacja Dolna (`course-nav`):** Na samym dole każdego pliku muszą znajdować się przyciski "Poprzedni" i "Następny" ułatwiające przechodzenie przez kurs.
+
+---
+
+## 4. Szablon Pliku Teoretycznego (`index.html`)
 
 ### A. Nagłówek (Header)
 
 - **Tytuł:** Jasny i opisowy (np. _Filar 2: Windows Server_).
 - **Podtytuł:** Pytanie retoryczne lub problem z życia wzięty (np. _Jak działa sieć w naszej szkole?_).
 
-### B. Karty Kroków (Step Cards)
+### B. Karty Kroków (`<div class="card">`)
 
-Każde zagadnienie techniczne (np. Active Directory, GPO) jest przedstawione jako osobna karta (`<div class="card">`).
+- **Tytuł i Tag:** Chwytliwy tytuł oraz tag z emoji (np. `<span class="tag">🛑 Restrykcje</span>`).
+- **Lista techniczna (`<ul class="tech-list">`):** 3-4 krótkie punkty wyjaśniające technologię.
+- **Analogia (`<div class="analogy-box">`):** Kluczowy element! Każda trudna technologia musi być wytłumaczona przez analogię (np. _Kontroler Domeny to bramkarz w klubie_).
 
-- **Tytuł:** Chwytliwy (np. _Koszmar informatyka_, _Władza Absolutna_).
-- **Tag:** Krótka kategoria z emoji (np. `🛑 Restrykcje`, `🗂️ Struktura`).
-- **Lista techniczna (`<ul>`):** 3-4 krótkie punkty wyjaśniające technologię w prostych słowach.
-- **Analogia (Kluczowy element!):** Blok `<div class="analogy-box">`. Każda trudna technologia **musi** być wytłumaczona za pomocą analogii ze świata rzeczywistego (np. _Kontroler Domeny to bramkarz w klubie_, _GPO to regulamin szkolny_).
+### C. Sekret Inżyniera (`<div class="card">` ze specjalnym formatowaniem)
 
-### C. Podsumowanie (Conclusion)
+- Blok z ikoną 🕵️‍♂️. Wyjaśnia różnicę między tym, czego wymaga egzamin CKE (często przestarzałe metody), a tym, jak pracuje się w prawdziwej korporacji (np. _komendy `net` vs PowerShell_).
 
-- Krótki akapit motywacyjny, łączący teorię z nadchodzącym egzaminem.
+### D. Zakończenie
+
+- **Podsumowanie (`<div class="conclusion-box">`):** Akapit motywacyjny łączący teorię z egzaminem.
+- **Siatka Laboratoriów (`<div class="labs-grid">`):** Kafelki z linkami do poszczególnych plików `labX.html`.
 
 ---
 
-## 4. Szablon Pliku Laboratoryjnego (`labX-temat.html`)
+## 5. Szablon Pliku Laboratoryjnego (`labX-temat.html`)
 
-### A. Nagłówek Laboratorium
+### A. Nagłówek i Cel
 
-- **Tytuł:** Kreatywny, łączący fabułę z technologią (np. _Lab 1: Narodziny Szefa (Kontroler Domeny)_).
-- **Czas wykonania:** Realistyczna estymacja (np. _Czas: 45 min_).
-- **Cel (Goal Box):** Jedno zdanie wyjaśniające, co uczeń osiągnie na końcu laba, wraz z odniesieniem do historycznych arkuszy egzaminacyjnych (np. _Z arkuszy: v1.1, v1.7_).
+- **Tytuł i Czas:** Kreatywny tytuł i realistyczna estymacja (np. `<span class="time-badge">Czas: 45 min</span>`).
+- **Cel (`<div class="goal-box">`):** Jedno zdanie wyjaśniające, co uczeń osiągnie na końcu laba.
 
-### B. Lista Zadań (Task List)
+### B. Wizualizacja (Opcjonalnie dla sieci)
 
-Instrukcje krok po kroku. Zamiast ścian tekstu, używamy specyficznych formatowań:
+- **Topologia (`<div class="topology">`):** Jeśli lab dotyczy sieci (np. Firewall, Routing), używamy wizualizacji z ikonami FontAwesome, aby pokazać przepływ ruchu między maszynami.
 
-- **Ścieżki GUI:** Jeśli uczeń musi coś wyklikać, używamy bloku `<div class="gui-path">` ze strzałkami (np. _Narzędzia ➔ Zarządzanie zasadami grupy_).
-- **Bloki CLI:** Jeśli uczeń musi wpisać komendę, używamy bloku `<div class="cli-block">` z komentarzami wyjaśniającymi, co robi dana komenda.
+### C. Formatowanie Instrukcji (Task List)
 
-### C. Bloki Trenerskie (Kluczowy element dydaktyczny!)
+- **Ścieżki GUI:** `<div class="gui-path">` ze strzałkami `<span class="gui-arrow">➔</span>` (np. _Narzędzia ➔ Zarządzanie zasadami grupy_).
+- **Bloki CLI:** `<div class="cli-block">` z komentarzami `<span class="cli-comment">` wyjaśniającymi komendy.
+- **Klawisze:** Używamy tagu `<kbd>` dla skrótów klawiszowych (np. `<kbd>TAB</kbd>`, `<kbd>Ctrl</kbd> + <kbd>C</kbd>`).
 
-Wplatane pomiędzy kroki instrukcji. Służą do budowania "inżynierskiego myślenia" i unikania frustracji.
+### D. Bloki Trenerskie (Kluczowy element dydaktyczny!)
 
-1.  **Najczęstszy błąd (`<div class="pitfall-box">`):**
+Wplatane pomiędzy kroki instrukcji:
+
+1. **Najczęstszy błąd (`<div class="pitfall-box">`):**
     - _Ikona:_ 🚨
-    - _Treść:_ Opis typowego błędu, który popełniają uczniowie (np. _Próba podłączenia do domeny bez ustawienia DNS_).
-2.  **Złota Rada Trenera (`<div class="golden-rule-box">`):**
+    - _Treść:_ Opis typowego błędu uczniów (np. _Spacje w plikach YAML, brak flagi -aG_).
+2. **Złota Rada Trenera (`<div class="golden-rule-box">`):**
     - _Ikona:_ 💡
-    - _Treść:_ Wskazówka z "prawdziwego życia" IT lub sposób na szybkie rozwiązanie problemu (np. _Święta Trójca GPO: gpupdate, wyloguj, zaloguj_).
+    - _Treść:_ Wskazówka z "prawdziwego życia" IT (np. _Święta Trójca GPO, używanie flagi -h_).
 
-### D. Weryfikacja Egzaminacyjna (`<div class="exam-verify-box">`)
+### E. Referencje Egzaminacyjne (`<details class="exam-reference">`)
+
+- Rozwijany blok (akordeon) wplatany w zadania.
+- Zawiera dokładny miesiąc i rok egzaminu, link do PDF oraz cytat (`<blockquote>`) z oryginalną treścią zadania CKE. Buduje to zaufanie ucznia do materiału.
+
+### F. Weryfikacja Egzaminacyjna (`<div class="exam-verify-box">`)
 
 Zawsze na końcu laboratorium. Tłumaczy, jak uczeń musi udowodnić wykonanie zadania przed egzaminatorem.
 
-- _Styl:_ Czerwona, przerywana ramka (przyciąga wzrok).
 - _Warianty:_
-    - **Zrzut ekranu:** Instrukcja, co dokładnie ma być na screenie i gdzie go zapisać (np. _stacja_testy.docx na pendrive_).
-    - **Podniesienie ręki:** Instrukcja, co zostawić na ekranie przed wezwaniem egzaminatora.
-    - **Papierowa tabela:** Przypomnienie o konieczności wpisania komendy długopisem do arkusza.
+    - **📸 Zrzut ekranu:** Co dokładnie ma być na screenie i gdzie go zapisać.
+    - **🙋‍♂️ Podniesienie ręki:** Co zostawić na ekranie przed wezwaniem egzaminatora.
+    - **📝 Papierowa tabela:** Przypomnienie o wpisaniu komendy długopisem do arkusza.
 
 ---
 
-## 5. Wytyczne dla LLM (Prompting Instructions)
+## 6. Wytyczne dla LLM (Prompting Instructions)
 
 _Jeśli w przyszłości poprosisz AI o wygenerowanie nowego modułu, wklej ten Blueprint i dodaj poniższe polecenie:_
 
 > **Prompt dla LLM:**
-> "Działaj jako certyfikowany trener IT i ekspert Instructional Design. Wygeneruj moduł szkoleniowy dla tematu [WPISZ TEMAT, np. Routing i VLANy w Packet Tracer].
+> "Działaj jako certyfikowany trener IT, ekspert DevOps i specjalista Instructional Design. Wygeneruj moduł szkoleniowy dla tematu [WPISZ TEMAT, np. Routing i VLANy w Packet Tracer].
 >
-> 1. Stwórz plik `index.html` z teorią, używając silnych, życiowych analogii (zgodnie z Blueprintem).
-> 2. Stwórz pliki `labX.html` z instrukcjami krok po kroku.
-> 3. Obowiązkowo wpleć bloki `pitfall-box` (najczęstsze błędy uczniów) oraz `golden-rule-box` (wskazówki z branży).
-> 4. Zakończ każde laboratorium blokiem `exam-verify-box`, wyjaśniającym, jak zadanie jest oceniane na egzaminie INF.02.
-> 5. Używaj dostarczonych klas CSS i struktury HTML."
+> 1. Stosuj się rygorystycznie do dostarczonego pliku `blueprint.md`.
+> 2. Wygeneruj plik `index.html` z teorią, używając silnych, życiowych analogii oraz bloku 'Sekret Inżyniera'.
+> 3. Wygeneruj pliki `labX.html` z instrukcjami krok po kroku.
+> 4. Zdefiniuj lokalne zmienne CSS (`:root`) w sekcji `<head>` dopasowane kolorystycznie do tematu.
+> 5. Obowiązkowo wpleć bloki `pitfall-box` (najczęstsze błędy), `golden-rule-box` (wskazówki z branży) oraz `exam-reference` (cytaty z arkuszy CKE).
+> 6. Używaj tagów `<kbd>` dla klawiszy, `<div class="gui-path">` dla klikania i `<div class="cli-block">` dla terminala.
+> 7. Zakończ każde laboratorium blokiem `exam-verify-box`, wyjaśniającym, jak zadanie jest oceniane na egzaminie INF.02.
+> 8. Pamiętaj o dolnej nawigacji `<div class="course-nav">`."
