@@ -56,6 +56,13 @@
                 margin-top: 0;
             }
 
+            /* --- POPRAWKA MARGINESÓW DLA LIST --- */
+            ul {
+                padding-left: 25px; /* Robi miejsce na punktory wewnątrz boksów */
+                margin-left: 5px;
+            }
+            /* ------------------------------------ */
+
             /* Style dla referencji egzaminacyjnej */
             .exam-reference {
                 margin-top: 15px;
@@ -381,6 +388,35 @@
                     </li>
                 </ul>
                 <p>Zrób zrzut ekranu tego wyniku i wklej do dokumentacji egzaminacyjnej.</p>
+            </div>
+
+            <div
+                class="golden-rule-box"
+                style="
+                    border-left-color: var(--ubu-purple);
+                    background: var(--ubu-purple-bg);
+                    margin-top: 15px;
+                "
+            >
+                <strong>💡 Jak czytać ten Matrix? (Rozszyfrowanie ls -l)</strong><br />
+                Spójrz na wynik: <code>-rw-r--r-- 1 administrator administrator 0 plik.txt</code>
+                <ul style="margin-top: 5px; margin-bottom: 0">
+                    <li>
+                        <strong>Pierwszy znak:</strong> <code>-</code> oznacza plik. Gdyby to był
+                        katalog, byłoby tam <code>d</code> (directory).
+                    </li>
+                    <li>
+                        <strong>Kolejne 9 znaków:</strong> To Twoje uprawnienia! Trzy dla
+                        Właściciela (<code>rw-</code>), trzy dla Grupy (<code>r--</code>) i trzy dla
+                        Reszty (<code>r--</code>).
+                    </li>
+                    <li>
+                        <strong>Dlaczego słowo "administrator" jest dwa razy?</strong> Bo pierwsze
+                        oznacza <em>Właściciela</em> (człowieka), a drugie oznacza <em>Grupę</em>,
+                        do której ten plik należy. Teraz już wiesz, po co wcześniej tworzyliśmy
+                        grupy!
+                    </li>
+                </ul>
             </div>
         </main>
 
