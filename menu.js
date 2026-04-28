@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Wykrywanie głębokości (czy jesteśmy w głównym folderze, czy w podfolderze np. 02-windows)
+    // 1. Wykrywanie głębokości
     const path = window.location.pathname;
     const isSubfolder =
         path.includes('/01-sieci/') ||
         path.includes('/02-windows/') ||
         path.includes('/03-linux/') ||
         path.includes('/04-sprzet/') ||
-        path.includes('/05-excel/');
+        path.includes('/05-excel/') ||
+        path.includes('/06-integracja/');
     const prefix = isSubfolder ? '../' : './';
 
-    // 2. Generowanie Globalnego Paska Nawigacji (Top Navbar)
+    // 2. Generowanie Globalnego Paska Nawigacji
     const navHTML = `
         <nav id="global-nav">
             <a href="${prefix}index.html" class="nav-brand">🏠 INF.02 Baza Wiedzy</a>
@@ -20,12 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <a href="${prefix}03-linux/index.html">🐧 Linux</a>
                 <a href="${prefix}04-sprzet/index.html">🔌 Sprzęt</a>
                 <a href="${prefix}05-excel/index.html">📊 Excel</a>
+                <a href="${prefix}06-integracja/index.html">🔗 Integracja</a>
             </div>
         </nav>
     `;
     document.body.insertAdjacentHTML('afterbegin', navHTML);
 
-    // 3. Generowanie Okruszków (Breadcrumbs) - tylko dla laboratoriów
+    // 3. Generowanie Okruszków (Breadcrumbs)
     if (isSubfolder && !path.endsWith('index.html')) {
         let pillarName = '';
         let pillarLink = '';
@@ -42,8 +44,20 @@ document.addEventListener('DOMContentLoaded', function () {
             pillarName = '🐧 Filar 3: Linux';
             pillarLink = 'index.html';
         }
+        if (path.includes('04-sprzet')) {
+            pillarName = '🔌 Filar 4: Sprzęt';
+            pillarLink = 'index.html';
+        }
+        if (path.includes('05-excel')) {
+            pillarName = '📊 Filar 5: Excel';
+            pillarLink = 'index.html';
+        }
+        if (path.includes('06-integracja')) {
+            pillarName = '🔗 Filar 6: Integracja';
+            pillarLink = 'index.html';
+        } // <-- DODANE
 
-        const pageTitle = document.title; // Pobiera tytuł z tagu <title>
+        const pageTitle = document.title;
 
         const breadcrumbsHTML = `
             <div id="breadcrumbs">

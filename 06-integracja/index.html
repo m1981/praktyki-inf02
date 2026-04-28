@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Teoria: Integracja Win-Lin</title>
+        <link rel="stylesheet" href="../common.css" />
+        <style>
+            /* Lokalne style dla akcentów modułu Integracji */
+            .int-border {
+                border-top-color: #9c88ff !important;
+            }
+            .int-tag {
+                background: rgba(156, 136, 255, 0.15) !important;
+                color: #9c88ff !important;
+            }
+            .int-text {
+                color: #9c88ff !important;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>🔗 Filar 6: Integracja Win-Lin</h1>
+            <p class="subtitle">Kiedy dwa różne światy muszą zacząć ze sobą rozmawiać</p>
+        </header>
+
+        <main class="roadmap-container">
+            <!-- KROK 1 -->
+            <div class="card int-border">
+                <div class="step-number">Krok 1</div>
+                <h2>Po co łączyć ogień z wodą?</h2>
+                <span class="tag int-tag">🌍 Prawdziwe IT</span>
+                <ul class="tech-list">
+                    <li>
+                        <strong>Mit:</strong> W firmach używa się tylko Windowsa albo tylko Linuxa.
+                    </li>
+                    <li>
+                        <strong>Fakt:</strong> Każdy system ma swoje mocne strony. Windows jest
+                        genialny do zarządzania ludźmi (Active Directory) i stacjami roboczymi.
+                        Linux jest niepokonany jako lekki serwer WWW, baza danych czy narzędzie
+                        sieciowe.
+                    </li>
+                    <li>
+                        <strong>Na egzaminie INF.02:</strong> Egzaminatorzy symulują to środowisko.
+                        Zazwyczaj <strong>Windows to Serwer</strong> (dostarcza usługi), a
+                        <strong>Linux to Klient</strong> (konsumuje usługi i służy do testowania).
+                    </li>
+                </ul>
+                <div class="analogy-box">
+                    <strong>💡 Analogia:</strong>
+                    Wyobraź sobie restaurację. Windows to "Sala dla gości i Menadżer" (ładny wygląd,
+                    zarządzanie kelnerami, Active Directory). Linux to "Kuchnia" (tam się ciężko
+                    pracuje, jest gorąco, nie ma ładnych okienek, ale powstają tam najlepsze
+                    rzeczy). Restauracja potrzebuje obu tych działów, żeby działać!
+                </div>
+            </div>
+
+            <!-- KROK 2 -->
+            <div class="card int-border">
+                <div class="step-number">Krok 2</div>
+                <h2>Wspólny język (Protokoły)</h2>
+                <span class="tag int-tag">🗣️ Komunikacja</span>
+                <ul class="tech-list">
+                    <li>
+                        <strong>Systemy się nie widzą:</strong> Linux nie wie, że rozmawia z
+                        Windowsem. Windows nie wie, że rozmawia z Linuxem.
+                    </li>
+                    <li>
+                        <strong>Liczy się standard:</strong> Komunikacja odbywa się przez
+                        uniwersalne protokoły. Jeśli Windows wystawi stronę po
+                        <strong>HTTP (port 80)</strong>, to przeglądarka na Linuxie ją zrozumie.
+                    </li>
+                    <li>
+                        <strong>Kluczowe protokoły na egzaminie:</strong> ICMP (Ping), DNS
+                        (rozwiązywanie nazw), HTTP (strony WWW), DHCP (przydzielanie IP).
+                    </li>
+                </ul>
+                <div class="analogy-box">
+                    <strong>💡 Analogia:</strong>
+                    To tak, jakby spotkał się Polak z Japończykiem. Nie znają swoich języków
+                    ojczystych (Windows/Linux), ale obaj świetnie mówią po angielsku (TCP/IP).
+                    Dzięki temu mogą bez problemu ubić interes.
+                </div>
+            </div>
+
+            <!-- KROK 3 -->
+            <div class="card int-border">
+                <div class="step-number">Krok 3</div>
+                <h2>Incepcja: System w Systemie</h2>
+                <span class="tag int-tag">📦 Wirtualizacja</span>
+                <ul class="tech-list">
+                    <li>
+                        <strong>VirtualBox:</strong> Na nowszych arkuszach egzaminacyjnych nie
+                        dostaniesz dwóch fizycznych komputerów. Dostaniesz Windowsa, na którym
+                        musisz postawić Linuxa w maszynie wirtualnej.
+                    </li>
+                    <li>
+                        <strong>Karta Mostkowana (Bridged):</strong> To najważniejsze ustawienie!
+                        Domyślnie maszyna wirtualna jest odcięta od sieci fizycznej (tryb NAT).
+                        Musisz zrobić "most", żeby Linux dostał IP z tej samej puli co fizyczny
+                        Windows.
+                    </li>
+                </ul>
+                <div class="analogy-box">
+                    <strong>💡 Analogia:</strong>
+                    Tryb NAT to jak mieszkanie w hotelu – masz internet, ale nikt z zewnątrz nie
+                    wie, w którym jesteś pokoju. Tryb Bridged (Mostkowana) to jak wybudowanie
+                    własnego domu na tej samej ulicy co hotel – dostajesz własny, widoczny dla
+                    wszystkich adres.
+                </div>
+            </div>
+
+            <!-- SEKRET INŻYNIERA -->
+            <div
+                class="card engineer-secret"
+                style="border-top-color: #e84118; background-color: #fff5f5"
+            >
+                <h2>🕵️‍♂️ Sekret Inżyniera: Asymetria Zapory (Firewall)</h2>
+                <span class="tag" style="background: #ffcccc; color: #e84118"
+                    >🚨 Najczęstszy błąd na egzaminie!</span
+                >
+                <p style="margin-top: 15px">
+                    Wyobraź sobie, że połączyłeś kable, ustawiłeś adresy IP i chcesz sprawdzić, czy
+                    komputery się widzą. Używasz komendy <code>ping</code>.
+                </p>
+                <ul class="tech-list">
+                    <li>
+                        <strong>Windows ➔ Linux:</strong> Działa od razu! Linux z natury jest ufny i
+                        odpowiada na pingi.
+                    </li>
+                    <li>
+                        <strong>Linux ➔ Windows:</strong>
+                        <em>Request Timeout (Upłynął limit czasu żądania)</em>. Panika! Kable
+                        zepsute? Złe IP?
+                    </li>
+                </ul>
+                <div
+                    class="analogy-box"
+                    style="background: #ffcccc; border-color: #e84118; color: #c23616"
+                >
+                    <strong>💡 Pamiętaj:</strong>
+                    Windows domyślnie <strong>BLOKUJE</strong> wszystkie zapytania z zewnątrz, w tym
+                    Ping (ICMP). Zanim zaczniesz szukać błędu w kablach, wejdź w Zaporę Windows
+                    (<code>wf.msc</code>) i włącz regułę przychodzącą dla "Żądania echa
+                    (ICMPv4-In)". Bez tego oblejesz test komunikacji!
+                </div>
+            </div>
+        </main>
+
+        <!-- PODSUMOWANIE -->
+        <div
+            class="conclusion-box"
+            style="background: rgba(156, 136, 255, 0.1); border-color: #9c88ff"
+        >
+            <div class="conclusion-icon">🎓</div>
+            <div class="conclusion-text">
+                <strong>Podsumowanie dla Was:</strong>
+                <span
+                    >Ten moduł to ostateczny test Waszych umiejętności. Jeśli potraficie sprawić, że
+                    Linux pobierze stronę WWW z Windowsa, a Windows wypuści Linuxa do Internetu
+                    przez swój routing – jesteście gotowi na egzamin i prawdziwą pracę w IT!</span
+                >
+            </div>
+        </div>
+
+        <!-- SEKCJA Z LINKAMI DO ĆWICZEŃ -->
+        <section class="labs-section">
+            <h2>💻 Poligon Doświadczalny</h2>
+            <p style="color: #b2bec3; margin-bottom: 20px">
+                Wybierz laboratorium, aby przećwiczyć współpracę systemów:
+            </p>
+
+            <div class="labs-grid">
+                <a href="lab1-web-dns.html" class="lab-link-card int-border">
+                    <span class="lab-title">Lab 1: Web & DNS</span>
+                    <span class="lab-desc">Linux szuka strony na Windowsie</span>
+                </a>
+                <a href="lab2-routing.html" class="lab-link-card int-border">
+                    <span class="lab-title">Lab 2: Routing i NAT</span>
+                    <span class="lab-desc">Windows jako domowy router dla Linuxa</span>
+                </a>
+                <a href="lab3-zapora.html" class="lab-link-card int-border">
+                    <span class="lab-title">Lab 3: Mur z Ognia</span>
+                    <span class="lab-desc">Pingowanie i odblokowywanie Zapory</span>
+                </a>
+                <a href="lab4-wirtualizacja.html" class="lab-link-card int-border">
+                    <span class="lab-title">Lab 4: Incepcja</span>
+                    <span class="lab-desc">VirtualBox, tryb Bridged i sieć fizyczna</span>
+                </a>
+                <a href="lab5-drukarki.html" class="lab-link-card int-border">
+                    <span class="lab-title">Lab 5: Widmo Drukarki</span>
+                    <span class="lab-desc">Multihoming i serwer wydruku TCP/IP</span>
+                </a>
+            </div>
+        </section>
+
+        <script src="../menu.js"></script>
+    </body>
+</html>
