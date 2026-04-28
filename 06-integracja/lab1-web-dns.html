@@ -4,343 +4,131 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>LAB 1: Gdzie jest moja strona?</title>
-
-        <!-- TWOJE GLOBALNE STYLE -->
         <link rel="stylesheet" href="../common.css" />
-
-        <!-- FontAwesome dla ikon -->
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
-        <style>
-            :root {
-                --bg-color: #1e1e2f;
-                --card-bg: #2a2a40;
-                --win-color: #00a8ff;
-                --lin-color: #fbc531;
-                --text-main: #f5f6fa;
-                --text-muted: #a4b0be;
-                --danger: #e84118;
-                --success: #4cd137;
-                --step-bg: #353550;
-            }
-
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: var(--bg-color);
-                color: var(--text-main);
-                margin: 0;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            header {
-                text-align: center;
-                margin-bottom: 30px;
-                width: 100%;
-                max-width: 900px;
-                border-bottom: 2px solid #444;
-                padding-bottom: 20px;
-            }
-
-            h1 {
-                color: var(--text-main);
-                font-size: 2.2rem;
-                margin-bottom: 5px;
-            }
-
-            h1 span {
-                color: var(--success);
-            }
-
-            .goal {
-                color: var(--text-muted);
-                font-size: 1.1rem;
-                font-style: italic;
-            }
-
-            .topology {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                background-color: var(--card-bg);
-                width: 100%;
-                max-width: 900px;
-                padding: 20px;
-                border-radius: 10px;
-                margin-bottom: 30px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            }
-
-            .machine {
-                text-align: center;
-            }
-
-            .machine i {
-                font-size: 3.5rem;
-                margin-bottom: 10px;
-            }
-
-            .machine.win i {
-                color: var(--win-color);
-            }
-            .machine.lin i {
-                color: var(--lin-color);
-            }
-
-            .machine-title {
-                font-weight: bold;
-                font-size: 1.2rem;
-            }
-            .machine-ip {
-                color: var(--text-muted);
-                font-family: monospace;
-                background: #000;
-                padding: 2px 8px;
-                border-radius: 4px;
-                margin-top: 5px;
-                display: inline-block;
-            }
-
-            .connection {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                color: var(--text-muted);
-            }
-
-            .connection i {
-                font-size: 2rem;
-                color: var(--success);
-            }
-            .connection span {
-                font-weight: bold;
-                margin-top: 5px;
-                letter-spacing: 1px;
-            }
-
-            .steps-container {
-                width: 100%;
-                max-width: 900px;
-            }
-
-            .step {
-                background-color: var(--step-bg);
-                border-radius: 8px;
-                padding: 15px 20px;
-                margin-bottom: 15px;
-                display: flex;
-                align-items: flex-start;
-                gap: 15px;
-                border-left: 5px solid transparent;
-                transition: transform 0.2s;
-            }
-
-            .step:hover {
-                transform: translateX(5px);
-            }
-
-            .step.win {
-                border-left-color: var(--win-color);
-            }
-            .step.lin {
-                border-left-color: var(--lin-color);
-            }
-
-            .step-icon {
-                font-size: 1.8rem;
-                margin-top: 5px;
-            }
-
-            .step.win .step-icon {
-                color: var(--win-color);
-            }
-            .step.lin .step-icon {
-                color: var(--lin-color);
-            }
-
-            .step-content h3 {
-                margin: 0 0 5px 0;
-                font-size: 1.1rem;
-            }
-
-            .step-content p {
-                margin: 0;
-                color: #dcdde1;
-                line-height: 1.5;
-            }
-
-            code {
-                background-color: #000;
-                color: #00d2d3;
-                padding: 2px 6px;
-                border-radius: 4px;
-                font-family: 'Courier New', Courier, monospace;
-                font-weight: bold;
-            }
-
-            .warning-box {
-                background: rgba(232, 65, 24, 0.15);
-                border: 2px dashed var(--danger);
-                border-radius: 10px;
-                padding: 20px;
-                width: 100%;
-                max-width: 860px;
-                margin-top: 30px;
-            }
-
-            .warning-title {
-                color: var(--danger);
-                font-size: 1.3rem;
-                font-weight: bold;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 15px;
-            }
-
-            .warning-box ul {
-                margin: 0;
-                padding-left: 20px;
-                color: #f5f6fa;
-            }
-
-            .warning-box li {
-                margin-bottom: 10px;
-                line-height: 1.4;
-            }
-
-            .pro-tip {
-                background: rgba(76, 209, 55, 0.1);
-                border-left: 4px solid var(--success);
-                padding: 15px;
-                margin-top: 20px;
-                border-radius: 0 8px 8px 0;
-            }
-        </style>
     </head>
     <body>
         <header>
-            <h1>LAB 1: <span>"Gdzie jest moja strona?"</span></h1>
-            <div class="goal">
-                <i class="fas fa-bullseye"></i> Cel: Udowodnić, że Linux potrafi korzystać z usług
-                Web i DNS hostowanych na Windows Server.
-            </div>
+            <h1>🌐 LAB 1: Gdzie jest moja strona?</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem">
+                Integracja usług: Windows Server + Linux
+            </p>
         </header>
 
-        <!-- Topologia -->
-        <div class="topology">
-            <div class="machine win">
-                <i class="fab fa-windows"></i>
-                <div class="machine-title">Windows Server 2022</div>
-                <div class="machine-ip">Serwer (IIS + DNS)</div>
-            </div>
+        <main class="lab-container">
+            <!-- TOPOLOGIA -->
+            <div class="topology-box" style="align-items: center; gap: 30px; flex-wrap: wrap">
+                <div class="node windows">
+                    <span class="node-icon">🪟</span>
+                    <span class="node-name">Windows Server 2022</span>
+                    <span class="node-ip">Serwer (IIS + DNS)</span>
+                </div>
 
-            <div class="connection">
-                <span>ZAPYTANIE HTTP/DNS</span>
-                <i class="fas fa-exchange-alt"></i>
-            </div>
+                <div style="color: var(--text-muted); font-weight: bold; text-align: center">
+                    ZAPYTANIE HTTP/DNS<br />
+                    <span style="font-size: 1.5rem; color: var(--success-color)">➔</span>
+                </div>
 
-            <div class="machine lin">
-                <i class="fab fa-ubuntu"></i>
-                <div class="machine-title">Ubuntu Desktop</div>
-                <div class="machine-ip">Klient (Przeglądarka)</div>
-            </div>
-        </div>
-
-        <!-- Kroki -->
-        <div class="steps-container">
-            <div class="step win">
-                <div class="step-icon"><i class="fas fa-download"></i></div>
-                <div class="step-content">
-                    <h3>Krok 1: Instalacja Ról</h3>
-                    <p>
-                        W Menedżerze Serwera zainstaluj dwie role: <b>Serwer DNS</b> oraz
-                        <b>Serwer sieci Web (IIS)</b>.
-                    </p>
+                <div class="node linux">
+                    <span class="node-icon">🐧</span>
+                    <span class="node-name">Ubuntu Desktop</span>
+                    <span class="node-ip">Klient (Przeglądarka)</span>
                 </div>
             </div>
 
-            <div class="step win">
-                <div class="step-icon"><i class="fas fa-address-book"></i></div>
-                <div class="step-content">
-                    <h3>Krok 2: Konfiguracja DNS</h3>
-                    <p>
-                        Otwórz przystawkę DNS. Utwórz nową <i>Strefę wyszukiwania do przodu</i> o
-                        nazwie <code>egzamin.local</code>. Wewnątrz strefy dodaj nowy
-                        <b>Rekord A (Host)</b> o nazwie <code>www</code>, wskazujący na adres IP
-                        tego Windows Servera.
-                    </p>
+            <!-- KARTA LABORATORIUM -->
+            <div class="lab-card">
+                <div class="lab-header">
+                    <h3>Wielki Test Połączenia</h3>
+                    <span class="time-badge">Czas: 45 min</span>
+                </div>
+                <div class="lab-body">
+                    <div class="goal-box">
+                        Cel: Udowodnić, że Linux potrafi korzystać z usług Web i DNS hostowanych na
+                        Windows Server.
+                    </div>
+
+                    <ul class="task-list">
+                        <li>
+                            <strong>Krok 1: Instalacja Ról (Windows)</strong>
+                            <p>
+                                W Menedżerze Serwera zainstaluj dwie role:
+                                <strong>Serwer DNS</strong> oraz
+                                <strong>Serwer sieci Web (IIS)</strong>.
+                            </p>
+                        </li>
+
+                        <li>
+                            <strong>Krok 2: Konfiguracja DNS (Windows)</strong>
+                            <p>
+                                Otwórz przystawkę DNS. Utwórz nową
+                                <em>Strefę wyszukiwania do przodu</em> o nazwie
+                                <code>egzamin.local</code>. Wewnątrz strefy dodaj nowy
+                                <strong>Rekord A (Host)</strong> o nazwie <code>www</code>,
+                                wskazujący na adres IP tego Windows Servera.
+                            </p>
+                        </li>
+
+                        <li>
+                            <strong>Krok 3: Konfiguracja IIS (Windows)</strong>
+                            <p>
+                                Utwórz folder <code>C:\www</code> i stwórz w nim plik
+                                <code>index.html</code> z dowolnym tekstem. Otwórz Menedżer IIS,
+                                dodaj nową witrynę wskazującą na ten folder. W oknie
+                                <strong>Wiązania (Bindings)</strong> w polu
+                                <em>Nazwa hosta</em> wpisz koniecznie:
+                                <code>www.egzamin.local</code>.
+                            </p>
+                        </li>
+
+                        <li>
+                            <strong>Krok 4: Konfiguracja Sieci Klienta (Linux)</strong>
+                            <p>
+                                Na Ubuntu wejdź w ustawienia karty sieciowej (lub użyj Netplan).
+                                Zmień adres <strong>Serwera DNS</strong> na adres IP Twojego Windows
+                                Servera. Zapisz i zrestartuj połączenie sieciowe.
+                            </p>
+                        </li>
+
+                        <li>
+                            <strong>Krok 5: Wielki Test (Linux)</strong>
+                            <p>
+                                Otwórz przeglądarkę Firefox na Ubuntu i wpisz w pasek adresu:
+                                <code>http://www.egzamin.local</code>. Strona powinna się załadować!
+                            </p>
+                        </li>
+                    </ul>
+
+                    <!-- HACZYKI EGZAMINACYJNE -->
+                    <div class="pitfall-box danger">
+                        <strong>🚨 HACZYKI EGZAMINACYJNE (Arkusze 24.01, 25.01):</strong>
+                        <ul style="margin-top: 10px">
+                            <li>
+                                <strong>Zapora (Firewall):</strong> Strona się nie ładuje (Timeout)?
+                                Windows domyślnie blokuje ruch z zewnątrz! Musisz wejść w
+                                <code>wf.msc</code> na Windowsie i utworzyć regułę przychodzącą
+                                zezwalającą na ruch na porcie <strong>80 (TCP)</strong>.
+                            </li>
+                            <li>
+                                <strong>Uprawnienia NTFS:</strong> Widzisz błąd 401/403 (Brak
+                                dostępu) w przeglądarce? Sprawdź, czy folder <code>C:\www</code> ma
+                                w zakładce Zabezpieczenia dodane uprawnienia "Odczyt" dla grupy
+                                <strong>Użytkownicy</strong> (lub IIS_IUSRS).
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- PRO TIP -->
+                    <div class="golden-rule-box ubu-purple">
+                        <strong>💡 Pro-Tip od DevOpsa:</strong>
+                        Zamiast klikać w przeglądarkę, otwórz terminal na Ubuntu i wpisz
+                        <code>curl -v http://www.egzamin.local</code>. Zobaczysz dokładnie, czy
+                        problem leży w DNS (nie potrafi rozwiązać nazwy), czy w zaporze (brak
+                        połączenia), czy w uprawnieniach (kod HTTP 403).
+                    </div>
                 </div>
             </div>
+        </main>
 
-            <div class="step win">
-                <div class="step-icon"><i class="fas fa-server"></i></div>
-                <div class="step-content">
-                    <h3>Krok 3: Konfiguracja IIS (Web Server)</h3>
-                    <p>
-                        Utwórz folder <code>C:\www</code> i stwórz w nim plik
-                        <code>index.html</code> z dowolnym tekstem. Otwórz Menedżer IIS, dodaj nową
-                        witrynę wskazującą na ten folder. W oknie <b>Wiązania (Bindings)</b> w polu
-                        <i>Nazwa hosta</i> wpisz koniecznie: <code>www.egzamin.local</code>.
-                    </p>
-                </div>
-            </div>
-
-            <div class="step lin">
-                <div class="step-icon"><i class="fas fa-network-wired"></i></div>
-                <div class="step-content">
-                    <h3>Krok 4: Konfiguracja Sieci Klienta</h3>
-                    <p>
-                        Na Ubuntu wejdź w ustawienia karty sieciowej. Zmień adres
-                        <b>Serwera DNS</b> na adres IP Twojego Windows Servera. Zapisz i zrestartuj
-                        połączenie sieciowe.
-                    </p>
-                </div>
-            </div>
-
-            <div class="step lin">
-                <div class="step-icon"><i class="fab fa-firefox-browser"></i></div>
-                <div class="step-content">
-                    <h3>Krok 5: Wielki Test</h3>
-                    <p>
-                        Otwórz przeglądarkę Firefox na Ubuntu i wpisz w pasek adresu:
-                        <code>http://www.egzamin.local</code>. Strona powinna się załadować!
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Haczyki Egzaminacyjne -->
-        <div class="warning-box">
-            <div class="warning-title">
-                <i class="fas fa-exclamation-triangle"></i> HACZYKI EGZAMINACYJNE (Arkusze 24.01,
-                25.01)
-            </div>
-            <ul>
-                <li>
-                    <b>Zapora (Firewall):</b> Strona się nie ładuje (Timeout)? Windows domyślnie
-                    blokuje ruch z zewnątrz! Musisz wejść w <code>wf.msc</code> na Windowsie i
-                    utworzyć regułę przychodzącą zezwalającą na ruch na porcie <b>80 (TCP)</b>.
-                </li>
-                <li>
-                    <b>Uprawnienia NTFS:</b> Widzisz błąd 401/403 (Brak dostępu) w przeglądarce?
-                    Sprawdź, czy folder <code>C:\www</code> ma w zakładce Zabezpieczenia dodane
-                    uprawnienia "Odczyt" dla grupy <b>Użytkownicy</b> (lub IIS_IUSRS).
-                </li>
-            </ul>
-
-            <div class="pro-tip">
-                <i class="fas fa-lightbulb"></i> <b>Pro-Tip od DevOpsa:</b> Zamiast klikać w
-                przeglądarkę, otwórz terminal na Ubuntu i wpisz
-                <code>curl -v http://www.egzamin.local</code>. Zobaczysz dokładnie, czy problem leży
-                w DNS (nie potrafi rozwiązać nazwy), czy w zaporze (brak połączenia), czy w
-                uprawnieniach (kod HTTP 403).
-            </div>
-        </div>
         <script src="../menu.js"></script>
     </body>
 </html>
