@@ -190,24 +190,38 @@ code {
     font-style: italic;
 }
 
-/* --- PODSUMOWANIA --- */
+/* ==========================================================================
+   PODSUMOWANIA (Zunifikowane dla wszystkich modułów)
+   ========================================================================== */
 .conclusion-box {
-    background: #e8f8f5;
-    border: 1px solid #a3e4d7;
-    padding: 15px;
+    max-width: 1200px;
+    margin: 30px auto;
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 20px;
     border-radius: 8px;
-    margin-top: 20px;
     display: flex;
     gap: 15px;
     align-items: flex-start;
+    color: #2d3436;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
+
 .conclusion-icon {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    line-height: 1;
 }
+
 .conclusion-text strong {
-    color: #00b894;
+    color: #856404;
     display: block;
     margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.conclusion-text span {
+    color: #2d3436;
+    line-height: 1.6;
 }
 
 /* --- SCHEMATY --- */
