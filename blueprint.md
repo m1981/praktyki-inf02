@@ -9,10 +9,13 @@
 
 ## 2. Architektura Modułu (Struktura Katalogu)
 
-Każdy duży temat (Filar) składa się z dwóch rodzajów plików:
+Każdy duży temat (Filar) znajduje się w osobnym folderze (np. `02-windows/`, `03-linux/`) i składa się z dwóch rodzajów plików:
 
 1. **Plik Teoretyczny (`index.html`):** Buduje kontekst biznesowy i architektoniczny. Odpowiada na pytanie _"Dlaczego to robimy?"_.
 2. **Pliki Laboratoryjne (`labX-temat.html`):** Instrukcje krok po kroku. Odpowiadają na pytanie _"Jak to zrobić i jak zdać egzamin?"_.
+
+3. **Plik Teoretyczny (`index.html`):** Buduje kontekst biznesowy i architektoniczny. Odpowiada na pytanie _"Dlaczego to robimy?"_.
+4. **Pliki Laboratoryjne (`labX-temat.html`):** Instrukcje krok po kroku. Odpowiadają na pytanie _"Jak to zrobić i jak zdać egzamin?"_.
 
 ---
 
@@ -21,9 +24,9 @@ Każdy duży temat (Filar) składa się z dwóch rodzajów plików:
 Każdy plik HTML musi bezwzględnie zawierać:
 
 - **Style i Skrypty:** Podpięcie `<link rel="stylesheet" href="../common.css" />` w sekcji `<head>` oraz `<script src="../menu.js"></script>` na końcu `<body>`.
-- **Zmienne Kolorystyczne (CSS Variables):** Definiowane w `<style>` w sekcji `<head>`. Każdy filar ma swój branding:
-    - _Windows:_ Zielony (`#00b894`), Czerwony (`#d63031`), Niebieski (`#0984e3`).
-    - _Linux:_ Pomarańczowy Ubuntu (`#E95420`), Fiolet Ubuntu (`#77216F`), Ciemny (`#2C001E`).
+- **Zmienne Kolorystyczne (CSS Variables):** Są zdefiniowane globalnie w pliku `common.css`. Nie używamy tagów `<style>` w plikach HTML! Każdy filar ma swój branding:
+    - _Windows:_ Zielony (`--win-ad-color`), Czerwony (`--win-gpo-color`), Niebieski (`--win-file-color`).
+    - _Linux:_ Pomarańczowy Ubuntu (`--ubu-orange`), Fiolet Ubuntu (`--ubu-purple`), Ciemny (`--ubu-dark`).
 - **Nawigacja Dolna (`course-nav`):** Na samym dole każdego pliku muszą znajdować się przyciski "Poprzedni" i "Następny" ułatwiające przechodzenie przez kurs.
 
 ---
@@ -41,14 +44,21 @@ Każdy plik HTML musi bezwzględnie zawierać:
 - **Lista techniczna (`<ul class="tech-list">`):** 3-4 krótkie punkty wyjaśniające technologię.
 - **Analogia (`<div class="analogy-box">`):** Kluczowy element! Każda trudna technologia musi być wytłumaczona przez analogię (np. _Kontroler Domeny to bramkarz w klubie_).
 
-### C. Sekret Inżyniera (`<div class="card">` ze specjalnym formatowaniem)
+### C. Lista Zadań (`<div class="steps-container">`)
 
-- Blok z ikoną 🕵️‍♂️. Wyjaśnia różnicę między tym, czego wymaga egzamin CKE (często przestarzałe metody), a tym, jak pracuje się w prawdziwej korporacji (np. _komendy `net` vs PowerShell_).
+- Kroki ułożone wertykalnie jako `<div class="step win|lin|mixed">`.
+- Klasa CSS kroku (`win` lub `lin`) determinuje kolor lewego marginesu i ikony, jasno wskazując uczniowi, **na której maszynie** ma wykonać dane polecenie.
+- Komendy wpisywane w terminalu/CMD muszą być w tagach `<code>`.
 
-### D. Zakończenie
+### D. Sekret Inżyniera (`<div class="card engineer-secret">`)
 
-- **Podsumowanie (`<div class="conclusion-box">`):** Akapit motywacyjny łączący teorię z egzaminem.
-- **Siatka Laboratoriów (`<div class="labs-grid">`):** Kafelki z linkami do poszczególnych plików `labX.html`.
+- Obowiązkowy blok w każdym module teoretycznym.
+- Zmienia mindset ucznia. Tłumaczy różnicę między "wymogami egzaminu CKE" a "prawdziwą pracą w korporacji" (np. _Dlaczego na egzaminie wyłączamy zaporę, a w pracy za to zwalniają_).
+
+### D. Podsumowanie i Siatka Labów
+
+- `<div class="conclusion-box">`: Krótkie podsumowanie w zunifikowanym, żółto-złotym stylu.
+- `<section class="labs-section">`: Zawiera `<div class="labs-grid">` z linkami do poszczególnych laboratoriów (`<a class="lab-link-card">`).
 
 ---
 
@@ -59,12 +69,15 @@ Każdy plik HTML musi bezwzględnie zawierać:
 - **Tytuł i Czas:** Kreatywny tytuł i realistyczna estymacja (np. `<span class="time-badge">Czas: 45 min</span>`).
 - **Cel (`<div class="goal-box">`):** Jedno zdanie wyjaśniające, co uczeń osiągnie na końcu laba.
 
-### B. Wizualizacja (Opcjonalnie dla sieci)
+### B. Wizualizacja Topologii (Dla zadań sieciowych)
 
-- **Topologia (`<div class="topology">`):** Jeśli lab dotyczy sieci (np. Firewall, Routing), używamy wizualizacji z ikonami FontAwesome, aby pokazać przepływ ruchu między maszynami.
+- Używamy kontenera `<div class="topology-box">`.
+- Maszyny to `<div class="node windows|linux|isp|nat">`.
+- Zamiast zewnętrznych bibliotek ikon, używamy systemowych emoji (🪟, 🐧, ☁️, 🛡️), co zapewnia lekkość i spójność kodu.
 
 ### C. Formatowanie Instrukcji (Task List)
 
+- **Kroki:** Używamy standardowej listy `<ul class="task-list">`.
 - **Ścieżki GUI:** `<div class="gui-path">` ze strzałkami `<span class="gui-arrow">➔</span>` (np. _Narzędzia ➔ Zarządzanie zasadami grupy_).
 - **Bloki CLI:** `<div class="cli-block">` z komentarzami `<span class="cli-comment">` wyjaśniającymi komendy.
 - **Klawisze:** Używamy tagu `<kbd>` dla skrótów klawiszowych (np. `<kbd>TAB</kbd>`, `<kbd>Ctrl</kbd> + <kbd>C</kbd>`).
@@ -73,7 +86,7 @@ Każdy plik HTML musi bezwzględnie zawierać:
 
 Wplatane pomiędzy kroki instrukcji:
 
-1. **Najczęstszy błąd (`<div class="pitfall-box">`):**
+1. **Najczęstszy błąd (`<div class="pitfall-box">` lub `<div class="pitfall-box danger">`):**
     - _Ikona:_ 🚨
     - _Treść:_ Opis typowego błędu uczniów (np. _Spacje w plikach YAML, brak flagi -aG_).
 2. **Złota Rada Trenera (`<div class="golden-rule-box">`):**
