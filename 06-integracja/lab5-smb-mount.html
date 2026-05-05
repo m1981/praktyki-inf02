@@ -1,0 +1,253 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB 5: Most między systemami plików</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   .int-border {
+    border-top-color: #9c88ff !important;
+   }
+   .int-tag {
+    background: rgba(156, 136, 255, 0.15) !important;
+    color: #9c88ff !important;
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🌉 LAB 5: Most między systemami</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Montowanie udziałów Windows (SMB/CIFS) w drzewie Linuxa
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <!-- TOPOLOGIA -->
+   <div
+    class="topology-box"
+    style="align-items: center; gap: 20px; flex-wrap: wrap; justify-content: space-between"
+   >
+    <div class="node windows">
+     <span class="node-icon">🪟</span>
+     <span class="node-name">Windows Server</span>
+     <span class="node-ip">Udział: \\192.168.1.10\Backup$</span>
+    </div>
+
+    <div
+     style="color: var(--text-muted); font-weight: bold; text-align: center; font-size: 0.85rem"
+    >
+     Protokół SMB<br />
+     <span style="font-size: 1.5rem; color: #9c88ff">➔</span>
+    </div>
+
+    <div class="node linux">
+     <span class="node-icon">🐧</span>
+     <span class="node-name">Ubuntu Server</span>
+     <span class="node-ip">Katalog: /mnt/backup</span>
+    </div>
+   </div>
+
+   <!-- KARTA 1: WINDOWS -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 1: Przygotowanie gruntu (Windows)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Utworzenie ukrytego folderu na Windows Serverze, który będzie służył jako magazyn na
+      kopie zapasowe z Linuxa.
+     </div>
+
+     <ul class="task-list">
+      <li>
+       <strong>Tworzenie folderu:</strong> Na dysku <code>C:\</code> w Windows Serverze utwórz
+       folder o nazwie <code>Kopie_Linux</code>.
+      </li>
+      <li>
+       <strong>Udostępnianie (Share):</strong> Kliknij prawym przyciskiem myszy na folder ➔
+       Właściwości ➔ Udostępnianie ➔ Udostępnianie zaawansowane.
+      </li>
+      <li>
+       <strong>Ukryty udział:</strong> Zaznacz "Udostępnij ten folder". W polu
+       <em>Nazwa udziału</em> wpisz <code>Backup$</code> (znak dolara ukryje go w sieci).
+      </li>
+      <li>
+       <strong>Uprawnienia:</strong> Kliknij przycisk <em>Uprawnienia</em>. Upewnij się, że grupa
+       <strong>Wszyscy (Everyone)</strong> ma zaznaczoną <strong>Pełną kontrolę</strong>. (Pamiętaj,
+       że prawdziwe bezpieczeństwo i tak zapewniają uprawnienia NTFS w zakładce Zabezpieczenia,
+       gdzie Administrator ma pełnię praw).
+      </li>
+     </ul>
+    </div>
+   </div>
+
+   <!-- KARTA 2: LINUX TOOLS -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 2: Narzędzia i Punkt Montowania (Linux)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Zainstalowanie pakietów obsługujących protokół Microsoftu oraz przygotowanie "drzwi" do
+      Windowsa.
+     </div>
+
+     <details class="theory-block">
+      <summary>Czym jest Punkt Montowania (Mount Point)?</summary>
+      <div class="theory-content">
+       <p>
+        W Windowsie, gdy podłączasz dysk sieciowy, dostaje on nową literę (np. <code>Z:\</code>). W
+        Linuxie nie ma liter dysków! Wszystko musi być podpięte do głównego drzewa katalogów
+        (zaczynającego się od <code>/</code>).
+       </p>
+       <p>
+        <strong>Punkt montowania</strong> to po prostu pusty folder w Linuxie. Kiedy "zamontujesz" w
+        nim udział z Windowsa, ten folder staje się magicznym portalem. Cokolwiek do niego wrzucisz,
+        fizycznie poleci kablem sieciowym na dysk Windowsa!
+       </p>
+      </div>
+     </details>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Zaktualizuj listę pakietów i zainstaluj narzędzia CIFS (Common Internet File System -
+       protokół Windowsa)</span
+      >
+      sudo apt update sudo apt install cifs-utils -y
+
+      <span class="cli-comment"
+       ># 2. Utwórz pusty katalog, który będzie naszym "portalem" (zwyczajowo robimy to w katalogu
+       /mnt)</span
+      >
+      sudo mkdir -p /mnt/backup
+     </div>
+    </div>
+   </div>
+
+   <!-- KARTA 3: MOUNT -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 3: Rzucanie mostu (Montowanie)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Połączenie pustego katalogu w Linuxie z udostępnionym folderem na Windowsie.
+     </div>
+
+     <p>
+      Teraz wykonamy najważniejszą komendę. Zastąp <code>192.168.1.10</code> adresem IP swojego
+      Windows Servera!
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Składnia: sudo mount -t cifs -o username=USER,password=HASLO //IP_SERWERA/UDZIAL
+       /PUNKT_MONTOWANIA</span
+      >
+      sudo mount -t cifs -o username=Administrator,password=ZAQ\!2wsx //192.168.1.10/Backup$
+      /mnt/backup
+     </div>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 Najczęstsze błędy (Ukośniki i Znaki Specjalne):</strong>
+      <ul style="margin-top: 10px">
+       <li>
+        <strong>Ukośniki:</strong> W Windowsie ścieżki sieciowe piszemy backslashem
+        (<code>\\192...</code>). W Linuxie <strong>ZAWSZE</strong> używamy zwykłego slasha
+        (<code>//192...</code>).
+       </li>
+       <li>
+        <strong>Wykrzyknik w haśle:</strong> Zauważyłeś backslash <code>\</code> przed wykrzyknikiem
+        w haśle <code>ZAQ\!2wsx</code>? W Linuxie wykrzyknik to znak specjalny (odwołuje się do
+        historii komend). Aby system potraktował go jako zwykłą literę hasła, musimy go "uciec"
+        (escape) dodając przed nim <code>\</code>.
+       </li>
+      </ul>
+     </div>
+
+     <ul class="task-list">
+      <li>
+       <strong>Wielki Test:</strong> Sprawdźmy, czy most działa! Będąc na Linuxie, stwórzmy plik w
+       naszym portalu:
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Wejdź do zamontowanego katalogu</span>
+      cd /mnt/backup
+
+      <span class="cli-comment"
+       ># Utwórz plik tekstowy (wymaga sudo, bo udział zamontował root)</span
+      >
+      sudo touch kopia_z_linuxa.txt sudo sh -c 'echo "Witaj Windowsie, tu Linux!" >
+      kopia_z_linuxa.txt'
+     </div>
+
+     <p>
+      <strong>Teraz przejdź na maszynę z Windows Serverem.</strong> Otwórz folder
+      <code>C:\Kopie_Linux</code>. Plik <code>kopia_z_linuxa.txt</code> powinien tam na Ciebie
+      czekać!
+     </p>
+    </div>
+   </div>
+
+   <!-- KARTA 4: SEKRET INŻYNIERA -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 4: Automatyzacja (fstab)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="card engineer-secret" style="border-top-color: #e84118; background-color: #fff5f5">
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Trwałość po restarcie</h4>
+      <p>
+       Komenda <code>mount</code> działa tylko do momentu wyłączenia komputera. Po restarcie Linuxa,
+       most zniknie! W prawdziwej pracy DevOpsa musimy sprawić, by udział montował się automatycznie
+       przy każdym starcie systemu.
+      </p>
+      <p>Służy do tego plik <strong>/etc/fstab</strong> (File System Table).</p>
+
+      <div class="cli-block">
+       <span class="cli-comment"># Otwórz plik fstab w edytorze nano</span>
+       sudo nano /etc/fstab
+      </div>
+
+      <p>
+       Na samym dole pliku dopisuje się linijkę (nie rób tego teraz, jeśli nie czujesz się pewnie,
+       bo błąd w tym pliku może uniemożliwić start Linuxa!):
+      </p>
+
+      <div class="cli-block" style="background-color: #2d3436; color: #f8f8f2">
+       <pre style="margin: 0; font-family: monospace; white-space: pre-wrap">
+//192.168.1.10/Backup$  /mnt/backup  cifs  username=Administrator,password=ZAQ!2wsx  0  0</pre
+       >
+      </div>
+
+      <p style="margin-top: 15px">
+       <em>Pro-Tip Bezpieczeństwa:</em> Wpisywanie hasła jawnym tekstem w pliku
+       <code>fstab</code> to zła praktyka. Profesjonaliści tworzą ukryty plik z poświadczeniami (np.
+       <code>/root/.smbcredentials</code>) i w fstabie odwołują się tylko do niego za pomocą opcji
+       <code>credentials=/root/.smbcredentials</code>.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="lab4-ssh-scp.html" class="course-btn">⬅️ Poprzedni: Lab 4 (SSH & SCP)</a>
+   <a
+    href="lab6-troubleshooting.html"
+    class="course-btn next"
+    style="background-color: #9c88ff; color: white"
+    >Następny: Lab 6 (Troubleshooting) ➡️</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

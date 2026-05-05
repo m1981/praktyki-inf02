@@ -1,0 +1,225 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB 4: Zdalne Dowodzenie</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   .int-border {
+    border-top-color: #9c88ff !important;
+   }
+   .int-tag {
+    background: rgba(156, 136, 255, 0.15) !important;
+    color: #9c88ff !important;
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>💻 LAB 4: Zdalne Dowodzenie</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zarządzanie Linuxem z poziomu Windowsa (SSH & SCP)
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <!-- TOPOLOGIA -->
+   <div
+    class="topology-box"
+    style="align-items: center; gap: 20px; flex-wrap: wrap; justify-content: space-between"
+   >
+    <div class="node windows">
+     <span class="node-icon">🪟</span>
+     <span class="node-name">Windows 10 / Server</span>
+     <span class="node-ip">Stacja Administratora</span>
+    </div>
+
+    <div
+     style="color: var(--text-muted); font-weight: bold; text-align: center; font-size: 0.85rem"
+    >
+     Port 22 (SSH)<br />
+     <span style="font-size: 1.5rem; color: #9c88ff">➔</span>
+    </div>
+
+    <div class="node linux">
+     <span class="node-icon">🐧</span>
+     <span class="node-name">Ubuntu Server</span>
+     <span class="node-ip">Serwer Headless</span>
+    </div>
+   </div>
+
+   <!-- KARTA 1: SSH -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 1: Przejęcie kontroli (SSH)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Zalogowanie się do terminala Linuxa bezpośrednio z Wiersza poleceń (CMD) w Windowsie.
+     </div>
+
+     <p>
+      W prawdziwej serwerowni serwery Linux nie mają podłączonych monitorów (nazywamy to pracą
+      <em>headless</em>). Zminimalizuj okno VirtualBoxa z Ubuntu – nie będzie Ci już potrzebne!
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Sprawdzenie IP:</strong> Upewnij się, że znasz adres IP swojego Ubuntu (np.
+       <code>192.168.1.20</code>).
+      </li>
+      <li>
+       <strong>Atak z Windowsa:</strong> Otwórz Wiersz poleceń (CMD) lub PowerShell na Windowsie i
+       wpisz:
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Składnia: ssh uzytkownik@adres_ip</span>
+      ssh administrator@192.168.1.20
+     </div>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 Pułapka (Odcisk palca):</strong>
+      Przy pierwszym połączeniu Windows zapyta Cię:
+      <em>"Are you sure you want to continue connecting (yes/no/[fingerprint])?"</em>. Musisz wpisać
+      pełne słowo <strong>yes</strong> i wcisnąć Enter. Jeśli wciśniesz samo "y", połączenie
+      zostanie odrzucone!
+     </div>
+
+     <p>
+      Po wpisaniu hasła (pamiętaj, że gwiazdki się nie pojawiają!), Twój windowsowy CMD zmieni się w
+      terminal Linuxa. Wpisz <code>ls</code> lub <code>pwd</code>, aby to udowodnić. Aby wrócić do
+      Windowsa, wpisz <code>exit</code>.
+     </p>
+    </div>
+   </div>
+
+   <!-- KARTA 2: SCP -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 2: Kurier sieciowy (SCP)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Przesłanie pliku z Windowsa na Linuxa bez użycia pendrive'a czy udostępniania folderów.
+     </div>
+
+     <p>
+      Protokół SSH służy nie tylko do wpisywania komend. Posiada wbudowanego "kuriera" o nazwie
+      <strong>SCP (Secure Copy)</strong>.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Przygotowanie paczki:</strong> Otwórz CMD w Windowsie (upewnij się, że nie jesteś
+       zalogowany po SSH do Linuxa!). Stwórzmy szybki plik tekstowy na pulpicie:
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Tworzymy plik na Windowsie</span>
+      cd Desktop echo "Witaj Linuxie, tu Windows!" > wiadomosc.txt
+     </div>
+
+     <ul class="task-list">
+      <li>
+       <strong>Wysyłka:</strong> Teraz wyślemy ten plik prosto do katalogu domowego (<code>~</code>)
+       na Ubuntu.
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Składnia: scp CO_WYSYŁAM DOKĄD_WYSYŁAM</span>
+      scp wiadomosc.txt administrator@192.168.1.20:~
+     </div>
+
+     <div class="golden-rule-box">
+      <strong>💡 Złota Rada Trenera (Dwukropek to świętość):</strong>
+      Zwróć uwagę na dwukropek <code>:</code> po adresie IP w komendzie SCP. Oddziela on adres
+      serwera od ścieżki na dysku. Znak <code>~</code> po dwukropku oznacza "wrzuć to do mojego
+      katalogu domowego".
+     </div>
+    </div>
+   </div>
+
+   <!-- KARTA 3: KLUCZE SSH -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 3: Magia DevOps (Logowanie bez hasła)</h3>
+     <span class="time-badge">Czas: 20 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Wygenerowanie pary kluczy kryptograficznych, aby logować się na serwer bez podawania
+      hasła.
+     </div>
+
+     <p>
+      Wpisywanie hasła za każdym razem jest męczące. Co gorsza, skrypty automatyzujące nie potrafią
+      wpisywać haseł! Rozwiązaniem są <strong>Klucze SSH</strong>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. NA WINDOWSIE: Wygeneruj parę kluczy (wciskaj Enter na wszystkie pytania, nie podawaj
+       hasła/passphrase)</span
+      >
+      ssh-keygen
+
+      <span class="cli-comment"
+       ># 2. NA WINDOWSIE: Wyślij swój klucz PUBLICZNY na Linuxa za pomocą SCP</span
+      >
+      scp .ssh\id_rsa.pub administrator@192.168.1.20:~/klucz_windowsa.pub
+
+      <span class="cli-comment"># 3. Zaloguj się na Linuxa (ostatni raz z hasłem!)</span>
+      ssh administrator@192.168.1.20
+
+      <span class="cli-comment"
+       ># 4. NA LINUXIE: Dodaj klucz Windowsa do listy zaufanych kluczy</span
+      >
+      mkdir -p ~/.ssh cat ~/klucz_windowsa.pub >> ~/.ssh/authorized_keys
+
+      <span class="cli-comment"># 5. Wyloguj się z Linuxa</span>
+      exit
+     </div>
+
+     <p>
+      <strong>Wielki Test:</strong> Będąc z powrotem w CMD na Windowsie, wpisz ponownie
+      <code>ssh administrator@192.168.1.20</code>. Jeśli wszystko zrobiłeś dobrze, system wpuści Cię
+      natychmiast, <strong>bez pytania o hasło!</strong>
+     </p>
+
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-top: 20px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Klucz do Chmury</h4>
+      <p>
+       Właśnie poznałeś najważniejszy mechanizm w nowoczesnym IT. Kiedy kupujesz serwer w chmurze
+       (AWS, Azure, Google Cloud), nikt nie daje Ci do niego hasła. Podczas tworzenia serwera
+       podajesz swój <strong>klucz publiczny</strong>, a chmura wstrzykuje go do pliku
+       <code>authorized_keys</code>. Dzięki temu tylko Ty (posiadacz klucza prywatnego) możesz się
+       tam dostać. Na tym mechanizmie opierają się też potężne narzędzia DevOps, takie jak
+       <strong>Ansible</strong>.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="lab3-zapora.html" class="course-btn">⬅️ Poprzedni: Lab 3 (Zapora)</a>
+   <a
+    href="lab5-smb-mount.html"
+    class="course-btn next"
+    style="background-color: #9c88ff; color: white"
+    >Następny: Lab 5 (Montowanie SMB) ➡️</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

@@ -1,0 +1,237 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB 6: Zaawansowany Troubleshooting</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   .int-border {
+    border-top-color: #9c88ff !important;
+   }
+   .int-tag {
+    background: rgba(156, 136, 255, 0.15) !important;
+    color: #9c88ff !important;
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🕵️‍♂️ LAB 6: Zaawansowany Troubleshooting</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Diagnozowanie usług sieciowych (PowerShell, Netcat i Logi)
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <!-- TOPOLOGIA -->
+   <div
+    class="topology-box"
+    style="align-items: center; gap: 20px; flex-wrap: wrap; justify-content: space-between"
+   >
+    <div class="node windows">
+     <span class="node-icon">🪟</span>
+     <span class="node-name">Windows Server</span>
+     <span class="node-ip">Port 80 (IIS) | Port 53 (DNS)</span>
+    </div>
+
+    <div
+     style="color: var(--text-muted); font-weight: bold; text-align: center; font-size: 0.85rem"
+    >
+     Skanowanie Portów (L4)<br />
+     <span style="font-size: 1.5rem; color: #9c88ff">↔</span>
+    </div>
+
+    <div class="node linux">
+     <span class="node-icon">🐧</span>
+     <span class="node-name">Ubuntu Server</span>
+     <span class="node-ip">Port 22 (SSH)</span>
+    </div>
+   </div>
+
+   <div class="goal-box">
+    Cel: Przestać polegać wyłącznie na komendzie PING. Nauczyć się sprawdzać, czy konkretna usługa
+    (np. strona WWW lub SSH) faktycznie działa i nas nasłuchuje.
+   </div>
+
+   <details class="theory-block">
+    <summary>Dlaczego PING kłamie? (Model OSI w praktyce)</summary>
+    <div class="theory-content">
+     <p>
+      Komenda <code>ping</code> działa w <strong>Warstwie 3 (Sieciowej)</strong> modelu OSI. Używa
+      protokołu ICMP. Jeśli ping działa, wiesz tylko tyle, że kable są podłączone, a adresy IP i
+      routing są poprawne.
+     </p>
+     <p>
+      Ale co, jeśli serwer WWW (IIS) na Windowsie się zawiesił? Ping nadal będzie działał! Aby
+      sprawdzić, czy usługa żyje, musimy "zapukać" do konkretnych drzwi w
+      <strong>Warstwie 4 (Transportowej)</strong> – czyli na konkretny
+      <strong>Port TCP/UDP</strong>.
+     </p>
+    </div>
+   </details>
+
+   <!-- KARTA 1: POWERSHELL -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 1: Pukanie z Windowsa (PowerShell)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W starym CMD używało się komendy <code>telnet</code>, ale dziś w Windowsie króluje
+      <strong>PowerShell</strong>. Ma on wbudowane potężne narzędzie do testowania sieci.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Zadanie:</strong> Sprawdźmy, czy na naszym Linuxie (np. <code>192.168.1.20</code>)
+       działa usługa SSH (Port 22).
+      </li>
+      <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na Windowsie i wpisz:</li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Składnia: Test-NetConnection -ComputerName IP -Port NUMER</span>
+      Test-NetConnection -ComputerName 192.168.1.20 -Port 22
+     </div>
+
+     <p>
+      Zwróć uwagę na ostatnią linijkę wyniku: <code>TcpTestSucceeded : True</code>. To oznacza, że
+      Linux żyje, usługa SSH działa, a zapora nie blokuje połączenia!
+     </p>
+    </div>
+   </div>
+
+   <!-- KARTA 2: NETCAT -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 2: Szwajcarski scyzoryk Linuxa (Netcat)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W świecie Linuxa absolutnym królem diagnozowania sieci jest program <code>nc</code> (Netcat).
+      Pozwala on wysyłać dowolne dane na dowolny port.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Zadanie A (Testowanie IIS):</strong> Sprawdźmy, czy Windows Server (np.
+       <code>192.168.1.10</code>) serwuje stronę WWW (Port 80 TCP).
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Flagi: -v (verbose/gadatliwy), -z (zero-I/O, tylko skanuj port, nie wysyłaj danych)</span
+      >
+      nc -vz 192.168.1.10 80
+     </div>
+     <p>
+      Wynik <code>Connection to 192.168.1.10 80 port [tcp/http] succeeded!</code> oznacza sukces.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Zadanie B (Testowanie DNS):</strong> Usługa DNS działa inaczej – używa protokołu
+       <strong>UDP</strong> na porcie 53. Musimy dodać flagę <code>-u</code>.
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Flaga -u oznacza skanowanie UDP</span>
+      nc -vzu 192.168.1.10 53
+     </div>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 Diagnoza błędów (Timeout vs Refused):</strong>
+      Jeśli port nie odpowiada, Netcat wyrzuci jeden z dwóch błędów. Jako inżynier musisz znać
+      różnicę:
+      <ul style="margin-top: 5px; margin-bottom: 0">
+       <li>
+        <strong>Connection Refused (Odmowa połączenia):</strong> Pakiety dotarły do serwera, ale
+        serwer odpowiedział "Nie mam tu takiej usługi".
+        <em>Rozwiązanie: Uruchom usługę (np. włącz IIS).</em>
+       </li>
+       <li>
+        <strong>Connection Timeout (Upłynął limit czasu):</strong> Pakiety wpadły w czarną dziurę.
+        Serwer w ogóle nie odpowiedział.
+        <em>Rozwiązanie: Sprawdź Zaporę (Firewall) lub routing!</em>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+
+   <!-- KARTA 3: LOGI -->
+   <div class="lab-card int-border">
+    <div class="lab-header">
+     <h3>Krok 3: Podglądanie Matrixa (Czytanie Logów)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Prawdziwy administrator nie zgaduje, co się zepsuło. Administrator czyta logi (dzienniki
+      zdarzeń). W Linuxie logi systemowe znajdują się w katalogu <code>/var/log/</code>.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Zadanie:</strong> Będziemy obserwować na żywo, jak ktoś próbuje włamać się na naszego
+       Linuxa po SSH.
+      </li>
+      <li>
+       <strong>Na Linuxie:</strong> Użyjemy komendy <code>tail</code> z flagą
+       <code>-f</code> (follow), która na bieżąco wyświetla nowe linijki dopisywane do pliku.
+      </li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Obserwuj logi autoryzacji na żywo (wymaga sudo!)</span>
+      sudo tail -f /var/log/auth.log
+     </div>
+
+     <ul class="task-list">
+      <li>
+       <strong>Na Windowsie:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa, podając
+       <strong>błędne hasło</strong>. <br /><code>ssh administrator@192.168.1.20</code>
+      </li>
+      <li>
+       <strong>Obserwuj Linuxa:</strong> Zobaczysz, jak na czarnym ekranie natychmiast pojawia się
+       nowa linijka: <br /><code style="color: #d63031"
+        >Failed password for administrator from 192.168.1.10 port 50321 ssh2</code
+       >.
+      </li>
+     </ul>
+
+     <div class="golden-rule-box">
+      <strong>💡 Złota Rada Trenera (Wyjście z Matrixa):</strong>
+      Komenda <code>tail -f</code> działa w nieskończoność, czekając na nowe logi. Aby z niej wyjść
+      i odzyskać kontrolę nad terminalem, wciśnij <strong>Ctrl + C</strong>.
+     </div>
+    </div>
+   </div>
+
+   <!-- PODSUMOWANIE -->
+   <div class="conclusion-box" style="background: rgba(156, 136, 255, 0.1); border-color: #9c88ff">
+    <div class="conclusion-icon">🏆</div>
+    <div class="conclusion-text">
+     <strong>Gratulacje, Inżynierze!</strong>
+     Ukończyłeś najbardziej zaawansowany moduł w tym kursie. Potrafisz już nie tylko konfigurować
+     usługi, ale też zdalnie nimi zarządzać, łączyć systemy plików i diagnozować problemy na
+     poziomie portów i logów. To umiejętności, które wyróżniają świetnych DevOpsów i Administratorów
+     na rynku pracy.
+    </div>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="lab5-smb-mount.html" class="course-btn">⬅️ Poprzedni: Lab 5 (Montowanie SMB)</a>
+   <a href="../index.html" class="course-btn next" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

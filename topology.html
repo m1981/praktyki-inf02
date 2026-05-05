@@ -1,0 +1,311 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa Architektury: Złoty Standard</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   /* Style dla tabel topologii */
+   .topology-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+   }
+   .topology-table th {
+    background-color: #2d3436;
+    color: #ffffff;
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 600;
+   }
+   .topology-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dfe6e9;
+    background-color: #ffffff;
+    vertical-align: top;
+   }
+   .topology-table tr:last-child td {
+    border-bottom: none;
+   }
+   .topology-table tr:hover td {
+    background-color: #f8f9fa;
+   }
+   .ip-highlight {
+    font-family: monospace;
+    background: #e3f2fd;
+    color: #0984e3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+   }
+   .service-badge {
+    display: inline-block;
+    background: #00b894;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin: 2px;
+   }
+   .service-badge.pending {
+    background: #b2bec3;
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🗺️ Mapa Architektury (Złoty Standard)</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Jedno Źródło Prawdy o Twoim środowisku w VirtualBox
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div class="golden-rule-box" style="border-left-color: #0984e3; background: #e3f2fd">
+    <strong>💡 Złota Rada Trenera (Dlaczego to ważne?):</strong>
+    W prawdziwym IT nie zmieniamy adresów IP co 5 minut. Budujemy środowisko raz, a dobrze. Zanim
+    zaczniesz jakikolwiek Lab, sprawdź w tej tabeli, na jakim etapie jesteśmy.
+    <strong>Karta 1 (NAT)</strong> daje Ci Internet.
+    <strong>Karta 2 (Sieć Wewnętrzna: INF02-LAN)</strong> to nasza prywatna piaskownica.
+   </div>
+
+   <!-- TYDZIEŃ 2 -->
+   <div class="lab-card" style="border-top-color: #e17055">
+    <div class="lab-header">
+     <h3>Faza 1: Tydzień 2 (Linux SysOps)</h3>
+     <span class="time-badge">Start</span>
+    </div>
+    <div class="lab-body">
+     <p>Uczymy się podstaw Linuxa. Windowsy są wyłączone, żeby nie zużywać RAM-u.</p>
+     <table class="topology-table">
+      <thead>
+       <tr>
+        <th>Maszyna (VM)</th>
+        <th>Karta 1 (NAT - Internet)</th>
+        <th>Karta 2 (Internal: INF02-LAN)</th>
+        <th>Aktywne Usługi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td><strong>🐧 Ubuntu Server</strong></td>
+        <td>DHCP (np. <span class="ip-highlight">10.0.2.15</span>)</td>
+        <td>IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama: <em>Brak</em></td>
+        <td><span class="service-badge">SSH</span></td>
+       </tr>
+       <tr>
+        <td><strong>🪟 Win Server 2022</strong></td>
+        <td colspan="2" style="text-align: center; color: #b2bec3"><em>Maszyna wyłączona</em></td>
+        <td><span class="service-badge pending">Czeka</span></td>
+       </tr>
+       <tr>
+        <td><strong>💻 Windows 10</strong></td>
+        <td colspan="2" style="text-align: center; color: #b2bec3"><em>Maszyna wyłączona</em></td>
+        <td><span class="service-badge pending">Czeka</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+
+   <!-- TYDZIEŃ 3 -->
+   <div class="lab-card" style="border-top-color: #0984e3">
+    <div class="lab-header">
+     <h3>Faza 2: Tydzień 3 (Serce Firmy - AD)</h3>
+     <span class="time-badge">Rozbudowa</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Uruchamiamy Windows Server. Stawiamy domenę <code>zs1.local</code> i podłączamy stację
+      roboczą.
+     </p>
+     <table class="topology-table">
+      <thead>
+       <tr>
+        <th>Maszyna (VM)</th>
+        <th>Karta 1 (NAT - Internet)</th>
+        <th>Karta 2 (Internal: INF02-LAN)</th>
+        <th>Aktywne Usługi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td><strong>🐧 Ubuntu Server</strong></td>
+        <td>DHCP</td>
+        <td>IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama: <em>Brak</em></td>
+        <td><span class="service-badge">SSH</span></td>
+       </tr>
+       <tr>
+        <td><strong>🪟 Win Server 2022</strong></td>
+        <td>DHCP</td>
+        <td>
+         IP: <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <span class="ip-highlight">127.0.0.1</span>
+        </td>
+        <td>
+         <span class="service-badge">AD DS</span> <span class="service-badge">DNS</span>
+         <span class="service-badge">SMB (Udziały)</span>
+        </td>
+       </tr>
+       <tr>
+        <td><strong>💻 Windows 10</strong></td>
+        <td><em>Wyłączona</em></td>
+        <td>
+         IP: <span class="ip-highlight">192.168.10.30/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <span class="ip-highlight">192.168.10.10</span>
+        </td>
+        <td><span class="service-badge">W Domenie</span> <span class="service-badge">GPO</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+
+   <!-- TYDZIEŃ 4 -->
+   <div class="lab-card" style="border-top-color: #00b894">
+    <div class="lab-header">
+     <h3>Faza 3: Tydzień 4 (Krwiobieg - DHCP & RRAS)</h3>
+     <span class="time-badge">Automatyzacja</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Windows Server staje się routerem (NAT) i serwerem WWW. Windows 10 przechodzi na automatyczne
+      IP.
+     </p>
+     <table class="topology-table">
+      <thead>
+       <tr>
+        <th>Maszyna (VM)</th>
+        <th>Karta 1 (NAT - Internet)</th>
+        <th>Karta 2 (Internal: INF02-LAN)</th>
+        <th>Aktywne Usługi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td><strong>🐧 Ubuntu Server</strong></td>
+        <td><em>Wyłączona!</em> (Test RRAS)</td>
+        <td>
+         IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama:
+         <span class="ip-highlight">192.168.10.10</span><br />DNS:
+         <span class="ip-highlight">192.168.10.10</span>
+        </td>
+        <td><span class="service-badge">SSH</span></td>
+       </tr>
+       <tr>
+        <td><strong>🪟 Win Server 2022</strong></td>
+        <td>DHCP</td>
+        <td>
+         IP: <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <span class="ip-highlight">127.0.0.1</span>
+        </td>
+        <td>
+         <span class="service-badge">AD DS</span> <span class="service-badge">DNS</span>
+         <span class="service-badge">DHCP</span> <span class="service-badge">RRAS (NAT)</span>
+         <span class="service-badge">IIS</span>
+        </td>
+       </tr>
+       <tr>
+        <td><strong>💻 Windows 10</strong></td>
+        <td><em>Wyłączona</em></td>
+        <td><strong>DHCP</strong> (Pobiera IP, Bramę .10 i DNS .10)</td>
+        <td><span class="service-badge">W Domenie</span></td>
+       </tr>
+      </tbody>
+     </table>
+     <div class="pitfall-box danger" style="margin-top: 15px">
+      <strong>🚨 Uwaga na Ubuntu:</strong> W tej fazie wyłączamy pierwszą kartę (NAT) w Ubuntu! Od
+      teraz Linux musi wychodzić do Internetu przez nasz Windows Server (Brama: 192.168.10.10).
+     </div>
+    </div>
+   </div>
+
+   <!-- TYDZIEŃ 5 -->
+   <div class="lab-card" style="border-top-color: #9c88ff">
+    <div class="lab-header">
+     <h3>Faza 4: Tydzień 5 (Integracja Win-Lin)</h3>
+     <span class="time-badge">Finał</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Wszystko działa jako jeden organizm. Testujemy współpracę systemów i rozwiązujemy problemy.
+     </p>
+     <table class="topology-table">
+      <thead>
+       <tr>
+        <th>Maszyna (VM)</th>
+        <th>Karta 1 (NAT - Internet)</th>
+        <th>Karta 2 (Internal: INF02-LAN)</th>
+        <th>Aktywne Usługi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td><strong>🐧 Ubuntu Server</strong></td>
+        <td><em>Wyłączona</em></td>
+        <td>
+         IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama:
+         <span class="ip-highlight">192.168.10.10</span><br />DNS:
+         <span class="ip-highlight">192.168.10.10</span>
+        </td>
+        <td>
+         <span class="service-badge">SSH</span>
+         <span class="service-badge">SMB Mount (/mnt/backup)</span>
+        </td>
+       </tr>
+       <tr>
+        <td><strong>🪟 Win Server 2022</strong></td>
+        <td>DHCP</td>
+        <td>
+         IP: <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <span class="ip-highlight">127.0.0.1</span>
+        </td>
+        <td>
+         <span class="service-badge">AD DS</span> <span class="service-badge">DNS</span>
+         <span class="service-badge">DHCP</span> <span class="service-badge">RRAS</span>
+         <span class="service-badge">IIS</span>
+         <span class="service-badge" style="background: #d63031">Firewall (ICMP)</span>
+        </td>
+       </tr>
+       <tr>
+        <td><strong>💻 Windows 10</strong></td>
+        <td><em>Wyłączona</em></td>
+        <td><strong>DHCP</strong></td>
+        <td>
+         <span class="service-badge">W Domenie</span>
+         <span class="service-badge">PowerShell (Test-NetConnection)</span>
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+
+   <div class="card engineer-secret" style="border-top-color: #2d3436; background-color: #f8f9fa">
+    <h4 style="color: #2d3436; margin-top: 0">
+     🕵️‍♂️ Sekret Inżyniera: State Drift (Rozjazd Konfiguracji)
+    </h4>
+    <p>
+     W dużych firmach (np. Netflix, Spotify) nikt nie konfiguruje serwerów ręcznie, bo ludzie
+     popełniają błędy i zapominają adresów IP. Używa się narzędzi takich jak
+     <strong>Terraform</strong> czy <strong>Ansible</strong> (Infrastructure as Code), które czytają
+     plik konfiguracyjny i same ustawiają sieć. Dopóki nie poznasz tych narzędzi, ta strona HTML
+     jest Twoim "Terraformem". Trzymaj się jej ściśle!
+    </p>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="../index.html" class="course-btn" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>
