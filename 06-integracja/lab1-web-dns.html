@@ -1,134 +1,137 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LAB 1: Gdzie jest moja strona?</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>🌐 LAB 1: Gdzie jest moja strona?</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem">
-                Integracja usług: Windows Server + Linux
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB 1: Gdzie jest moja strona?</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>🌐 LAB 1: Gdzie jest moja strona?</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Integracja usług: Windows Server + Linux
+   </p>
+  </header>
 
-        <main class="lab-container">
-            <!-- TOPOLOGIA -->
-            <div class="topology-box" style="align-items: center; gap: 30px; flex-wrap: wrap">
-                <div class="node windows">
-                    <span class="node-icon">🪟</span>
-                    <span class="node-name">Windows Server 2022</span>
-                    <span class="node-ip">Serwer (IIS + DNS)</span>
-                </div>
+  <main class="lab-container">
+   <!-- TOPOLOGIA -->
+   <div class="topology-box" style="align-items: center; gap: 30px; flex-wrap: wrap">
+    <div class="node windows">
+     <span class="node-icon">🪟</span>
+     <span class="node-name">Windows Server 2022</span>
+     <span class="node-ip">Serwer (IIS + DNS)</span>
+    </div>
 
-                <div style="color: var(--text-muted); font-weight: bold; text-align: center">
-                    ZAPYTANIE HTTP/DNS<br />
-                    <span style="font-size: 1.5rem; color: var(--success-color)">➔</span>
-                </div>
+    <div style="color: var(--text-muted); font-weight: bold; text-align: center">
+     ZAPYTANIE HTTP/DNS<br />
+     <span style="font-size: 1.5rem; color: var(--success-color)">➔</span>
+    </div>
 
-                <div class="node linux">
-                    <span class="node-icon">🐧</span>
-                    <span class="node-name">Ubuntu Desktop</span>
-                    <span class="node-ip">Klient (Przeglądarka)</span>
-                </div>
-            </div>
+    <div class="node linux">
+     <span class="node-icon">🐧</span>
+     <span class="node-name">Ubuntu Desktop</span>
+     <span class="node-ip">Klient (Przeglądarka)</span>
+    </div>
+   </div>
 
-            <!-- KARTA LABORATORIUM -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Wielki Test Połączenia</h3>
-                    <span class="time-badge">Czas: 45 min</span>
-                </div>
-                <div class="lab-body">
-                    <div class="goal-box">
-                        Cel: Udowodnić, że Linux potrafi korzystać z usług Web i DNS hostowanych na
-                        Windows Server.
-                    </div>
+   <!-- KARTA LABORATORIUM -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Wielki Test Połączenia</h3>
+     <span class="time-badge">Czas: 45 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Udowodnić, że Linux potrafi korzystać z usług Web i DNS hostowanych na Windows Server.
+     </div>
 
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Instalacja Ról (Windows)</strong>
-                            <p>
-                                W Menedżerze Serwera zainstaluj dwie role:
-                                <strong>Serwer DNS</strong> oraz
-                                <strong>Serwer sieci Web (IIS)</strong>.
-                            </p>
-                        </li>
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Instalacja Ról (Windows)</strong>
+       <p>
+        W Menedżerze Serwera zainstaluj dwie role:
+        <strong>Serwer DNS</strong> oraz <strong>Serwer sieci Web (IIS)</strong>.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 2: Konfiguracja DNS (Windows)</strong>
-                            <p>
-                                Otwórz przystawkę DNS. Utwórz nową
-                                <em>Strefę wyszukiwania do przodu</em> o nazwie
-                                <code>egzamin.local</code>. Wewnątrz strefy dodaj nowy
-                                <strong>Rekord A (Host)</strong> o nazwie <code>www</code>,
-                                wskazujący na adres IP tego Windows Servera.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 2: Konfiguracja DNS (Windows)</strong>
+       <p>
+        Otwórz przystawkę DNS. Utwórz nową
+        <em>Strefę wyszukiwania do przodu</em> o nazwie <code>egzamin.local</code>. Wewnątrz strefy
+        dodaj nowy <strong>Rekord A (Host)</strong> o nazwie <code>www</code>, wskazujący na adres
+        IP tego Windows Servera.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 3: Konfiguracja IIS (Windows)</strong>
-                            <p>
-                                Utwórz folder <code>C:\www</code> i stwórz w nim plik
-                                <code>index.html</code> z dowolnym tekstem. Otwórz Menedżer IIS,
-                                dodaj nową witrynę wskazującą na ten folder. W oknie
-                                <strong>Wiązania (Bindings)</strong> w polu
-                                <em>Nazwa hosta</em> wpisz koniecznie:
-                                <code>www.egzamin.local</code>.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 3: Konfiguracja IIS (Windows)</strong>
+       <p>
+        Utwórz folder <code>C:\www</code> i stwórz w nim plik <code>index.html</code> z dowolnym
+        tekstem. Otwórz Menedżer IIS, dodaj nową witrynę wskazującą na ten folder. W oknie
+        <strong>Wiązania (Bindings)</strong> w polu <em>Nazwa hosta</em> wpisz koniecznie:
+        <code>www.egzamin.local</code>.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 4: Konfiguracja Sieci Klienta (Linux)</strong>
-                            <p>
-                                Na Ubuntu wejdź w ustawienia karty sieciowej (lub użyj Netplan).
-                                Zmień adres <strong>Serwera DNS</strong> na adres IP Twojego Windows
-                                Servera. Zapisz i zrestartuj połączenie sieciowe.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 4: Konfiguracja Sieci Klienta (Linux)</strong>
+       <p>
+        Na Ubuntu wejdź w ustawienia karty sieciowej (lub użyj Netplan). Zmień adres
+        <strong>Serwera DNS</strong> na adres IP Twojego Windows Servera. Zapisz i zrestartuj
+        połączenie sieciowe.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 5: Wielki Test (Linux)</strong>
-                            <p>
-                                Otwórz przeglądarkę Firefox na Ubuntu i wpisz w pasek adresu:
-                                <code>http://www.egzamin.local</code>. Strona powinna się załadować!
-                            </p>
-                        </li>
-                    </ul>
+      <li>
+       <strong>Krok 5: Wielki Test (Linux)</strong>
+       <p>
+        Otwórz przeglądarkę Firefox na Ubuntu i wpisz w pasek adresu:
+        <code>http://www.egzamin.local</code>. Strona powinna się załadować!
+       </p>
+      </li>
+     </ul>
 
-                    <!-- HACZYKI EGZAMINACYJNE -->
-                    <div class="pitfall-box danger">
-                        <strong>🚨 HACZYKI EGZAMINACYJNE (Arkusze 24.01, 25.01):</strong>
-                        <ul style="margin-top: 10px">
-                            <li>
-                                <strong>Zapora (Firewall):</strong> Strona się nie ładuje (Timeout)?
-                                Windows domyślnie blokuje ruch z zewnątrz! Musisz wejść w
-                                <code>wf.msc</code> na Windowsie i utworzyć regułę przychodzącą
-                                zezwalającą na ruch na porcie <strong>80 (TCP)</strong>.
-                            </li>
-                            <li>
-                                <strong>Uprawnienia NTFS:</strong> Widzisz błąd 401/403 (Brak
-                                dostępu) w przeglądarce? Sprawdź, czy folder <code>C:\www</code> ma
-                                w zakładce Zabezpieczenia dodane uprawnienia "Odczyt" dla grupy
-                                <strong>Użytkownicy</strong> (lub IIS_IUSRS).
-                            </li>
-                        </ul>
-                    </div>
+     <!-- HACZYKI EGZAMINACYJNE -->
+     <div class="pitfall-box danger">
+      <strong>🚨 HACZYKI EGZAMINACYJNE (Arkusze 24.01, 25.01):</strong>
+      <ul style="margin-top: 10px">
+       <li>
+        <strong>Zapora (Firewall):</strong> Strona się nie ładuje (Timeout)? Windows domyślnie
+        blokuje ruch z zewnątrz! Musisz wejść w <code>wf.msc</code> na Windowsie i utworzyć regułę
+        przychodzącą zezwalającą na ruch na porcie <strong>80 (TCP)</strong>.
+       </li>
+       <li>
+        <strong>Uprawnienia NTFS:</strong> Widzisz błąd 401/403 (Brak dostępu) w przeglądarce?
+        Sprawdź, czy folder <code>C:\www</code> ma w zakładce Zabezpieczenia dodane uprawnienia
+        "Odczyt" dla grupy <strong>Użytkownicy</strong> (lub IIS_IUSRS).
+       </li>
+      </ul>
+     </div>
 
-                    <!-- PRO TIP -->
-                    <div class="golden-rule-box ubu-purple">
-                        <strong>💡 Pro-Tip od DevOpsa:</strong>
-                        Zamiast klikać w przeglądarkę, otwórz terminal na Ubuntu i wpisz
-                        <code>curl -v http://www.egzamin.local</code>. Zobaczysz dokładnie, czy
-                        problem leży w DNS (nie potrafi rozwiązać nazwy), czy w zaporze (brak
-                        połączenia), czy w uprawnieniach (kod HTTP 403).
-                    </div>
-                </div>
-            </div>
-        </main>
+     <!-- PRO TIP -->
+     <div class="golden-rule-box ubu-purple">
+      <strong>💡 Pro-Tip od DevOpsa:</strong>
+      Zamiast klikać w przeglądarkę, otwórz terminal na Ubuntu i wpisz
+      <code>curl -v http://www.egzamin.local</code>. Zobaczysz dokładnie, czy problem leży w DNS
+      (nie potrafi rozwiązać nazwy), czy w zaporze (brak połączenia), czy w uprawnieniach (kod HTTP
+      403).
+     </div>
+    </div>
+   </div>
+  </main>
 
-        <script src="../menu.js"></script>
-    </body>
+  <div class="course-nav">
+   <a href="index.html" class="course-btn">⬅️ Wróć do Filaru 6</a>
+   <a
+    href="lab2-routing.html"
+    class="course-btn next"
+    style="background-color: #9c88ff; color: white"
+    >Następny: Lab 2 (Routing) ➡️</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
 </html>
