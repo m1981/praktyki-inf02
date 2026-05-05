@@ -84,7 +84,7 @@
 
      <ul class="task-list">
       <li>
-       <strong>Zadanie:</strong> Sprawdźmy, czy na naszym Linuxie (np. <code>192.168.1.20</code>)
+       <strong>Zadanie:</strong> Sprawdźmy, czy na naszym Linuxie (np. <code>192.168.10.20</code>)
        działa usługa SSH (Port 22).
       </li>
       <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na Windowsie i wpisz:</li>
@@ -92,7 +92,7 @@
 
      <div class="cli-block">
       <span class="cli-comment"># Składnia: Test-NetConnection -ComputerName IP -Port NUMER</span>
-      Test-NetConnection -ComputerName 192.168.1.20 -Port 22
+      Test-NetConnection -ComputerName 192.168.10.20 -Port 22
      </div>
 
      <p>
@@ -117,7 +117,7 @@
      <ul class="task-list">
       <li>
        <strong>Zadanie A (Testowanie IIS):</strong> Sprawdźmy, czy Windows Server (np.
-       <code>192.168.1.10</code>) serwuje stronę WWW (Port 80 TCP).
+       <code>192.168.10.10</code>) serwuje stronę WWW (Port 80 TCP).
       </li>
      </ul>
 
@@ -125,10 +125,10 @@
       <span class="cli-comment"
        ># Flagi: -v (verbose/gadatliwy), -z (zero-I/O, tylko skanuj port, nie wysyłaj danych)</span
       >
-      nc -vz 192.168.1.10 80
+      nc -vz 192.168.10.10 80
      </div>
      <p>
-      Wynik <code>Connection to 192.168.1.10 80 port [tcp/http] succeeded!</code> oznacza sukces.
+      Wynik <code>Connection to 192.168.10.10 80 port [tcp/http] succeeded!</code> oznacza sukces.
      </p>
 
      <ul class="task-list">
@@ -140,7 +140,7 @@
 
      <div class="cli-block">
       <span class="cli-comment"># Flaga -u oznacza skanowanie UDP</span>
-      nc -vzu 192.168.1.10 53
+      nc -vzu 192.168.10.10 53
      </div>
 
      <div class="pitfall-box danger">
@@ -194,12 +194,12 @@
      <ul class="task-list">
       <li>
        <strong>Na Windowsie:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa, podając
-       <strong>błędne hasło</strong>. <br /><code>ssh administrator@192.168.1.20</code>
+       <strong>błędne hasło</strong>. <br /><code>ssh administrator@192.168.10.20</code>
       </li>
       <li>
        <strong>Obserwuj Linuxa:</strong> Zobaczysz, jak na czarnym ekranie natychmiast pojawia się
        nowa linijka: <br /><code style="color: #d63031"
-        >Failed password for administrator from 192.168.1.10 port 50321 ssh2</code
+        >Failed password for administrator from 192.168.10.10 port 50321 ssh2</code
        >.
       </li>
      </ul>

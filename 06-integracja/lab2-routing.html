@@ -1,195 +1,167 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LAB 2: Windows jako domowy router</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>🌐 LAB 2: Windows jako domowy router</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem">
-                Konfiguracja usługi RRAS (NAT)
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB 2: Windows jako domowy router</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>🌐 LAB 2: Windows jako domowy router</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">Konfiguracja usługi RRAS (NAT)</p>
+  </header>
 
-        <main class="lab-container">
-            <!-- TOPOLOGIA -->
-            <div
-                class="topology-box"
-                style="
-                    align-items: center;
-                    gap: 20px;
-                    flex-wrap: wrap;
-                    justify-content: space-between;
-                "
-            >
-                <div class="node isp">
-                    <span class="node-icon">☁️</span>
-                    <span class="node-name">Internet</span>
-                    <span class="node-ip">8.8.8.8</span>
-                </div>
+  <main class="lab-container">
+   <!-- TOPOLOGIA -->
+   <div
+    class="topology-box"
+    style="align-items: center; gap: 20px; flex-wrap: wrap; justify-content: space-between"
+   >
+    <div class="node isp">
+     <span class="node-icon">☁️</span>
+     <span class="node-name">Internet</span>
+     <span class="node-ip">8.8.8.8</span>
+    </div>
 
-                <div
-                    style="
-                        color: var(--text-muted);
-                        font-weight: bold;
-                        text-align: center;
-                        font-size: 0.85rem;
-                    "
-                >
-                    WAN<br />
-                    <span style="font-size: 1.5rem; color: var(--isp-color)">↔</span>
-                </div>
+    <div
+     style="color: var(--text-muted); font-weight: bold; text-align: center; font-size: 0.85rem"
+    >
+     WAN<br />
+     <span style="font-size: 1.5rem; color: var(--isp-color)">↔</span>
+    </div>
 
-                <div class="node nat">
-                    <span class="node-icon">🪟</span>
-                    <span class="node-name">Windows Server</span>
-                    <span class="node-ip">LAN: 10.0.0.1</span>
-                </div>
+    <div class="node nat">
+     <span class="node-icon">🪟</span>
+     <span class="node-name">Windows Server</span>
+     <span class="node-ip">LAN: 192.168.10.10</span>
+    </div>
 
-                <div
-                    style="
-                        color: var(--text-muted);
-                        font-weight: bold;
-                        text-align: center;
-                        font-size: 0.85rem;
-                    "
-                >
-                    LAN<br />
-                    <span style="font-size: 1.5rem; color: var(--success-color)">↔</span>
-                </div>
+    <div
+     style="color: var(--text-muted); font-weight: bold; text-align: center; font-size: 0.85rem"
+    >
+     LAN<br />
+     <span style="font-size: 1.5rem; color: var(--success-color)">↔</span>
+    </div>
 
-                <div class="node linux">
-                    <span class="node-icon">🐧</span>
-                    <span class="node-name">Ubuntu Desktop</span>
-                    <span class="node-ip">LAN: 10.0.0.2</span>
-                </div>
-            </div>
+    <div class="node linux">
+     <span class="node-icon">🐧</span>
+     <span class="node-name">Ubuntu Desktop</span>
+     <span class="node-ip">LAN: 192.168.10.20</span>
+    </div>
+   </div>
 
-            <!-- KARTA LABORATORIUM -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Routing i Translacja Adresów</h3>
-                    <span class="time-badge">Czas: 45 min</span>
-                </div>
-                <div class="lab-body">
-                    <div class="goal-box">
-                        Cel: Skonfigurować usługę RRAS (NAT), aby Linux mógł połączyć się z
-                        Internetem przez Windows Server.
-                    </div>
+   <!-- KARTA LABORATORIUM -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Routing i Translacja Adresów</h3>
+     <span class="time-badge">Czas: 45 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Skonfigurować usługę RRAS (NAT), aby Linux mógł połączyć się z Internetem przez Windows
+      Server.
+     </div>
 
-                    <div
-                        class="golden-rule-box"
-                        style="border-left-color: #d63031; background: #ffefef; margin-bottom: 20px"
-                    >
-                        <strong>🌐 Pre-flight Check (VirtualBox - Zmiana Architektury!):</strong>
-                        Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox musisz mieć
-                        włączone <strong>dwie karty sieciowe</strong>:
-                        <ul style="margin-top: 5px; margin-bottom: 0">
-                            <li>
-                                <strong>Adapter 1 (LAN):</strong> Internal Network (Sieć wewnętrzna)
-                                - <em>połączenie z uczniami</em>.
-                            </li>
-                            <li>
-                                <strong>Adapter 2 (WAN):</strong> NAT -
-                                <em>wyjście do prawdziwego Internetu</em>.
-                            </li>
-                        </ul>
-                        Windows 10 zostaje bez zmian (tylko Internal Network).
-                    </div>
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Dwie karty sieciowe (Multihoming)</strong>
-                            <p>
-                                Upewnij się, że Windows Server ma
-                                <strong>dwie karty sieciowe</strong>. Karta 1 (WAN) ma dostęp do
-                                Internetu. Karta 2 (LAN) musi mieć ustawiony statyczny adres IP, np.
-                                <code>10.0.0.1</code>. <strong>Ważne:</strong> Karta LAN nie może
-                                mieć ustawionej bramy domyślnej!
-                            </p>
-                        </li>
+     <div
+      class="golden-rule-box"
+      style="border-left-color: #d63031; background: #ffefef; margin-bottom: 20px"
+     >
+      <strong>🌐 Pre-flight Check (Weryfikacja Architektury):</strong>
+      Upewnij się, że Twój Windows Server nadal ma włączone
+      <strong>dwie karty sieciowe</strong> (tak jak ustawiliśmy to na początku kursu):
+      <ul style="margin-top: 5px; margin-bottom: 0">
+       <li><strong>Adapter 1 (WAN):</strong> NAT - <em>wyjście do prawdziwego Internetu</em>.</li>
+       <li>
+        <strong>Adapter 2 (LAN):</strong> Internal Network (<code>INF02-LAN</code>) -
+        <em>połączenie z Linuxem i Windows 10</em>.
+       </li>
+      </ul>
+     </div>
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Dwie karty sieciowe (Multihoming)</strong>
+       <p>
+        Upewnij się, że Windows Server ma
+        <strong>dwie karty sieciowe</strong>. Karta 1 (WAN) ma dostęp do Internetu. Karta 2 (LAN)
+        musi mieć ustawiony statyczny adres IP, np. <code>192.168.10.10</code>.
+        <strong>Ważne:</strong> Karta LAN nie może mieć ustawionej bramy domyślnej!
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 2: Instalacja Roli RRAS</strong>
-                            <p>
-                                W Menedżerze Serwera dodaj rolę:
-                                <strong>Dostęp zdalny</strong> (Remote Access), a w jej szczegółach
-                                zaznacz <strong>Routing</strong>.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 2: Instalacja Roli RRAS</strong>
+       <p>
+        W Menedżerze Serwera dodaj rolę:
+        <strong>Dostęp zdalny</strong> (Remote Access), a w jej szczegółach zaznacz
+        <strong>Routing</strong>.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 3: Konfiguracja NAT</strong>
-                            <p>
-                                Otwórz przystawkę
-                                <em>Routing i dostęp zdalny</em> (<code>rrasmgmt.msc</code>).
-                                Kliknij prawym przyciskiem myszy na nazwę serwera i wybierz
-                                <strong>Konfiguruj i włącz...</strong>. W kreatorze wybierz
-                                <strong>Translacja adresów sieciowych (NAT)</strong>. Następnie
-                                wskaż Kartę 1 (WAN) jako interfejs publiczny podłączony do
-                                Internetu.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 3: Konfiguracja NAT</strong>
+       <p>
+        Otwórz przystawkę
+        <em>Routing i dostęp zdalny</em> (<code>rrasmgmt.msc</code>). Kliknij prawym przyciskiem
+        myszy na nazwę serwera i wybierz <strong>Konfiguruj i włącz...</strong>. W kreatorze wybierz
+        <strong>Translacja adresów sieciowych (NAT)</strong>. Następnie wskaż Kartę 1 (WAN) jako
+        interfejs publiczny podłączony do Internetu.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 4: Konfiguracja Klienta (Linux)</strong>
-                            <p>
-                                Na Ubuntu ustaw statyczny adres IP z tej samej podsieci, np.
-                                <code>10.0.0.2</code>. Jako
-                                <strong>Bramę domyślną (Gateway)</strong> wpisz adres LAN Windowsa:
-                                <code>10.0.0.1</code>. Jako DNS ustaw np. <code>8.8.8.8</code>.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 4: Konfiguracja Klienta (Linux)</strong>
+       <p>
+        Na Ubuntu ustaw statyczny adres IP z tej samej podsieci, np.
+        <code>192.168.10.20</code>. Jako <strong>Bramę domyślną (Gateway)</strong> wpisz adres LAN
+        Windowsa: <code>192.168.10.10</code>. Jako DNS ustaw np. <code>8.8.8.8</code>.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 5: Wielki Test (Ping w świat)</strong>
-                            <p>
-                                Otwórz terminal na Ubuntu i wpisz: <code>ping 8.8.8.8</code>. Jeśli
-                                pakiety wracają, oznacza to, że Windows Server poprawnie tłumaczy
-                                adresy (NAT) i wypuszcza Linuxa w świat!
-                            </p>
-                        </li>
-                    </ul>
+      <li>
+       <strong>Krok 5: Wielki Test (Ping w świat)</strong>
+       <p>
+        Otwórz terminal na Ubuntu i wpisz: <code>ping 8.8.8.8</code>. Jeśli pakiety wracają, oznacza
+        to, że Windows Server poprawnie tłumaczy adresy (NAT) i wypuszcza Linuxa w świat!
+       </p>
+      </li>
+     </ul>
 
-                    <!-- HACZYKI EGZAMINACYJNE -->
-                    <div class="pitfall-box danger">
-                        <strong>🚨 HACZYKI EGZAMINACYJNE (Arkusz 24.01):</strong>
-                        <ul style="margin-top: 10px">
-                            <li>
-                                <strong>Dwie Bramy Domyślne:</strong> To najczęstszy błąd! Windows
-                                Server <strong>nie może</strong> mieć wpisanej bramy domyślnej na
-                                karcie LAN. Brama domyślna może być tylko jedna w całym systemie (na
-                                karcie WAN). Jeśli wpiszesz dwie, tablica routingu zwariuje i NAT
-                                nie zadziała.
-                            </li>
-                            <li>
-                                <strong>Brak Bramy na Linuxie:</strong> Jeśli zapomnisz wpisać
-                                <code>10.0.0.1</code> jako bramę w ustawieniach Ubuntu, Linux nie
-                                będzie wiedział, komu przekazać pakiety przeznaczone do Internetu.
-                                Zwróci błąd <em>Network is unreachable</em>.
-                            </li>
-                            <li>
-                                <strong>Zły interfejs w kreatorze RRAS:</strong> Kreator pyta o
-                                interfejs <em>publiczny</em> (podłączony do Internetu). Jeśli przez
-                                pomyłkę wskażesz tam kartę LAN, zablokujesz cały ruch.
-                            </li>
-                        </ul>
-                    </div>
+     <!-- HACZYKI EGZAMINACYJNE -->
+     <div class="pitfall-box danger">
+      <strong>🚨 HACZYKI EGZAMINACYJNE (Arkusz 24.01):</strong>
+      <ul style="margin-top: 10px">
+       <li>
+        <strong>Dwie Bramy Domyślne:</strong> To najczęstszy błąd! Windows Server
+        <strong>nie może</strong> mieć wpisanej bramy domyślnej na karcie LAN. Brama domyślna może
+        być tylko jedna w całym systemie (na karcie WAN). Jeśli wpiszesz dwie, tablica routingu
+        zwariuje i NAT nie zadziała.
+       </li>
+       <li>
+        <strong>Brak Bramy na Linuxie:</strong> Jeśli zapomnisz wpisać
+        <code>192.168.10.10</code> jako bramę w ustawieniach Ubuntu, Linux nie będzie wiedział, komu
+        przekazać pakiety przeznaczone do Internetu. Zwróci błąd <em>Network is unreachable</em>.
+       </li>
+       <li>
+        <strong>Zły interfejs w kreatorze RRAS:</strong> Kreator pyta o interfejs
+        <em>publiczny</em> (podłączony do Internetu). Jeśli przez pomyłkę wskażesz tam kartę LAN,
+        zablokujesz cały ruch.
+       </li>
+      </ul>
+     </div>
 
-                    <!-- PRO TIP -->
-                    <div class="golden-rule-box ubu-purple">
-                        <strong>💡 Pro-Tip od DevOpsa:</strong>
-                        Chcesz zobaczyć magię routingu na własne oczy? Na Linuxie wpisz komendę
-                        <code>traceroute 8.8.8.8</code> (lub <code>tracepath 8.8.8.8</code>).
-                        Zobaczysz, że pierwszym "przystankiem" (hop) Twoich pakietów jest adres IP
-                        Windows Servera (10.0.0.1), a dopiero potem lecą one do dostawcy Internetu.
-                    </div>
-                </div>
-            </div>
-        </main>
+     <!-- PRO TIP -->
+     <div class="golden-rule-box ubu-purple">
+      <strong>💡 Pro-Tip od DevOpsa:</strong>
+      Chcesz zobaczyć magię routingu na własne oczy? Na Linuxie wpisz komendę
+      <code>traceroute 8.8.8.8</code> (lub <code>tracepath 8.8.8.8</code>). Zobaczysz, że pierwszym
+      "przystankiem" (hop) Twoich pakietów jest adres IP Windows Servera (192.168.10.10), a dopiero
+      potem lecą one do dostawcy Internetu.
+     </div>
+    </div>
+   </div>
+  </main>
 
-        <script src="../menu.js"></script>
-    </body>
+  <script src="../menu.js"></script>
+ </body>
 </html>

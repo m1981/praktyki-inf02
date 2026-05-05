@@ -1,21 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Wykrywanie głębokości
-    const path = window.location.pathname;
-    const isSubfolder =
-        path.includes('/01-sieci/') ||
-        path.includes('/02-windows/') ||
-        path.includes('/03-linux/') ||
-        path.includes('/04-sprzet/') ||
-        path.includes('/05-excel/') ||
-        path.includes('/06-integracja/');
-    const prefix = isSubfolder ? '../' : './';
+ // 1. Wykrywanie głębokości
+ const path = window.location.pathname;
+ const isSubfolder =
+  path.includes('/01-sieci/') ||
+  path.includes('/02-windows/') ||
+  path.includes('/03-linux/') ||
+  path.includes('/04-sprzet/') ||
+  path.includes('/05-excel/') ||
+  path.includes('/06-integracja/');
+ const prefix = isSubfolder ? '../' : './';
 
-    // 2. Generowanie Globalnego Paska Nawigacji
-    const navHTML = `
+ // 2. Generowanie Globalnego Paska Nawigacji
+ const navHTML = `
         <nav id="global-nav">
             <a href="${prefix}index.html" class="nav-brand">🏠 INF.02 Baza Wiedzy</a>
             <div class="nav-links">
                 <a href="${prefix}setup.html">🛠️ Dzień 0</a>
+                <a href="${prefix}topology.html">🗺️ Topologia</a>
                 <a href="${prefix}01-sieci/index.html">🟢 Sieci</a>
                 <a href="${prefix}02-windows/index.html">🪟 Windows</a>
                 <a href="${prefix}03-linux/index.html">🐧 Linux</a>
@@ -25,41 +26,41 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         </nav>
     `;
-    document.body.insertAdjacentHTML('afterbegin', navHTML);
+ document.body.insertAdjacentHTML('afterbegin', navHTML);
 
-    // 3. Generowanie Okruszków (Breadcrumbs)
-    if (isSubfolder && !path.endsWith('index.html')) {
-        let pillarName = '';
-        let pillarLink = '';
+ // 3. Generowanie Okruszków (Breadcrumbs)
+ if (isSubfolder && !path.endsWith('index.html')) {
+  let pillarName = '';
+  let pillarLink = '';
 
-        if (path.includes('01-sieci')) {
-            pillarName = '🟢 Filar 1: Sieci';
-            pillarLink = 'index.html';
-        }
-        if (path.includes('02-windows')) {
-            pillarName = '🪟 Filar 2: Windows';
-            pillarLink = 'index.html';
-        }
-        if (path.includes('03-linux')) {
-            pillarName = '🐧 Filar 3: Linux';
-            pillarLink = 'index.html';
-        }
-        if (path.includes('04-sprzet')) {
-            pillarName = '🔌 Filar 4: Sprzęt';
-            pillarLink = 'index.html';
-        }
-        if (path.includes('05-excel')) {
-            pillarName = '📊 Filar 5: Excel';
-            pillarLink = 'index.html';
-        }
-        if (path.includes('06-integracja')) {
-            pillarName = '🔗 Filar 6: Integracja';
-            pillarLink = 'index.html';
-        } // <-- DODANE
+  if (path.includes('01-sieci')) {
+   pillarName = '🟢 Filar 1: Sieci';
+   pillarLink = 'index.html';
+  }
+  if (path.includes('02-windows')) {
+   pillarName = '🪟 Filar 2: Windows';
+   pillarLink = 'index.html';
+  }
+  if (path.includes('03-linux')) {
+   pillarName = '🐧 Filar 3: Linux';
+   pillarLink = 'index.html';
+  }
+  if (path.includes('04-sprzet')) {
+   pillarName = '🔌 Filar 4: Sprzęt';
+   pillarLink = 'index.html';
+  }
+  if (path.includes('05-excel')) {
+   pillarName = '📊 Filar 5: Excel';
+   pillarLink = 'index.html';
+  }
+  if (path.includes('06-integracja')) {
+   pillarName = '🔗 Filar 6: Integracja';
+   pillarLink = 'index.html';
+  } // <-- DODANE
 
-        const pageTitle = document.title;
+  const pageTitle = document.title;
 
-        const breadcrumbsHTML = `
+  const breadcrumbsHTML = `
             <div id="breadcrumbs">
                 <a href="${prefix}index.html">🏠 Strona Główna</a> / 
                 <a href="${pillarLink}">${pillarName}</a> / 
@@ -67,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `;
 
-        // Wstawiamy okruszki zaraz pod headerem
-        const header = document.querySelector('header');
-        if (header) {
-            header.insertAdjacentHTML('afterend', breadcrumbsHTML);
-        }
-    }
+  // Wstawiamy okruszki zaraz pod headerem
+  const header = document.querySelector('header');
+  if (header) {
+   header.insertAdjacentHTML('afterend', breadcrumbsHTML);
+  }
+ }
 });

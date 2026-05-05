@@ -67,7 +67,7 @@
      <ul class="task-list">
       <li>
        <strong>Sprawdzenie IP:</strong> Upewnij się, że znasz adres IP swojego Ubuntu (np.
-       <code>192.168.1.20</code>).
+       <code>192.168.10.20</code>).
       </li>
       <li>
        <strong>Atak z Windowsa:</strong> Otwórz Wiersz poleceń (CMD) lub PowerShell na Windowsie i
@@ -77,7 +77,7 @@
 
      <div class="cli-block">
       <span class="cli-comment"># Składnia: ssh uzytkownik@adres_ip</span>
-      ssh administrator@192.168.1.20
+      ssh administrator@192.168.10.20
      </div>
 
      <div class="pitfall-box danger">
@@ -133,7 +133,7 @@
 
      <div class="cli-block">
       <span class="cli-comment"># Składnia: scp CO_WYSYŁAM DOKĄD_WYSYŁAM</span>
-      scp wiadomosc.txt administrator@192.168.1.20:~
+      scp wiadomosc.txt administrator@192.168.10.20:~
      </div>
 
      <div class="golden-rule-box">
@@ -172,10 +172,10 @@
       <span class="cli-comment"
        ># 2. NA WINDOWSIE: Wyślij swój klucz PUBLICZNY na Linuxa za pomocą SCP</span
       >
-      scp .ssh\id_rsa.pub administrator@192.168.1.20:~/klucz_windowsa.pub
+      scp .ssh\id_rsa.pub administrator@192.168.10.20:~/klucz_windowsa.pub
 
       <span class="cli-comment"># 3. Zaloguj się na Linuxa (ostatni raz z hasłem!)</span>
-      ssh administrator@192.168.1.20
+      ssh administrator@192.168.10.20
 
       <span class="cli-comment"
        ># 4. NA LINUXIE: Dodaj klucz Windowsa do listy zaufanych kluczy</span
@@ -188,8 +188,8 @@
 
      <p>
       <strong>Wielki Test:</strong> Będąc z powrotem w CMD na Windowsie, wpisz ponownie
-      <code>ssh administrator@192.168.1.20</code>. Jeśli wszystko zrobiłeś dobrze, system wpuści Cię
-      natychmiast, <strong>bez pytania o hasło!</strong>
+      <code>ssh administrator@192.168.10.20</code>. Jeśli wszystko zrobiłeś dobrze, system wpuści
+      Cię natychmiast, <strong>bez pytania o hasło!</strong>
      </p>
 
      <div

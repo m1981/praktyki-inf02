@@ -1,176 +1,159 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LAB 3: Mur z Ognia</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>🔥 LAB 3: Mur z Ognia</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem">
-                Zapora Windows i odblokowanie ruchu ICMP (Ping)
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB 3: Mur z Ognia</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>🔥 LAB 3: Mur z Ognia</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zapora Windows i odblokowanie ruchu ICMP (Ping)
+   </p>
+  </header>
 
-        <main class="lab-container">
-            <!-- TOPOLOGIA -->
-            <div
-                class="topology-box"
-                style="
-                    align-items: center;
-                    gap: 20px;
-                    flex-wrap: wrap;
-                    justify-content: space-between;
-                "
-            >
-                <div class="node linux">
-                    <span class="node-icon">🐧</span>
-                    <span class="node-name">Ubuntu</span>
-                    <span class="node-ip">192.168.1.20</span>
-                </div>
+  <main class="lab-container">
+   <!-- TOPOLOGIA -->
+   <div
+    class="topology-box"
+    style="align-items: center; gap: 20px; flex-wrap: wrap; justify-content: space-between"
+   >
+    <div class="node linux">
+     <span class="node-icon">🐧</span>
+     <span class="node-name">Ubuntu</span>
+     <span class="node-ip">192.168.10.20</span>
+    </div>
 
-                <div
-                    style="
-                        color: var(--text-muted);
-                        font-weight: bold;
-                        text-align: center;
-                        font-size: 0.85rem;
-                        position: relative;
-                    "
-                >
-                    ICMP (PING)<br />
-                    <span style="font-size: 1.5rem; color: var(--text-muted)">↔</span>
-                    <!-- Tarcza symbolizująca zaporę -->
-                    <span
-                        style="
-                            font-size: 2rem;
-                            position: absolute;
-                            top: -15px;
-                            left: 50%;
-                            transform: translateX(-50%);
-                        "
-                        >🛡️</span
-                    >
-                </div>
+    <div
+     style="
+      color: var(--text-muted);
+      font-weight: bold;
+      text-align: center;
+      font-size: 0.85rem;
+      position: relative;
+     "
+    >
+     ICMP (PING)<br />
+     <span style="font-size: 1.5rem; color: var(--text-muted)">↔</span>
+     <!-- Tarcza symbolizująca zaporę -->
+     <span
+      style="
+       font-size: 2rem;
+       position: absolute;
+       top: -15px;
+       left: 50%;
+       transform: translateX(-50%);
+      "
+      >🛡️</span
+     >
+    </div>
 
-                <div class="node windows">
-                    <span class="node-icon">🪟</span>
-                    <span class="node-name">Windows 10 / Server</span>
-                    <span class="node-ip">192.168.1.10</span>
-                </div>
-            </div>
+    <div class="node windows">
+     <span class="node-icon">🪟</span>
+     <span class="node-name">Windows 10 / Server</span>
+     <span class="node-ip">192.168.10.10</span>
+    </div>
+   </div>
 
-            <!-- KARTA LABORATORIUM -->
-            <div class="lab-card">
-                <div class="lab-header">
-                    <h3>Asymetria Zabezpieczeń</h3>
-                    <span class="time-badge">Czas: 20 min</span>
-                </div>
-                <div class="lab-body">
-                    <div class="goal-box">
-                        Cel: Zrozumieć asymetrię zabezpieczeń i odblokować ruch ICMP (Ping) w
-                        Zaporze Windows.
-                    </div>
+   <!-- KARTA LABORATORIUM -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Asymetria Zabezpieczeń</h3>
+     <span class="time-badge">Czas: 20 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Zrozumieć asymetrię zabezpieczeń i odblokować ruch ICMP (Ping) w Zaporze Windows.
+     </div>
 
-                    <ul class="task-list">
-                        <li>
-                            <strong>Krok 1: Przygotowanie sieci</strong>
-                            <p>
-                                Upewnij się, że obie maszyny są w tej samej podsieci (np. Windows ma
-                                <code>192.168.1.10/24</code>, a Linux ma
-                                <code>192.168.1.20/24</code>). Kable są podłączone, a karty sieciowe
-                                włączone.
-                            </p>
-                        </li>
+     <ul class="task-list">
+      <li>
+       <strong>Krok 1: Przygotowanie sieci</strong>
+       <p>
+        Upewnij się, że obie maszyny są w tej samej podsieci (np. Windows ma
+        <code>192.168.10.10/24</code>, a Linux ma <code>192.168.10.20/24</code>). Kable są
+        podłączone, a karty sieciowe włączone.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 2: Atak z Windowsa</strong>
-                            <p>
-                                Na maszynie z Windowsem otwórz Wiersz poleceń (CMD) i wpisz:
-                                <code>ping 192.168.1.20</code>. Zobaczysz, że Linux grzecznie
-                                odpowiada na zapytania. Linux z natury ufa sieci lokalnej.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 2: Atak z Windowsa</strong>
+       <p>
+        Na maszynie z Windowsem otwórz Wiersz poleceń (CMD) i wpisz:
+        <code>ping 192.168.10.20</code>. Zobaczysz, że Linux grzecznie odpowiada na zapytania. Linux
+        z natury ufa sieci lokalnej.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 3: Odbicie od ściany (Linux pyta Windowsa)</strong>
-                            <p>
-                                Teraz otwórz terminal na Ubuntu i wpisz:
-                                <code>ping 192.168.1.10</code>. Zobaczysz brak odpowiedzi lub
-                                komunikat <em>Request Timeout</em>. Pakiety wychodzą z Linuxa,
-                                docierają do Windowsa, ale Zapora (Firewall) je niszczy i nie
-                                pozwala odpowiedzieć!
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 3: Odbicie od ściany (Linux pyta Windowsa)</strong>
+       <p>
+        Teraz otwórz terminal na Ubuntu i wpisz:
+        <code>ping 192.168.10.10</code>. Zobaczysz brak odpowiedzi lub komunikat
+        <em>Request Timeout</em>. Pakiety wychodzą z Linuxa, docierają do Windowsa, ale Zapora
+        (Firewall) je niszczy i nie pozwala odpowiedzieć!
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 4: Robimy dziurę w murze</strong>
-                            <p>
-                                Na Windowsie wciśnij Start, wpisz <code>wf.msc</code> i wciśnij
-                                Enter (Zapora Windows Defender z zaawansowanymi zabezpieczeniami).
-                                Po lewej stronie kliknij <strong>Reguły przychodzące</strong>.
-                                Znajdź na liście regułę o nazwie:
-                                <strong
-                                    >Udostępnianie plików i drukarek (żądanie echa —
-                                    ICMPv4-In)</strong
-                                >. Kliknij na nią prawym przyciskiem myszy i wybierz
-                                <strong>Włącz regułę</strong>.
-                            </p>
-                        </li>
+      <li>
+       <strong>Krok 4: Robimy dziurę w murze</strong>
+       <p>
+        Na Windowsie wciśnij Start, wpisz <code>wf.msc</code> i wciśnij Enter (Zapora Windows
+        Defender z zaawansowanymi zabezpieczeniami). Po lewej stronie kliknij
+        <strong>Reguły przychodzące</strong>. Znajdź na liście regułę o nazwie:
+        <strong>Udostępnianie plików i drukarek (żądanie echa — ICMPv4-In)</strong>. Kliknij na nią
+        prawym przyciskiem myszy i wybierz <strong>Włącz regułę</strong>.
+       </p>
+      </li>
 
-                        <li>
-                            <strong>Krok 5: Sukces!</strong>
-                            <p>
-                                Wróć do terminala na Ubuntu i ponownie wpisz:
-                                <code>ping 192.168.1.10</code>. Tym razem pakiety wrócą! Komunikacja
-                                działa w obie strony.
-                            </p>
-                        </li>
-                    </ul>
+      <li>
+       <strong>Krok 5: Sukces!</strong>
+       <p>
+        Wróć do terminala na Ubuntu i ponownie wpisz:
+        <code>ping 192.168.10.10</code>. Tym razem pakiety wrócą! Komunikacja działa w obie strony.
+       </p>
+      </li>
+     </ul>
 
-                    <!-- HACZYKI EGZAMINACYJNE -->
-                    <div class="pitfall-box danger">
-                        <strong>🚨 HACZYKI EGZAMINACYJNE (Wszystkie arkusze):</strong>
-                        <ul style="margin-top: 10px">
-                            <li>
-                                <strong>"Wykonaj test komunikacji":</strong> To polecenie pojawia
-                                się na końcu prawie każdego arkusza. Egzaminator podchodzi i patrzy,
-                                czy komputery się pingują. Jeśli zapomnisz o zaporze, egzaminator
-                                uzna, że źle skonfigurowałeś adresy IP lub kable, i stracisz punkty
-                                za cały moduł sieciowy!
-                            </li>
-                            <li>
-                                <strong>Profil sieci:</strong> Zwróć uwagę, że reguła ICMPv4-In w
-                                zaporze występuje w kilku wersjach (dla profilu Prywatnego,
-                                Publicznego i Domenowego). Najbezpieczniej jest włączyć tę, która
-                                odpowiada Twojemu obecnemu profilowi sieci (lub wszystkie, jeśli
-                                jesteś w izolowanym środowisku egzaminacyjnym).
-                            </li>
-                            <li>
-                                <strong>Wyłączanie całej zapory:</strong> Niektórzy uczniowie z
-                                paniki wyłączają całkowicie zaporę Windows. Choć to sprawi, że ping
-                                zadziała, w prawdziwym świecie IT (i u surowych egzaminatorów) jest
-                                to traktowane jako <strong>krytyczny błąd bezpieczeństwa</strong>.
-                                Ucz się włączać tylko konkretne reguły!
-                            </li>
-                        </ul>
-                    </div>
+     <!-- HACZYKI EGZAMINACYJNE -->
+     <div class="pitfall-box danger">
+      <strong>🚨 HACZYKI EGZAMINACYJNE (Wszystkie arkusze):</strong>
+      <ul style="margin-top: 10px">
+       <li>
+        <strong>"Wykonaj test komunikacji":</strong> To polecenie pojawia się na końcu prawie
+        każdego arkusza. Egzaminator podchodzi i patrzy, czy komputery się pingują. Jeśli zapomnisz
+        o zaporze, egzaminator uzna, że źle skonfigurowałeś adresy IP lub kable, i stracisz punkty
+        za cały moduł sieciowy!
+       </li>
+       <li>
+        <strong>Profil sieci:</strong> Zwróć uwagę, że reguła ICMPv4-In w zaporze występuje w kilku
+        wersjach (dla profilu Prywatnego, Publicznego i Domenowego). Najbezpieczniej jest włączyć
+        tę, która odpowiada Twojemu obecnemu profilowi sieci (lub wszystkie, jeśli jesteś w
+        izolowanym środowisku egzaminacyjnym).
+       </li>
+       <li>
+        <strong>Wyłączanie całej zapory:</strong> Niektórzy uczniowie z paniki wyłączają całkowicie
+        zaporę Windows. Choć to sprawi, że ping zadziała, w prawdziwym świecie IT (i u surowych
+        egzaminatorów) jest to traktowane jako <strong>krytyczny błąd bezpieczeństwa</strong>. Ucz
+        się włączać tylko konkretne reguły!
+       </li>
+      </ul>
+     </div>
 
-                    <!-- PRO TIP -->
-                    <div class="golden-rule-box">
-                        <strong>💡 Pro-Tip od DevOpsa:</strong>
-                        Dlaczego Microsoft domyślnie blokuje pingi? To zabezpieczenie przed tzw.
-                        skanowaniem sieci (Ping Sweep). Złośliwe oprogramowanie (np. ransomware) po
-                        zainfekowaniu jednego komputera wysyła pingi na wszystkie adresy w sieci,
-                        szukając kolejnych ofiar. Ukrywanie się przed pingiem to pierwsza linia
-                        obrony (tzw. <em>Stealth Mode</em>).
-                    </div>
-                </div>
-            </div>
-        </main>
+     <!-- PRO TIP -->
+     <div class="golden-rule-box">
+      <strong>💡 Pro-Tip od DevOpsa:</strong>
+      Dlaczego Microsoft domyślnie blokuje pingi? To zabezpieczenie przed tzw. skanowaniem sieci
+      (Ping Sweep). Złośliwe oprogramowanie (np. ransomware) po zainfekowaniu jednego komputera
+      wysyła pingi na wszystkie adresy w sieci, szukając kolejnych ofiar. Ukrywanie się przed
+      pingiem to pierwsza linia obrony (tzw. <em>Stealth Mode</em>).
+     </div>
+    </div>
+   </div>
+  </main>
 
-        <script src="../menu.js"></script>
-    </body>
+  <script src="../menu.js"></script>
+ </body>
 </html>
