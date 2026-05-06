@@ -1,0 +1,253 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 5: Władca Usług (Systemd & SSH)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🐧 Lab 5: Władca Usług</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zarządzanie demonami (Systemd), bezpieczne backupy i konfiguracja SSH
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div class="goal-box">
+    Cel: Nauczyć się modyfikować pliki konfiguracyjne usług sieciowych (na przykładzie serwera SSH),
+    robić ich kopie zapasowe oraz zarządzać procesami w tle za pomocą <code>systemctl</code>.
+   </div>
+
+   <!-- KROK 1 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 1: Złota zasada SysOpsa (Backup)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Windowsie usługi konfiguruje się wyklikując opcje w okienkach. W Linuxie usługi (zwane
+      <em>demonami</em>) czytają swoje ustawienia ze zwykłych plików tekstowych, które leżą w
+      katalogu <code>/etc/</code>.
+     </p>
+     <p>
+      <strong>Złota zasada:</strong> NIGDY nie edytuj pliku konfiguracyjnego, dopóki nie zrobisz
+      jego kopii zapasowej! Jeśli zrobisz literówkę, usługa nie wstanie, a Ty stracisz dostęp do
+      serwera.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Upewnij się, że jesteś w katalogu domowym</span>
+      cd ~
+
+      <span class="cli-comment"># 2. Utwórz podkatalog na kopie zapasowe</span>
+      mkdir KOPIE
+
+      <span class="cli-comment"
+       ># 3. Skopiuj plik konfiguracyjny serwera SSH do swojego folderu</span
+      >
+      <span class="cli-comment"
+       ># Składnia: cp [CO_KOPIUJESZ] [DOKĄD_KOPIUJESZ_I_POD_JAKĄ_NAZWĄ]</span
+      >
+      sudo cp /etc/ssh/sshd_config ~/KOPIE/ssh_old
+
+      <span class="cli-comment"># 4. Sprawdź, czy plik faktycznie tam jest</span>
+      ls -l ~/KOPIE/
+     </div>
+
+     <!-- REFERENCJA EGZAMINACYJNA -->
+     <details class="exam-reference">
+      <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+      <div class="exam-content">
+       <p><strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.06-SG)</p>
+       <blockquote>
+        <p>
+         <strong>Treść zadania:</strong><br />
+         ‒ utwórz w katalogu domowym użytkownika administrator podkatalog o nazwie KOPIE<br />
+         ‒ wykonaj kopię pliku konfiguracyjnego serwera SSH i zapisz ją w katalogu KOPIE pod nazwą
+         ssh_old
+        </p>
+       </blockquote>
+      </div>
+     </details>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Chirurgiczne cięcie (Edycja)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Domyślnie serwer SSH nasłuchuje na porcie <strong>22</strong>. Każdy haker na świecie o tym
+      wie, dlatego boty w internecie nieustannie atakują ten port. Zmienimy go na niestandardowy,
+      np. <strong>2222</strong>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Otwórz oryginalny plik konfiguracyjny w edytorze nano (wymaga sudo!)</span
+      >
+      sudo nano /etc/ssh/sshd_config
+     </div>
+
+     <ul class="task-list">
+      <li>W edytorze odszukaj linijkę, która wygląda tak: <code>#Port 22</code>.</li>
+      <li>
+       Znak <code>#</code> na początku linii oznacza <strong>komentarz</strong> (system ignoruje tę
+       linijkę i używa wartości domyślnej).
+      </li>
+      <li>
+       Usuń znak <code>#</code> (odkomentuj linię) i zmień liczbę 22 na <strong>2222</strong>.
+       Linijka ma wyglądać tak: <code>Port 2222</code>.
+      </li>
+      <li>Zapisz plik (<kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>) i wyjdź (<kbd>Ctrl+X</kbd>).</li>
+     </ul>
+
+     <div
+      class="golden-rule-box"
+      style="border-left-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+     >
+      <strong>💡 Złota Rada Trenera (Wyszukiwanie w Nano):</strong>
+      Pliki konfiguracyjne potrafią mieć setki linijek. Nie szukaj tekstu ręcznie! W edytorze
+      <code>nano</code> wciśnij <strong>Ctrl + W</strong> (Where is), wpisz słowo
+      <code>Port</code> i wciśnij Enter. Kursor sam skoczy w odpowiednie miejsce.
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Przebudzenie Demona (Systemctl)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="pitfall-box">
+      <strong>🚨 Najczęstszy błąd uczniów:</strong>
+      Zmieniliście plik, zapisaliście go i myślicie, że gotowe? BŁĄD! Usługa SSH wczytała swój plik
+      konfiguracyjny podczas startu serwera. Nie wie, że właśnie go zmieniliście. Musimy ją
+      zrestartować!
+     </div>
+
+     <p>
+      Do zarządzania usługami w nowoczesnym Linuxie służy potężne narzędzie
+      <strong>systemctl</strong>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Zrestartuj usługę SSH, aby wczytała nową konfigurację</span>
+      sudo systemctl restart ssh
+
+      <span class="cli-comment"
+       ># 2. Sprawdź status usługi (czy wstała poprawnie, czy wyrzuciła błąd?)</span
+      >
+      sudo systemctl status ssh
+     </div>
+
+     <p>
+      Jeśli w statusie widzisz zielony napis <strong>active (running)</strong>, a poniżej informację
+      <em>Server listening on 0.0.0.0 port 2222</em>, to znaczy, że operacja się udała! <br /><em
+       >(Aby wyjść z podglądu statusu, wciśnij klawisz <strong>q</strong>).</em
+      >
+     </p>
+
+     <div
+      class="card"
+      style="border-top-color: #2c001e; background-color: #f8f9fa; margin-top: 20px; padding: 15px"
+     >
+      <h4 style="color: #2c001e; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Matka wszystkich procesów</h4>
+      <p>
+       Kiedyś w Linuxie używało się komend typu <code>service ssh restart</code>. Dziś standardem
+       jest <strong>systemd</strong>. To pierwszy proces, który uruchamia się po starcie jądra
+       Linuxa (ma PID = 1). To on powołuje do życia wszystkie inne usługi (sieć, serwery WWW, bazy
+       danych). Komenda <code>systemctl</code> to Twój pilot do sterowania tym potężnym systemem.
+       Warto znać też:
+      </p>
+      <ul>
+       <li><code>systemctl stop ssh</code> (Zatrzymuje usługę)</li>
+       <li>
+        <code>systemctl disable ssh</code> (Sprawia, że usługa NIE uruchomi się po restarcie
+        serwera)
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Wielki Test (Atak z Windowsa)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Przejdźmy na maszynę z Windowsem 10 (lub Windows Serverem), aby przetestować naszą nową
+      konfigurację.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Próba 1 (Stary port):</strong> Otwórz CMD na Windowsie i spróbuj zalogować się tak
+       jak zawsze:
+       <div class="cli-block">ssh administrator@192.168.10.20</div>
+       <em>Wynik:</em> Po chwili powinieneś otrzymać błąd <code>Connection refused</code> (Odmowa
+       połączenia). Serwer już nie nasłuchuje na porcie 22!
+      </li>
+      <li>
+       <strong>Próba 2 (Nowy port):</strong> Musimy poinstruować klienta SSH, aby użył naszego
+       nowego portu. Służy do tego flaga <code>-p</code> (małe 'p').
+       <div class="cli-block">ssh -p 2222 administrator@192.168.10.20</div>
+       <em>Wynik:</em> System poprosi o hasło. Jesteś w środku!
+      </li>
+     </ul>
+
+     <div
+      class="conclusion-box"
+      style="background: rgba(119, 33, 111, 0.1); border-color: var(--ubu-purple)"
+     >
+      <div class="conclusion-icon">🛡️</div>
+      <div class="conclusion-text">
+       <strong>Wniosek:</strong> Właśnie wykonałeś klasyczne zadanie z zakresu
+       <em>Hardeningu</em> (utwardzania) serwera. Zmiana domyślnych portów odcina 90% automatycznych
+       ataków z internetu. Nauczyłeś się też, że plik konfiguracyjny to tylko tekst – dopóki nie
+       zrestartujesz usługi przez <code>systemctl</code>, zmiany nie wejdą w życie.
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab4-siec.html" class="course-btn">⬅️ Poprzedni: Lab 4 (Sieci w CLI)</a>
+   <a
+    href="lab6-lowca.html"
+    class="course-btn next"
+    style="background-color: var(--ubu-orange); color: white"
+    >Następny: Lab 6 (Łowca Danych) ➡️</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

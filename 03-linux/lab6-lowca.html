@@ -1,0 +1,237 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 6: Łowca Danych (Grep & Find)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🐧 Lab 6: Łowca Danych</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Wyszukiwanie plików (find), filtrowanie tekstu (grep) i czarna dziura (/dev/null)
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div class="goal-box">
+    Cel: Przestać czytać ściany tekstu. Nauczyć się błyskawicznie znajdować zagubione pliki oraz
+    wyciągać z logów i poleceń diagnostycznych tylko te informacje, których dokładnie potrzebujesz.
+   </div>
+
+   <!-- KROK 1 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 1: Szukanie igły w stogu siana (Grep)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Wyobraź sobie, że musisz znaleźć informację o nieudanych logowaniach na serwer. Plik z logami
+      (<code>/var/log/auth.log</code>) może mieć tysiące linijek. Czytanie go ręcznie to koszmar. Z
+      pomocą przychodzi <strong>grep</strong> – potężny filtr tekstu.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Wyświetl cały plik logów (ściana tekstu!)</span>
+      sudo cat /var/log/auth.log
+
+      <span class="cli-comment"
+       ># 2. Użyj "rury" (|), aby przefiltrować wynik. Pokaż tylko linijki ze słowem "Failed"</span
+      >
+      sudo cat /var/log/auth.log | grep "Failed"
+
+      <span class="cli-comment"
+       ># 3. Grep rozróżnia wielkość liter. Użyj flagi -i (ignore case), aby szukać "failed",
+       "FAILED" i "Failed" naraz</span
+      >
+      sudo cat /var/log/auth.log | grep -i "failed"
+     </div>
+
+     <div
+      class="golden-rule-box"
+      style="border-left-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+     >
+      <strong>💡 Złota Rada Trenera (Egzaminacyjny Hack):</strong>
+      Na egzaminie musisz wpisać do tabeli model procesora. Komenda <code>lscpu</code> wyrzuca 40
+      linijek tekstu. Zamiast tego wpisz: <br />
+      <code>lscpu | grep "Model name"</code><br />
+      Dostaniesz dokładnie jedną linijkę z odpowiedzią. Oszczędzasz czas i nerwy!
+     </div>
+
+     <!-- REFERENCJA EGZAMINACYJNA -->
+     <details class="exam-reference">
+      <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+      <div class="exam-content">
+       <p><strong>Egzamin:</strong> Styczeń 2022 (INF.02-01-22.01-SG)</p>
+       <blockquote>
+        <p>
+         <strong>Treść zadania:</strong><br />
+         ‒ przeprowadź na stacji roboczej identyfikację zasobów komputera ujętych w Tabeli 1.<br />
+         <em>(W tabeli wymagane jest podanie m.in. Numeru seryjnego dysku twardego).</em>
+        </p>
+        <p>
+         <strong>Rozwiązanie z użyciem grep:</strong><br />
+         <code>sudo hdparm -I /dev/sda | grep "Serial Number"</code>
+        </p>
+       </blockquote>
+      </div>
+     </details>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Gdzie jest ten plik? (Find)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Windowsie masz lupkę w prawym górnym rogu. W Linuxie masz komendę <strong>find</strong>. Jej
+      składnia jest prosta: <code>find [GDZIE_SZUKAĆ] -name [CZEGO_SZUKAĆ]</code>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Znajdź plik o nazwie "sshd_config" szukając od samego korzenia systemu (/)</span
+      >
+      find / -name "sshd_config"
+     </div>
+
+     <p>
+      <strong>Co się stało?</strong> Ekran zalała fala błędów
+      <em>"Permission denied" (Odmowa dostępu)</em>. Dlaczego? Ponieważ szukasz jako zwykły
+      użytkownik w folderach systemowych, do których nie masz praw. Twój właściwy wynik zginął w
+      gąszczu błędów!
+     </p>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Czarna dziura na błędy (/dev/null)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-bottom: 15px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Strumienie 1 i 2</h4>
+      <p>W Linuxie każdy program ma dwa "głośniki", przez które do Ciebie mówi:</p>
+      <ul>
+       <li>
+        <strong>Strumień 1 (Standard Output - stdout):</strong> Tędy lecą poprawne wyniki (np.
+        znaleziona ścieżka do pliku).
+       </li>
+       <li>
+        <strong>Strumień 2 (Standard Error - stderr):</strong> Tędy lecą błędy (np. "Odmowa
+        dostępu").
+       </li>
+      </ul>
+      <p>
+       Domyślnie oba głośniki grają prosto na Twój ekran. Ale możemy wziąć głośnik z błędami (2) i
+       przekierować go (&gt;) do systemowego śmietnika, zwanego <strong>/dev/null</strong> (to taka
+       czarna dziura – co tam wpadnie, znika na zawsze).
+      </p>
+     </div>
+
+     <p>Spróbujmy wyszukać plik jeszcze raz, ale tym razem wyrzucając błędy do kosza:</p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Szukaj od korzenia (/), pliku "sshd_config", a błędy (2) wyrzuć do śmietnika (&gt;)
+       (/dev/null)</span
+      >
+      find / -name "sshd_config" 2&gt;/dev/null
+     </div>
+
+     <p>
+      <strong>Efekt:</strong> Czysty, profesjonalny wynik. Na ekranie pojawi się tylko jedna
+      linijka: <code>/etc/ssh/sshd_config</code>. Właśnie awansowałeś na wyższy poziom
+      administracji!
+     </p>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Egzaminacyjne Combo (Find + Grep)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Połączmy teraz obie umiejętności. Co jeśli nie pamiętasz dokładnej nazwy pliku, ale wiesz, że
+      ma w nazwie słowo "netplan"?
+     </p>
+
+     <ul class="task-list">
+      <li>Możesz użyć gwiazdki <code>*</code> jako symbolu wieloznacznego (tzw. wildcard).</li>
+     </ul>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Znajdź wszystkie pliki w katalogu /etc, które kończą się na ".yaml"</span
+      >
+      find /etc -name "*.yaml" 2&gt;/dev/null
+     </div>
+
+     <p>
+      A co jeśli chcesz przeszukać <strong>zawartość</strong> wielu plików naraz? Na przykład chcesz
+      znaleźć, w którym pliku konfiguracyjnym w katalogu <code>/etc/ssh</code> użyto słowa "Port"?
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Użyj grep z flagą -r (recursive - przeszukuj foldery w głąb)</span
+      >
+      grep -r "Port" /etc/ssh/ 2&gt;/dev/null
+     </div>
+
+     <div
+      class="conclusion-box"
+      style="background: rgba(119, 33, 111, 0.1); border-color: var(--ubu-purple)"
+     >
+      <div class="conclusion-icon">🎯</div>
+      <div class="conclusion-text">
+       <strong>Wniosek:</strong> Narzędzia <code>grep</code> i <code>find</code> to Twoje oczy w
+       systemie Linux. Kiedy na egzaminie zapomnisz, gdzie leży plik konfiguracyjny sieci albo jak
+       wyciągnąć konkretny parametr sprzętu, te dwie komendy uratują Ci życie.
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab5-uslugi.html" class="course-btn">⬅️ Poprzedni: Lab 5 (Władca Usług)</a>
+   <a
+    href="lab7-procesy.html"
+    class="course-btn next"
+    style="background-color: var(--ubu-orange); color: white"
+    >Następny: Lab 7 (Strażnik Zasobów) ➡️</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

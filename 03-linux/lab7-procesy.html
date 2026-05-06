@@ -1,0 +1,267 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 7: Strażnik Zasobów (Procesy i Dysk)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🐧 Lab 7: Strażnik Zasobów</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zarządzanie miejscem na dysku, procesy w tle i polowanie na Zombie
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div class="goal-box">
+    Cel: Nauczyć się monitorować "zdrowie" serwera. Sprawdzisz, co zżera miejsce na dysku, oraz
+    nauczysz się bezlitośnie zamykać zawieszone programy.
+   </div>
+
+   <!-- KROK 1 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 1: Gdzie podziało się miejsce? (df & du)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Windowsie klikasz "Ten komputer", żeby zobaczyć pasek zajętości dysku. W Linuxie używamy do
+      tego dwóch komend: <code>df</code> (Disk Free) oraz <code>du</code> (Disk Usage).
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Sprawdź ogólne zużycie dysków (flaga -h = human readable, czyli w GB/MB)</span
+      >
+      df -h
+
+      <span class="cli-comment"
+       ># 2. Zapisz wynik do pliku tekstowego (Zadanie Egzaminacyjne!)</span
+      >
+      df -h > ~/dysk.txt
+     </div>
+
+     <!-- REFERENCJA EGZAMINACYJNA -->
+     <details class="exam-reference">
+      <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+      <div class="exam-content">
+       <p><strong>Egzamin:</strong> Czerwiec 2023 (INF.02-01-23.06-SG)</p>
+       <blockquote>
+        <p>
+         <strong>Treść zadania:</strong><br />
+         ‒ sprawdź ilość wolnego miejsca na dysku i efekt przekieruj do pliku tekstowego o nazwie
+         dysk w katalogu domowym użytkownika administrator
+        </p>
+       </blockquote>
+      </div>
+     </details>
+
+     <p style="margin-top: 15px">
+      Komenda <code>df</code> pokazuje całe partycje. Ale co, jeśli partycja jest pełna i chcesz
+      znaleźć folder, który waży najwięcej? Używasz <code>du</code>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 3. Wejdź do katalogu /var/log (tam gdzie system trzyma logi)</span
+      >
+      cd /var/log
+
+      <span class="cli-comment"
+       ># 4. Sprawdź, ile ważą poszczególne foldery i pliki w tym miejscu</span
+      >
+      <span class="cli-comment"># Flagi: -s (summary/podsumowanie), -h (human readable)</span>
+      sudo du -sh *
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Anatomia Procesu (Działanie w tle)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Każdy uruchomiony program w Linuxie to <strong>Proces</strong>. Każdy proces dostaje swój
+      unikalny numer identyfikacyjny – <strong>PID</strong> (Process ID).
+     </p>
+     <p>
+      Zróbmy eksperyment. Uruchomimy nieskończony ping, ale "oderwiemy" go od naszego terminala,
+      żeby działał w tle.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Uruchom ping do Google. Wynik wyrzuć do czarnej dziury (/dev/null).</span
+      >
+      <span class="cli-comment"
+       ># Znak ampersand (&) na samym końcu oznacza: "Uruchom to w tle i oddaj mi kontrolę nad
+       terminalem!"</span
+      >
+      ping 8.8.8.8 > /dev/null &
+     </div>
+
+     <p>
+      System odpowie czymś w stylu: <code>[1] 14523</code>. Ta druga liczba to właśnie
+      <strong>PID</strong> Twojego procesu! Ping działa teraz w tle, a Ty możesz normalnie wpisywać
+      kolejne komendy.
+     </p>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Polowanie i Egzekucja (ps & kill)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Wyobraź sobie, że zapomniałeś PID swojego pinga, a on cały czas zużywa zasoby sieciowe. Musimy
+      go znaleźć i zabić.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Wylistuj WSZYSTKIE procesy w systemie (ps aux) i przefiltruj je (grep), szukając słowa
+       "ping"</span
+      >
+      ps aux | grep ping
+     </div>
+
+     <p>
+      Na ekranie zobaczysz linijkę podobną do tej:<br />
+      <code>admin <strong>14523</strong> 0.0 0.1 12345 6789 ? S 12:00 0:00 ping 8.8.8.8</code><br />
+      Druga kolumna (tutaj 14523) to Twój PID!
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 2. Zabij proces używając jego numeru PID (podmień 14523 na SWÓJ numer!)</span
+      >
+      <span class="cli-comment"
+       ># Flaga -9 oznacza SIGKILL (brutalne, natychmiastowe zabicie procesu bez pytania o
+       zgodę)</span
+      >
+      kill -9 14523
+
+      <span class="cli-comment"># 3. Sprawdź ponownie. Ping powinien zniknąć z listy!</span>
+      ps aux | grep ping
+     </div>
+
+     <div
+      class="golden-rule-box"
+      style="border-left-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+     >
+      <strong>💡 Złota Rada Trenera (kill vs kill -9):</strong>
+      Zwykła komenda <code>kill [PID]</code> grzecznie prosi program o zamknięcie (pozwala mu
+      zapisać pliki). Komenda <code>kill -9 [PID]</code> to strzał w głowę. Używaj
+      <code>-9</code> tylko wtedy, gdy program całkowicie się zawiesił i nie reaguje na zwykłe
+      zamknięcie!
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Inwazja Zombie (top)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-bottom: 15px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Czym jest proces Zombie?</h4>
+      <p>
+       W Linuxie każdy program (proces) ma swojego "rodzica". Gdy program kończy działanie,
+       "umiera", ale jego ciało (wpis w tablicy procesów) zostaje w systemie, dopóki rodzic nie
+       odczyta jego statusu zakończenia. Jeśli rodzic się zawiesi i tego nie zrobi, martwy proces
+       staje się <strong>Zombie</strong>. Nie zużywa RAMu ani CPU, ale zaśmieca system.
+       <br /><br /><strong>Ciekawostka:</strong> Procesu Zombie nie da się zabić komendą
+       <code>kill -9</code> (bo on już nie żyje!). Aby się go pozbyć, musisz zabić jego rodzica!
+      </p>
+     </div>
+
+     <p>
+      Na egzaminie często pojawia się zadanie polegające na odczytaniu liczby procesów Zombie.
+      Używamy do tego menedżera zadań czasu rzeczywistego – komendy <code>top</code>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Uruchom menedżer zadań (aby wyjść, wciśnij klawisz 'q')</span>
+      top
+     </div>
+
+     <p>
+      Spójrz na drugą linijkę od góry (zaczyna się od słowa <em>Tasks:</em>). Znajdziesz tam
+      informację:
+      <code>... total, ... running, ... sleeping, ... stopped, <strong>0 zombie</strong></code
+      >.
+     </p>
+
+     <!-- REFERENCJA EGZAMINACYJNA -->
+     <details class="exam-reference">
+      <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+      <div class="exam-content">
+       <p><strong>Egzamin:</strong> Czerwiec 2024 (INF.02-01-24.06-SG)</p>
+       <blockquote>
+        <p>
+         <strong>Treść zadania:</strong><br />
+         ‒ przeprowadź na stacji roboczej diagnostykę komputera (...) Uzyskane wyniki zapisz w
+         Tabeli 1.<br />
+         <em>(W tabeli wymagane jest podanie: Liczba procesów zombie).</em>
+        </p>
+       </blockquote>
+      </div>
+     </details>
+    </div>
+   </div>
+
+   <!-- PODSUMOWANIE -->
+   <div
+    class="conclusion-box"
+    style="background: rgba(119, 33, 111, 0.1); border-color: var(--ubu-purple)"
+   >
+    <div class="conclusion-icon">🏆</div>
+    <div class="conclusion-text">
+     <strong>Gratulacje, SysOpsie!</strong>
+     Ukończyłeś moduł Linux PRO. Potrafisz już zarządzać usługami (systemd), bezpiecznie edytować
+     konfigurację, wyszukiwać dane w gąszczu logów (grep/find) oraz bezlitośnie zarządzać procesami
+     (kill). To umiejętności, które na egzaminie INF.02 dadzą Ci komplet punktów, a w prawdziwej
+     pracy – szacunek starszych administratorów.
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab6-lowca.html" class="course-btn">⬅️ Poprzedni: Lab 6 (Łowca Danych)</a>
+   <a href="../index.html" class="course-btn next" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>
