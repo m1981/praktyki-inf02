@@ -1,0 +1,261 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wyzwanie 1: Leniwy Administrator (Bash & Cron)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+    --challenge-gold: #f1c40f;
+    --challenge-gold-bg: #fdfae6;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+   .card.challenge {
+    border-top-color: var(--challenge-gold);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🌟 Wyzwanie 1: Leniwy Administrator</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Skrypty Bash, zmienne systemowe i automatyzacja zadań (Cron)
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div
+    class="goal-box"
+    style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
+   >
+    <strong>Cel Wyzwania:</strong> Dobry administrator to leniwy administrator. Jeśli robisz coś
+    częściej niż raz, napisz do tego skrypt. Zautomatyzujemy proces tworzenia kopii zapasowych,
+    który robiliśmy ręcznie w Labie 5.
+   </div>
+
+   <!-- KROK 1 -->
+   <div class="lab-card challenge">
+    <div class="lab-header">
+     <h3>Krok 1: Tworzenie Skryptu (Bash)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Skrypt w Linuxie to po prostu plik tekstowy zawierający listę komend, które system ma wykonać
+      jedna po drugiej.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Upewnij się, że jesteś w katalogu domowym i masz folder KOPIE</span
+      >
+      cd ~ mkdir -p KOPIE
+
+      <span class="cli-comment"># 2. Utwórz nowy plik skryptu w edytorze nano</span>
+      nano backup.sh
+     </div>
+
+     <p>
+      Wpisz w edytorze poniższy kod. Zwróć szczególną uwagę na pierwszą linijkę (tzw.
+      <em>Shebang</em>) oraz na znaki grawisu (odwrotnego apostrofu) wokół komendy
+      <code>date</code>!
+     </p>
+
+     <div class="cli-block" style="background-color: #2d3436; color: #f8f8f2">
+      <pre style="margin: 0; font-family: monospace">
+#!/bin/bash
+
+# Pobranie aktualnej daty i czasu do zmiennej
+DATA=$(date +%Y-%m-%d_%H-%M)
+
+# Nazwa pliku archiwum
+NAZWA_PLIKU="backup_ssh_$DATA.tar.gz"
+
+# Pakowanie folderu /etc/ssh do archiwum w folderze KOPIE
+tar -czf /home/administrator/KOPIE/$NAZWA_PLIKU /etc/ssh 2>/dev/null
+
+# Wypisanie komunikatu na ekran
+echo "Kopia zapasowa $NAZWA_PLIKU zostala utworzona!"
+</pre
+      >
+     </div>
+
+     <p>Zapisz plik (<kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>) i wyjdź (<kbd>Ctrl+X</kbd>).</p>
+
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-top: 15px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Magia Zmiennych</h4>
+      <p>
+       Dlaczego użyliśmy zmiennej <code>$DATA</code>? Gdybyśmy nazwali plik po prostu
+       <code>backup.tar.gz</code>, każdy kolejny backup nadpisywałby ten poprzedni! Dzięki
+       wstrzyknięciu aktualnej daty i godziny do nazwy pliku, każdy backup jest unikalny. To
+       standardowa praktyka w korporacjach.
+      </p>
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Prawo do życia (chmod +x)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Windowsie system wie, że plik jest programem, bo ma rozszerzenie <code>.exe</code> lub
+      <code>.bat</code>. W Linuxie rozszerzenia nie mają znaczenia! Aby plik tekstowy stał się
+      programem, musisz nadać mu <strong>prawo do wykonywania (eXecute)</strong>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Sprawdź uprawnienia pliku (zobaczysz, że nie ma literki 'x')</span
+      >
+      ls -l backup.sh
+
+      <span class="cli-comment"># 2. Nadaj prawo do wykonywania (+x)</span>
+      chmod +x backup.sh
+
+      <span class="cli-comment"
+       ># 3. Sprawdź ponownie (plik powinien zmienić kolor na zielony!)</span
+      >
+      ls -l backup.sh
+
+      <span class="cli-comment"
+       ># 4. Uruchom skrypt ręcznie (kropka i ukośnik oznaczają "uruchom plik z obecnego
+       folderu")</span
+      >
+      sudo ./backup.sh
+     </div>
+
+     <p>
+      Sprawdź folder <code>KOPIE</code> (komendą <code>ls -l KOPIE</code>). Powinien tam leżeć Twój
+      świeżutki, spakowany backup z dzisiejszą datą w nazwie!
+     </p>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Robot wkracza do akcji (Cron)</h3>
+     <span class="time-badge">Czas: 15 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Skrypt działa, ale nadal musimy go uruchamiać ręcznie. Zlećmy to zadanie systemowemu robotowi
+      o nazwie <strong>Cron</strong>. Cron to demon, który budzi się co minutę, sprawdza swoją listę
+      zadań (crontab) i wykonuje je o określonym czasie.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># Otwórz tabelę zadań Crona dla użytkownika root (bo skrypt pakuje pliki systemowe)</span
+      >
+      sudo crontab -e
+     </div>
+
+     <p>
+      <em
+       >(Jeśli system zapyta Cię o wybór edytora, wciśnij <strong>1</strong>, aby wybrać nano).</em
+      >
+     </p>
+
+     <p>
+      Zjedź na sam dół pliku i dopisz poniższą linijkę. Oznacza ona:
+      <em>"Uruchamiaj ten skrypt co 2 minuty, każdego dnia, każdego miesiąca"</em>.
+     </p>
+
+     <div class="cli-block" style="background-color: #2d3436; color: #f8f8f2">
+      <pre style="margin: 0; font-family: monospace">*/2 * * * * /home/administrator/backup.sh</pre>
+     </div>
+
+     <p>
+      Zapisz plik i wyjdź z edytora. System powinien wyświetlić komunikat:
+      <code>crontab: installing new crontab</code>.
+     </p>
+
+     <div
+      class="golden-rule-box"
+      style="border-left-color: var(--challenge-gold); background: var(--challenge-gold-bg)"
+     >
+      <strong>💡 Jak czytać czas w Cronie? (5 gwiazdek)</strong><br />
+      Składnia to: <code>MINUTA GODZINA DZIEŃ MIESIĄC DZIEŃ_TYGODNIA KOMENDA</code>
+      <ul>
+       <li><code>0 2 * * * skrypt.sh</code> ➔ Uruchom codziennie o 02:00 w nocy.</li>
+       <li><code>30 15 * * 5 skrypt.sh</code> ➔ Uruchom o 15:30 w każdy piątek (5).</li>
+       <li><code>*/5 * * * * skrypt.sh</code> ➔ Uruchom co 5 minut.</li>
+      </ul>
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Obserwacja (Wielki Finał)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Teraz najtrudniejsza część pracy administratora: czekanie. Odłóż ręce od klawiatury i poczekaj
+      2-3 minuty.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Sprawdzaj zawartość folderu KOPIE</span>
+      ls -l ~/KOPIE
+     </div>
+
+     <p>
+      Jeśli wszystko zrobiłeś poprawnie, co 2 minuty w folderze będzie pojawiał się nowy plik z
+      backupem! Właśnie zautomatyzowałeś proces, za który w korporacjach płaci się duże pieniądze.
+     </p>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 Posprzątaj po sobie!</strong>
+      Jeśli zostawisz ten skrypt włączony, za kilka dni zapcha Ci cały dysk wirtualny! Wpisz
+      <code>sudo crontab -e</code> i usuń (lub zakomentuj znakiem <code>#</code>) linijkę, którą
+      przed chwilą dodałeś.
+     </div>
+    </div>
+   </div>
+
+   <!-- PODSUMOWANIE -->
+   <div
+    class="conclusion-box"
+    style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
+   >
+    <div class="conclusion-icon">🏆</div>
+    <div class="conclusion-text">
+     <strong>Wyzwanie Zaliczone!</strong>
+     Zrobiłeś pierwszy krok w stronę DevOps. Zrozumiałeś, że system operacyjny to nie tylko miejsce
+     do wpisywania komend, ale środowisko, które można programować i automatyzować.
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab7-procesy.html" class="course-btn">⬅️ Poprzedni: Lab 7 (Procesy)</a>
+   <a href="../index.html" class="course-btn next" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>
