@@ -1,0 +1,220 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wyzwanie 2: Twierdza Linux (UFW & Fail2ban)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+    --challenge-gold: #f1c40f;
+    --challenge-gold-bg: #fdfae6;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+   .card.challenge {
+    border-top-color: var(--challenge-gold);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🌟 Wyzwanie 2: Twierdza Linux</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Zapora sieciowa (UFW) i aktywna obrona przed atakami (Fail2ban)
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div
+    class="goal-box"
+    style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
+   >
+    <strong>Cel Wyzwania:</strong> Zabezpieczyć serwer przed nieautoryzowanym dostępem.
+    Skonfigurujemy zaporę sieciową z poziomu terminala, a następnie zainstalujemy "strażnika", który
+    będzie automatycznie blokował hakerów próbujących odgadnąć nasze hasło.
+   </div>
+
+   <!-- KROK 1 -->
+   <div class="lab-card challenge">
+    <div class="lab-header">
+     <h3>Krok 1: Podnoszenie Tarcz (UFW)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Windowsie używaliśmy graficznej przystawki <code>wf.msc</code>. W Ubuntu standardowym
+      narzędziem do zarządzania zaporą jest <strong>UFW</strong> (Uncomplicated Firewall -
+      Nieskomplikowana Zapora).
+     </p>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 KRYTYCZNY KROK (Nie odetnij się!):</strong>
+      Domyślnie UFW blokuje <strong>cały</strong> ruch przychodzący. Jeśli włączysz zaporę teraz,
+      natychmiast stracisz połączenie SSH z serwerem! Najpierw musimy zrobić "dziurę" w zaporze dla
+      naszego portu SSH (w Labie 5 zmieniliśmy go na 2222).
+     </div>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Sprawdź status zapory (powinna być nieaktywna - inactive)</span
+      >
+      sudo ufw status
+
+      <span class="cli-comment"
+       ># 2. Zezwól na ruch przychodzący na porcie 2222 (protokół TCP)</span
+      >
+      sudo ufw allow 2222/tcp
+
+      <span class="cli-comment"
+       ># 3. Włącz zaporę (system ostrzeże Cię o możliwym przerwaniu połączeń SSH - wciśnij
+       'y')</span
+      >
+      sudo ufw enable
+
+      <span class="cli-comment"># 4. Sprawdź status ponownie. Zobaczysz swoją aktywną regułę!</span>
+      sudo ufw status
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Aktywna Obrona (Fail2ban)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Zapora UFW to obrona bierna – po prostu wpuszcza ruch na porcie 2222. Ale co, jeśli ktoś (lub
+      bot) zacznie zgadywać nasze hasło, wysyłając 1000 zapytań na sekundę (atak Brute-Force)?
+      Potrzebujemy <strong>Fail2ban</strong>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Zaktualizuj listę pakietów i zainstaluj Fail2ban</span>
+      sudo apt update sudo apt install fail2ban -y
+
+      <span class="cli-comment"
+       ># 2. Sprawdź, czy usługa działa (powinna uruchomić się automatycznie)</span
+      >
+      sudo systemctl status fail2ban
+     </div>
+
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-top: 15px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Jak działa Fail2ban?</h4>
+      <p>
+       Pamiętasz Lab 6, gdzie używaliśmy <code>grep</code> do szukania słowa "Failed" w pliku
+       <code>/var/log/auth.log</code>? Fail2ban to po prostu skrypt, który robi to samo, ale
+       automatycznie i w czasie rzeczywistym! Jeśli zauważy, że z jednego adresu IP przyszło np. 5
+       błędnych haseł w ciągu 10 minut, natychmiast dodaje ten adres IP do "czarnej listy" w zaporze
+       UFW na określony czas (np. 10 minut).
+      </p>
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Symulacja Ataku (Z Windowsa)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Przetestujmy naszego strażnika. Wcielimy się w rolę hakera atakującego z maszyny Windows 10.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Na Windowsie:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa.
+       <div class="cli-block">ssh -p 2222 administrator@192.168.10.20</div>
+      </li>
+      <li>Gdy system zapyta o hasło, <strong>wpisz błędne hasło</strong> i wciśnij Enter.</li>
+      <li>Powtórz tę czynność (wpisywanie błędnego hasła) około 5-6 razy.</li>
+      <li>
+       <strong>Efekt:</strong> Nagle terminal "zawiśnie" lub wyrzuci błąd
+       <code>Connection timed out</code> / <code>Connection refused</code>. Nie będziesz mógł nawet
+       spingować serwera! Zostałeś zbanowany.
+      </li>
+     </ul>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Analiza i Ułaskawienie (Na Linuxie)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Skoro Twój Windows dostał bana, nie połączysz się już przez SSH. Musisz otworzyć okno
+      VirtualBoxa z Ubuntu (konsolę lokalną), zalogować się i sprawdzić, co się stało.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Sprawdź status "więzienia" (jail) dla usługi SSH</span>
+      sudo fail2ban-client status sshd
+     </div>
+
+     <p>
+      Na ekranie zobaczysz statystyki. W sekcji <code>Banned IP list:</code> powinien widnieć adres
+      IP Twojego Windowsa (<code>192.168.10.10</code> lub <code>192.168.10.30</code>)!
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 2. Ułaskawienie: Zdejmij bana z adresu IP Windowsa (podmień IP na to, które widziałeś
+       wyżej!)</span
+      >
+      sudo fail2ban-client set sshd unbanip 192.168.10.10
+
+      <span class="cli-comment"
+       ># 3. Sprawdź status UFW (zobaczysz, że Fail2ban zarządza regułami za Ciebie)</span
+      >
+      sudo ufw status
+     </div>
+
+     <p>Wróć na Windowsa. Połączenie SSH znów powinno działać (tym razem podaj poprawne hasło!).</p>
+    </div>
+   </div>
+
+   <!-- PODSUMOWANIE -->
+   <div
+    class="conclusion-box"
+    style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
+   >
+    <div class="conclusion-icon">🛡️</div>
+    <div class="conclusion-text">
+     <strong>Wyzwanie Zaliczone!</strong>
+     Twój serwer to teraz prawdziwa twierdza. Nauczyłeś się, że bezpieczeństwo to proces
+     wielowarstwowy: najpierw zmieniliśmy domyślny port (Lab 5), potem zablokowaliśmy niepotrzebny
+     ruch (UFW), a na koniec wdrożyliśmy aktywną ochronę przed atakami słownikowymi (Fail2ban). Tak
+     zabezpiecza się serwery produkcyjne!
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab8-wyzwanie-cron.html" class="course-btn">⬅️ Poprzedni: Wyzwanie 1 (Leniwy Admin)</a>
+   <a href="../index.html" class="course-btn next" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

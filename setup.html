@@ -193,7 +193,7 @@
    <!-- KROK 4: PIERWSZE URUCHOMIENIE -->
    <div class="lab-card">
     <div class="lab-header">
-     <h3>Krok 4: Pierwsze uruchomienie (Statyczny IP)</h3>
+     <h3>Krok 4: Adresacja IP (Fundament Sieci)</h3>
      <span class="time-badge">Wymóg przed Labem 1!</span>
     </div>
     <div class="lab-body">
@@ -202,16 +202,18 @@
       który pobiera adres IP automatycznie (DHCP). Kreator wyrzuci błąd!
      </div>
      <p>
-      Po zainstalowaniu Windows Server 2022, Twoim pierwszym zadaniem jako Administratora jest
-      ustawienie stałego adresu IP <strong>na karcie wewnętrznej (LAN)</strong>.
+      Po zainstalowaniu systemów, Twoim pierwszym zadaniem jest ustawienie stałych adresów IP
+      <strong>na kartach podłączonych do sieci wewnętrznej (INF02-LAN)</strong>.
      </p>
      <div class="gui-path">
       Uruchom: <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> Zidentyfikuj kartę podłączoną
-      do sieci wewnętrznej (zmień jej nazwę na LAN) <span class="gui-arrow">➔</span> Prawy klik
+      do sieci wewnętrznej <span class="gui-arrow">➔</span> Prawy klik
       <span class="gui-arrow">➔</span> Properties (Właściwości)
       <span class="gui-arrow">➔</span> Internet Protocol Version 4 (TCP/IPv4)
      </div>
-     <ul style="margin-left: 20px; margin-top: 10px">
+
+     <h4 style="margin-top: 15px; color: #0984e3">🖥️ Maszyna 1: Windows Server</h4>
+     <ul style="margin-left: 20px; margin-top: 5px">
       <li>Wybierz: <strong>Use the following IP address</strong></li>
       <li>IP address: <code>192.168.10.10</code></li>
       <li>Subnet mask: <code>255.255.255.0</code></li>
@@ -220,6 +222,45 @@
        drugiej zepsuje routing)
       </li>
       <li>Preferred DNS server: <code>127.0.0.1</code> (Serwer będzie sam dla siebie DNS-em)</li>
+     </ul>
+
+     <h4 style="margin-top: 15px; color: #0984e3">💻 Maszyna 2: Windows 10 (Uczeń)</h4>
+     <ul style="margin-left: 20px; margin-top: 5px">
+      <li>Wybierz: <strong>Use the following IP address</strong></li>
+      <li>IP address: <code>192.168.10.30</code></li>
+      <li>Subnet mask: <code>255.255.255.0</code></li>
+      <li>Default gateway: <strong>zostaw puste!</strong> (Na razie nie mamy routera w sieci)</li>
+      <li>Preferred DNS server: <code>192.168.10.10</code> (Wskazujemy na nasz Windows Server)</li>
+     </ul>
+    </div>
+   </div>
+
+   <!-- KROK 5: WERYFIKACJA NARZĘDZI -->
+   <div class="lab-card">
+    <div class="lab-header">
+     <h3>Krok 5: Weryfikacja narzędzi (SSH)</h3>
+     <span class="time-badge">Czas: 2 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="goal-box">
+      Cel: Upewnienie się, że Windows 10 posiada wbudowane narzędzia do zarządzania Linuxem.
+     </div>
+     <p>
+      W nowoczesnym IT nie musisz instalować dodatkowych programów (jak PuTTY), aby zarządzać
+      serwerami Linux. Microsoft wbudował klienta OpenSSH bezpośrednio w system Windows 10!
+     </p>
+     <ul class="task-list">
+      <li>Uruchom maszynę <strong>Windows 10</strong>.</li>
+      <li>
+       Kliknij menu Start, wpisz <code>cmd</code> i wciśnij Enter (uruchomi się Wiersz poleceń).
+      </li>
+      <li>W czarnym oknie wpisz komendę: <code>ssh</code> i wciśnij Enter.</li>
+      <li>
+       <strong>Wynik:</strong> Jeśli zobaczysz listę dostępnych opcji (np.
+       <em>usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy]...</em>), oznacza to, że Twój system jest gotowy do
+       laboratoriów z integracji! Jeśli system zwróci błąd "nie rozpoznano polecenia", upewnij się,
+       że pobrałeś najnowszą wersję Windows 10 z linku w Kroku 2.
+      </li>
      </ul>
     </div>
    </div>
