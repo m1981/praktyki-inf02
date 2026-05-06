@@ -1,0 +1,232 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wyzwanie 4: Wstęp do DevOps (Docker)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+    --challenge-gold: #f1c40f;
+    --challenge-gold-bg: #fdfae6;
+    --docker-blue: #0db7ed;
+    --docker-blue-bg: #e1f5fe;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+   .card.challenge {
+    border-top-color: var(--challenge-gold);
+   }
+   .card.docker {
+    border-top-color: var(--docker-blue);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🐳 Wyzwanie 4: Wstęp do DevOps</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Koniec z ciężkimi maszynami wirtualnymi. Czas na Kontenery (Docker)!
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div
+    class="goal-box"
+    style="background: var(--docker-blue-bg); border-color: var(--docker-blue)"
+   >
+    <strong>Cel Wyzwania (Boss Fight):</strong> Zrozumieć, jak działa nowoczesne IT. Zainstalujemy
+    silnik Docker i uruchomimy w pełni funkcjonalny serwer WWW w odizolowanym kontenerze za pomocą
+    zaledwie jednej komendy.
+   </div>
+
+   <details class="theory-block" style="margin-bottom: 20px">
+    <summary>Czym różni się Kontener od Maszyny Wirtualnej?</summary>
+    <div class="theory-content">
+     <p>
+      <strong>Maszyna Wirtualna (np. VirtualBox):</strong> Emuluje cały sprzęt (płytę główną, dysk,
+      RAM) i instaluje na nim pełny, ciężki system operacyjny (np. Windows Server ważący 15 GB).
+      Uruchamia się kilka minut.
+     </p>
+     <p>
+      <strong>Kontener (Docker):</strong> Nie emuluje sprzętu. Współdzieli jądro (kernel) z systemem
+      gospodarza (Twoim Ubuntu). Pakuje tylko samą aplikację (np. serwer WWW) i jej niezbędne
+      biblioteki. Waży kilka megabajtów i uruchamia się w ułamek sekundy!
+     </p>
+    </div>
+   </details>
+
+   <!-- KROK 1 -->
+   <div class="lab-card docker">
+    <div class="lab-header">
+     <h3>Krok 1: Instalacja Silnika (Docker Engine)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Aby uruchamiać kontenery, potrzebujemy programu zarządzającego – silnika Docker. W Ubuntu
+      instalacja jest bardzo prosta.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Zaktualizuj pakiety i zainstaluj Dockera (pobierze ok. 100-200 MB)</span
+      >
+      sudo apt update sudo apt install docker.io -y
+
+      <span class="cli-comment"># 2. Sprawdź, czy silnik działa i włącza się po restarcie</span>
+      sudo systemctl enable --now docker sudo systemctl status docker
+     </div>
+     <p><em>(Wciśnij 'q', aby wyjść ze statusu).</em></p>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card challenge">
+    <div class="lab-header">
+     <h3>Krok 2: Magia jednej komendy (Run)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Wyzwaniu 3 instalowaliśmy Nginxa bezpośrednio na naszym systemie. Teraz uruchomimy inny
+      serwer WWW (Apache - <code>httpd</code>), ale zamkniemy go w kontenerze.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># Uruchom kontener z serwerem Apache</span>
+      <span class="cli-comment"
+       ># Flagi: -d (działaj w tle/detached), -p (przekieruj port 8080 z Ubuntu na port 80 w
+       kontenerze), --name (nazwij kontener)</span
+      >
+      sudo docker run -d -p 8080:80 --name moj_serwer httpd
+     </div>
+
+     <p><strong>Co się właśnie stało?</strong></p>
+     <ol>
+      <li>Docker zauważył, że nie masz obrazu <code>httpd</code> na dysku.</li>
+      <li>Szybko pobrał go z internetu (z Docker Hub).</li>
+      <li>Stworzył z niego odizolowany kontener.</li>
+      <li>
+       Uruchomił go w tle i połączył port 8080 Twojego Ubuntu z portem 80 wewnątrz kontenera.
+      </li>
+     </ol>
+     <p>Wszystko to w kilka sekund!</p>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 3: Weryfikacja i Test z Windowsa</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <div class="cli-block">
+      <span class="cli-comment"># Sprawdź listę działających kontenerów</span>
+      sudo docker ps
+     </div>
+     <p>
+      Zobaczysz tabelę, w której widnieje Twój kontener <code>moj_serwer</code> oraz informacja o
+      portach: <code>0.0.0.0:8080->80/tcp</code>.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Test z Windowsa:</strong> Przejdź na maszynę Windows 10. Otwórz przeglądarkę i wpisz
+       adres IP Linuxa, ale tym razem z portem 8080: <br /><code>http://192.168.10.20:8080</code>
+      </li>
+      <li>
+       Powinieneś zobaczyć wielki napis <strong>It works!</strong> (To domyślna strona serwera
+       Apache).
+      </li>
+     </ul>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 Zapora UFW (Przypomnienie):</strong>
+      Jeśli w Wyzwaniu 2 włączyłeś zaporę UFW, musisz odblokować port 8080, aby Windows mógł się
+      połączyć!
+      <br /><code>sudo ufw allow 8080/tcp</code>
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card docker">
+    <div class="lab-header">
+     <h3>Krok 4: Zarządzanie Kontenerami</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Kontenery są "jednorazowe". Jeśli coś zepsujesz, po prostu usuwasz kontener i stawiasz nowy w
+      3 sekundy.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Zatrzymanie kontenera (strona WWW przestanie działać)</span>
+      sudo docker stop moj_serwer
+
+      <span class="cli-comment"
+       ># 2. Usunięcie kontenera (bezpowrotnie kasuje kontener, ale obraz httpd zostaje na
+       dysku)</span
+      >
+      sudo docker rm moj_serwer
+
+      <span class="cli-comment"># 3. Sprawdź, czy kontener zniknął</span>
+      sudo docker ps -a
+     </div>
+
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-top: 15px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">
+       🕵️‍♂️ Sekret Inżyniera: Dlaczego Docker zmienił świat?
+      </h4>
+      <p>
+       Kiedyś programiści mówili:
+       <em>"U mnie na komputerze działa, nie wiem dlaczego na serwerze nie działa"</em>. Docker
+       rozwiązał ten problem. Programista pakuje swoją aplikację do kontenera razem ze wszystkimi
+       bibliotekami. Jeśli kontener działa na laptopie programisty, zadziała dokładnie tak samo na
+       serwerze testowym, produkcyjnym i w chmurze AWS. To fundament kultury
+       <strong>DevOps</strong> (Development + Operations).
+      </p>
+     </div>
+    </div>
+   </div>
+
+   <!-- PODSUMOWANIE -->
+   <div
+    class="conclusion-box"
+    style="background: var(--docker-blue-bg); border-color: var(--docker-blue)"
+   >
+    <div class="conclusion-icon">🏆</div>
+    <div class="conclusion-text">
+     <strong>Wyzwanie Zaliczone! Jesteś gotowy na przyszłość.</strong>
+     Właśnie dotknąłeś technologii, na której opiera się dzisiejszy internet (Netflix, Spotify,
+     banki – wszyscy używają kontenerów). Zrozumiałeś różnicę między ciężką wirtualizacją
+     (VirtualBox) a lekką konteneryzacją (Docker). Gratulacje za ukończenie wszystkich wyzwań!
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab10-wyzwanie-nginx.html" class="course-btn">⬅️ Poprzedni: Wyzwanie 3 (Nginx)</a>
+   <a href="../index.html" class="course-btn next" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>

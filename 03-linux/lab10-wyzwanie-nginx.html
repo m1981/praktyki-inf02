@@ -1,0 +1,209 @@
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wyzwanie 3: Konkurencja dla IIS (Nginx)</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   :root {
+    --ubu-orange: #e95420;
+    --ubu-orange-bg: #fdf3f0;
+    --ubu-purple: #77216f;
+    --ubu-purple-bg: #f5eef5;
+    --ubu-dark: #2c001e;
+    --challenge-gold: #f1c40f;
+    --challenge-gold-bg: #fdfae6;
+   }
+   .card.ubu-orange {
+    border-top-color: var(--ubu-orange);
+   }
+   .card.ubu-purple {
+    border-top-color: var(--ubu-purple);
+   }
+   .card.challenge {
+    border-top-color: var(--challenge-gold);
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🌟 Wyzwanie 3: Konkurencja dla IIS</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Błyskawiczny serwer WWW (Nginx) i analiza logów dostępu w czasie rzeczywistym
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div
+    class="goal-box"
+    style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
+   >
+    <strong>Cel Wyzwania:</strong> Postawienie serwera WWW na Linuxie i porównanie tego procesu z
+    instalacją IIS na Windows Serverze. Zrozumienie, dlaczego większość internetu działa na
+    systemach uniksowych.
+   </div>
+
+   <!-- KROK 1 -->
+   <div class="lab-card challenge">
+    <div class="lab-header">
+     <h3>Krok 1: Błyskawiczna Instalacja (Nginx)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Przypomnij sobie, jak instalowałeś rolę <em>Serwer sieci Web (IIS)</em> na Windowsie. Menedżer
+      serwera, kreator, wybieranie ról, czekanie na pasek postępu... W Linuxie zrobimy to jednym
+      poleceniem. Użyjemy serwera <strong>Nginx</strong> (czyt. <em>Engine-X</em>) –
+      najpopularniejszego serwera WWW na świecie.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"
+       ># 1. Zaktualizuj listę pakietów i zainstaluj Nginx (flaga -y automatycznie potwierdza
+       instalację)</span
+      >
+      sudo apt update sudo apt install nginx -y
+
+      <span class="cli-comment"
+       ># 2. Sprawdź, czy usługa działa (powinna wstać automatycznie!)</span
+      >
+      sudo systemctl status nginx
+     </div>
+     <p><em>(Wciśnij 'q', aby wyjść ze statusu).</em></p>
+    </div>
+   </div>
+
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Własna strona WWW</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Windowsie domyślnym folderem dla stron WWW jest <code>C:\inetpub\wwwroot</code> (lub
+      <code>C:\www</code>, jeśli tak ustawisz). W Linuxie standardowym miejscem na pliki stron
+      internetowych jest katalog <code>/var/www/html</code>.
+     </p>
+
+     <div class="cli-block">
+      <span class="cli-comment"># 1. Przejdź do katalogu ze stroną</span>
+      cd /var/www/html
+
+      <span class="cli-comment"
+       ># 2. Zobacz, co tam jest (znajdziesz domyślny plik index.nginx-debian.html)</span
+      >
+      ls -l
+
+      <span class="cli-comment"
+       ># 3. Nadpiszmy domyślną stronę własnym kodem HTML (wymaga sudo!)</span
+      >
+      sudo sh -c 'echo "&lt;h1&gt;Witaj z Linuxa! Nginx dziala blyskawicznie!&lt;/h1&gt;" >
+      index.html'
+     </div>
+    </div>
+   </div>
+
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Test z Windowsa (i pułapka!)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Przejdź na maszynę <strong>Windows 10</strong>, otwórz przeglądarkę internetową i wpisz adres
+      IP swojego Linuxa: <code>http://192.168.10.20</code>.
+     </p>
+
+     <div class="pitfall-box danger">
+      <strong>🚨 Strona się nie ładuje? (Jeśli robiłeś Wyzwanie 2)</strong>
+      Jeśli w poprzednim wyzwaniu włączyłeś zaporę UFW (<code>sudo ufw enable</code>), to domyślnie
+      blokuje ona cały ruch z wyjątkiem SSH! Musisz wrócić na Linuxa i zrobić "dziurę" w zaporze dla
+      ruchu HTTP (port 80). <br /><br />
+      <strong>Rozwiązanie na Linuxie:</strong><br />
+      <code>sudo ufw allow 80/tcp</code><br />
+      <code>sudo ufw status</code>
+     </div>
+
+     <p>
+      Po odblokowaniu portu 80, odśwież stronę na Windowsie. Powinieneś zobaczyć swój wielki napis:
+      <em>Witaj z Linuxa!</em>
+     </p>
+    </div>
+   </div>
+
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Podglądanie ruchu (Access Logs)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Jako administrator musisz wiedzieć, kto i kiedy odwiedza Twoją stronę. Nginx zapisuje każde
+      zapytanie w specjalnym pliku logów. Użyjemy komendy <code>tail -f</code> (poznanej w Labie 6),
+      aby obserwować ten ruch na żywo.
+     </p>
+
+     <ul class="task-list">
+      <li>
+       <strong>Na Linuxie:</strong> Uruchom śledzenie logów dostępu:
+       <div class="cli-block">sudo tail -f /var/log/nginx/access.log</div>
+      </li>
+      <li>
+       <strong>Na Windowsie:</strong> Ułóż okna tak, aby widzieć terminal Linuxa. W przeglądarce na
+       Windowsie wciśnij <strong>F5 (Odśwież)</strong> kilka razy.
+      </li>
+      <li>
+       <strong>Obserwuj Linuxa:</strong> Zobaczysz, jak z każdym odświeżeniem strony na czarnym
+       ekranie pojawia się nowa linijka! Będzie tam adres IP Twojego Windowsa
+       (<code>192.168.10.30</code>), data, godzina oraz informacja o przeglądarce (User-Agent).
+      </li>
+     </ul>
+
+     <div
+      class="card engineer-secret"
+      style="border-top-color: #e84118; background-color: #fff5f5; margin-top: 15px"
+     >
+      <h4 style="color: #e84118; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Nginx vs IIS</h4>
+      <p>
+       Dlaczego Nginx jest tak popularny? Ponieważ jest niesamowicie lekki i potrafi obsłużyć
+       dziesiątki tysięcy jednoczesnych połączeń przy minimalnym zużyciu RAMu. W nowoczesnym IT
+       Nginx rzadko serwuje same pliki HTML – najczęściej działa jako
+       <strong>Reverse Proxy</strong> (odwrotne proxy) lub <strong>Load Balancer</strong>,
+       rozdzielając ruch na dziesiątki innych serwerów ukrytych na zapleczu.
+      </p>
+     </div>
+    </div>
+   </div>
+
+   <!-- PODSUMOWANIE -->
+   <div
+    class="conclusion-box"
+    style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
+   >
+    <div class="conclusion-icon">🚀</div>
+    <div class="conclusion-text">
+     <strong>Wyzwanie Zaliczone!</strong>
+     Właśnie postawiłeś produkcyjny serwer WWW w mniej niż minutę. Zrozumiałeś, jak ważne jest
+     zarządzanie zaporą (UFW) przy dodawaniu nowych usług i nauczyłeś się monitorować ruch sieciowy
+     w czasie rzeczywistym.
+    </div>
+   </div>
+  </main>
+
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab9-wyzwanie-twierdza.html" class="course-btn">⬅️ Poprzedni: Wyzwanie 2 (Twierdza)</a>
+   <a
+    href="lab11-wyzwanie-docker.html"
+    class="course-btn next"
+    style="background-color: #2d3436; color: white"
+    >Następny: Wyzwanie 4 (Docker) ➡️</a
+   >
+  </div>
+
+  <script src="../menu.js"></script>
+ </body>
+</html>
