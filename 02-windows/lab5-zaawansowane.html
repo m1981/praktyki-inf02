@@ -26,8 +26,9 @@
        <strong>Krok 1: Dwie karty sieciowe</strong>
        <p>
         Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj
-        <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em> (to będzie nasz WAN).
-        Pierwsza karta zostaje na <em>Internal Network (Sieć wewnętrzna)</em> (to nasz LAN).
+        <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em> (to będzie nasz WAN, który
+        dostanie adres np. <code>10.0.2.15</code>). Pierwsza karta zostaje na
+        <em>Internal Network (Sieć wewnętrzna)</em> (to nasz LAN: <code>192.168.10.10</code>).
        </p>
       </li>
       <li>
@@ -71,6 +72,14 @@
            ‒ włącz usługę rutingu oraz NAT dla adresu 172.31.0.2 jako interfejsu publicznego
           </p>
          </blockquote>
+         <p>
+          <em
+           ><strong>Uwaga Trenera:</strong> W tym zadaniu egzaminacyjnym adres WAN to 172.31.0.2. W
+           naszym laboratorium VirtualBox Twoja karta WAN (NAT) otrzyma inny adres (np. 10.0.2.15).
+           Zasada konfiguracji jest jednak identyczna – wskazujesz kartę podłączoną do
+           "Internetu".</em
+          >
+         </p>
         </div>
        </details>
       </li>
@@ -138,7 +147,8 @@
       <div class="golden-rule-box">
        <strong>💡 Złota Rada Trenera:</strong> Po utworzeniu zespołu (Team), Twoje dwie fizyczne
        karty tracą swoje adresy IP! Musisz wejść w ustawienia sieciowe (ncpa.cpl) i nadać adres IP
-       nowej, wirtualnej karcie o nazwie <code>LAN_Zespol</code>.
+       nowej, wirtualnej karcie o nazwie <code>LAN_Zespol</code> (użyj naszego standardowego adresu:
+       <code>192.168.10.10</code>).
       </div>
      </ul>
     </div>
@@ -160,8 +170,8 @@
        </div>
        <p>
         Wybierz "Add a printer using a TCP/IP address or hostname" (Dodaj drukarkę używając adresu
-        TCP/IP). Wpisz adres, np.
-        <code>192.168.10.200</code>. Zainstaluj sterownik Generic / Text Only.
+        TCP/IP). Wpisz adres: <code>192.168.10.250</code> (jest to wolny adres statyczny w naszej
+        sieci). Zainstaluj sterownik Generic / Text Only.
        </p>
       </li>
       <li>
@@ -199,6 +209,13 @@
            ‒ dostępność od godziny 8:00 do godziny 21:00
           </p>
          </blockquote>
+         <p>
+          <em
+           ><strong>Uwaga Trenera:</strong> W tym zadaniu egzaminacyjnym drukarka znajdowała się w
+           innej podsieci (192.168.0.x). W naszym laboratorium symulujemy drukarkę w naszej własnej
+           sieci LAN, dlatego używamy adresu 192.168.10.250.</em
+          >
+         </p>
         </div>
        </details>
       </li>

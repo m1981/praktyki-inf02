@@ -55,6 +55,10 @@
    .service-badge.pending {
     background: #b2bec3;
    }
+   .net-change-alert {
+    color: #d63031;
+    font-weight: bold;
+   }
   </style>
  </head>
  <body>
@@ -71,17 +75,18 @@
     W prawdziwym IT nie zmieniamy adresów IP co 5 minut. Budujemy środowisko raz, a dobrze. Zanim
     zaczniesz jakikolwiek Lab, sprawdź w tej tabeli, na jakim etapie jesteśmy.
     <strong>Karta 1 (NAT)</strong> daje Ci Internet.
-    <strong>Karta 2 (Sieć Wewnętrzna: INF02-LAN)</strong> to nasza prywatna piaskownica.
+    <strong>Karta 2 (Sieć Wewnętrzna: INF02-LAN)</strong> to nasza prywatna piaskownica (podsieć
+    <code>192.168.10.0/24</code>).
    </div>
 
-   <!-- TYDZIEŃ 2 -->
+   <!-- FAZA 1: LINUX START -->
    <div class="lab-card" style="border-top-color: #e17055">
     <div class="lab-header">
-     <h3>Faza 1: Tydzień 2 (Linux SysOps)</h3>
+     <h3>Faza 1: Tydzień 2 (Linux SysOps - Start)</h3>
      <span class="time-badge">Start</span>
     </div>
     <div class="lab-body">
-     <p>Uczymy się podstaw Linuxa. Windowsy są wyłączone, żeby nie zużywać RAM-u.</p>
+     <p>Uczymy się podstaw Linuxa w izolacji. Windowsy są wyłączone.</p>
      <table class="topology-table">
       <thead>
        <tr>
@@ -95,7 +100,11 @@
        <tr>
         <td><strong>🐧 Ubuntu Server</strong></td>
         <td>DHCP (np. <span class="ip-highlight">10.0.2.15</span>)</td>
-        <td>IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama: <em>Brak</em></td>
+        <td>
+         IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama: <em>Brak</em><br /><small
+          >(Tymczasowy IP do nauki)</small
+         >
+        </td>
         <td><span class="service-badge">SSH</span></td>
        </tr>
        <tr>
@@ -113,7 +122,7 @@
     </div>
    </div>
 
-   <!-- TYDZIEŃ 3 -->
+   <!-- FAZA 2: WINDOWS AD -->
    <div class="lab-card" style="border-top-color: #0984e3">
     <div class="lab-header">
      <h3>Faza 2: Tydzień 3 (Serce Firmy - AD)</h3>
@@ -122,7 +131,7 @@
     <div class="lab-body">
      <p>
       Uruchamiamy Windows Server. Stawiamy domenę <code>zs1.local</code> i podłączamy stację
-      roboczą.
+      roboczą. Linux chwilowo odpoczywa.
      </p>
      <table class="topology-table">
       <thead>
@@ -136,9 +145,10 @@
       <tbody>
        <tr>
         <td><strong>🐧 Ubuntu Server</strong></td>
-        <td>DHCP</td>
-        <td>IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama: <em>Brak</em></td>
-        <td><span class="service-badge">SSH</span></td>
+        <td colspan="2" style="text-align: center; color: #b2bec3">
+         <em>Maszyna wyłączona (lub nieużywana)</em>
+        </td>
+        <td><span class="service-badge pending">Czeka</span></td>
        </tr>
        <tr>
         <td><strong>🪟 Win Server 2022</strong></td>
@@ -166,16 +176,16 @@
     </div>
    </div>
 
-   <!-- TYDZIEŃ 4 -->
+   <!-- FAZA 3: ROUTING I INTEGRACJA -->
    <div class="lab-card" style="border-top-color: #00b894">
     <div class="lab-header">
      <h3>Faza 3: Tydzień 4 (Krwiobieg - DHCP & RRAS)</h3>
-     <span class="time-badge">Automatyzacja</span>
+     <span class="time-badge">Automatyzacja & Migracja</span>
     </div>
     <div class="lab-body">
      <p>
-      Windows Server staje się routerem (NAT) i serwerem WWW. Windows 10 przechodzi na automatyczne
-      IP.
+      Windows Server staje się routerem (NAT). <strong>Kluczowy moment:</strong> Przenosimy Linuxa
+      do głównej podsieci!
      </p>
      <table class="topology-table">
       <thead>
@@ -191,7 +201,8 @@
         <td><strong>🐧 Ubuntu Server</strong></td>
         <td><em>Wyłączona!</em> (Test RRAS)</td>
         <td>
-         IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama:
+         <span class="net-change-alert">⚠️ ZMIANA IP!</span><br />
+         IP: <span class="ip-highlight">192.168.10.20/24</span><br />Brama:
          <span class="ip-highlight">192.168.10.10</span><br />DNS:
          <span class="ip-highlight">192.168.10.10</span>
         </td>
@@ -213,19 +224,20 @@
        <tr>
         <td><strong>💻 Windows 10</strong></td>
         <td><em>Wyłączona</em></td>
-        <td><strong>DHCP</strong> (Pobiera IP, Bramę .10 i DNS .10)</td>
+        <td><strong>DHCP</strong> (Pobiera IP .100+, Bramę .10 i DNS .10)</td>
         <td><span class="service-badge">W Domenie</span></td>
        </tr>
       </tbody>
      </table>
      <div class="pitfall-box danger" style="margin-top: 15px">
-      <strong>🚨 Uwaga na Ubuntu:</strong> W tej fazie wyłączamy pierwszą kartę (NAT) w Ubuntu! Od
-      teraz Linux musi wychodzić do Internetu przez nasz Windows Server (Brama: 192.168.10.10).
+      <strong>🚨 Uwaga na Ubuntu:</strong> W tej fazie musisz ręcznie zmienić IP Linuxa na
+      <code>192.168.10.20</code> (używając Netplan) i wyłączyć jego pierwszą kartę (NAT) w
+      VirtualBox. Od teraz Linux wychodzi na świat przez Windows Server!
      </div>
     </div>
    </div>
 
-   <!-- TYDZIEŃ 5 -->
+   <!-- FAZA 4: INTEGRACJA FINALNA -->
    <div class="lab-card" style="border-top-color: #9c88ff">
     <div class="lab-header">
      <h3>Faza 4: Tydzień 5 (Integracja Win-Lin)</h3>
@@ -233,7 +245,7 @@
     </div>
     <div class="lab-body">
      <p>
-      Wszystko działa jako jeden organizm. Testujemy współpracę systemów i rozwiązujemy problemy.
+      Wszystko działa w jednej podsieci <code>192.168.10.0/24</code>. Testujemy współpracę systemów.
      </p>
      <table class="topology-table">
       <thead>
@@ -249,7 +261,7 @@
         <td><strong>🐧 Ubuntu Server</strong></td>
         <td><em>Wyłączona</em></td>
         <td>
-         IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama:
+         IP: <span class="ip-highlight">192.168.10.20/24</span><br />Brama:
          <span class="ip-highlight">192.168.10.10</span><br />DNS:
          <span class="ip-highlight">192.168.10.10</span>
         </td>
