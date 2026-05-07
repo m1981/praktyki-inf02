@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab 3: Pliki i Uprawnienia - Windows Server</title>
   <link rel="stylesheet" href="../common.css" />
+  <style>
+   /* Styl dla zrzutów ekranu wewnątrz kroków */
+   .step-screenshot {
+    display: block;
+    max-width: 95%;
+    height: auto;
+    margin: 15px auto;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   }
+  </style>
  </head>
  <body>
   <header>
@@ -22,172 +34,116 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Konfiguracja uprawnień do plików (NTFS), ukrytych udziałów sieciowych oraz profili
-      mobilnych.
+      Cel: Konfiguracja bezpiecznego, ukrytego folderu sieciowego i wykorzystanie go do
+      przechowywania profili mobilnych użytkowników.
      </div>
 
      <div
       class="golden-rule-box"
       style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
      >
-      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Zanim zaczniesz, wejdź w ustawienia obu
-      maszyn (Serwer i Windows 10) w VirtualBox. Upewnij się, że w zakładce
-      <em>Network (Sieć)</em> karta jest ustawiona na
-      <strong>Internal Network (Sieć wewnętrzna)</strong>. Jeśli zostawisz NAT, maszyny się nie
-      zobaczą!
+      <strong>🌐 Pre-flight Check:</strong> Upewnij się, że masz utworzonego użytkownika w AD (np.
+      Adam Abacki / abackia - patrz Ekran 11 w przewodniku) oraz że obie maszyny (Serwer i Klient)
+      są w tej samej sieci wewnętrznej i widzą się nawzajem.
      </div>
 
      <ul class="task-list">
+      <!-- KROK 1: UKRYTY UDZIAŁ (EKRAN 12) -->
       <li>
-       <strong>Krok 1: Ukryty udział dla profili</strong>
+       <strong>Krok 1: Utworzenie ukrytego udziału sieciowego (Share)</strong>
        <p>
-        Utwórz na dysku C: folder <code>Profile</code>. Udostępnij go w sieci, ale dodaj znak
-        <code>$</code> na końcu nazwy udziału (<code>Profile$</code>). Dzięki temu będzie
-        niewidoczny dla wścibskich uczniów.
+        Na dysku C: utwórz folder <code>Profile</code>. Wejdź w jego właściwości, zakładka
+        <strong>Udostępnianie (Sharing)</strong> ->
+        <strong>Udostępnianie zaawansowane (Advanced Sharing)</strong>.
        </p>
-
-       <!-- REFERENCJA EGZAMINACYJNA -->
-       <details class="exam-reference">
-        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-        <div class="exam-content">
-         <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
-         <p>
-          <strong>Arkusz:</strong>
-          <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
-           >Pobierz PDF</a
-          >
-         </p>
-         <blockquote>
-          <p>
-           <em style="color: #636e72"
-            >Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em
-           >
-          </p>
-          <p>
-           <strong>Treść zadania:</strong><br />
-           ‒ utwórz folder C:\Profile i udostępnij go pod nazwą profile$<br />
-           ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko dla Wszyscy – Pełna kontrola
-          </p>
-         </blockquote>
-        </div>
-       </details>
-      </li>
-      <li>
-       <strong>Krok 2: Profil Mobilny (Roaming Profile)</strong>
-       <div class="gui-path">
-        Properties (Właściwości) użytkownika 'maciek' w AD
-        <span class="gui-arrow">➔</span> Profile (Profil) tab
-        <span class="gui-arrow">➔</span> Profile path (Ścieżka profilu)
+       <p>
+        Zaznacz "Udostępnij ten folder". W nazwie udziału dodaj na końcu znak dolara:
+        <code>profile$</code>. To sprawi, że folder będzie niewidoczny w otoczeniu sieciowym.
+       </p>
+       <img
+        src="../img/ekran-12-hidden-share-profile.jpg"
+        alt="Ekran 12: Tworzenie ukrytego udziału profile$"
+        class="step-screenshot"
+       />
+       <div class="golden-rule-box">
+        <strong>💡 Złota Rada Trenera (Uprawnienia Udziału):</strong>
+        Kliknij przycisk <strong>Uprawnienia (Permissions)</strong> w tym oknie i upewnij się, że
+        grupa <strong>Wszyscy (Everyone)</strong> ma <strong>Pełną kontrolę (Full Control)</strong>.
+        Prawdziwe restrykcje ustawimy za chwilę w NTFS.
        </div>
-       <p>
-        Wpisz ścieżkę UNC: <code>\\NAZWA_SERWERA\Profile$\%username%</code>. Zaloguj się jako maciek
-        na Windows 10, stwórz plik na pulpicie, wyloguj się i sprawdź na serwerze, czy plik się
-        zsynchronizował!
-       </p>
-
-       <!-- REFERENCJA EGZAMINACYJNA -->
-       <details class="exam-reference">
-        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-        <div class="exam-content">
-         <p><strong>Egzamin:</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
-         <p>
-          <strong>Arkusz:</strong>
-          <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
-           >Pobierz PDF</a
-          >
-         </p>
-         <blockquote>
-          <p>
-           <em style="color: #636e72"
-            >Zadanie: 6. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em
-           >
-          </p>
-          <p>
-           <strong>Treść zadania:</strong><br />
-           ‒ dla użytkownika Adam Abacki ustaw ścieżkę profilu mobilnego, który będzie zlokalizowany
-           w udostępnionym folderze
-          </p>
-         </blockquote>
-        </div>
-       </details>
       </li>
 
-      <div class="golden-rule-box">
-       <strong>💡 Złota Rada Trenera (Najbardziej restrykcyjne wygrywa):</strong>
-       Jeśli na zakładce <em>Sharing (Udostępnianie)</em> dasz "Full control (Pełną kontrolę)", ale
-       w <em>Security (Zabezpieczeniach NTFS)</em> dasz tylko "Read (Odczyt)", to użytkownik będzie
-       miał tylko odczyt. Zawsze dawaj "Everyone - Full control" w Udostępnianiu, a prawdziwe
-       restrykcje ustawiaj w Zabezpieczeniach!
-      </div>
-
+      <!-- KROK 2: UPRAWNIENIA NTFS (EKRAN 13) -->
       <li>
-       <strong>Krok 3: Uprawnienia NTFS i Szyfrowanie (EFS)</strong>
+       <strong>Krok 2: Konfiguracja uprawnień NTFS (Wyłączenie dziedziczenia)</strong>
        <p>
-        Utwórz folder <code>Sprawdziany</code>. W zakładce
-        <strong>Security (Zabezpieczenia)</strong> ustaw:
+        To najważniejsza część zadania. Przejdź do zakładki
+        <strong>Zabezpieczenia (Security)</strong> i kliknij
+        <strong>Zaawansowane (Advanced)</strong>.
        </p>
-       <ul style="margin-left: 20px; margin-bottom: 10px">
-        <li>
-         Administrators (Administratorzy):
-         <strong>Full control (Pełna kontrola)</strong>
-        </li>
-        <li>
-         Users (Użytkownicy):
-         <strong>Read & execute (Odczyt i wykonywanie)</strong>
-        </li>
-       </ul>
        <p>
-        Zaloguj się jako uczeń, stwórz plik tekstowy i zaszyfruj go (Properties (Właściwości) pliku
-        -> Advanced (Zaawansowane) ->
-        <strong>Encrypt contents to secure data (Szyfruj zawartość, aby zabezpieczyć dane)</strong
-        >). Spróbuj go otworzyć z konta Administratora (Odmowa dostępu!).
+        Aby spełnić wymóg "tylko dla Administratorów i Użytkowników", musisz kliknąć
+        <strong>Wyłącz dziedziczenie (Disable inheritance)</strong>. Pojawi się kluczowe
+        ostrzeżenie:
        </p>
+       <img
+        src="../img/ekran-13a-ntfs-inheritance-warning.jpg"
+        alt="Ekran 13a: Ostrzeżenie przy wyłączaniu dziedziczenia - wybierz Konwertuj"
+        class="step-screenshot"
+       />
+       <p>
+        Wybierz pierwszą opcję:
+        <strong
+         >"Skonwertuj uprawnienia odziedziczone na uprawnienia jawne..." (Convert inherited
+         permissions...)</strong
+        >.
+       </p>
+       <p>
+        Następnie usuń z listy zbędne grupy (np. SYSTEM, Użytkownicy uwierzytelnieni), zostawiając
+        tylko <strong>Administratorów</strong> i <strong>Użytkowników</strong>. Upewnij się, że obie
+        grupy mają <strong>Pełną kontrolę</strong>. Efekt końcowy:
+       </p>
+       <img
+        src="../img/ekran-13b-ntfs-permissions-final.jpg"
+        alt="Ekran 13b: Finalne uprawnienia NTFS z wyłączonym dziedziczeniem"
+        class="step-screenshot"
+       />
+      </li>
 
-       <!-- REFERENCJA EGZAMINACYJNA (Dwa arkusze!) -->
-       <details class="exam-reference">
-        <summary>Zobacz oryginalne zadania z egzaminów</summary>
-        <div class="exam-content">
-         <p><strong>Egzamin (Uprawnienia NTFS):</strong> Czerwiec 2022 (INF.02-01-22.06-SG)</p>
-         <p>
-          <strong>Arkusz:</strong>
-          <a href="../egzaminy/inf02-2022-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
-           >Pobierz PDF</a
-          >
-         </p>
-         <blockquote>
-          <p>
-           <em style="color: #636e72"
-            >Zadanie: 7. Skonfiguruj serwer z zainstalowanym systemem Windows: (...)</em
-           >
-          </p>
-          <p>
-           <strong>Treść zadania:</strong><br />
-           ‒ ustaw zabezpieczenia utworzonego folderu dla:<br />
-           ‒ Administratorzy – Pełna kontrola<br />
-           ‒ Użytkownicy – Odczyt i wykonywanie
-          </p>
-         </blockquote>
-         <hr style="border: 0; border-top: 1px solid #dfe6e9; margin: 15px 0" />
-         <p><strong>Egzamin (Szyfrowanie EFS):</strong> Czerwiec 2025 (INF.02-01-25.06-SG)</p>
-         <p>
-          <strong>Arkusz:</strong>
-          <a href="../egzaminy/inf02-2025-czerwiec-egzamin-zawodowy-praktyczny.pdf" target="_blank"
-           >Pobierz PDF</a
-          >
-         </p>
-         <blockquote>
-          <p>
-           <em style="color: #636e72"
-            >Zadanie: 7. Skonfiguruj stację roboczą z zainstalowanym systemem Windows: (...)</em
-           >
-          </p>
-          <p>
-           <strong>Treść zadania:</strong><br />
-           ‒ zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku
-          </p>
-         </blockquote>
-        </div>
-       </details>
+      <!-- KROK 3: PROFIL MOBILNY (EKRAN 14) -->
+      <li>
+       <strong>Krok 3: Konfiguracja ścieżki Profilu Mobilnego</strong>
+       <p>
+        Teraz, gdy folder jest gotowy, przypiszemy go użytkownikowi. Otwórz ADUC
+        (<code>dsa.msc</code>), wejdź we właściwości użytkownika (np. Adam Abacki) i przejdź do
+        zakładki <strong>Profil</strong>.
+       </p>
+       <p>
+        W polu <strong>Ścieżka profilu (Profile path)</strong> wpisz ścieżkę UNC do ukrytego
+        udziału, używając zmiennej <code>%username%</code>. System automatycznie podstawi login
+        użytkownika.
+       </p>
+       <p>Ścieżka: <code>\\SERWER-01\profile$\%username%</code></p>
+       <img
+        src="../img/ekran-14-roaming-profile-path.jpg"
+        alt="Ekran 14: Ustawienie ścieżki profilu mobilnego w ADUC"
+        class="step-screenshot"
+       />
+      </li>
+
+      <!-- KROK 4: SZYFROWANIE EFS (NA KLIENCIE) -->
+      <li>
+       <strong>Krok 4: Weryfikacja i Szyfrowanie EFS (Na stacji roboczej)</strong>
+       <p>
+        Zaloguj się na Windows 10 jako użytkownik domenowy (np. <code>abackia</code>). Pierwsze
+        logowanie potrwa dłużej, bo tworzy się profil mobilny.
+       </p>
+       <p>
+        Utwórz na pulpicie plik (np. <code>tajne.txt</code>). Wejdź w jego Właściwości ->
+        Zaawansowane i zaznacz
+        <strong>"Szyfruj zawartość, aby zabezpieczyć dane" (Encrypt contents to secure data)</strong
+        >. Nazwa pliku powinna zmienić kolor na zielony.
+       </p>
       </li>
 
       <div class="pitfall-box">
@@ -199,19 +155,18 @@
 
      <div class="exam-verify-box">
       <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
-      <p>Aby udowodnić egzaminatorowi poprawne uprawnienia i szyfrowanie:</p>
+      <p>Aby udowodnić egzaminatorowi poprawne wykonanie zadania:</p>
       <ol>
        <li>
-        Zrób zrzut ekranu zakładki
-        <strong>Security (Zabezpieczenia)</strong> folderu <code>Sprawdziany</code>, pokazując
-        uprawnienia dla grupy Users (Użytkownicy).
+        Zrób zrzut ekranu okna <strong>Zaawansowane ustawienia zabezpieczeń</strong> folderu
+        <code>Profile</code> (to, gdzie widać "Inheritance is disabled" i tylko dwie grupy - Ekran
+        13b).
        </li>
        <li>
-        Zrób zrzut ekranu okna Eksploratora, na którym widać, że nazwa zaszyfrowanego pliku zmieniła
-        kolor na <strong>zielony</strong> (lub zrób zrzut okna "Advanced Attributes" z zaznaczonym
-        ptaszkiem przy szyfrowaniu).
+        Na stacji roboczej zrób zrzut ekranu pulpitu, na którym widać, że nazwa zaszyfrowanego pliku
+        jest <strong>zielona</strong>.
        </li>
-       <li>Wklej zrzuty do pliku tekstowego i zapisz na pendrive egzaminacyjnym.</li>
+       <li>Wklej zrzuty do pliku tekstowego na pendrive egzaminacyjnym.</li>
       </ol>
      </div>
     </div>
