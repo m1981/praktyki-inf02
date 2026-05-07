@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab 4: Usługi Sieciowe - Windows Server</title>
   <link rel="stylesheet" href="../common.css" />
+  <style>
+   /* Styl dla zrzutów ekranu wewnątrz kroków */
+   .step-screenshot {
+    display: block;
+    max-width: 95%;
+    height: auto;
+    margin: 15px auto;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   }
+  </style>
  </head>
  <body>
   <header>
@@ -22,18 +34,17 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Uruchomienie szkolnej strony WWW i konfiguracja serwera nazw (DNS).
+      Cel: Uruchomienie szkolnej strony WWW i konfiguracja serwera nazw (DNS), aby strona była
+      dostępna pod przyjazną nazwą domenową.
      </div>
 
      <div
       class="golden-rule-box"
       style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
      >
-      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Zanim zaczniesz, wejdź w ustawienia obu
-      maszyn (Serwer i Windows 10) w VirtualBox. Upewnij się, że w zakładce
-      <em>Network (Sieć)</em> karta jest ustawiona na
-      <strong>Internal Network (Sieć wewnętrzna)</strong>. Jeśli zostawisz NAT, maszyny się nie
-      zobaczą!
+      <strong>🌐 Pre-flight Check:</strong> Upewnij się, że serwer ma ustawiony statyczny adres IP
+      (np. 192.168.10.10) i wskazuje sam na siebie jako serwer DNS (127.0.0.1). Stacja robocza musi
+      mieć ustawiony adres IP serwera jako swój DNS.
      </div>
 
      <ul class="task-list">
@@ -46,19 +57,31 @@
        </div>
       </li>
       <li>
-       <strong>Krok 2: Konfiguracja DNS</strong>
+       <strong>Krok 2: Konfiguracja DNS (Strefa i Rekordy)</strong>
        <div class="gui-path">
         DNS Manager (Menedżer DNS) <span class="gui-arrow">➔</span> Forward Lookup Zones (Strefy
         wyszukiwania do przodu) <span class="gui-arrow">➔</span> New Zone (Nowa strefa)
        </div>
+       <p>Utwórz nową strefę podstawową (Primary Zone) o nazwie <code>intranet.local</code>.</p>
+       <img
+        src="../img/server-dns-01-new-zone.jpg"
+        alt="Ekran 15: Tworzenie nowej strefy DNS intranet.local"
+        class="step-screenshot"
+       />
        <p>
-        Utwórz strefę <code>intranet.local</code>. Wejdź w jej właściwości (zakładka SOA) i zmień
-        <em>Refresh interval (Interwał odświeżania)</em> na 10 minut.
+        Wejdź we właściwości nowej strefy (zakładka SOA) i zmień
+        <em>Refresh interval (Interwał odświeżania)</em> na 10 minut (wymóg egzaminacyjny).
        </p>
        <p>
-        Utwórz <strong>New Host (A) (Nowy rekord hosta A)</strong> (nazwa: <code>www</code>, adres
-        IP: adres Twojego serwera).
+        Następnie kliknij prawym na strefę i utwórz
+        <strong>New Host (A) (Nowy rekord hosta A)</strong>. Wpisz nazwę <code>www</code> i podaj
+        adres IP Twojego serwera (np. <code>192.168.10.10</code>).
        </p>
+       <img
+        src="../img/server-dns-02-new-host-a.jpg"
+        alt="Ekran 16: Dodawanie rekordu hosta A dla www"
+        class="step-screenshot"
+       />
 
        <!-- REFERENCJA EGZAMINACYJNA -->
        <details class="exam-reference">
@@ -99,20 +122,28 @@
       </div>
 
       <li>
-       <strong>Krok 3: Konfiguracja IIS (Host Headers)</strong>
+       <strong>Krok 3: Konfiguracja IIS (Host Headers / Wiązania)</strong>
        <p>
-        Utwórz prosty plik <code>index.html</code> z napisem "Witaj w szkole" i wrzuć go do folderu
-        <code>C:\inetpub\wwwroot\szkola</code>.
+        Najpierw przygotuj treść. Utwórz folder <code>C:\inetpub\wwwroot\szkola</code> i stwórz w
+        nim prosty plik <code>index.html</code> z napisem "Witaj w szkole".
        </p>
        <div class="gui-path">
         IIS Manager (Menedżer IIS) <span class="gui-arrow">➔</span> Sites (Witryny)
         <span class="gui-arrow">➔</span> Add Website (Dodaj witrynę sieci Web)
        </div>
        <p>
-        Wskaż ścieżkę fizyczną. W sekcji
-        <strong>Bindings (Wiązania)</strong> wpisz w polu <em>Host name (Nazwa hosta)</em>:
-        <code>www.intranet.local</code>.
+        Wpisz nazwę witryny (np. SzkolnyIntranet) i wskaż ścieżkę fizyczną do utworzonego folderu.
        </p>
+       <p>
+        <strong>Kluczowy moment:</strong> W sekcji <strong>Bindings (Wiązania)</strong> wpisz w polu
+        <em>Host name (Nazwa hosta)</em>: <code>www.intranet.local</code>. Dzięki temu serwer będzie
+        wiedział, którą stronę pokazać, gdy ktoś wpisze ten konkretny adres.
+       </p>
+       <img
+        src="../img/server-iis-01-website-binding.jpg"
+        alt="Ekran 17: Konfiguracja wiązania (Host Header) w IIS"
+        class="step-screenshot"
+       />
 
        <!-- REFERENCJA EGZAMINACYJNA -->
        <details class="exam-reference">
@@ -147,9 +178,10 @@
 
       <div class="pitfall-box">
        <strong>🚨 Najczęstszy błąd uczniów (Błąd 403 w IIS):</strong> Jeśli usuniesz domyślne
-       uprawnienia z folderu <code>C:\inetpub\wwwroot\szkola</code>, serwer IIS nie będzie mógł
-       odczytać pliku <code>index.html</code>. IIS używa specjalnej grupy <code>IIS_IUSRS</code> do
-       czytania plików. Nie usuwaj jej!
+       uprawnienia z folderu <code>C:\inetpub\wwwroot\szkola</code> (np. bawiąc się dziedziczeniem z
+       poprzedniego labu), serwer IIS nie będzie mógł odczytać pliku <code>index.html</code>. IIS
+       używa specjalnej grupy lokalnej <code>IIS_IUSRS</code> do czytania plików. Nie usuwaj jej
+       uprawnień!
       </div>
      </ul>
 
@@ -157,7 +189,7 @@
       <h4>🙋‍♂️ Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
       <p>W zadaniach z IIS i DNS egzaminator zazwyczaj chce zobaczyć efekt końcowy na żywo:</p>
       <ol>
-       <li>Otwórz przeglądarkę na stacji roboczej (Windows 10 lub wirtualny Linux).</li>
+       <li>Otwórz przeglądarkę na stacji roboczej (Windows 10).</li>
        <li>Wpisz w pasku adresu: <code>http://www.intranet.local</code>.</li>
        <li>
         Gdy strona się załaduje, <strong>podnieś rękę</strong>. Egzaminator podejdzie i sprawdzi,
