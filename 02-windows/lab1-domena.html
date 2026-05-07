@@ -40,6 +40,37 @@
      <span class="time-badge">Czas: 60 min</span>
     </div>
     <div class="lab-body">
+     <!-- === DIAGRAM SIECIOWY START === -->
+     <div class="network-diagram-container">
+      <!-- Rząd z urządzeniami -->
+      <div class="devices-row">
+       <!-- SERWER -->
+       <div class="device-box">
+        <i class="fa-solid fa-server device-icon"></i>
+        <div class="device-title">Windows Server (DC)</div>
+        <!-- Używamy klasy .lan dla zielonego koloru -->
+        <div class="interface-badge lan">192.168.10.10</div>
+       </div>
+
+       <!-- KLIENT -->
+       <div class="device-box">
+        <i class="fa-solid fa-desktop device-icon"></i>
+        <div class="device-title">Windows 10 (Klient)</div>
+        <div class="interface-badge lan">192.168.10.30</div>
+       </div>
+      </div>
+
+      <!-- Rząd ze Switchem -->
+      <div class="switch-row">
+       <!-- Pozioma linia -->
+       <div class="switch-line"></div>
+       <!-- Ikona Switcha na środku -->
+       <div class="switch-badge">
+        <i class="fa-solid fa-network-wired"></i>
+        INF02-LAN
+       </div>
+      </div>
+     </div>
      <div class="goal-box">
       Cel: Przygotowanie serwera (nazwa, sieć), przekształcenie go w Kontroler Domeny i podłączenie
       stacji roboczej.
