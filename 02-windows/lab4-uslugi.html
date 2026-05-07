@@ -33,6 +33,64 @@
      <span class="time-badge">Czas: 60 min</span>
     </div>
     <div class="lab-body">
+     <!-- === DIAGRAM SIECIOWY (LOGICZNY) START === -->
+     <div class="network-diagram-container">
+      <!-- WARSTWA LOGICZNA (STRZAŁKI) -->
+      <div class="logical-flow-container">
+       <!-- Strzałka 1: Zapytanie DNS -->
+       <div class="flow-arrow arrow-dns-query"></div>
+       <div class="flow-label label-dns-query">1. Gdzie jest "www.intranet.local"? (DNS)</div>
+
+       <!-- Strzałka 2: Odpowiedź HTTP -->
+       <div class="flow-arrow arrow-http-resp"></div>
+       <div class="flow-label label-http-resp">2. Oto strona WWW (HTTP/IIS)</div>
+      </div>
+
+      <!-- WARSTWA FIZYCZNA (URZĄDZENIA) -->
+      <div class="devices-row">
+       <!-- SERWER (DNS + IIS) -->
+       <div class="device-box">
+        <!-- Ikona serwera z małymi ikonami usług -->
+        <div style="position: relative; display: inline-block">
+         <i class="fa-solid fa-server device-icon"></i>
+         <i
+          class="fa-solid fa-globe"
+          style="
+           position: absolute;
+           bottom: 10px;
+           right: -10px;
+           color: var(--net-wan-color);
+           font-size: 1.2rem;
+           background: white;
+           border-radius: 50%;
+          "
+         ></i>
+        </div>
+        <div class="device-title">Windows Server<br /><small>(DNS & IIS)</small></div>
+        <div class="interface-badge lan">192.168.10.10</div>
+       </div>
+
+       <!-- KLIENT -->
+       <div class="device-box">
+        <i class="fa-solid fa-desktop device-icon"></i>
+        <div class="device-title">Windows 10 (Klient)</div>
+        <div class="interface-badge lan">192.168.10.30</div>
+        <!-- Dodatkowy badge z DNS -->
+        <div style="margin-top: 5px; font-size: 0.8rem; color: #636e72">DNS: 192.168.10.10</div>
+       </div>
+      </div>
+
+      <!-- Rząd ze Switchem -->
+      <div class="switch-row">
+       <div class="switch-line"></div>
+       <div class="switch-badge">
+        <i class="fa-solid fa-network-wired"></i>
+        INF02-LAN
+       </div>
+      </div>
+     </div>
+     <!-- === DIAGRAM SIECIOWY END === -->
+
      <div class="goal-box">
       Cel: Uruchomienie szkolnej strony WWW i konfiguracja serwera nazw (DNS), aby strona była
       dostępna pod przyjazną nazwą domenową.
