@@ -54,7 +54,7 @@
       Wszystkie karty Internal muszą mieć <strong>Promiscuous Mode: Allow All</strong>.
      </div>
      <ul class="task-list">
-      <!-- NOWA SEKCJA: WSTĘPNA KONFIGURACJA -->
+      <!-- KROK 0: WSTĘPNA KONFIGURACJA -->
       <li>
        <strong>Krok 0: Wstępna konfiguracja serwera (Kluczowe!)</strong>
        <p>
@@ -101,7 +101,7 @@
        </div>
       </li>
 
-      <!-- ISTNIEJĄCE KROKI LABU 1 -->
+      <!-- KROK 1: INSTALACJA ROLI -->
       <li>
        <strong>Krok 1: Instalacja roli AD DS</strong>
        <div class="gui-path">
@@ -117,6 +117,8 @@
         class="step-screenshot"
        />
       </li>
+
+      <!-- KROK 2: PROMOWANIE SERWERA (TUTAJ BYŁ BŁĄD) -->
       <li>
        <strong>Krok 2: Promowanie serwera</strong>
        <p>
@@ -129,10 +131,26 @@
        <ul style="margin-left: 20px; margin-top: 5px">
         <li>Wybierz: <strong>Add a new forest (Dodaj nowy las)</strong>.</li>
         <li>Root domain name (Nazwa domeny głównej): <code>zs1.local</code></li>
+        <!-- DODANO BRAKUJĄCY OBRAZEK PONIŻEJ -->
+        <img
+         src="../img/server-ad-02-new-forest.jpg"
+         alt="Konfiguracja nowego lasu i nazwy domeny zs1.local"
+         class="step-screenshot"
+        />
         <li>
          Ustaw hasło przywracania usług katalogowych (DSRM) na
          <code>Zaq12345!</code>
         </li>
+        <li>
+         Ustaw hasło przywracania usług katalogowych (DSRM) na
+         <code>Zaq12345!</code>
+        </li>
+        <!-- DODANY OBRAZEK EKRANU 10 -->
+        <img
+         src="../img/server-ad-03-dsrm-password.jpg"
+         alt="Konfiguracja opcji kontrolera domeny i hasła DSRM"
+         class="step-screenshot"
+        />
        </ul>
 
        <!-- REFERENCJA EGZAMINACYJNA -->
@@ -177,6 +195,7 @@
        </div>
       </li>
 
+      <!-- KROK 3: PODŁĄCZENIE STACJI -->
       <li>
        <strong>Krok 3: Podłączenie stacji roboczej (Windows 10)</strong>
        <p>
