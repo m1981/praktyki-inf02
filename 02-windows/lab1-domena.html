@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab 1: Kontroler Domeny - Windows Server</title>
   <link rel="stylesheet" href="../common.css" />
+  <style>
+   /* Styl dla zrzutów ekranu wewnątrz kroków */
+   .step-screenshot {
+    display: block;
+    max-width: 95%;
+    height: auto;
+    margin: 15px auto;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   }
+   .step-container {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #636e72;
+   }
+  </style>
  </head>
  <body>
   <header>
@@ -18,25 +37,71 @@
    <div class="lab-card">
     <div class="lab-header">
      <h3>Lab 1: Narodziny Szefa (Kontroler Domeny)</h3>
-     <span class="time-badge">Czas: 45 min</span>
+     <span class="time-badge">Czas: 60 min</span>
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Przekształcenie zwykłego Windows Servera w Kontroler Domeny i podłączenie do niego stacji
-      roboczej ucznia.
+      Cel: Przygotowanie serwera (nazwa, sieć), przekształcenie go w Kontroler Domeny i podłączenie
+      stacji roboczej.
      </div>
 
      <div
       class="golden-rule-box"
       style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
      >
-      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Zanim zaczniesz, wejdź w ustawienia obu
-      maszyn (Serwer i Windows 10) w VirtualBox. Upewnij się, że w zakładce
-      <em>Network (Sieć)</em> karta jest ustawiona na
-      <strong>Internal Network (Sieć wewnętrzna)</strong>. Jeśli zostawisz NAT, maszyny się nie
-      zobaczą!
+      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Upewnij się, że wykonałeś kroki z "Dnia 0"!
+      Serwer musi mieć 3 karty sieciowe (1x NAT, 2x Internal), a Windows 10 jedną (Internal).
+      Wszystkie karty Internal muszą mieć <strong>Promiscuous Mode: Allow All</strong>.
      </div>
      <ul class="task-list">
+      <!-- NOWA SEKCJA: WSTĘPNA KONFIGURACJA -->
+      <li>
+       <strong>Krok 0: Wstępna konfiguracja serwera (Kluczowe!)</strong>
+       <p>
+        Zanim zainstalujemy AD, musimy przygotować fundamenty systemu. Zaloguj się jako
+        Administrator.
+       </p>
+
+       <div class="step-container">
+        <strong>A. Zmiana nazwy komputera</strong><br />
+        Zmień losową nazwę serwera (np. WIN-XXXX) na <code>SERWER-01</code>. Wymaga restartu.
+        <img
+         src="../img/server-setup-01-hostname.jpg"
+         alt="Zmiana nazwy hosta na SERWER-01"
+         class="step-screenshot"
+        />
+       </div>
+
+       <div class="step-container">
+        <strong>B. Konfiguracja NIC Teaming (Zespół kart)</strong><br />
+        W Menedżerze Serwera (Local Server) kliknij "NIC Teaming". Utwórz nowy zespół o nazwie
+        <code>LAN12</code>, zaznaczając dwie karty podłączone do sieci wewnętrznej. Tryb:
+        <em>Switch Independent / Dynamic</em>.
+        <img
+         src="../img/server-setup-02-nic-teaming.jpg"
+         alt="Tworzenie zespołu NIC Teaming LAN12"
+         class="step-screenshot"
+        />
+       </div>
+
+       <div class="step-container">
+        <strong>C. Adresacja IP Zespołu</strong><br />
+        Wejdź w połączenia sieciowe (<code>ncpa.cpl</code>). Skonfiguruj protokół IPv4
+        <strong>na nowym interfejsie zespołu "LAN12"</strong> (nie na pojedynczych kartach!).
+        <ul>
+         <li>IP: <code>192.168.10.10</code></li>
+         <li>Maska: <code>255.255.255.0</code></li>
+         <li>DNS: <code>127.0.0.1</code> (Serwer wskazuje sam na siebie)</li>
+        </ul>
+        <img
+         src="../img/server-setup-03-team-ip.jpg"
+         alt="Konfiguracja IP interfejsu zespołu LAN12"
+         class="step-screenshot"
+        />
+       </div>
+      </li>
+
+      <!-- ISTNIEJĄCE KROKI LABU 1 -->
       <li>
        <strong>Krok 1: Instalacja roli AD DS</strong>
        <div class="gui-path">
@@ -45,6 +110,12 @@
         <span class="gui-arrow">➔</span> Active Directory Domain Services (Usługi domenowe Active
         Directory)
        </div>
+       <!-- DODANY OBRAZEK -->
+       <img
+        src="../img/server-ad-01-role-selection.jpg"
+        alt="Wybór roli Active Directory Domain Services w kreatorze"
+        class="step-screenshot"
+       />
       </li>
       <li>
        <strong>Krok 2: Promowanie serwera</strong>
@@ -100,8 +171,9 @@
        <div class="golden-rule-box">
         <strong>💡 Złota Rada Trenera:</strong> Zanim klikniesz "Dołącz do domeny", wejdź w
         ustawienia karty sieciowej Windows 10 (ncpa.cpl) i w polu
-        <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera! Następnie
-        otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada – możesz dołączać!
+        <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera
+        (192.168.10.10)! Następnie otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada –
+        możesz dołączać!
        </div>
       </li>
 
