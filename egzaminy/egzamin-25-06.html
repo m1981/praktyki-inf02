@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dekoder Egzaminacyjny: Czerwiec 2025</title>
+  <link rel="stylesheet" href="../common.css" />
+  <style>
+   .decoder-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+   }
+   .cke-column {
+    background-color: #f8f9fa;
+    border-left: 5px solid #636e72;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+   }
+   .devops-column {
+    background-color: #ffffff;
+    border-left: 5px solid #0984e3;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+   }
+   .cke-title {
+    color: #2d3436;
+    font-weight: bold;
+    border-bottom: 2px solid #dfe6e9;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+   }
+   .devops-title {
+    color: #0984e3;
+    font-weight: bold;
+    border-bottom: 2px solid #74b9ff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+   }
+
+   /* Klasa rozciągająca element na całą szerokość siatki (obie kolumny) */
+   .full-width-box {
+    grid-column: 1 / -1;
+   }
+
+   /* Odznaki maszyn wirtualnych */
+   .vm-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+   }
+   .server-badge {
+    background-color: #e3f2fd;
+    color: #0984e3;
+    border: 1px solid #74b9ff;
+   }
+   .client-badge {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    border: 1px solid #2ecc71;
+   }
+
+   @media (max-width: 768px) {
+    .decoder-grid {
+     grid-template-columns: 1fr;
+    }
+    .cke-column {
+     border-bottom: none;
+     border-radius: 8px 8px 0 0;
+    }
+    .devops-column {
+     border-radius: 0 0 8px 8px;
+     margin-bottom: 20px;
+    }
+   }
+  </style>
+ </head>
+ <body>
+  <header>
+   <h1>🕵️‍♂️ Dekoder Egzaminacyjny</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Rozszyfrowujemy arkusz INF.02 (Czerwiec 2025) na język inżynierów
+   </p>
+  </header>
+
+  <main class="lab-container">
+   <div class="golden-rule-box" style="border-left-color: #00b894; background: #f3f0ff">
+    <strong>💡 Słowo od Trenera:</strong> Egzaminatorzy CKE używają oficjalnej polskiej terminologii
+    Microsoftu. W pracy IT częściej używamy angielskich skrótów (NIC Teaming, Share, NTFS, Roaming
+    Profile). Ten dekoder pomoże Wam połączyć te dwa światy.
+   </div>
+
+   <div class="decoder-grid">
+    <!-- NAGŁÓWKI KOLUMN -->
+    <div
+     class="cke-column"
+     style="background: transparent; border: none; padding: 0; box-shadow: none"
+    >
+     <h2 class="cke-title">📜 Urzędowy język CKE (Arkusz)</h2>
+    </div>
+    <div
+     class="devops-column"
+     style="background: transparent; border: none; padding: 0; box-shadow: none"
+    >
+     <h2 class="devops-title">🛠️ Tłumaczenie Inżyniera (Co robimy)</h2>
+    </div>
+
+    <!-- ZADANIE 1: NIC TEAMING -->
+    <div class="cke-column">
+     <strong>Zadanie 6 (Serwer):</strong><br /><br />
+     "utworzony zespół kart interfejsu sieciowego na serwerze lokalnym (NIC Teaming)<br />
+     ‒ nazwa interfejsu: LAN12<br />
+     ‒ zgrupowane interfejsy sieciowe LAN1 i LAN2<br />
+     ‒ niezależny od przełącznika, dynamiczne równoważenie obciążenia"
+    </div>
+    <div class="devops-column">
+     <div class="vm-badge server-badge">🪟 VirtualBox: Windows Server 2022</div>
+     <br />
+     <strong>Wysoka Dostępność (NIC Teaming):</strong><br />
+     Łączymy dwie fizyczne karty w jedną wirtualną, żeby w razie awarii kabla serwer nadal
+     działał.<br /><br />
+     👉 <em>Gdzie kliknąć:</em> Menedżer Serwera -> Serwer Lokalny -> Zespół kart interfejsu
+     sieciowego (NIC Teaming). Zaznacz LAN1 i LAN2, prawy klik -> Dodaj do nowego zespołu. <br />
+     👉 <em>Tryb (Teaming mode):</em> Switch Independent.<br />
+     👉 <em>Rozkładanie (Load balancing):</em> Dynamic.<br /><br />
+     <div class="pitfall-box" style="margin-top: 10px; margin-bottom: 15px">
+      ⚠️ <strong>Ważne:</strong> Po utworzeniu zespołu, musisz wejść w <code>ncpa.cpl</code> i nadać
+      adres IP nowej, wirtualnej karcie LAN12!
+     </div>
+     <a
+      class="course-btn"
+      style="background-color: #2d3436; color: white; padding: 8px 15px; font-size: 0.9rem"
+      href="https://www.youtube.com/watch?v=d7wRpwYlhl4"
+      >🎬 Filmik Polski</a
+     >
+     <a
+      class="course-btn"
+      style="background-color: #2d3436; color: white; padding: 8px 15px; font-size: 0.9rem"
+      href="https://www.youtube.com/watch?v=d4dJBIE7GFs"
+      >🎬 Filmik English</a
+     >
+    </div>
+
+    <!-- ZADANIE 2: UKRYTY UDZIAŁ -->
+    <div class="cke-column">
+     <strong>Zadanie 6 (Serwer):</strong><br /><br />
+     "utwórz folder C:\Profile i udostępnij go pod nazwą profile$<br />
+     ‒ do utworzonego zasobu ustaw uprawnienia sieciowe tylko dla Wszyscy – Pełna kontrola<br />
+     ‒ do utworzonego folderu ustaw zabezpieczenia tylko dla grupy Administratorzy – Pełna kontrola
+     oraz Użytkownicy – Pełna kontrola"
+    </div>
+    <div class="devops-column">
+     <div class="vm-badge server-badge">🪟 VirtualBox: Windows Server 2022</div>
+     <br />
+     <strong>Ukryty Share i Uprawnienia NTFS:</strong><br />
+     Znak dolara <code>$</code> na końcu nazwy udziału sprawia, że folder jest niewidoczny w
+     otoczeniu sieciowym (tzw. ukryty udział).<br /><br />
+     👉 <em>Uprawnienia sieciowe (Zakładka Udostępnianie):</em> Dajemy Wszyscy -> Pełna kontrola.<br />
+     👉 <em>Zabezpieczenia (Zakładka Zabezpieczenia/NTFS):</em> Tutaj robimy prawdziwe restrykcje.
+     Musisz wejść w Zaawansowane, <strong>wyłączyć dziedziczenie</strong>, usunąć stare wpisy i
+     dodać tylko Administratorów i Użytkowników na Full Control.<br /><br />
+
+     <a
+      class="course-btn"
+      style="background-color: #2d3436; color: white; padding: 8px 15px; font-size: 0.9rem"
+      href="https://www.youtube.com/watch?v=OGmGcnFEQiI"
+      >🎬 Filmik English</a
+     >
+    </div>
+
+    <!-- SEKRET ADMINISTRATORA: DZIEDZICZENIE (ROZCIĄGNIĘTY NA 2 KOLUMNY) -->
+    <div
+     class="devops-column full-width-box"
+     style="background: #fff3cd; border-left-color: #ffc107"
+    >
+     <h4
+      style="color: #d35400; margin-top: 0; border-bottom: 1px solid #ffeaa7; padding-bottom: 5px"
+     >
+      🕵️‍♂️ Sekret Administratora: Co to jest Dziedziczenie Uprawnień?
+     </h4>
+     <p style="margin-bottom: 10px">
+      Wyobraź sobie, że dysk <code>C:\</code> to budynek szkoły, a folder
+      <code>C:\Profile$</code> to gabinet dyrektora.
+     </p>
+     <ul style="margin-left: 20px; margin-bottom: 10px">
+      <li>
+       <strong>Jak działa dziedziczenie (Inheritance):</strong> Domyślnie w Windowsie każdy nowy
+       folder "kopiuje" uprawnienia od swojego rodzica. Skoro wszyscy uczniowie mogą wejść do
+       budynku szkoły (dysk C:\), to system automatycznie pozwala im wejść do gabinetu dyrektora. To
+       oszczędza czas przy zwykłych folderach.
+      </li>
+      <li>
+       <strong>Dlaczego musimy je wyłączyć?</strong> Na egzaminie (i w prawdziwym IT) tworzymy
+       foldery specjalnego przeznaczenia. Musimy powiedzieć systemowi:
+       <em
+        >"Zatrzymaj się! Ten folder ma własne, surowe zasady. Przestań kopiować uprawnienia z
+        góry!"</em
+       >.
+      </li>
+     </ul>
+     <p style="margin-bottom: 0">
+      <strong>Jak to zrobić:</strong> Wchodzisz w <em>Zaawansowane</em> ustawienia zabezpieczeń i
+      klikasz <strong>Wyłącz dziedziczenie (Disable inheritance)</strong>. System zapyta, co zrobić
+      ze starymi regułami. Zawsze wybieraj: <em>"Konwertuj odziedziczone uprawnienia na jawne"</em>.
+      Dzięki temu zachowasz stare reguły jako szablon, z którego usuniesz niepotrzebne grupy (np.
+      zwykłych Użytkowników), a zostawisz tylko te wymagane w zadaniu.
+     </p>
+    </div>
+
+    <!-- ZADANIE 3: PROFILE MOBILNE -->
+    <div class="cke-column">
+     <strong>Zadanie 6 (Serwer):</strong><br /><br />
+     "dla użytkownika Adam Abacki ustaw ścieżkę profilu mobilnego, który będzie zlokalizowany w
+     udostępnionym folderze"
+    </div>
+    <div class="devops-column">
+     <div class="vm-badge server-badge">🪟 VirtualBox: Windows Server 2022</div>
+     <br />
+     <strong>Roaming Profiles (Wędrujący pulpit):</strong><br />
+     Chcemy, żeby pliki użytkownika zapisywały się na serwerze, a nie na lokalnym dysku stacji
+     roboczej.<br /><br />
+     👉 <em>Gdzie kliknąć:</em> Active Directory (<code>dsa.msc</code>) -> Właściwości użytkownika
+     Adam Abacki -> Zakładka <strong>Profil</strong>.<br />
+     👉 <em>Co wpisać w "Ścieżka profilu":</em> Wpisujesz ścieżkę sieciową (UNC) do ukrytego folderu
+     z poprzedniego zadania: <code>\\SERWER-XX\profile$\%username%</code>. Zmienna %username% sama
+     podmieni się na login Adama!<br /><br />
+     <a
+      class="course-btn"
+      style="background-color: #2d3436; color: white; padding: 8px 15px; font-size: 0.9rem"
+      href="https://www.youtube.com/watch?v=038Uj350ZrU"
+      >🎬 Filmik Polski</a
+     >
+    </div>
+
+    <!-- ZADANIE 4: DOMAIN JOIN -->
+    <div class="cke-column">
+     <strong>Zadanie 7 (Stacja robocza):</strong><br /><br />
+     "dodaj stację roboczą do utworzonej domeny<br />
+     ‒ zaloguj się do domeny na konto abackia, a następnie wyloguj się"
+    </div>
+    <div class="devops-column" style="border-left-color: #27ae60">
+     <div class="vm-badge client-badge">💻 VirtualBox: Windows 10</div>
+     <br />
+     <strong>Domain Join (Podłączenie do AD):</strong><br />
+     Podpinamy Windowsa 10 pod władzę Windows Servera.<br /><br />
+     👉 <em>KRYTYCZNY KROK:</em> Zanim to zrobisz, karta sieciowa Windows 10
+     <strong>musi</strong> mieć wpisany adres IP serwera w polu "Preferowany serwer DNS". Inaczej
+     nie znajdzie domeny!<br />
+     👉 <em>Gdzie kliknąć:</em> Właściwości systemu -> Zmień ustawienia -> Zmień -> Zaznacz "Domena"
+     i wpisz <code>informatyk.local</code>. Podaj hasło Administratora serwera.
+    </div>
+
+    <!-- ZADANIE 5: SZYFROWANIE EFS -->
+    <div class="cke-column">
+     <strong>Zadanie 7 (Stacja robocza):</strong><br /><br />
+     "zaszyfruj plik tapeta.jpg za pomocą atrybutów pliku"
+    </div>
+    <div class="devops-column" style="border-left-color: #27ae60">
+     <div class="vm-badge client-badge">💻 VirtualBox: Windows 10</div>
+     <br />
+     <strong>Szyfrowanie EFS (Encrypting File System):</strong><br />
+     Zabezpieczamy plik tak, aby tylko osoba, która go zaszyfrowała, mogła go otworzyć (nawet inny
+     admin go nie otworzy!).<br /><br />
+     👉 <em>Gdzie kliknąć:</em> Prawy przycisk myszy na plik <code>tapeta.jpg</code> -> Właściwości
+     -> Przycisk <strong>Zaawansowane</strong> -> Zaznacz ptaszek przy
+     <strong>"Szyfruj zawartość, aby zabezpieczyć dane"</strong>. Nazwa pliku zmieni kolor na
+     zielony.<br /><br />
+     <a
+      class="course-btn"
+      style="background-color: #2d3436; color: white; padding: 8px 15px; font-size: 0.9rem"
+      href="https://www.youtube.com/watch?v=NIB3lvy04as"
+      >🎬 Filmik Polski</a
+     >
+    </div>
+   </div>
+  </main>
+
+  <div class="course-nav">
+   <a href="../index.html" class="course-btn" style="background-color: #2d3436; color: white"
+    >🏠 Wróć do Menu Głównego</a
+   >
+  </div>
+  <script src="../menu.js"></script>
+ </body>
+</html>
