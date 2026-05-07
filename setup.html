@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dzień 0: Przygotowanie Środowiska</title>
   <link rel="stylesheet" href="common.css" />
+  <style>
+   /* Dodatkowy styl dla zrzutów ekranu w instrukcji */
+   .setup-screenshot {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   }
+   .new-requirement-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #0984e3;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 4px;
+   }
+  </style>
  </head>
  <body>
   <header>
@@ -104,11 +124,12 @@
    <div class="lab-card">
     <div class="lab-header">
      <h3>Krok 3: Stworzenie "Pustych" Maszyn w VirtualBox</h3>
-     <span class="time-badge">Czas: 15 min</span>
+     <span class="time-badge">Czas: 20 min</span>
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Wyklikanie szkieletu maszyn wirtualnych w architekturze Dual-NIC (Dwie karty sieciowe).
+      Cel: Wyklikanie szkieletu maszyn wirtualnych.
+      <strong>Uwaga: Egzamin wymaga specyficznej konfiguracji sieci!</strong>
      </div>
      <ul class="task-list">
       <li>
@@ -118,7 +139,9 @@
          Nazwa: <code>Windows Server</code> (Typ: Microsoft Windows, Wersja: Windows 2019/2022
          64-bit)
         </li>
-        <li>RAM: <strong>2048 MB</strong> (2 GB) - to wystarczy do nauki.</li>
+        <li>
+         RAM: <strong>2048 MB</strong> (2 GB) - absolutne minimum. Jeśli możesz, daj 4096 MB.
+        </li>
         <li>Dysk twardy: VDI, dynamicznie przydzielany, <strong>30 GB</strong>.</li>
        </ul>
       </li>
@@ -133,56 +156,84 @@
       <li>
        <strong>Magia Sieci (Kluczowe dla naszych laboratoriów!):</strong>
        <p>
-        Aby środowisko działało poprawnie i miało dostęp do Internetu, musimy skonfigurować karty
-        sieciowe w architekturze <strong>Dual-NIC</strong>.
+        Aby wykonać zadanie z <strong>NIC Teaming (Zespoły kart)</strong>, nasz serwer musi posiadać
+        aż <strong>TRZY</strong> karty sieciowe.
        </p>
        <div class="gui-path">Ustawienia Maszyny <span class="gui-arrow">➔</span> Sieć</div>
+
+       <h4 style="margin-top: 20px; color: #0984e3">
+        🖥️ Konfiguracja Sieci: Windows Server (3 Karty!)
+       </h4>
        <ul style="margin-top: 10px">
         <li>
-         <strong>Dla Windows Server:</strong>
-         <ul>
-          <li><strong>Karta 1:</strong> Zostaw na <strong>NAT</strong> (wyjście do Internetu).</li>
-          <li>
-           <strong>Karta 2:</strong> Włącz ją i ustaw na
-           <strong>Sieć wewnętrzna (Internal Network)</strong>. Nazwij ją <code>INF02-LAN</code>.
-          </li>
-         </ul>
+         <strong>Karta 1 (Adapter 1):</strong> Zostaw na <strong>NAT</strong> (wyjście do
+         Internetu).
+         <img
+          src="img/vbox-server-nic1-nat.jpg"
+          alt="VirtualBox Serwer Karta 1 NAT"
+          class="setup-screenshot"
+         />
         </li>
-        <li style="margin-top: 10px">
-         <strong>Dla Windows 10:</strong>
-         <ul>
-          <li>
-           <strong>Karta 1:</strong> Zmień na <strong>Sieć wewnętrzna (Internal Network)</strong>.
-           Nazwij ją <code>INF02-LAN</code>.
-          </li>
-         </ul>
+        <li>
+         <strong>Karta 2 (Adapter 2):</strong> Włącz ją, ustaw na
+         <strong>Sieć wewnętrzna (Internal Network)</strong> i nazwij <code>INF02-LAN</code>.
+         <img
+          src="img/vbox-server-nic2-internal.jpg"
+          alt="VirtualBox Serwer Karta 2 Internal"
+          class="setup-screenshot"
+         />
+        </li>
+        <li class="new-requirement-box">
+         <strong>🆕 Karta 3 (Adapter 3) - Wymagana do NIC Teaming!</strong><br />
+         Włącz tę kartę. Ustaw ją identycznie jak Kartę 2:
+         <strong>Sieć wewnętrzna (INF02-LAN)</strong>.
+         <img
+          src="img/vbox-server-nic3-internal.jpg"
+          alt="VirtualBox Serwer Karta 3 Internal"
+          class="setup-screenshot"
+         />
         </li>
        </ul>
-       <div class="golden-rule-box" style="margin-top: 15px">
-        <strong>💡 Krytyczne ustawienie dla Labu 5 (NIC Teaming):</strong><br />
-        Kliknij <strong>Advanced (Zaawansowane)</strong> w ustawieniach kart podłączonych do sieci
-        wewnętrznej i zmień <strong>Promiscuous Mode (Tryb nasłuchiwania)</strong> na
-        <strong>Allow All (Pozwól wszystkim)</strong>. Bez tego wirtualny switch zablokuje
-        zaawansowane usługi sieciowe! Zrób to dla obu maszyn.
+
+       <h4 style="margin-top: 25px; color: #0984e3">💻 Konfiguracja Sieci: Windows 10 (1 Karta)</h4>
+       <ul style="margin-top: 10px">
+        <li>
+         <strong>Karta 1 (Adapter 1):</strong> Zmień na
+         <strong>Sieć wewnętrzna (Internal Network)</strong>. Nazwij ją <code>INF02-LAN</code>.
+         <img
+          src="img/vbox-client-nic1-internal.jpg"
+          alt="VirtualBox Klient Karta 1 Internal"
+          class="setup-screenshot"
+         />
+        </li>
+       </ul>
+
+       <div class="golden-rule-box" style="margin-top: 25px">
+        <strong>💡 Ustawienie KRYTYCZNE (Promiscuous Mode):</strong><br />
+        Dla <strong>WSZYSTKICH</strong> kart ustawionych na "Sieć wewnętrzna" (czyli Karta 2 i 3 na
+        Serwerze oraz Karta 1 na Kliencie), musisz kliknąć
+        <strong>Advanced (Zaawansowane)</strong> i zmienić
+        <strong>Promiscuous Mode (Tryb nasłuchiwania)</strong> na
+        <strong>Allow All (Pozwól wszystkim)</strong>. <br /><br />
+        Bez tego wirtualny switch zablokuje komunikację w zespole NIC Teaming! Sprawdź to dwa razy.
        </div>
       </li>
      </ul>
 
-     <details class="theory-block" style="margin-bottom: 15px">
-      <summary>🕵️‍♂️ Sekret Inżyniera: NAT vs Internal Network</summary>
+     <details class="theory-block" style="margin-bottom: 15px; margin-top: 20px">
+      <summary>🕵️‍♂️ Sekret Inżyniera: Po co aż 3 karty?</summary>
       <div class="theory-content">
-       <p>Dlaczego nasz Serwer ma dwie karty?</p>
+       <p>
+        Egzamin wymaga stworzenia "Zespołu" (NIC Teaming) z dwóch kart. Jeśli użylibyśmy karty NAT i
+        jednej karty LAN, stracilibyśmy internet na serwerze po ich połączeniu.
+       </p>
+       <p>Dlatego stosujemy profesjonalne podejście:</p>
        <ul style="margin-left: 20px; margin-top: 10px">
+        <li><strong>Karta 1 (NAT):</strong> Dedykowana tylko do Internetu (aktualizacje).</li>
         <li>
-         <strong>Karta NAT:</strong> Daje serwerowi dostęp do Internetu (do pobierania aktualizacji
-         i programów), ale chroni go przed atakami z zewnątrz.
-        </li>
-        <li>
-         <strong>Sieć wewnętrzna (INF02-LAN):</strong> Tworzy całkowicie odizolowany, wirtualny
-         kabel (switch) wewnątrz Twojego laptopa. Maszyny widzą się nawzajem, ale nie mają wyjścia
-         do Internetu. <strong>To nasz poligon doświadczalny!</strong> Tutaj możemy bezpiecznie
-         psuć, stawiać własne serwery DNS i DHCP bez ryzyka, że zepsujemy prawdziwą sieć w Twoim
-         domu.
+         <strong>Karta 2 + Karta 3 (Internal):</strong> Te dwie karty "skleimy" programowo w jedną
+         super-kartę (zespół LAN12) wewnątrz Windows Servera. To na tym zespole oprzemy całą naszą
+         sieć laboratoryjną.
         </li>
        </ul>
       </div>
@@ -202,35 +253,31 @@
       który pobiera adres IP automatycznie (DHCP). Kreator wyrzuci błąd!
      </div>
      <p>
-      Po zainstalowaniu systemów, Twoim pierwszym zadaniem jest ustawienie stałych adresów IP
-      <strong>na kartach podłączonych do sieci wewnętrznej (INF02-LAN)</strong>.
+      Teraz zainstaluj systemy z plików ISO. Po instalacji, Twoim pierwszym zadaniem jest ustawienie
+      stałych adresów IP.
      </p>
      <div class="gui-path">
-      Uruchom: <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> Zidentyfikuj kartę podłączoną
-      do sieci wewnętrznej <span class="gui-arrow">➔</span> Prawy klik
+      Uruchom: <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> Prawy klik na właściwą kartę
       <span class="gui-arrow">➔</span> Properties (Właściwości)
       <span class="gui-arrow">➔</span> Internet Protocol Version 4 (TCP/IPv4)
      </div>
 
      <h4 style="margin-top: 15px; color: #0984e3">🖥️ Maszyna 1: Windows Server</h4>
-     <ul style="margin-left: 20px; margin-top: 5px">
-      <li>Wybierz: <strong>Use the following IP address</strong></li>
-      <li>IP address: <code>192.168.10.10</code></li>
-      <li>Subnet mask: <code>255.255.255.0</code></li>
-      <li>
-       Default gateway: <strong>zostaw puste!</strong> (Karta NAT ma już swoją bramę, wpisanie
-       drugiej zepsuje routing)
-      </li>
-      <li>Preferred DNS server: <code>127.0.0.1</code> (Serwer będzie sam dla siebie DNS-em)</li>
-     </ul>
+     <p>
+      Na serwerze, po utworzeniu NIC Teamingu (co zrobimy w kolejnych labach), będziesz konfigurować
+      nową, wirtualną kartę zespołu. Na razie upewnij się tylko, że karta NAT ma internet.
+     </p>
 
      <h4 style="margin-top: 15px; color: #0984e3">💻 Maszyna 2: Windows 10 (Uczeń)</h4>
+     <p>Na kliencie ustawiamy adres na sztywno, wskazując na przyszły adres serwera jako DNS.</p>
      <ul style="margin-left: 20px; margin-top: 5px">
       <li>Wybierz: <strong>Use the following IP address</strong></li>
       <li>IP address: <code>192.168.10.30</code></li>
       <li>Subnet mask: <code>255.255.255.0</code></li>
-      <li>Default gateway: <strong>zostaw puste!</strong> (Na razie nie mamy routera w sieci)</li>
-      <li>Preferred DNS server: <code>192.168.10.10</code> (Wskazujemy na nasz Windows Server)</li>
+      <li>
+       Default gateway: <strong>zostaw puste!</strong> (Na razie nie mamy routera w sieci LAN)
+      </li>
+      <li>Preferred DNS server: <code>192.168.10.10</code> (To będzie adres naszego serwera)</li>
      </ul>
     </div>
    </div>
@@ -259,7 +306,7 @@
        <strong>Wynik:</strong> Jeśli zobaczysz listę dostępnych opcji (np.
        <em>usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy]...</em>), oznacza to, że Twój system jest gotowy do
        laboratoriów z integracji! Jeśli system zwróci błąd "nie rozpoznano polecenia", upewnij się,
-       że pobrałeś najnowszą wersję Windows 10 z linku w Kroku 2.
+       że pobrałeś najnowszą wersję Windows 10 z linku w Kroku 2 i zaktualizowałeś system.
       </li>
      </ul>
     </div>
