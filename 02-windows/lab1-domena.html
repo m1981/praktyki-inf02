@@ -55,7 +55,7 @@
        <!-- KLIENT -->
        <div class="device-box">
         <i class="fa-solid fa-desktop device-icon"></i>
-        <div class="device-title">Windows 10 (Klient)</div>
+        <div class="device-title">Windows 11 (Klient)</div>
         <div class="interface-badge lan">192.168.10.30</div>
        </div>
       </div>
@@ -80,9 +80,12 @@
       class="golden-rule-box"
       style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
      >
-      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Upewnij się, że wykonałeś kroki z "Dnia 0"!
-      Serwer musi mieć 3 karty sieciowe (1x NAT, 2x Internal), a Windows 10 jedną (Internal).
-      Wszystkie karty Internal muszą mieć <strong>Promiscuous Mode: Allow All</strong>.
+      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Upewnij się, że wykonałeś
+      <a href="../setup.html">Dzień 0</a>! Serwer ma 3 karty (Karta 1 NAT, Karty 2 i 3
+      <code>INF02-LAN</code>), klient Windows 11 – 2 karty (Karta 1 NAT, Karta 2
+      <code>INF02-LAN</code>). Wszystkie karty <code>INF02-LAN</code> mają
+      <strong>Promiscuous Mode: Allow All</strong>. Stan docelowy:
+      <a href="../topology.html">Mapa Architektury, Faza 2</a>.
      </div>
      <ul class="task-list">
       <!-- KROK 0: WSTĘPNA KONFIGURACJA -->
@@ -130,6 +133,20 @@
          class="step-screenshot"
         />
        </div>
+
+       <div class="step-container">
+        <strong>D. Karta NAT nie może „mieszać” w DNS</strong><br />
+        Karta 1 (NAT, <code>Ethernet</code>) ma adres <code>10.0.2.15</code>. Jeśli serwer
+        zarejestruje go w DNS domeny, klient czasem dostanie ten adres zamiast
+        <code>192.168.10.10</code> i dołączanie do domeny będzie losowo zawodzić.
+        <div class="gui-path">
+         <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> Ethernet (NAT)
+         <span class="gui-arrow">➔</span> Properties <span class="gui-arrow">➔</span> IPv4
+         <span class="gui-arrow">➔</span> Advanced <span class="gui-arrow">➔</span> DNS
+         <span class="gui-arrow">➔</span> odznacz
+         <strong>Register this connection's addresses in DNS</strong>
+        </div>
+       </div>
       </li>
 
       <!-- KROK 1: INSTALACJA ROLI -->
@@ -172,10 +189,6 @@
          Ustaw hasło przywracania usług katalogowych (DSRM) na
          <code>Zaq12345!</code>
         </li>
-        <li>
-         Ustaw hasło przywracania usług katalogowych (DSRM) na
-         <code>Zaq12345!</code>
-        </li>
         <!-- DODANY OBRAZEK EKRANU 10 -->
         <img
          src="../img/server-ad-03-dsrm-password.jpg"
@@ -212,27 +225,59 @@
        </details>
 
        <div class="pitfall-box">
-        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia Windowsa 10 do domeny kończy
+        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia Windowsa 11 do domeny kończy
         się błędem "Nie można odnaleźć domeny". Dzieje się tak, ponieważ stacja robocza nie wie,
         gdzie szukać domeny <code>zs1.local</code>.
        </div>
 
        <div class="golden-rule-box">
         <strong>💡 Złota Rada Trenera:</strong> Zanim klikniesz "Dołącz do domeny", wejdź w
-        ustawienia karty sieciowej Windows 10 (ncpa.cpl) i w polu
+        ustawienia karty sieciowej Windows 11 (ncpa.cpl) i w polu
         <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera
         (192.168.10.10)! Następnie otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada –
         możesz dołączać!
        </div>
       </li>
 
+      <!-- KROK 2B: DNS TYLKO W LAN -->
+      <li>
+       <strong>Krok 2b: DNS słucha tylko w sieci LAN</strong>
+       <p>Po restarcie zaloguj się jako <code>ZS1\Administrator</code> i otwórz DNS Manager:</p>
+       <div class="gui-path">
+        Server Manager <span class="gui-arrow">➔</span> Tools <span class="gui-arrow">➔</span> DNS
+        <span class="gui-arrow">➔</span> prawy klik na SERWER-01
+        <span class="gui-arrow">➔</span> Properties
+       </div>
+       <ul style="margin-left: 20px; margin-top: 5px">
+        <li>
+         Zakładka <strong>Interfaces</strong>: <em>Only the following IP addresses</em> ➔ zostaw
+         zaznaczony tylko <code>192.168.10.10</code>.
+        </li>
+        <li>
+         Zakładka <strong>Forwarders</strong>: <em>Edit</em> ➔ dodaj <code>10.0.2.3</code> (serwer
+         DNS VirtualBoxa w sieci NAT). Dzięki temu serwer i klienci dalej rozwiązują nazwy z
+         Internetu.
+        </li>
+       </ul>
+       <p>
+        Sprawdzenie na serwerze: <code>nslookup zs1.local</code> zwraca tylko
+        <code>192.168.10.10</code>.
+       </p>
+      </li>
+
       <!-- KROK 3: PODŁĄCZENIE STACJI -->
       <li>
-       <strong>Krok 3: Podłączenie stacji roboczej (Windows 10)</strong>
+       <strong>Krok 3: Podłączenie stacji roboczej (Windows 11)</strong>
        <p>
-        Uruchom drugą maszynę wirtualną (Windows 10). Upewnij się, że w ustawieniach karty sieciowej
-        ma wpisany adres IP serwera jako swój serwer DNS!
+        Uruchom drugą maszynę wirtualną (Windows 11) i wypnij kabel Karty 1 (NAT): Urządzenia ➔ Sieć
+        ➔ odznacz <em>Połącz kartę sieciową 1</em>. Następnie w <code>ncpa.cpl</code> na karcie
+        <code>Ethernet 2</code> (INF02-LAN) ustaw IPv4:
        </p>
+       <ul style="margin-left: 20px; margin-top: 5px">
+        <li>IP: <code>192.168.10.30</code>, Maska: <code>255.255.255.0</code></li>
+        <li>Brama: <strong>pusta</strong> (w sieci LAN nie ma jeszcze routera)</li>
+        <li>Preferowany DNS: <code>192.168.10.10</code> (Twój serwer)</li>
+       </ul>
        <div class="gui-path">
         System Properties (Właściwości systemu)
         <span class="gui-arrow">➔</span> Change settings (Zmień ustawienia)
@@ -273,7 +318,7 @@
       <p>Na egzaminie INF.02 nikt nie uwierzy Ci na słowo. Musisz to udowodnić:</p>
       <ol>
        <li>
-        Na stacji roboczej (Windows 10) otwórz okno
+        Na stacji roboczej (Windows 11) otwórz okno
         <strong>Właściwości systemu</strong> (tam, gdzie widać pełną nazwę komputera i nazwę
         domeny).
        </li>

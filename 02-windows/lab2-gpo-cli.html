@@ -32,18 +32,18 @@
       style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
      >
       <strong>🌐 Pre-flight Check (Architektura Sieci):</strong> Zanim zaczniesz, upewnij się, że
-      maszyny w VirtualBox mają poprawnie ustawione karty sieciowe:
+      maszyny są w stanie z <a href="../topology.html">Mapy Architektury, Faza 2</a>:
       <ul>
        <li>
-        <strong>Windows Server:</strong> Karta 1 -> NAT (Internet), Karta 2 -> Sieć wewnętrzna
-        (<code>INF02-LAN</code>). Ustaw statyczne IP na Karcie 2: <code>192.168.10.10</code>.
+        <strong>Windows Server:</strong> Karta 1 -> NAT (Internet), zespół <code>LAN12</code> (Karty
+        2 i 3, <code>INF02-LAN</code>) z IP <code>192.168.10.10</code>.
        </li>
        <li>
-        <strong>Windows 10:</strong> Karta 1 -> Sieć wewnętrzna (<code>INF02-LAN</code>). Ustaw
-        statyczne IP: <code>192.168.10.30</code>.
+        <strong>Windows 11:</strong> kabel Karty 1 (NAT) wypięty, Karta 2 (<code>INF02-LAN</code>) z
+        IP <code>192.168.10.30</code> i DNS <code>192.168.10.10</code>.
        </li>
       </ul>
-      Jeśli Windows 10 będzie miał włączony NAT, maszyny mogą się nie zobaczyć!
+      Jeśli klient będzie miał podłączony NAT, może szukać domeny w złym DNS!
      </div>
      <ul class="task-list">
       <li>
