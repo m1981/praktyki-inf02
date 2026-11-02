@@ -361,12 +361,13 @@ _title: INF.02 - Interakcje Windows ↔ Linux_
 _title: Dzień 0: Przygotowanie Środowiska_
 
 - **H1** 🛠️ Dzień 0: Zbuduj swoje laboratorium
-  - **H3** Etap 0: Sprawdź swój komputer
+  - **H3** Etap 0: Sprawdź swój laptop
   - **H3** Etap 1: Pobierz program i obrazy systemów
-  - **H3** Etap 2: Utwórz 3 maszyny wirtualne
+  - **H3** Etap 2: Utwórz 3 maszyny
   - **H3** Etap 3: Zainstaluj systemy
   - **H3** Etap 4: Sprawdź, czy wszystko działa
   - **H3** Etap 5: Migawka – Twój przycisk „Cofnij”
+  - **H3** Coś nie działa? Objaw ➔ Przyczyna ➔ Naprawa
 
 ## [`syllabus.html`](syllabus.html)
 

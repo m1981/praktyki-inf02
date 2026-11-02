@@ -17,14 +17,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
    }
-   .new-requirement-box {
-    background-color: #e3f2fd;
-    border-left: 4px solid #0984e3;
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 4px;
-   }
-   /* Tabele parametrów i weryfikacji */
+   /* Tabele parametrów, weryfikacji i problemów */
    .vm-table {
     width: 100%;
     border-collapse: collapse;
@@ -50,30 +43,36 @@
     margin-top: 25px;
     color: #0984e3;
    }
+   /* Linijka "Gotowe, gdy" na końcu każdego etapu */
+   .done-line {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px dashed #b2bec3;
+   }
   </style>
  </head>
  <body>
   <header>
    <h1>🛠️ Dzień 0: Zbuduj swoje laboratorium</h1>
    <p style="color: var(--text-muted); font-size: 1.2rem">
-    Praca domowa przed pierwszym labem: 3 maszyny wirtualne w VirtualBox, jedna instrukcja, te same
-    zasady
+    Praca domowa przed pierwszym labem: 3 maszyny w VirtualBox, jedna instrukcja, te same zasady.
+    Łącznie ok. 3 godziny – rozłóż na 2 wieczory: <strong>Etapy 0–2</strong>, potem
+    <strong>Etapy 3–5</strong>.
    </p>
   </header>
 
   <div class="lab-container">
-   <!-- ETAP 0: HOST -->
+   <!-- ETAP 0: LAPTOP -->
    <div class="lab-card" id="etap-0">
     <div class="lab-header">
-     <h3>Etap 0: Sprawdź swój komputer</h3>
-     <span class="time-badge">Krytyczne!</span>
+     <h3>Etap 0: Sprawdź swój laptop</h3>
+     <span class="time-badge">Czas: 10 min</span>
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Upewnić się, że Twój laptop udźwignie trzy maszyny wirtualne i że nic nie blokuje
-      wirtualizacji.
+      Cel: Upewnić się, że Twój laptop udźwignie trzy maszyny i że nic nie blokuje wirtualizacji.
      </div>
-     <ul class="task-list">
+     <ol style="margin-left: 20px">
       <li>
        <strong>Architektura procesora:</strong>
        <div class="gui-path">
@@ -86,7 +85,7 @@
        </p>
       </li>
       <li>
-       <strong>RAM i dysk:</strong> RAM: <strong>16 GB</strong> to ideał, <strong>8 GB</strong> to
+       <strong>RAM i dysk:</strong> RAM <strong>16 GB</strong> to ideał, <strong>8 GB</strong> to
        minimum (wtedy włączaj najwyżej 2 maszyny naraz). Dysk:
        <strong>minimum 100 GB wolnego miejsca</strong>, najlepiej SSD.
       </li>
@@ -96,34 +95,55 @@
         Menedżer zadań (Ctrl+Shift+Esc) <span class="gui-arrow">➔</span> Wydajność
         <span class="gui-arrow">➔</span> Procesor
        </div>
-       <p>
-        W prawym dolnym rogu musi być <strong>Wirtualizacja: Włączone</strong>. Jeśli jest
-        „Wyłączone” – wejdź do BIOS/UEFI (przy starcie klawisz F2, F10 lub DEL) i włącz
-        <em>Intel Virtualization Technology</em> lub <em>SVM Mode</em> (AMD). Jeśli zamiast tego
-        widzisz komunikat o <strong>wykrytym hypervisorze</strong> – przejdź do punktu poniżej.
-       </p>
+       <ul style="margin-left: 20px">
+        <li><strong>Wirtualizacja: Włączone</strong> – OK, przejdź do punktu 4.</li>
+        <li>
+         <strong>Wirtualizacja: Wyłączone</strong> – wejdź do BIOS/UEFI (przy starcie klawisz F2,
+         F10 lub DEL) i włącz <em>Intel Virtualization Technology</em> lub <em>SVM Mode</em> (AMD).
+        </li>
+        <li>
+         Zamiast tej linijki widzisz komunikat o <strong>wykrytym hypervisorze</strong> – zrób punkt
+         4.
+        </li>
+       </ul>
       </li>
       <li>
-       <strong>Wyłącz Hyper-V / Izolację rdzenia</strong> (dotyczy zwłaszcza Windows 11):
-       <div class="gui-path">
-        Zabezpieczenia Windows <span class="gui-arrow">➔</span> Zabezpieczenia urządzenia
-        <span class="gui-arrow">➔</span> Izolacja rdzenia
-        <span class="gui-arrow">➔</span> Integralność pamięci: <strong>Wyłączone</strong>
-       </div>
-       <p>Następnie uruchom <strong>CMD jako administrator</strong> i zrestartuj komputer:</p>
-       <div class="cli-block">bcdedit /set hypervisorlaunchtype off</div>
+       <strong>Hyper-V (blokuje VirtualBox):</strong>
        <p>
-        <strong>Sprawdzenie:</strong> <code>msinfo32</code> ➔ „Zabezpieczenia oparte na
-        wirtualizacji” = <strong>Nie włączono</strong>.
+        <strong>Sprawdź:</strong> <code>Win+R</code> ➔ <code>msinfo32</code> ➔ wiersz
+        „Zabezpieczenia oparte na wirtualizacji”.
        </p>
+       <ul style="margin-left: 20px">
+        <li><strong>Nie włączono</strong> – OK, pomiń resztę punktu.</li>
+        <li>
+         <strong>Uruchomiono</strong> (albo w punkcie 3 widzisz komunikat o hypervisorze) – zrób A i
+         B:
+         <ol type="A" style="margin-left: 20px">
+          <li>
+           <div class="gui-path">
+            Zabezpieczenia Windows <span class="gui-arrow">➔</span> Zabezpieczenia urządzenia
+            <span class="gui-arrow">➔</span> Izolacja rdzenia
+            <span class="gui-arrow">➔</span> Integralność pamięci: <strong>Wyłączone</strong>
+           </div>
+          </li>
+          <li>
+           <strong>CMD jako administrator</strong>, potem restart laptopa:
+           <div class="cli-block">bcdedit /set hypervisorlaunchtype off</div>
+          </li>
+         </ol>
+        </li>
+       </ul>
+       <div class="pitfall-box">
+        <strong>🚨 Pułapka nr 1:</strong> Po wyłączeniu Hyper-V przestaną działać WSL2 i Docker
+        Desktop. Przywrócisz je komendą <code>bcdedit /set hypervisorlaunchtype auto</code> (i
+        restartem).
+       </div>
       </li>
-     </ul>
-     <div class="pitfall-box">
-      <strong>🐢 Zielony żółw w VirtualBox:</strong> Jeśli w prawym dolnym rogu okna maszyny widzisz
-      ikonę żółwia, VirtualBox działa „przez” Hyper-V i maszyny będą bardzo wolne. Wróć do punktu
-      wyżej. Uwaga: po wyłączeniu Hyper-V przestaną działać WSL2 i Docker Desktop (przywrócisz je
-      komendą <code>bcdedit /set hypervisorlaunchtype auto</code>).
-     </div>
+     </ol>
+     <p class="done-line">
+      ✅ <strong>Gotowe, gdy:</strong> procesor x64, ≥ 100 GB wolnego dysku, Wirtualizacja:
+      Włączone, <code>msinfo32</code> pokazuje „Nie włączono”.
+     </p>
     </div>
    </div>
 
@@ -131,21 +151,23 @@
    <div class="lab-card" id="etap-1">
     <div class="lab-header">
      <h3>Etap 1: Pobierz program i obrazy systemów</h3>
-     <span class="time-badge">Ok. 1 godzina</span>
+     <span class="time-badge">Czas: ok. 1 h</span>
     </div>
     <div class="lab-body">
      <div class="goal-box">
       Cel: Pobrać darmowe, legalne wersje próbne (180 i 90 dni – z zapasem na całe praktyki).
       Wszystkie pliki zapisz w jednym folderze: <code>C:\INF02\ISO</code>.
      </div>
-     <ul class="task-list">
+     <ol style="margin-left: 20px">
       <li>
-       <strong>VirtualBox 7.2</strong> (aktualnie 7.2.22) –
-       <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">virtualbox.org</a>
-       ➔ <em>Windows hosts</em>. Cała klasa używa <strong>tej samej wersji</strong>, żeby opcje i
-       zrzuty ekranu się zgadzały. Jeśli instalator poprosi o
-       <em>Microsoft Visual C++ Redistributable</em> – zainstaluj go. W trakcie instalacji sieć na
-       chwilę zniknie, to normalne.
+       <strong>VirtualBox 7.2.22</strong> –
+       <a href="https://download.virtualbox.org/virtualbox/7.2.22/VirtualBox-7.2.22-175245-Win.exe"
+        >pobierz instalator</a
+       >
+       i zainstaluj (Next, Next, Install). Cała klasa używa <strong>tej samej wersji</strong>, żeby
+       opcje i zrzuty ekranu się zgadzały. Jeśli instalator poprosi o
+       <em>Microsoft Visual C++ Redistributable</em> – zainstaluj go. W trakcie instalacji sieć
+       laptopa na chwilę zniknie, to normalne.
       </li>
       <li>
        <strong>Windows Server 2022</strong> (Evaluation, 180 dni, ok. 5 GB) –
@@ -163,31 +185,30 @@
         target="_blank"
         >Microsoft Evaluation Center</a
        >
-       ➔ ISO, English. Nie pobieraj „Media Creation Tool” (.exe) – potrzebujemy pliku
-       <code>.iso</code>.
+       ➔ ISO, English. Potrzebujemy pliku <code>.iso</code>, nie „Media Creation Tool” (.exe).
       </li>
       <li>
        <strong>Ubuntu Server 26.04 LTS</strong> (ok. 3 GB) –
        <a href="https://releases.ubuntu.com/26.04/" target="_blank">releases.ubuntu.com</a> ➔
        <em>live-server-amd64.iso</em>. Wersja <strong>Server</strong>, nie Desktop!
       </li>
-     </ul>
-     <div class="conclusion-box" style="background: #fff3cd; border-color: #ffeeba">
-      <div class="conclusion-icon">⚠️</div>
-      <div class="conclusion-text">
-       <strong style="color: #856404">Ważne:</strong>
-       Nie rozpakowuj plików .iso! VirtualBox czyta je jak wirtualne płyty DVD. Wszystkie systemy
-       instalujemy po angielsku z polską klawiaturą – komunikaty błędów łatwiej potem znaleźć w
-       Google.
-      </div>
+     </ol>
+     <div class="golden-rule-box">
+      <strong>💡 Rada:</strong> Nie rozpakowuj plików .iso – VirtualBox czyta je jak płyty DVD.
+      Systemy instalujemy po angielsku z polską klawiaturą: komunikaty błędów łatwiej potem znaleźć
+      w Google.
      </div>
+     <p class="done-line">
+      ✅ <strong>Gotowe, gdy:</strong> VirtualBox jest zainstalowany, a w
+      <code>C:\INF02\ISO</code> leżą 3 pliki .iso.
+     </p>
     </div>
    </div>
 
    <!-- ETAP 2: TWORZENIE MASZYN -->
    <div class="lab-card" id="etap-2">
     <div class="lab-header">
-     <h3>Etap 2: Utwórz 3 maszyny wirtualne</h3>
+     <h3>Etap 2: Utwórz 3 maszyny</h3>
      <span class="time-badge">Czas: 30 min</span>
     </div>
     <div class="lab-body">
@@ -215,164 +236,171 @@
          <td>Ubuntu Server 26.04</td>
         </tr>
         <tr>
-         <td>CPU</td>
+         <td>Processors (CPU)</td>
          <td>2</td>
          <td>2</td>
          <td>2</td>
         </tr>
         <tr>
-         <td>RAM (laptop 16 GB / 8 GB)</td>
-         <td>4096 / 2048 MB</td>
-         <td>4096 / 4096 MB*</td>
-         <td>2048 / 2048 MB</td>
+         <td>Base Memory – laptop 16 GB</td>
+         <td>4096 MB</td>
+         <td>4096 MB</td>
+         <td>2048 MB</td>
         </tr>
         <tr>
-         <td>Dysk (VDI, dynamiczny)</td>
+         <td>Base Memory – laptop 8 GB</td>
+         <td>2048 MB</td>
+         <td>4096 MB*</td>
+         <td>1024 MB</td>
+        </tr>
+        <tr>
+         <td>Hard Disk (VDI, dynamiczny)</td>
          <td>50 GB</td>
          <td>64 GB</td>
          <td>25 GB</td>
         </tr>
         <tr>
-         <td>Karta 1</td>
+         <td>Karta 1 (Adapter 1)</td>
          <td>NAT</td>
          <td>NAT</td>
          <td>NAT + przekierowanie portu 2222 ➔ 22</td>
         </tr>
         <tr>
-         <td>Karta 2</td>
-         <td>Sieć wewnętrzna <code>INF02-LAN</code></td>
-         <td>Sieć wewnętrzna <code>INF02-LAN</code></td>
-         <td>Sieć wewnętrzna <code>INF02-LAN</code></td>
+         <td>Karta 2 (Adapter 2)</td>
+         <td>INF02-LAN</td>
+         <td>INF02-LAN</td>
+         <td>INF02-LAN</td>
         </tr>
         <tr>
-         <td>Karta 3</td>
-         <td>Sieć wewnętrzna <code>INF02-LAN</code></td>
+         <td>Karta 3 (Adapter 3)</td>
+         <td>INF02-LAN</td>
          <td>–</td>
          <td>–</td>
-        </tr>
-        <tr>
-         <td>Konto / hasło</td>
-         <td>Administrator / <code>ZAQ!2wsx</code></td>
-         <td>uczen / <code>ZAQ!2wsx</code></td>
-         <td>administrator / <code>ZAQ!2wsx</code></td>
         </tr>
        </tbody>
       </table>
      </div>
      <p style="color: var(--text-muted)">
-      * Instalator Windows 11 wymaga 4 GB RAM. Na laptopie z 8 GB po instalacji zmniejsz RAM klienta
-      do 3072 MB.
+      * Instalator Windows 11 wymaga 4 GB RAM. Na laptopie z 8 GB po instalacji zmniejsz RAM maszyny
+      INF02-KLIENT do 3072 MB.
      </p>
 
-     <ul class="task-list">
+     <ol style="margin-left: 20px">
+      <li>
+       <strong>VirtualBox po angielsku</strong> (opcje i zrzuty w tej instrukcji są po angielsku):
+       <div class="gui-path">
+        File (Plik) <span class="gui-arrow">➔</span> Preferences (Preferencje)
+        <span class="gui-arrow">➔</span> Language <span class="gui-arrow">➔</span>
+        <strong>English</strong> <span class="gui-arrow">➔</span> OK
+       </div>
+      </li>
       <li>
        <strong>Folder maszyn:</strong>
        <div class="gui-path">
-        Plik <span class="gui-arrow">➔</span> Preferencje <span class="gui-arrow">➔</span> Ogólne
-        <span class="gui-arrow">➔</span> Domyślny folder maszyn: <code>C:\INF02\VM</code>
+        File <span class="gui-arrow">➔</span> Preferences <span class="gui-arrow">➔</span> General
+        <span class="gui-arrow">➔</span> Default Machine Folder: <code>C:\INF02\VM</code>
        </div>
       </li>
       <li>
-       <strong>Nowa maszyna:</strong> Kliknij <em>Nowa</em>, wpisz nazwę z tabeli i wskaż plik ISO.
-       VirtualBox sam rozpozna system (dla Windows 11 sam włączy EFI, Secure Boot i TPM 2.0). Ustaw
-       RAM, CPU i dysk według tabeli.
-       <div class="pitfall-box">
-        <strong>🚨 Pułapka nr 1:</strong> Zaznacz
-        <strong>„Pomiń instalację nienadzorowaną” (Skip Unattended Installation)</strong>! Bez tego
-        VirtualBox zainstaluje system sam – z kontem <code>vboxuser</code>/<code>changeme</code>, a
-        Windows Server bez okienek (Core). Instalację robimy ręcznie, bo to umiejętność
-        egzaminacyjna.
-       </div>
-      </li>
-      <li>
-       <strong>Schowek i ekran</strong> (obie maszyny Windows):
-       <div class="gui-path">
-        Ustawienia <span class="gui-arrow">➔</span> Ogólne
-        <span class="gui-arrow">➔</span> Zaawansowane <span class="gui-arrow">➔</span> Współdzielony
-        schowek: <strong>Dwukierunkowy</strong>
-       </div>
-       <div class="gui-path">
-        Ustawienia <span class="gui-arrow">➔</span> Ekran <span class="gui-arrow">➔</span> Kontroler
-        graficzny: <strong>VBoxSVGA</strong>, pamięć wideo: <strong>128 MB</strong>
-       </div>
-      </li>
-      <li>
-       <strong>Sieć (Kluczowe dla naszych laboratoriów!):</strong>
-       <div class="gui-path">Ustawienia maszyny <span class="gui-arrow">➔</span> Sieć</div>
-       <ul style="margin-top: 10px">
+       <strong>Nowa maszyna</strong> – kliknij <em>New</em> i wypełnij kreator po kolei (powtórz dla
+       każdej z 3 maszyn):
+       <ol type="a" style="margin-left: 20px">
         <li>
-         <strong>Karta 1:</strong> zostaw <strong>NAT</strong> (wyjście do Internetu – instalacja,
-         aktywacja, aktualizacje).
+         <em>Name and Operating System</em>: Name z tabeli (np. <code>INF02-SERWER</code>),
+         <em>ISO Image</em>: plik z <code>C:\INF02\ISO</code>. Type i Version VirtualBox ustawi sam
+         (dla Windows 11 sam włączy też EFI, Secure Boot i TPM 2.0).
+        </li>
+        <li>Zaznacz <strong>Skip Unattended Installation</strong> – patrz Pułapka nr 2.</li>
+        <li><em>Hardware</em>: Base Memory i Processors z tabeli.</li>
+        <li>
+         <em>Hard Disk</em>: <em>Create a Virtual Hard Disk Now</em>, rozmiar z tabeli, typ VDI,
+         <em>Pre-allocate Full Size</em> odznaczone ➔ <em>Finish</em>.
+        </li>
+       </ol>
+       <div class="pitfall-box">
+        <strong>🚨 Pułapka nr 2:</strong> Bez <em>Skip Unattended Installation</em> VirtualBox
+        zainstaluje system sam – z kontem <code>vboxuser</code>/<code>changeme</code>, a Windows
+        Server bez okienek (Core). Instalację robimy ręcznie, bo to umiejętność egzaminacyjna.
+       </div>
+      </li>
+      <li>
+       <strong>Sieć</strong> – zaznacz maszynę ➔ <em>Settings</em> ➔ <em>Network</em>:
+       <ul style="margin-top: 10px; margin-left: 20px">
+        <li>
+         <strong>Adapter 1:</strong> zostaw <strong>NAT</strong> (Internet – instalacja, aktywacja,
+         aktualizacje).
          <img
           src="img/vbox-server-nic1-nat.jpg"
-          alt="VirtualBox Karta 1 NAT"
+          alt="VirtualBox Adapter 1 ustawiony na NAT"
           class="setup-screenshot"
          />
         </li>
         <li>
-         <strong>Karta 2:</strong> zaznacz „Włącz kartę sieciową”, ustaw
-         <strong>Sieć wewnętrzna (Internal Network)</strong> i wpisz nazwę <code>INF02-LAN</code>.
-         Rozwiń <em>Zaawansowane</em> i ustaw
-         <strong>Tryb nasłuchiwania (Promiscuous Mode): Zezwalaj na wszystko (Allow All)</strong>.
+         <strong>Adapter 2:</strong> zaznacz <em>Enable Network Adapter</em>, <em>Attached to</em>:
+         <strong>Internal Network</strong>, <em>Name</em>: <code>INF02-LAN</code>. Rozwiń
+         <em>Advanced</em> ➔ <em>Promiscuous Mode</em>: <strong>Allow All</strong>.
          <img
           src="img/vbox-server-nic2-internal.jpg"
-          alt="VirtualBox Karta 2 Sieć wewnętrzna INF02-LAN"
+          alt="VirtualBox Adapter 2 Internal Network INF02-LAN"
           class="setup-screenshot"
          />
         </li>
-        <li class="new-requirement-box">
-         <strong>🆕 Karta 3 – tylko INF02-SERWER (wymagana do NIC Teaming!)</strong><br />
-         Ustaw ją identycznie jak Kartę 2: <strong>Sieć wewnętrzna <code>INF02-LAN</code></strong
-         >, Promiscuous Mode: <strong>Allow All</strong>.
+        <li>
+         <strong>Adapter 3 – tylko INF02-SERWER</strong> (wymagany do NIC Teaming): ustaw
+         identycznie jak Adapter 2.
          <img
           src="img/vbox-server-nic3-internal.jpg"
-          alt="VirtualBox Serwer Karta 3 Sieć wewnętrzna"
+          alt="VirtualBox Adapter 3 serwera Internal Network INF02-LAN"
           class="setup-screenshot"
          />
         </li>
         <li>
          <strong>Tylko INF02-LINUX – SSH z Twojego laptopa:</strong>
          <div class="gui-path">
-          Karta 1 (NAT) <span class="gui-arrow">➔</span> Zaawansowane
-          <span class="gui-arrow">➔</span> Przekierowanie portów <span class="gui-arrow">➔</span> ➕
+          Adapter 1 <span class="gui-arrow">➔</span> Advanced <span class="gui-arrow">➔</span> Port
+          Forwarding <span class="gui-arrow">➔</span> ➕
          </div>
          <p>
-          Nazwa: <code>SSH</code>, Protokół: <code>TCP</code>, IP hosta: <code>127.0.0.1</code>,
-          Port hosta: <code>2222</code>, IP gościa: (puste), Port gościa: <code>22</code>.
+          Name: <code>SSH</code>, Protocol: <code>TCP</code>, Host IP: <code>127.0.0.1</code>, Host
+          Port: <code>2222</code>, Guest IP: (puste), Guest Port: <code>22</code>.
          </p>
         </li>
        </ul>
        <div class="pitfall-box">
-        <strong>🚨 Pułapka nr 2:</strong> Nazwa <code>INF02-LAN</code> musi być identyczna co do
+        <strong>🚨 Pułapka nr 3:</strong> Nazwa <code>INF02-LAN</code> musi być identyczna co do
         znaku na wszystkich maszynach (wielkie litery, myślnik). Inna nazwa = inny „switch” i
         maszyny się nie zobaczą.
        </div>
       </li>
-     </ul>
+     </ol>
 
      <details class="theory-block" style="margin-bottom: 15px; margin-top: 20px">
       <summary>🕵️‍♂️ Sekret Inżyniera: Po co ten układ kart?</summary>
       <div class="theory-content">
        <ul style="margin-left: 20px; margin-top: 10px">
         <li>
-         <strong>Ten sam schemat na każdej maszynie</strong> = przewidywalne nazwy interfejsów:
-         Karta 1 to zawsze <code>Ethernet</code> (Windows) / <code>enp0s3</code> (Linux), Karta 2 to
+         <strong>Ten sam schemat na każdej maszynie</strong> = przewidywalne nazwy w systemie: Karta
+         1 to zawsze <code>Ethernet</code> (Windows) / <code>enp0s3</code> (Linux), Karta 2 to
          <code>Ethernet 2</code> / <code>enp0s8</code>.
         </li>
         <li>
          <strong>Karta 1 (NAT)</strong> służy tylko do Internetu. Gdy w kolejnych fazach maszyna ma
-         korzystać wyłącznie z LAN, nie zmieniamy ustawień – tylko „wypinamy kabel” (Urządzenia ➔
-         Sieć ➔ odznacz Połącz kartę sieciową).
+         korzystać wyłącznie z INF02-LAN, nie zmieniamy ustawień – tylko „wypinamy kabel”:
+         <em>Devices ➔ Network ➔</em> odznacz <em>Connect Network Adapter 1</em>.
         </li>
         <li>
-         <strong>Karta 2 + Karta 3 serwera</strong> „skleimy” w Lab 1 w jeden zespół NIC Teaming
-         (<code>LAN12</code>). Gdybyśmy skleili kartę NAT z kartą LAN, serwer straciłby Internet.
-         Zespół wymaga trybu <em>Allow All</em> – dlatego ustawiamy go na każdej karcie wewnętrznej
-         (innym kartom nie szkodzi).
+         <strong>Karty 2 i 3 serwera</strong> „skleimy” w Lab 1 w jeden zespół NIC Teaming
+         (<code>LAN12</code>). Gdybyśmy skleili kartę NAT z kartą INF02-LAN, serwer straciłby
+         Internet. Zespół wymaga <em>Promiscuous Mode: Allow All</em> – ustawiamy go na każdej
+         karcie INF02-LAN (innym kartom nie szkodzi).
         </li>
        </ul>
       </div>
      </details>
+     <p class="done-line">
+      ✅ <strong>Gotowe, gdy:</strong> w VirtualBox widzisz 3 wyłączone maszyny z nazwami z tabeli,
+      a w <em>Settings ➔ Network</em> każdej z nich karty są ustawione jak w tabeli.
+     </p>
     </div>
    </div>
 
@@ -380,29 +408,32 @@
    <div class="lab-card" id="etap-3">
     <div class="lab-header">
      <h3>Etap 3: Zainstaluj systemy</h3>
-     <span class="time-badge">Czas: 1-1,5 godziny</span>
+     <span class="time-badge">Czas: 1–1,5 h</span>
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Ręcznie zainstalować trzy systemy z ustalonymi kontami. Uruchom maszynę przyciskiem
-      <em>Uruchom</em> – wystartuje z podpiętego ISO.
+      Cel: Ręcznie zainstalować trzy systemy. Zaznacz maszynę i kliknij <em>Start</em> – wystartuje
+      z podpiętego ISO. Konta (wszędzie hasło <code>ZAQ!2wsx</code>): INF02-SERWER –
+      <code>Administrator</code>, INF02-KLIENT – <code>uczen</code>, INF02-LINUX –
+      <code>administrator</code>.
      </div>
 
      <div class="golden-rule-box">
-      <strong>💡 Złota Rada Trenera (Ctrl+Alt+Del):</strong> Wciśnięcie Ctrl+Alt+Del na klawiaturze
-      zadziała na Twoim laptopie, nie w maszynie! W maszynie użyj
-      <strong>Prawy Ctrl + Del</strong> lub menu <em>Wejście ➔ Klawiatura ➔ Wstaw Ctrl-Alt-Del</em>.
+      <strong>💡 Rada (Ctrl+Alt+Del):</strong> Ctrl+Alt+Del na klawiaturze zadziała na Twoim
+      laptopie, nie w maszynie! W maszynie wciśnij <strong>Prawy Ctrl + Del</strong> albo wybierz
+      <em>Input ➔ Keyboard ➔ Insert Ctrl-Alt-Del</em>.
      </div>
 
      <h4 class="os-title">🪟 INF02-SERWER: Windows Server 2022</h4>
      <ol style="margin-left: 20px">
       <li>
-       Language: <code>English</code>, Time and currency format: <code>Polish</code>, Keyboard:
-       <code>Polish (Programmers)</code> ➔ <em>Install now</em>.
+       Language to install: <code>English</code>, Time and currency format: <code>Polish</code>,
+       Keyboard: <code>Polish (Programmers)</code> ➔ <em>Next</em> ➔ <em>Install now</em>.
       </li>
       <li>
        Wybierz edycję
-       <strong>Windows Server 2022 Standard Evaluation (Desktop Experience)</strong>.
+       <strong>Windows Server 2022 Standard Evaluation (Desktop Experience)</strong> ➔ zaakceptuj
+       licencję.
       </li>
       <li>
        <em>Custom: Install Microsoft Server Operating System only</em> ➔ zaznacz
@@ -411,62 +442,67 @@
       <li>Po restarcie ustaw hasło konta <code>Administrator</code>: <code>ZAQ!2wsx</code>.</li>
      </ol>
      <div class="pitfall-box">
-      <strong>🚨 Pułapka nr 3:</strong> Pierwsza pozycja na liście edycji to wersja
+      <strong>🚨 Pułapka nr 4:</strong> Pierwsza pozycja na liście edycji to wersja
       <strong>bez</strong> „Desktop Experience” (Server Core – sam czarny wiersz poleceń). Jeśli po
-      instalacji nie widzisz pulpitu i Menedżera Serwera – zainstalowałeś złą edycję. Usuń dysk i
-      zacznij od nowa.
+      instalacji nie widzisz pulpitu i Server Managera – zainstalowałeś złą edycję. Wyłącz maszynę ➔
+      prawy klik na niej ➔ <em>Remove ➔ Delete all files</em> ➔ utwórz ją ponownie (Etap 2).
      </div>
      <p>Nazwy komputera <strong>nie zmieniaj</strong> – zrobimy to w Lab 1.</p>
 
      <h4 class="os-title">💻 INF02-KLIENT: Windows 11 Enterprise</h4>
      <ol style="margin-left: 20px">
       <li>
-       Language: <code>English</code>, Time and currency format: <code>Polish</code>, Keyboard:
-       <code>Polish (Programmers)</code> ➔ <em>Install now</em> ➔ instalacja na
-       <em>Drive 0 Unallocated Space</em>.
+       Language to install: <code>English</code>, Time and currency format: <code>Polish</code> ➔
+       <em>Next</em> ➔ Keyboard: <code>Polish (Programmers)</code> ➔ <em>Next</em>.
       </li>
       <li>
-       Po restarcie (konfiguracja OOBE): kraj <code>Poland</code>, klawiatura Polish (Programmers),
-       drugą klawiaturę pomiń.
+       <em>Select setup option</em>: <strong>Install Windows 11</strong> + zaznacz zgodę na
+       usunięcie danych ➔ <em>Next</em> ➔ zaakceptuj licencję.
+      </li>
+      <li>Wybierz <em>Disk 0 Unallocated Space</em> ➔ <em>Next</em> ➔ <em>Install</em>.</li>
+      <li>
+       Po restarcie: kraj <code>Poland</code>, klawiatura <code>Polish (Programmers)</code>, drugą
+       klawiaturę pomiń (<em>Skip</em>). Jeśli pojawi się ekran z nazwą urządzenia – <em>Skip</em>.
       </li>
       <li>
-       <em>How would you like to set up this device?</em> ➔
-       <strong>Set up for work or school</strong> ➔ <strong>Sign-in options</strong> ➔
-       <strong>Domain join instead</strong>.
+       Na ekranie <em>Let's set things up for your work or school</em> kliknij
+       <strong>Sign-in options</strong> ➔ <strong>Domain join instead</strong>. (Jeśli wcześniej
+       pojawi się pytanie <em>How would you like to set up this device?</em> – wybierz
+       <em>Set up for work or school</em>.)
       </li>
       <li>
        Nazwa użytkownika: <code>uczen</code>, hasło: <code>ZAQ!2wsx</code>, trzy pytania
-       bezpieczeństwa (cokolwiek – zapamiętaj!). Ustawienia prywatności możesz wyłączyć.
+       bezpieczeństwa (odpowiedzi zapisz!). Ustawienia prywatności możesz wyłączyć.
       </li>
      </ol>
      <div class="pitfall-box">
-      <strong>🚨 Pułapka nr 4:</strong> Jeśli klikniesz „Set up for personal use” albo pominiesz
-      „Domain join instead”, instalator zażąda konta Microsoft. Nie podawaj swojego prywatnego konta
-      – cofnij się i wybierz ścieżkę opisaną wyżej.
+      <strong>🚨 Pułapka nr 5:</strong> Bez <em>Domain join instead</em> instalator zażąda konta
+      Microsoft. Nie podawaj swojego prywatnego konta – cofnij się strzałką i wybierz
+      <em>Sign-in options</em>.
      </div>
 
-     <h4 class="os-title">🔧 Dodatki gościa (oba Windowsy)</h4>
+     <h4 class="os-title">🔧 Dodatki gościa i schowek (obie maszyny Windows)</h4>
      <p>Bez nich ekran jest malutki, a kopiuj-wklej nie działa. Zaloguj się, a następnie:</p>
-     <div class="gui-path">
-      Menu okna maszyny: Urządzenia <span class="gui-arrow">➔</span> Wstaw obraz płyty z Dodatkami
-      gościa <span class="gui-arrow">➔</span> Eksplorator plików <span class="gui-arrow">➔</span>
-      <code>D:\VBoxWindowsAdditions.exe</code> <span class="gui-arrow">➔</span> Next, Next, Install
-      <span class="gui-arrow">➔</span> Reboot
-     </div>
+     <ol style="margin-left: 20px">
+      <li>W menu okna maszyny: <em>Devices ➔ Insert Guest Additions CD image…</em></li>
+      <li>
+       Eksplorator plików ➔ napęd <strong>VirtualBox Guest Additions</strong> (zwykle D:) ➔
+       <code>VBoxWindowsAdditions.exe</code> ➔ Next, Next, Install ➔ <em>Reboot now</em>.
+      </li>
+      <li>Po restarcie: <em>Devices ➔ Shared Clipboard ➔ Bidirectional</em>.</li>
+     </ol>
 
      <h4 class="os-title">🐧 INF02-LINUX: Ubuntu Server 26.04</h4>
      <p>
-      Instalator jest tekstowy i ma kilka pułapek – przejdź go krok po kroku według osobnego
-      przewodnika, a potem wróć tutaj do Etapu 4:
+      Instalator jest tekstowy i ma kilka pułapek – przejdź go według osobnego przewodnika, a potem
+      wróć tutaj do Etapu 4:
      </p>
      <a href="03-linux/setup-ubuntu.html" class="course-btn next" style="display: inline-block"
       >🐧 Przewodnik: instalacja Ubuntu Server ➡️</a
      >
-     <p style="margin-top: 15px">
-      Najważniejsze ustawienia w skrócie: English, klawiatura Polish, sieć bez zmian, dysk: cały +
-      LVM z <strong>powiększonym <code>ubuntu-lv</code></strong
-      >, konto <code>administrator</code> / <code>serwer-linux</code> / <code>ZAQ!2wsx</code>,
-      <strong>[X] Install OpenSSH server</strong>.
+     <p class="done-line">
+      ✅ <strong>Gotowe, gdy:</strong> logujesz się do wszystkich trzech systemów, a oba Windowsy
+      dopasowują rozdzielczość do rozmiaru okna.
      </p>
     </div>
    </div>
@@ -486,16 +522,21 @@
       <table class="vm-table">
        <thead>
         <tr>
-         <th>Maszyna</th>
+         <th>Gdzie</th>
          <th>Komenda</th>
          <th>Oczekiwany wynik</th>
         </tr>
        </thead>
        <tbody>
         <tr>
-         <td rowspan="4">🪟 SERWER<br />💻 KLIENT<br /><small>(CMD)</small></td>
+         <td rowspan="4">
+          Na <strong>każdej</strong> z 2 maszyn Windows (INF02-SERWER i INF02-KLIENT), w CMD
+         </td>
          <td><code>ipconfig</code></td>
-         <td>Karta <code>Ethernet</code> ma adres <code>10.0.2.15</code></td>
+         <td>
+          <code>Ethernet</code> = <code>10.0.2.15</code>. Pozostałe karty z adresem
+          <code>169.254.x.x</code> – <strong>prawidłowo</strong>, adres w INF02-LAN nadamy w Lab 1
+         </td>
         </tr>
         <tr>
          <td><code>ping 8.8.8.8</code></td>
@@ -510,11 +551,11 @@
          <td>Okno z liczbą dni do końca wersji próbnej</td>
         </tr>
         <tr>
-         <td rowspan="2">🐧 LINUX<br /><small>(w oknie maszyny)</small></td>
+         <td rowspan="2">INF02-LINUX, w oknie maszyny</td>
          <td><code>ip -br a</code></td>
          <td>
           <code>enp0s3</code> = <code>10.0.2.15</code>; <code>enp0s8</code> = UP
-          <strong>bez adresu</strong> (to prawidłowe – adres nadamy w Lab 4)
+          <strong>bez adresu</strong> – prawidłowo, adres nadamy w Linux Lab 4
          </td>
         </tr>
         <tr>
@@ -522,7 +563,7 @@
          <td>3 odpowiedzi – jest Internet i DNS</td>
         </tr>
         <tr>
-         <td>💻 Twój laptop<br /><small>(CMD)</small></td>
+         <td>Twój laptop, w CMD</td>
          <td><code>ssh -p 2222 administrator@127.0.0.1</code></td>
          <td>
           Pytanie o odcisk klucza ➔ wpisz <code>yes</code> ➔ hasło ➔ znak zachęty
@@ -532,9 +573,9 @@
        </tbody>
       </table>
      </div>
-     <p>
-      Dodatki gościa działają, jeśli po zmianie rozmiaru okna maszyny Windows dopasowuje
-      rozdzielczość, a tekst skopiowany na laptopie wkleja się w maszynie.
+     <p class="done-line">
+      ✅ <strong>Gotowe, gdy:</strong> każdy wiersz tabeli daje oczekiwany wynik. Jeśli nie –
+      sprawdź tabelę problemów niżej.
      </p>
     </div>
    </div>
@@ -543,7 +584,7 @@
    <div class="lab-card" id="etap-5">
     <div class="lab-header">
      <h3>Etap 5: Migawka – Twój przycisk „Cofnij”</h3>
-     <span class="time-badge">Czas: 2 min</span>
+     <span class="time-badge">Czas: 5 min</span>
     </div>
     <div class="lab-body">
      <div class="goal-box">
@@ -552,14 +593,107 @@
      </div>
      <div class="gui-path">
       Wyłącz maszynę <span class="gui-arrow">➔</span> zaznacz ją w VirtualBox
-      <span class="gui-arrow">➔</span> ☰ Migawki <span class="gui-arrow">➔</span> Zrób
-      <span class="gui-arrow">➔</span> nazwa: <code>00-czysta-instalacja</code>
+      <span class="gui-arrow">➔</span> ☰ <span class="gui-arrow">➔</span> Snapshots
+      <span class="gui-arrow">➔</span> Take <span class="gui-arrow">➔</span> Name:
+      <code>00-czysta-instalacja</code>
      </div>
      <p>Zrób to dla każdej z trzech maszyn.</p>
      <div class="golden-rule-box">
-      <strong>💡 Złota Rada Trenera:</strong> Cofając się, cofaj <strong>wszystkie</strong> maszyny
-      do tego samego etapu. Serwer cofnięty do czystej instalacji „nie pamięta” domeny, do której
-      klient wciąż myśli, że należy.
+      <strong>💡 Rada:</strong> Cofając się, cofaj <strong>wszystkie</strong> maszyny do tego samego
+      etapu. INF02-SERWER cofnięty do czystej instalacji „nie pamięta” domeny, do której
+      INF02-KLIENT wciąż myśli, że należy.
+     </div>
+     <p class="done-line">
+      ✅ <strong>Gotowe, gdy:</strong> każda z 3 maszyn ma migawkę
+      <code>00-czysta-instalacja</code>.
+     </p>
+    </div>
+   </div>
+
+   <!-- PROBLEMY -->
+   <div class="lab-card" id="problemy">
+    <div class="lab-header">
+     <h3>Coś nie działa? Objaw ➔ Przyczyna ➔ Naprawa</h3>
+    </div>
+    <div class="lab-body">
+     <div class="table-scroll">
+      <table class="vm-table">
+       <thead>
+        <tr>
+         <th>Objaw</th>
+         <th>Przyczyna</th>
+         <th>Naprawa</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td><code>VT-x is not available</code> / <code>AMD-V is disabled</code></td>
+         <td>Wirtualizacja wyłączona w BIOS/UEFI albo zajęta przez Hyper-V</td>
+         <td><a href="#etap-0">Etap 0</a>, punkty 3 i 4</td>
+        </tr>
+        <tr>
+         <td>Zielony żółw w pasku okna maszyny, wszystko bardzo wolne</td>
+         <td>VirtualBox działa „przez” Hyper-V</td>
+         <td><a href="#etap-0">Etap 0</a>, punkt 4</td>
+        </tr>
+        <tr>
+         <td><code>No bootable medium found</code></td>
+         <td>Nie podpięto ISO</td>
+         <td><em>Settings ➔ Storage</em> ➔ ikona płyty (Optical Drive) ➔ wybierz plik ISO</td>
+        </tr>
+        <tr>
+         <td>
+          Windows 11: <em>Press any key to boot from CD or DVD…</em> minęło i nic się nie dzieje
+         </td>
+         <td>Nie wciśnięto klawisza w ciągu kilku sekund</td>
+         <td><em>Machine ➔ Reset</em> i od razu wciśnij dowolny klawisz</td>
+        </tr>
+        <tr>
+         <td>Windows 11: <em>This PC can't run Windows 11</em></td>
+         <td>Za mało RAM albo maszyna utworzona z innym typem systemu</td>
+         <td>
+          <em>Settings ➔ System</em>: Base Memory 4096 MB, zaznaczone <em>Enable EFI</em>,
+          <em>Secure Boot</em>, TPM <em>v2.0</em>
+         </td>
+        </tr>
+        <tr>
+         <td>Windows Server bez pulpitu, tylko czarne okno</td>
+         <td>Zainstalowana edycja Server Core</td>
+         <td><a href="#etap-3">Pułapka nr 4</a></td>
+        </tr>
+        <tr>
+         <td>Malutki ekran albo nie działa kopiuj-wklej</td>
+         <td>Brak Dodatków gościa albo wyłączony schowek</td>
+         <td>
+          <a href="#etap-3">Dodatki gościa i schowek</a>. Nadal źle: <em>Settings ➔ Display</em> ➔
+          Graphics Controller <em>VBoxSVGA</em>, Video Memory 128 MB
+         </td>
+        </tr>
+        <tr>
+         <td>Ubuntu: <code>enp0s3</code> bez adresu</td>
+         <td>Adapter 1 nie jest NAT albo odłączony kabel</td>
+         <td>
+          <em>Settings ➔ Network ➔ Adapter 1</em>: NAT, <em>Advanced ➔ Cable Connected</em>
+          zaznaczone
+         </td>
+        </tr>
+        <tr>
+         <td><code>ssh: Connection refused</code></td>
+         <td>Na Ubuntu nie ma serwera SSH albo maszyna jest wyłączona</td>
+         <td>Na Ubuntu: <code>sudo apt install openssh-server</code></td>
+        </tr>
+        <tr>
+         <td><code>ssh: Connection timed out</code></td>
+         <td>Brak reguły przekierowania portu albo zły port</td>
+         <td><a href="#etap-2">Etap 2</a>, punkt 4 (Port Forwarding)</td>
+        </tr>
+        <tr>
+         <td><code>REMOTE HOST IDENTIFICATION HAS CHANGED</code></td>
+         <td>Ubuntu zainstalowane od nowa ma nowy klucz</td>
+         <td>Na laptopie: <code>ssh-keygen -R "[127.0.0.1]:2222"</code></td>
+        </tr>
+       </tbody>
+      </table>
      </div>
     </div>
    </div>
@@ -573,11 +707,11 @@
     </p>
     <ul style="margin-left: 20px">
      <li>
-      🐧 Linux <code>192.168.10.20</code> –
+      🐧 INF02-LINUX <code>192.168.10.20</code> –
       <a href="03-linux/lab4-siec.html">Linux Lab 4 (Netplan)</a>
      </li>
      <li>
-      🪟 Serwer <code>192.168.10.10</code> i 💻 Klient <code>192.168.10.30</code> –
+      🪟 INF02-SERWER <code>192.168.10.10</code> i 💻 INF02-KLIENT <code>192.168.10.30</code> –
       <a href="02-windows/lab1-domena.html">Windows Lab 1 (Domena)</a>
      </li>
     </ul>
