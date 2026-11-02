@@ -54,12 +54,12 @@ for (const file of files) {
  lines.push(`## [\`${file}\`](${file})`, '');
  if (title) lines.push(`_title: ${title}_`, '');
  if (!headings.length) lines.push('- (brak nagłówków h1–h3)');
- // Wcięcie wg poziomu, ale najwyżej o jeden poziom głębiej niż poprzedni nagłówek (np. h1 -> h3)
- let prevDepth = -1;
+ // Wcięcie = liczba nadrzędnych nagłówków (h1 -> h3 bez h2 daje jeden poziom, a nie dwa)
+ const ancestors = [];
  for (const { level, text } of headings) {
-  const depth = Math.min(level - 1, prevDepth + 1);
-  lines.push(`${'  '.repeat(depth)}- **H${level}** ${text}`);
-  prevDepth = depth;
+  while (ancestors.length && ancestors.at(-1) >= level) ancestors.pop();
+  lines.push(`${'  '.repeat(ancestors.length)}- **H${level}** ${text}`);
+  ancestors.push(level);
  }
  lines.push('');
 }
