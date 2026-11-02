@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="pl">
  <head>
   <meta charset="UTF-8" />
@@ -76,7 +77,9 @@
     zaczniesz jakikolwiek Lab, sprawdź w tej tabeli, na jakim etapie jesteśmy.
     <strong>Karta 1 (NAT)</strong> daje Ci Internet.
     <strong>Karta 2 (Sieć Wewnętrzna: INF02-LAN)</strong> to nasza prywatna piaskownica (podsieć
-    <code>192.168.10.0/24</code>).
+    <code>192.168.10.0/24</code>). Karty ustawiasz raz, w <a href="setup.html">Dniu 0</a>.
+    <em>Wyłączona</em> w tabeli oznacza „wypięty kabel”: w oknie maszyny Urządzenia ➔ Sieć ➔ odznacz
+    <em>Połącz kartę sieciową</em> (ustawień karty nie zmieniasz).
    </div>
 
    <!-- FAZA 1: LINUX START -->
@@ -101,9 +104,8 @@
         <td><strong>🐧 Ubuntu Server</strong></td>
         <td>DHCP (np. <span class="ip-highlight">10.0.2.15</span>)</td>
         <td>
-         IP: <span class="ip-highlight">10.0.5.50/24</span><br />Brama: <em>Brak</em><br /><small
-          >(Tymczasowy IP do nauki)</small
-         >
+         IP: <span class="ip-highlight">192.168.10.20/24</span><br />Brama: <em>Brak</em
+         ><br /><small>(Ustawiasz w Linux Lab 4)</small>
         </td>
         <td><span class="service-badge">SSH</span></td>
        </tr>
@@ -113,7 +115,7 @@
         <td><span class="service-badge pending">Czeka</span></td>
        </tr>
        <tr>
-        <td><strong>💻 Windows 10</strong></td>
+        <td><strong>💻 Windows 11</strong></td>
         <td colspan="2" style="text-align: center; color: #b2bec3"><em>Maszyna wyłączona</em></td>
         <td><span class="service-badge pending">Czeka</span></td>
        </tr>
@@ -154,7 +156,8 @@
         <td><strong>🪟 Win Server 2022</strong></td>
         <td>DHCP</td>
         <td>
-         IP: <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <strong>LAN12</strong> (Karta 2+3)<br />IP:
+         <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
          <span class="ip-highlight">127.0.0.1</span>
         </td>
         <td>
@@ -163,7 +166,7 @@
         </td>
        </tr>
        <tr>
-        <td><strong>💻 Windows 10</strong></td>
+        <td><strong>💻 Windows 11</strong></td>
         <td><em>Wyłączona</em></td>
         <td>
          IP: <span class="ip-highlight">192.168.10.30/24</span><br />Brama: <em>Brak</em><br />DNS:
@@ -201,7 +204,7 @@
         <td><strong>🐧 Ubuntu Server</strong></td>
         <td><em>Wyłączona!</em> (Test RRAS)</td>
         <td>
-         <span class="net-change-alert">⚠️ ZMIANA IP!</span><br />
+         <span class="net-change-alert">⚠️ NOWE: Brama i DNS!</span><br />
          IP: <span class="ip-highlight">192.168.10.20/24</span><br />Brama:
          <span class="ip-highlight">192.168.10.10</span><br />DNS:
          <span class="ip-highlight">192.168.10.10</span>
@@ -212,7 +215,8 @@
         <td><strong>🪟 Win Server 2022</strong></td>
         <td>DHCP</td>
         <td>
-         IP: <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <strong>LAN12</strong> (Karta 2+3)<br />IP:
+         <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
          <span class="ip-highlight">127.0.0.1</span>
         </td>
         <td>
@@ -222,7 +226,7 @@
         </td>
        </tr>
        <tr>
-        <td><strong>💻 Windows 10</strong></td>
+        <td><strong>💻 Windows 11</strong></td>
         <td><em>Wyłączona</em></td>
         <td><strong>DHCP</strong> (Pobiera IP .100+, Bramę .10 i DNS .10)</td>
         <td><span class="service-badge">W Domenie</span></td>
@@ -230,9 +234,9 @@
       </tbody>
      </table>
      <div class="pitfall-box danger" style="margin-top: 15px">
-      <strong>🚨 Uwaga na Ubuntu:</strong> W tej fazie musisz ręcznie zmienić IP Linuxa na
-      <code>192.168.10.20</code> (używając Netplan) i wyłączyć jego pierwszą kartę (NAT) w
-      VirtualBox. Od teraz Linux wychodzi na świat przez Windows Server!
+      <strong>🚨 Uwaga na Ubuntu:</strong> W tej fazie dopisz w Netplan bramę i DNS
+      <code>192.168.10.10</code> (adres <code>192.168.10.20</code> zostaje) i wypnij kabel pierwszej
+      karty (NAT). Od teraz Linux wychodzi na świat przez Windows Server!
      </div>
     </div>
    </div>
@@ -274,7 +278,8 @@
         <td><strong>🪟 Win Server 2022</strong></td>
         <td>DHCP</td>
         <td>
-         IP: <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
+         <strong>LAN12</strong> (Karta 2+3)<br />IP:
+         <span class="ip-highlight">192.168.10.10/24</span><br />Brama: <em>Brak</em><br />DNS:
          <span class="ip-highlight">127.0.0.1</span>
         </td>
         <td>
@@ -285,7 +290,7 @@
         </td>
        </tr>
        <tr>
-        <td><strong>💻 Windows 10</strong></td>
+        <td><strong>💻 Windows 11</strong></td>
         <td><em>Wyłączona</em></td>
         <td><strong>DHCP</strong></td>
         <td>

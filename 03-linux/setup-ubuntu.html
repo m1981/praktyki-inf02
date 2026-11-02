@@ -62,7 +62,7 @@
   <header>
    <h1>🐧 Setup: Fundamenty Linuxa</h1>
    <p style="color: var(--text-muted); font-size: 1.2rem">
-    Instalacja Ubuntu Server 24.04 LTS w VirtualBox
+    Instalacja Ubuntu Server 26.04 LTS w VirtualBox
    </p>
   </header>
 
@@ -71,10 +71,9 @@
     <strong>🚨 UWAGA PRZED STARTEM:</strong> Pobieramy wersję <strong>Ubuntu SERVER</strong>, a nie
     Ubuntu Desktop! Prawdziwe serwery nie mają środowiska graficznego (okienek). Będziemy pracować
     wyłącznie w czarnym oknie terminala. Witamy w świecie profesjonalistów!
-    <a
-     href="https://releases.ubuntu.com/26.04/ubuntu-26.04-live-server-amd64.iso?_gl=1*1br84up*_gcl_au*MTgwNDgwNDEwLjE3NzcyNzEyODg."
-     >ISO Ubuntu Server 26.04 (3GB)
-    </a>
+    <a href="https://releases.ubuntu.com/26.04/" target="_blank"
+     >ISO Ubuntu Server 26.04 LTS (live-server-amd64, ok. 3 GB)</a
+    >
    </div>
 
    <!-- KROK 1 -->
@@ -85,33 +84,22 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Przygotowanie wirtualnego sprzętu w architekturze Dual-NIC (Dwie karty sieciowe).
+      Cel: Maszynę <code>INF02-LINUX</code> tworzysz według wspólnej tabeli z
+      <a href="../setup.html#etap-2">Dnia 0 (Etap 2)</a>. Zanim ją uruchomisz, sprawdź:
      </div>
 
      <ul class="task-list">
       <li>
-       <strong>Parametry podstawowe:</strong>
-       <p>
-        W VirtualBox kliknij <strong>Nowa</strong>. Nazwij maszynę <code>Ubuntu-Serwer</code>.
-        Przydziel jej minimum <strong>2048 MB RAM</strong> oraz <strong>2 procesory (CPU)</strong>.
-        Dysk wirtualny: 25 GB.
-       </p>
+       <strong>Parametry:</strong> 2 CPU, 2048 MB RAM (1024 MB na laptopie z 8 GB), dysk 25 GB,
+       zaznaczone <em>Pomiń instalację nienadzorowaną</em>.
       </li>
       <li>
-       <strong>Konfiguracja Sieci (KRYTYCZNE!):</strong>
-       <div class="gui-path">Ustawienia maszyny <span class="gui-arrow">➔</span> Sieć</div>
-       <p>Musisz skonfigurować dwie karty (karty 3 i 4 zostaw wyłączone):</p>
-       <ul>
-        <li>
-         <strong>Karta 1:</strong> Zostaw domyślne <strong>NAT</strong>. Dzięki temu Linux będzie
-         miał dostęp do Internetu (do pobierania aktualizacji).
-        </li>
-        <li>
-         <strong>Karta 2:</strong> Zaznacz "Włącz kartę sieciową". Podłączona do:
-         <strong>Sieć wewnętrzna (Internal Network)</strong>. Nazwa: <code>INF02-LAN</code>. To
-         będzie nasza odizolowana sieć egzaminacyjna!
-        </li>
-       </ul>
+       <strong>Karta 1:</strong> <strong>NAT</strong> (Internet) + przekierowanie portu
+       <code>127.0.0.1:2222 ➔ 22</code> (SSH z Twojego laptopa).
+      </li>
+      <li>
+       <strong>Karta 2:</strong> <strong>Sieć wewnętrzna</strong> <code>INF02-LAN</code>,
+       Promiscuous Mode: <strong>Allow All</strong>. To nasza odizolowana sieć egzaminacyjna!
       </li>
      </ul>
 
@@ -147,15 +135,30 @@
       </li>
       <li><strong>Klawiatura:</strong> Zmień Layout na <code>Polish</code>.</li>
       <li>
-       <strong>Sieć:</strong> Instalator powinien pokazać, że karta <code>enp0s3</code> dostała
-       adres IP z Waszego szkolnego routera (np. 192.168.x.x). Jeśli nie ma IP, źle ustawiłeś Kartę
-       Mostkowaną w Kroku 1!
+       <strong>Sieć:</strong> Niczego nie zmieniaj. Karta <code>enp0s3</code> (NAT) powinna dostać
+       od VirtualBoxa adres <code>10.0.2.15</code>. Karta <code>enp0s8</code> (INF02-LAN)
+       <strong>nie będzie miała adresu</strong> – to prawidłowe, w naszej sieci nie ma jeszcze DHCP.
+       Jeśli <code>enp0s3</code> nie ma adresu, Karta 1 nie jest ustawiona na NAT.
       </li>
       <li>
-       <strong>Dysk:</strong> Zostaw domyślne ustawienia (Use an entire disk / LVM). Kliknij
-       <em>Done</em> i potwierdź <em>Continue</em>.
+       <strong>Dysk:</strong> Zostaw <em>Use an entire disk</em> i
+       <em>Set up this disk as an LVM group</em> ➔ <em>Done</em>.
       </li>
+      <li>
+       <strong>Powiększ partycję systemową:</strong> Na ekranie podsumowania w sekcji
+       <em>USED DEVICES</em> wybierz <code>ubuntu-lv</code> ➔ <em>Edit</em> ➔ w polu
+       <em>Size</em> wpisz wartość maksymalną (podaną obok jako <em>max</em>) ➔ <em>Save</em> ➔
+       <em>Done</em> ➔ <em>Continue</em>.
+      </li>
+      <li><strong>Ubuntu Pro:</strong> <em>Skip for now</em>.</li>
      </ul>
+
+     <div class="pitfall-box">
+      <strong>🚨 Pułapka z dyskiem:</strong> Domyślnie instalator przydziela systemowi tylko część
+      dysku. Jeśli pominiesz powiększenie <code>ubuntu-lv</code>, zabraknie miejsca np. w wyzwaniu z
+      Dockerem. Ratunek po instalacji:
+      <code>sudo lvextend -r -l +100%FREE /dev/ubuntu-vg/ubuntu-lv</code>
+     </div>
     </div>
    </div>
 
@@ -186,7 +189,9 @@
        <strong>OpenSSH (Bardzo ważne!):</strong>
        <p>
         Na ekranie "SSH Setup" koniecznie wciśnij Spację przy
-        <strong>[X] Install OpenSSH server</strong>. Resztę opcji (Snaps) pomiń.
+        <strong>[X] Install OpenSSH server</strong>. Opcję
+        <em>Allow password authentication over SSH</em> zostaw zaznaczoną. Ekran z dodatkami
+        (Featured Server Snaps) pomiń – niczego nie zaznaczaj.
        </p>
       </li>
      </ul>
@@ -202,11 +207,12 @@
        <strong>nie działa kopiuj-wklej z Windowsa!</strong>
       </p>
       <p>
-       Instalując OpenSSH, pozwalamy naszemu Windowsowi połączyć się z Linuxem w tle. Będziemy mogli
-       otworzyć w Windowsie program
-       <strong>PuTTY</strong> lub <strong>Wiersz poleceń (CMD)</strong>, wpisać
-       <code>ssh administrator@IP_LINUXA</code> i pracować na serwerze w wygodnym oknie, gdzie
-       działa wklejanie komend! Tak właśnie pracują prawdziwi SysOpsi.
+       Instalując OpenSSH, pozwalamy Windowsowi połączyć się z Linuxem. Dzięki przekierowaniu portu
+       z Dnia 0 otworzysz <strong>Wiersz poleceń (CMD)</strong> na swoim laptopie, wpiszesz
+       <code>ssh -p 2222 administrator@127.0.0.1</code> i będziesz pracować na serwerze w wygodnym
+       oknie, gdzie działa wklejanie komend! Później, gdy Linux dostanie adres w sieci
+       <code>INF02-LAN</code>, połączysz się też z maszyny klienta:
+       <code>ssh administrator@192.168.10.20</code>. Tak właśnie pracują prawdziwi SysOpsi.
       </p>
      </div>
     </div>
@@ -230,11 +236,22 @@
        wciśnij Enter.</strong
       >
      </li>
-     <li>Wpisz komendę <code>ip a</code> i znajdź swój adres IP (np. 192.168.10.20).</li>
      <li>
-      Otwórz CMD na swoim fizycznym Windowsie i wpisz
-      <code>ping 192.168.10.20</code>. Jeśli odpowiada – gratulacje, zbudowałeś swój pierwszy
-      serwer!
+      Wpisz <code>ip -br a</code>: <code>enp0s3</code> ma adres <code>10.0.2.15</code>, a
+      <code>enp0s8</code> jest UP bez adresu (adres <code>192.168.10.20</code> nadasz w Lab 4).
+     </li>
+     <li>
+      Wpisz <code>ping -c 3 ubuntu.com</code> – 3 odpowiedzi oznaczają, że działa Internet i DNS.
+     </li>
+     <li>
+      Otwórz CMD na swoim laptopie i wpisz
+      <code>ssh -p 2222 administrator@127.0.0.1</code> (na pytanie o klucz odpowiedz
+      <code>yes</code>). Jeśli widzisz <code>administrator@serwer-linux:~$</code> – gratulacje,
+      zbudowałeś swój pierwszy serwer!
+     </li>
+     <li>
+      Wyłącz maszynę (<code>sudo poweroff</code>) i zrób migawkę <code>00-czysta-instalacja</code> –
+      <a href="../setup.html#etap-5">Dzień 0, Etap 5</a>.
      </li>
     </ol>
    </div>
@@ -242,7 +259,8 @@
 
   <!-- COURSE NAVIGATION -->
   <div class="course-nav">
-   <a href="index-linux.html" class="course-btn">⬅️ Poprzedni: Teoria Linux</a>
+   <a href="index.html" class="course-btn">⬅️ Poprzedni: Teoria Linux</a>
+   <a href="../setup.html#etap-4" class="course-btn">🛠️ Wróć do Dnia 0</a>
    <a
     href="lab0-przetrwanie.html"
     class="course-btn next"

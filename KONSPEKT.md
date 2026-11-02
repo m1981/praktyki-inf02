@@ -72,7 +72,7 @@ _title: Lab 2: Zarządzanie AD i GPO - Windows Server_
 
 - **H1** ⚙️ Lab 2: Władza z Klawiatury (Zarządzanie AD i GPO)
   - **H3** Lab 2a: Władza z Klawiatury (Zarządzanie AD)
-    - **H3** Lab 2b: Władza Absolutna (Zasady Grupy - GPO)
+  - **H3** Lab 2b: Władza Absolutna (Zasady Grupy - GPO)
 
 ## [`02-windows/lab3-pliki.html`](02-windows/lab3-pliki.html)
 
@@ -101,8 +101,8 @@ _title: Lab 5: Routing i Niezawodność - Windows Server_
 
 - **H1** 🚀 Lab 5: Zaawansowane (Routing, NIC Teaming i Drukarki)
   - **H3** Lab 5a: Serwer jako Router (RRAS i NAT)
-    - **H3** Lab 5b: Niezawodność (NIC Teaming)
-    - **H3** Lab 5c: Szkolna Drukarka (Print Server)
+  - **H3** Lab 5b: Niezawodność (NIC Teaming)
+  - **H3** Lab 5c: Szkolna Drukarka (Print Server)
 
 ## [`03-linux/index.html`](03-linux/index.html)
 
@@ -123,9 +123,9 @@ _title: Lab 0: Przetrwanie w CLI_
 
 - **H1** 🐧 Lab 0: Przetrwanie w CLI
   - **H3** Krok 1: Gdzie ja jestem? (Nawigacja)
-    - **H3** Krok 2: Magia Klawiatury (TAB i Strzałki)
-    - **H3** Krok 3: Edytor NANO (Notatnik Linuxa)
-    - **H3** Krok 4: Koło ratunkowe (Jak przerwać?)
+  - **H3** Krok 2: Magia Klawiatury (TAB i Strzałki)
+  - **H3** Krok 3: Edytor NANO (Notatnik Linuxa)
+  - **H3** Krok 4: Koło ratunkowe (Jak przerwać?)
 
 ## [`03-linux/lab1-diagnostyka.html`](03-linux/lab1-diagnostyka.html)
 
@@ -133,9 +133,9 @@ _title: Lab 1: Diagnostyka Sprzętu_
 
 - **H1** 🐧 Lab 1: Kim jestem i na czym działam?
   - **H3** Krok 1: System i Jądro (Kernel)
-    - **H3** Krok 2: Procesor (CPU) i Pamięć (RAM)
-    - **H3** Krok 3: Dyski twarde i Partycje
-    - **H3** Krok 4: Polowanie na Zombie (Procesy)
+  - **H3** Krok 2: Procesor (CPU) i Pamięć (RAM)
+  - **H3** Krok 3: Dyski twarde i Partycje
+  - **H3** Krok 4: Polowanie na Zombie (Procesy)
 
 ## [`03-linux/lab10-wyzwanie-nginx.html`](03-linux/lab10-wyzwanie-nginx.html)
 
@@ -143,9 +143,9 @@ _title: Wyzwanie 3: Konkurencja dla IIS (Nginx)_
 
 - **H1** 🌟 Wyzwanie 3: Konkurencja dla IIS
   - **H3** Krok 1: Błyskawiczna Instalacja (Nginx)
-    - **H3** Krok 2: Własna strona WWW
-    - **H3** Krok 3: Test z Windowsa (i pułapka!)
-    - **H3** Krok 4: Podglądanie ruchu (Access Logs)
+  - **H3** Krok 2: Własna strona WWW
+  - **H3** Krok 3: Test z Windowsa (i pułapka!)
+  - **H3** Krok 4: Podglądanie ruchu (Access Logs)
 
 ## [`03-linux/lab11-wyzwanie-docker.html`](03-linux/lab11-wyzwanie-docker.html)
 
@@ -153,9 +153,9 @@ _title: Wyzwanie 4: Wstęp do DevOps (Docker)_
 
 - **H1** 🐳 Wyzwanie 4: Wstęp do DevOps
   - **H3** Krok 1: Instalacja Silnika (Docker Engine)
-    - **H3** Krok 2: Magia jednej komendy (Run)
-    - **H3** Krok 3: Weryfikacja i Test z Windowsa
-    - **H3** Krok 4: Zarządzanie Kontenerami
+  - **H3** Krok 2: Magia jednej komendy (Run)
+  - **H3** Krok 3: Weryfikacja i Test z Windowsa
+  - **H3** Krok 4: Zarządzanie Kontenerami
 
 ## [`03-linux/lab2-pliki-archiwa.html`](03-linux/lab2-pliki-archiwa.html)
 
@@ -163,8 +163,8 @@ _title: Lab 2: Pliki i Archiwa_
 
 - **H1** 🐧 Lab 2: Papierkowa robota
   - **H3** Krok 1: Zabawa w chowanego (Ukryte katalogi)
-    - **H3** Krok 2: Skróty, czyli Dowiązania Symboliczne (Symlinks)
-    - **H3** Krok 3: Rozpakowywanie archiwów (Tarballs)
+  - **H3** Krok 2: Skróty, czyli Dowiązania Symboliczne (Symlinks)
+  - **H3** Krok 3: Rozpakowywanie archiwów (Tarballs)
 
 ## [`03-linux/lab3-iam-uprawnienia.html`](03-linux/lab3-iam-uprawnienia.html)
 
@@ -172,8 +172,8 @@ _title: Lab 3: IAM i Uprawnienia_
 
 - **H1** 🐧 Lab 3: Bramkarz w klubie
   - **H3** Krok 1: Użytkownicy i Grupy (IAM)
-    - **H3** Krok 2: Matematyka Uprawnień (Teoria)
-    - **H3** Krok 3: Nadawanie uprawnień (chmod)
+  - **H3** Krok 2: Matematyka Uprawnień (Teoria)
+  - **H3** Krok 3: Nadawanie uprawnień (chmod)
 
 ## [`03-linux/lab4-siec.html`](03-linux/lab4-siec.html)
 
@@ -181,8 +181,8 @@ _title: Lab 4: Sieci w CLI_
 
 - **H1** 🐧 Lab 4: Gdzie jest Internet?
   - **H3** Krok 1: Rozpoznanie (Recon)
-    - **H3** Krok 2: Zmiana nazwy komputera (Hostname)
-    - **H3** Krok 3: Konfiguracja IP (Netplan) - BOSS FIGHT 🐉
+  - **H3** Krok 2: Zmiana nazwy komputera (Hostname)
+  - **H3** Krok 3: Konfiguracja IP (Netplan) - BOSS FIGHT 🐉
 
 ## [`03-linux/lab5-uslugi.html`](03-linux/lab5-uslugi.html)
 
@@ -190,9 +190,9 @@ _title: Lab 5: Władca Usług (Systemd & SSH)_
 
 - **H1** 🐧 Lab 5: Władca Usług
   - **H3** Krok 1: Złota zasada SysOpsa (Backup)
-    - **H3** Krok 2: Chirurgiczne cięcie (Edycja)
-    - **H3** Krok 3: Przebudzenie Demona (Systemctl)
-    - **H3** Krok 4: Wielki Test (Atak z Windowsa)
+  - **H3** Krok 2: Chirurgiczne cięcie (Edycja)
+  - **H3** Krok 3: Przebudzenie Demona (Systemctl)
+  - **H3** Krok 4: Wielki Test (Atak z Windowsa)
 
 ## [`03-linux/lab6-lowca.html`](03-linux/lab6-lowca.html)
 
@@ -200,9 +200,9 @@ _title: Lab 6: Łowca Danych (Grep & Find)_
 
 - **H1** 🐧 Lab 6: Łowca Danych
   - **H3** Krok 1: Szukanie igły w stogu siana (Grep)
-    - **H3** Krok 2: Gdzie jest ten plik? (Find)
-    - **H3** Krok 3: Czarna dziura na błędy (/dev/null)
-    - **H3** Krok 4: Egzaminacyjne Combo (Find + Grep)
+  - **H3** Krok 2: Gdzie jest ten plik? (Find)
+  - **H3** Krok 3: Czarna dziura na błędy (/dev/null)
+  - **H3** Krok 4: Egzaminacyjne Combo (Find + Grep)
 
 ## [`03-linux/lab7-procesy.html`](03-linux/lab7-procesy.html)
 
@@ -210,9 +210,9 @@ _title: Lab 7: Strażnik Zasobów (Procesy i Dysk)_
 
 - **H1** 🐧 Lab 7: Strażnik Zasobów
   - **H3** Krok 1: Gdzie podziało się miejsce? (df & du)
-    - **H3** Krok 2: Anatomia Procesu (Działanie w tle)
-    - **H3** Krok 3: Polowanie i Egzekucja (ps & kill)
-    - **H3** Krok 4: Inwazja Zombie (top)
+  - **H3** Krok 2: Anatomia Procesu (Działanie w tle)
+  - **H3** Krok 3: Polowanie i Egzekucja (ps & kill)
+  - **H3** Krok 4: Inwazja Zombie (top)
 
 ## [`03-linux/lab8-wyzwanie-cron.html`](03-linux/lab8-wyzwanie-cron.html)
 
@@ -220,9 +220,9 @@ _title: Wyzwanie 1: Leniwy Administrator (Bash & Cron)_
 
 - **H1** 🌟 Wyzwanie 1: Leniwy Administrator
   - **H3** Krok 1: Tworzenie Skryptu (Bash)
-    - **H3** Krok 2: Prawo do życia (chmod +x)
-    - **H3** Krok 3: Robot wkracza do akcji (Cron)
-    - **H3** Krok 4: Obserwacja (Wielki Finał)
+  - **H3** Krok 2: Prawo do życia (chmod +x)
+  - **H3** Krok 3: Robot wkracza do akcji (Cron)
+  - **H3** Krok 4: Obserwacja (Wielki Finał)
 
 ## [`03-linux/lab9-wyzwanie-twierdza.html`](03-linux/lab9-wyzwanie-twierdza.html)
 
@@ -230,9 +230,9 @@ _title: Wyzwanie 2: Twierdza Linux (UFW & Fail2ban)_
 
 - **H1** 🌟 Wyzwanie 2: Twierdza Linux
   - **H3** Krok 1: Podnoszenie Tarcz (UFW)
-    - **H3** Krok 2: Aktywna Obrona (Fail2ban)
-    - **H3** Krok 3: Symulacja Ataku (Z Windowsa)
-    - **H3** Krok 4: Analiza i Ułaskawienie (Na Linuxie)
+  - **H3** Krok 2: Aktywna Obrona (Fail2ban)
+  - **H3** Krok 3: Symulacja Ataku (Z Windowsa)
+  - **H3** Krok 4: Analiza i Ułaskawienie (Na Linuxie)
 
 ## [`03-linux/setup-ubuntu.html`](03-linux/setup-ubuntu.html)
 
@@ -240,8 +240,8 @@ _title: Setup: Instalacja Ubuntu Server_
 
 - **H1** 🐧 Setup: Fundamenty Linuxa
   - **H3** Krok 1: Tworzenie "Żelaza" (VirtualBox)
-    - **H3** Krok 2: Instalator (Myszka tu nie działa!)
-    - **H3** Krok 3: Konto Egzaminacyjne i SSH
+  - **H3** Krok 2: Instalator (Myszka tu nie działa!)
+  - **H3** Krok 3: Konto Egzaminacyjne i SSH
 
 ## [`04-sprzet/index.html`](04-sprzet/index.html)
 
@@ -256,8 +256,8 @@ _title: Lab: Windows - Ostatnie Szlify_
 
 - **H1** 💻 Laboratoria: Windows Server
   - **H3** Lab A: Zaawansowane Udziały i Własność
-    - **H3** Lab B: Diagnostyka Sprzętu (S.M.A.R.T. i GPU)
-    - **H3** Lab C: Oprogramowanie i Archiwa (7-Zip)
+  - **H3** Lab B: Diagnostyka Sprzętu (S.M.A.R.T. i GPU)
+  - **H3** Lab C: Oprogramowanie i Archiwa (7-Zip)
 
 ## [`05-excel/index.html`](05-excel/index.html)
 
@@ -304,8 +304,8 @@ _title: LAB 4: Zdalne Dowodzenie_
 
 - **H1** 💻 LAB 4: Zdalne Dowodzenie
   - **H3** Krok 1: Przejęcie kontroli (SSH)
-    - **H3** Krok 2: Kurier sieciowy (SCP)
-    - **H3** Krok 3: Magia DevOps (Logowanie bez hasła)
+  - **H3** Krok 2: Kurier sieciowy (SCP)
+  - **H3** Krok 3: Magia DevOps (Logowanie bez hasła)
 
 ## [`06-integracja/lab5-smb-mount.html`](06-integracja/lab5-smb-mount.html)
 
@@ -313,9 +313,9 @@ _title: LAB 5: Most między systemami plików_
 
 - **H1** 🌉 LAB 5: Most między systemami
   - **H3** Krok 1: Przygotowanie gruntu (Windows)
-    - **H3** Krok 2: Narzędzia i Punkt Montowania (Linux)
-    - **H3** Krok 3: Rzucanie mostu (Montowanie)
-    - **H3** Krok 4: Automatyzacja (fstab)
+  - **H3** Krok 2: Narzędzia i Punkt Montowania (Linux)
+  - **H3** Krok 3: Rzucanie mostu (Montowanie)
+  - **H3** Krok 4: Automatyzacja (fstab)
 
 ## [`06-integracja/lab6-troubleshooting.html`](06-integracja/lab6-troubleshooting.html)
 
@@ -323,8 +323,8 @@ _title: LAB 6: Zaawansowany Troubleshooting_
 
 - **H1** 🕵️‍♂️ LAB 6: Zaawansowany Troubleshooting
   - **H3** Krok 1: Pukanie z Windowsa (PowerShell)
-    - **H3** Krok 2: Szwajcarski scyzoryk Linuxa (Netcat)
-    - **H3** Krok 3: Podglądanie Matrixa (Czytanie Logów)
+  - **H3** Krok 2: Szwajcarski scyzoryk Linuxa (Netcat)
+  - **H3** Krok 3: Podglądanie Matrixa (Czytanie Logów)
 
 ## [`egzaminy/egzamin-25-06.html`](egzaminy/egzamin-25-06.html)
 
@@ -360,12 +360,13 @@ _title: INF.02 - Interakcje Windows ↔ Linux_
 
 _title: Dzień 0: Przygotowanie Środowiska_
 
-- **H1** 🛠️ Dzień 0: Zbuduj swój własny serwer
-  - **H3** Krok 1: Sprawdzenie sprzętu i BIOS/UEFI
-    - **H3** Krok 2: Pobieranie narzędzi i systemów (ISO)
-    - **H3** Krok 3: Stworzenie "Pustych" Maszyn w VirtualBox
-    - **H3** Krok 4: Adresacja IP (Fundament Sieci)
-    - **H3** Krok 5: Weryfikacja narzędzi (SSH)
+- **H1** 🛠️ Dzień 0: Zbuduj swoje laboratorium
+  - **H3** Etap 0: Sprawdź swój komputer
+  - **H3** Etap 1: Pobierz program i obrazy systemów
+  - **H3** Etap 2: Utwórz 3 maszyny wirtualne
+  - **H3** Etap 3: Zainstaluj systemy
+  - **H3** Etap 4: Sprawdź, czy wszystko działa
+  - **H3** Etap 5: Migawka – Twój przycisk „Cofnij”
 
 ## [`syllabus.html`](syllabus.html)
 
@@ -386,6 +387,6 @@ _title: Mapa Architektury: Złoty Standard_
 
 - **H1** 🗺️ Mapa Architektury (Złoty Standard)
   - **H3** Faza 1: Tydzień 2 (Linux SysOps - Start)
-    - **H3** Faza 2: Tydzień 3 (Serce Firmy - AD)
-    - **H3** Faza 3: Tydzień 4 (Krwiobieg - DHCP & RRAS)
-    - **H3** Faza 4: Tydzień 5 (Integracja Win-Lin)
+  - **H3** Faza 2: Tydzień 3 (Serce Firmy - AD)
+  - **H3** Faza 3: Tydzień 4 (Krwiobieg - DHCP & RRAS)
+  - **H3** Faza 4: Tydzień 5 (Integracja Win-Lin)
