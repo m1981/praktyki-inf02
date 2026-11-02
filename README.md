@@ -4,34 +4,14 @@ Kompletne materiały do egzaminu zawodowego **INF.02 - Administracja Systemami i
 
 ## 📁 Struktura Projektu
 
-```
-/
-├── index.html              # Strona główna z kafelkami filarów
-├── syllabus.html           # Sylabus egzaminu (proporcje tematów)
-├── setup.html              # Dzień 0: Instalacja środowisk
-├── common.css              # Wspólne style dla wszystkich stron
-├── menu.js                 # Inteligentna nawigacja z breadcrumbs
-│
-├── 01-sieci/               # Filar 1: Sieci Komputerowe (~35%)
-│   ├── teoria.html         # Teoria: Model OSI, L2/L3
-│   ├── lab1-podstawy.html  # Lab: Płaska sieć, switch, routing
-│   ├── lab2-vlany.html     # Lab: VLANy i Router-on-a-Stick
-│   └── lab3-routing.html   # Lab: DHCP, DNS, NAT (4 fazy)
-│
-├── 02-windows/             # Filar 2: Windows Server (~30%)
-│   ├── teoria-ad.html      # Teoria: Active Directory
-│   ├── lab1-domena.html    # Lab: Instalacja AD DS
-│   └── lab2-gpo-cli.html   # Lab: GPO i komendy CLI
-│
-├── 03-linux/               # Filar 3: Linux SysOps (~15%)
-│   └── teoria.html         # Terminal, uprawnienia, diagnostyka
-│
-├── 04-sprzet/              # Filar 4: Warstwa Fizyczna (~10%)
-│   └── teoria.html         # Okablowanie, RACK, SMART, GPU-Z
-│
-└── 05-excel/               # Filar 5: Excel & Logika (~10%)
-    └── teoria.html         # Formuły, funkcje, kosztorysy
-```
+Pełna, zawsze aktualna mapa stron (wszystkie pliki HTML z nagłówkami h1–h3): **[KONSPEKT.md](KONSPEKT.md)**.
+
+Konspekt generuje skrypt `scripts/konspekt.mjs`. Uruchamia się automatycznie w hooku pre-commit, a ręcznie: `pnpm konspekt`.
+
+- `index.html`, `syllabus.html`, `setup.html`: strona główna, sylabus egzaminu, Dzień 0
+- `01-sieci/` … `06-integracja/`: filary; w każdym `index.html` (teoria) + `labN-*.html` (laboratoria)
+- `egzaminy/`: omówienia arkuszy CKE
+- `common.css`, `menu.js`: wspólne style i nawigacja
 
 ## 🎨 Funkcje
 
@@ -78,8 +58,8 @@ Plik `menu.js` automatycznie:
 
 ```html
 <div class="course-nav">
-    <a href="lab1.html" class="course-btn">⬅️ Poprzedni: Lab 1</a>
-    <a href="lab3.html" class="course-btn next">Następny: Lab 3 ➡️</a>
+ <a href="lab1.html" class="course-btn">⬅️ Poprzedni: Lab 1</a>
+ <a href="lab3.html" class="course-btn next">Następny: Lab 3 ➡️</a>
 </div>
 
 <script src="../menu.js"></script>
@@ -89,8 +69,8 @@ Plik `menu.js` automatycznie:
 
 ### Nowy filar
 
-1. Utwórz folder (np. `06-chmura/`)
-2. Dodaj `teoria.html` z odpowiednimi stylami
+1. Utwórz folder (np. `07-chmura/`)
+2. Dodaj `index.html` (teoria) z odpowiednimi stylami
 3. Zaktualizuj `menu.js` - dodaj link w `nav-links`
 4. Dodaj kafelek na stronie głównej (`index.html`)
 
