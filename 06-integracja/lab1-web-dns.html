@@ -89,10 +89,55 @@
       <li>
        <strong>Krok 4: Konfiguracja Sieci Klienta (Linux)</strong>
        <p>
-        Na Ubuntu wejdź w ustawienia karty sieciowej (lub użyj Netplan). Zmień adres
-        <strong>Serwera DNS</strong> na adres IP Twojego Windows Servera. Zapisz i zrestartuj
-        połączenie sieciowe.
+        Otwórz plik Netplan – ten sam, który edytowałeś w Linux Lab 4. Jeśli nazywa się inaczej niż
+        poniżej, sprawdź nazwę komendą <code>ls /etc/netplan/</code>:
        </p>
+       <pre class="cli-block">sudo nano /etc/netplan/50-cloud-init.yaml</pre>
+       <p>
+        <strong>Usuń całą zawartość pliku</strong> i wpisz dokładnie ten tekst. Wcięcia robisz
+        <strong>tylko spacjami</strong> (nigdy klawiszem TAB):
+       </p>
+       <pre class="cli-block">
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: yes
+      optional: true
+      dhcp4-overrides:
+        use-dns: no
+    enp0s8:
+      dhcp4: no
+      addresses: [192.168.10.20/24]
+      nameservers:
+        addresses: [192.168.10.10]</pre
+       >
+       <p>Zapisz (Ctrl+O, Enter, Ctrl+X), zastosuj zmianę i sprawdź DNS:</p>
+       <pre class="cli-block">
+sudo netplan apply
+resolvectl query www.egzamin.local</pre
+       >
+       <p><strong>Oczekiwany wynik:</strong> <code>www.egzamin.local: 192.168.10.10</code>.</p>
+       <details class="theory-block">
+        <summary>
+         🕵️‍♂️ Sekret Inżyniera: co robią linijki <code>use-dns</code> i <code>optional</code>?
+        </summary>
+        <div class="theory-content">
+         <ul style="margin-left: 20px">
+          <li>
+           <code>use-dns: no</code> – Linux nie bierze DNS od VirtualBoxa (<code>10.0.2.3</code>) i
+           pyta wyłącznie INF02-SERWER. Dzięki temu nazwy z <code>egzamin.local</code> zawsze się
+           rozwiążą. Internet nadal działa: INF02-SERWER przekazuje pozostałe zapytania dalej
+           (forwarder <code>10.0.2.3</code> z Windows Lab 1).
+          </li>
+          <li>
+           <code>optional: true</code> – start systemu nie czeka na kartę <code>enp0s3</code>. Bez
+           tego, gdy kabel Karty 1 jest wypięty (od Integracji Lab 2), Ubuntu przez 2 minuty
+           pokazuje <em>A start job is running for Wait for Network to be Configured</em>.
+          </li>
+         </ul>
+        </div>
+       </details>
       </li>
 
       <li>

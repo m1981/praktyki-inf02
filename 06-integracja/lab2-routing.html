@@ -111,14 +111,46 @@
       <li>
        <strong>Krok 4: Konfiguracja Klienta (Linux)</strong>
        <p>
-        INF02-LINUX ma już adres <code>192.168.10.20/24</code> (Linux Lab 4). W pliku Netplan dla
-        <code>enp0s8</code> dopisz bramę <code>192.168.10.10</code> (sekcja
-        <code>routes: - to: default via: 192.168.10.10</code>) i DNS
-        <code>192.168.10.10</code> (sekcja <code>nameservers: addresses: [192.168.10.10]</code>),
-        potem <code>sudo netplan apply</code>. Na koniec
-        <strong>wypnij kabel Karty 1</strong> INF02-LINUX: <em>Devices ➔ Network ➔</em> odznacz
-        <em>Connect Network Adapter 1</em>. Bez tego Linux nadal wychodziłby do Internetu przez NAT
-        VirtualBoxa, a nie przez Twój serwer.
+        <strong>1. Wypnij kabel Karty 1</strong> INF02-LINUX: w oknie maszyny
+        <em>Devices ➔ Network ➔</em> odznacz <em>Connect Network Adapter 1</em>. Bez tego Linux
+        nadal wychodziłby do Internetu przez NAT VirtualBoxa, a nie przez Twój serwer.
+       </p>
+       <p>
+        <strong>2.</strong> Otwórz plik Netplan – ten sam, który edytowałeś w Linux Lab 4. Jeśli
+        nazywa się inaczej niż poniżej, sprawdź nazwę komendą <code>ls /etc/netplan/</code>:
+       </p>
+       <pre class="cli-block">sudo nano /etc/netplan/50-cloud-init.yaml</pre>
+       <p>
+        <strong>Usuń całą zawartość pliku</strong> i wpisz dokładnie ten tekst. Wcięcia robisz
+        <strong>tylko spacjami</strong> (nigdy klawiszem TAB):
+       </p>
+       <p>Różnica względem Integracji Lab 1: doszła sekcja <code>routes</code> (brama).</p>
+       <pre class="cli-block">
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: yes
+      optional: true
+      dhcp4-overrides:
+        use-dns: no
+    enp0s8:
+      dhcp4: no
+      addresses: [192.168.10.20/24]
+      routes:
+        - to: default
+          via: 192.168.10.10
+      nameservers:
+        addresses: [192.168.10.10]</pre
+       >
+       <p><strong>3.</strong> Zapisz (Ctrl+O, Enter, Ctrl+X), zastosuj zmianę i sprawdź trasę:</p>
+       <pre class="cli-block">
+sudo netplan apply
+ip route</pre
+       >
+       <p>
+        <strong>Oczekiwany wynik:</strong> linia <code>default via 192.168.10.10 dev enp0s8</code> i
+        <strong>brak</strong> linii z <code>10.0.2.2</code>.
        </p>
       </li>
 
