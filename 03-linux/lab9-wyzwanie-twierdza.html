@@ -63,7 +63,7 @@
       naszego portu SSH (w Labie 5 zmieniliśmy go na 2222).
      </div>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Sprawdź status zapory (powinna być nieaktywna - inactive)</span
       >
@@ -82,7 +82,7 @@
 
       <span class="cli-comment"># 4. Sprawdź status ponownie. Zobaczysz swoją aktywną regułę!</span>
       sudo ufw status
-     </div>
+     </pre>
     </div>
    </div>
 
@@ -99,7 +99,7 @@
       Potrzebujemy <strong>Fail2ban</strong>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Zaktualizuj listę pakietów i zainstaluj Fail2ban</span>
       sudo apt update sudo apt install fail2ban -y
 
@@ -107,7 +107,7 @@
        ># 2. Sprawdź, czy usługa działa (powinna uruchomić się automatycznie)</span
       >
       sudo systemctl status fail2ban
-     </div>
+     </pre>
 
      <div
       class="card engineer-secret"
@@ -139,7 +139,7 @@
      <ul class="task-list">
       <li>
        <strong>Na Windowsie:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa.
-       <div class="cli-block">ssh -p 2222 administrator@192.168.10.20</div>
+       <pre class="cli-block">ssh -p 2222 administrator@192.168.10.20</pre>
       </li>
       <li>Gdy system zapyta o hasło, <strong>wpisz błędne hasło</strong> i wciśnij Enter.</li>
       <li>Powtórz tę czynność (wpisywanie błędnego hasła) około 5-6 razy.</li>
@@ -164,17 +164,17 @@
       VirtualBoxa z Ubuntu (konsolę lokalną), zalogować się i sprawdzić, co się stało.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Sprawdź status "więzienia" (jail) dla usługi SSH</span>
       sudo fail2ban-client status sshd
-     </div>
+     </pre>
 
      <p>
       Na ekranie zobaczysz statystyki. W sekcji <code>Banned IP list:</code> powinien widnieć adres
       IP Twojego Windowsa (<code>192.168.10.10</code> lub <code>192.168.10.30</code>)!
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 2. Ułaskawienie: Zdejmij bana z adresu IP Windowsa (podmień IP na to, które widziałeś
        wyżej!)</span
@@ -185,7 +185,7 @@
        ># 3. Sprawdź status UFW (zobaczysz, że Fail2ban zarządza regułami za Ciebie)</span
       >
       sudo ufw status
-     </div>
+     </pre>
 
      <p>Wróć na Windowsa. Połączenie SSH znów powinno działać (tym razem podaj poprawne hasło!).</p>
     </div>

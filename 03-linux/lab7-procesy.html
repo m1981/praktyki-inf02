@@ -46,7 +46,7 @@
       tego dwóch komend: <code>df</code> (Disk Free) oraz <code>du</code> (Disk Usage).
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Sprawdź ogólne zużycie dysków (flaga -h = human readable, czyli w GB/MB)</span
       >
@@ -56,7 +56,7 @@
        ># 2. Zapisz wynik do pliku tekstowego (Zadanie Egzaminacyjne!)</span
       >
       df -h > ~/dysk.txt
-     </div>
+     </pre>
 
      <!-- REFERENCJA EGZAMINACYJNA -->
      <details class="exam-reference">
@@ -78,7 +78,7 @@
       znaleźć folder, który waży najwięcej? Używasz <code>du</code>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 3. Wejdź do katalogu /var/log (tam gdzie system trzyma logi)</span
       >
@@ -89,7 +89,7 @@
       >
       <span class="cli-comment"># Flagi: -s (summary/podsumowanie), -h (human readable)</span>
       sudo du -sh *
-     </div>
+     </pre>
     </div>
    </div>
 
@@ -109,7 +109,7 @@
       żeby działał w tle.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Uruchom ping do Google. Wynik wyrzuć do czarnej dziury (/dev/null).</span
       >
@@ -118,7 +118,7 @@
        terminalem!"</span
       >
       ping 8.8.8.8 > /dev/null &
-     </div>
+     </pre>
 
      <p>
       System odpowie czymś w stylu: <code>[1] 14523</code>. Ta druga liczba to właśnie
@@ -140,13 +140,13 @@
       go znaleźć i zabić.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Wylistuj WSZYSTKIE procesy w systemie (ps aux) i przefiltruj je (grep), szukając słowa
        "ping"</span
       >
       ps aux | grep ping
-     </div>
+     </pre>
 
      <p>
       Na ekranie zobaczysz linijkę podobną do tej:<br />
@@ -154,7 +154,7 @@
       Druga kolumna (tutaj 14523) to Twój PID!
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 2. Zabij proces używając jego numeru PID (podmień 14523 na SWÓJ numer!)</span
       >
@@ -166,7 +166,7 @@
 
       <span class="cli-comment"># 3. Sprawdź ponownie. Ping powinien zniknąć z listy!</span>
       ps aux | grep ping
-     </div>
+     </pre>
 
      <div
       class="golden-rule-box"
@@ -208,10 +208,10 @@
       Używamy do tego menedżera zadań czasu rzeczywistego – komendy <code>top</code>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Uruchom menedżer zadań (aby wyjść, wciśnij klawisz 'q')</span>
       top
-     </div>
+     </pre>
 
      <p>
       Spójrz na drugą linijkę od góry (zaczyna się od słowa <em>Tasks:</em>). Znajdziesz tam

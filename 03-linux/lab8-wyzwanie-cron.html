@@ -55,15 +55,16 @@
       jedna po drugiej.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Upewnij się, że jesteś w katalogu domowym i masz folder KOPIE</span
       >
-      cd ~ mkdir -p KOPIE
+      cd ~
+      mkdir -p KOPIE
 
       <span class="cli-comment"># 2. Utwórz nowy plik skryptu w edytorze nano</span>
       nano backup.sh
-     </div>
+     </pre>
 
      <p>
       Wpisz w edytorze poniższy kod. Zwróć szczególną uwagę na pierwszą linijkę (tzw.
@@ -120,7 +121,7 @@ echo "Kopia zapasowa $NAZWA_PLIKU zostala utworzona!"
       programem, musisz nadać mu <strong>prawo do wykonywania (eXecute)</strong>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Sprawdź uprawnienia pliku (zobaczysz, że nie ma literki 'x')</span
       >
@@ -139,7 +140,7 @@ echo "Kopia zapasowa $NAZWA_PLIKU zostala utworzona!"
        folderu")</span
       >
       sudo ./backup.sh
-     </div>
+     </pre>
 
      <p>
       Sprawdź folder <code>KOPIE</code> (komendą <code>ls -l KOPIE</code>). Powinien tam leżeć Twój
@@ -161,12 +162,12 @@ echo "Kopia zapasowa $NAZWA_PLIKU zostala utworzona!"
       zadań (crontab) i wykonuje je o określonym czasie.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Otwórz tabelę zadań Crona dla użytkownika root (bo skrypt pakuje pliki systemowe)</span
       >
       sudo crontab -e
-     </div>
+     </pre>
 
      <p>
       <em
@@ -215,10 +216,10 @@ echo "Kopia zapasowa $NAZWA_PLIKU zostala utworzona!"
       2-3 minuty.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Sprawdzaj zawartość folderu KOPIE</span>
       ls -l ~/KOPIE
-     </div>
+     </pre>
 
      <p>
       Jeśli wszystko zrobiłeś poprawnie, co 2 minuty w folderze będzie pojawiał się nowy plik z

@@ -89,7 +89,7 @@
       </li>
      </ol>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment">! Tworzymy VLANy</span>
       enable configure terminal vlan 10 name IT vlan 20 name HR exit
 
@@ -98,7 +98,7 @@
 
       <span class="cli-comment">! Przypisujemy porty do VLAN 20 (HR)</span>
       interface range fastEthernet 0/11 - 12 switchport mode access switchport access vlan 20 exit
-     </div>
+     </pre>
 
      <ol class="task-list" start="3">
       <li>
@@ -180,10 +180,10 @@
       </li>
      </ol>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment">! Na Switchu:</span>
       interface gigabitEthernet 0/1 switchport mode trunk
-     </div>
+     </pre>
 
      <ol class="task-list" start="3">
       <li>
@@ -192,18 +192,22 @@
       </li>
      </ol>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment">! Na Routerze:</span>
       enable configure terminal interface gigabitEthernet 0/0 no shutdown exit
 
       <span class="cli-comment">! Tworzymy wirtualne drzwi dla VLAN 10</span>
-      interface gigabitEthernet 0/0.10 encapsulation dot1Q 10 ip address 192.168.10.1 255.255.255.0
+      interface gigabitEthernet 0/0.10
+       encapsulation dot1Q 10
+       ip address 192.168.10.1 255.255.255.0
       exit
 
       <span class="cli-comment">! Tworzymy wirtualne drzwi dla VLAN 20</span>
-      interface gigabitEthernet 0/0.20 encapsulation dot1Q 20 ip address 192.168.20.1 255.255.255.0
+      interface gigabitEthernet 0/0.20
+       encapsulation dot1Q 20
+       ip address 192.168.20.1 255.255.255.0
       exit
-     </div>
+     </pre>
 
      <ol class="task-list" start="4">
       <li>

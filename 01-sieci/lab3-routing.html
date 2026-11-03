@@ -361,16 +361,20 @@
       </li>
      </ol>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment">! Na Naszym Routerze (Firma):</span>
       enable configure terminal
 
       <span class="cli-comment">! Port w stronę naszej firmy (Inside)</span>
-      interface gigabitEthernet 0/0 ip nat inside exit
+      interface gigabitEthernet 0/0
+       ip nat inside
+       exit
 
       <span class="cli-comment">! Port w stronę Internetu (Outside)</span>
-      interface gigabitEthernet 0/1 ip nat outside exit
-     </div>
+      interface gigabitEthernet 0/1
+       ip nat outside
+       exit
+     </pre>
 
      <ol class="task-list" start="3">
       <li>
@@ -379,10 +383,10 @@
       </li>
      </ol>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment">! Tworzymy listę nr 1, która pozwala na wszystko</span>
       access-list 1 permit any
-     </div>
+     </pre>
 
      <ol class="task-list" start="4">
       <li>
@@ -390,10 +394,10 @@
       </li>
      </ol>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment">! Tłumacz adresy z listy 1 na publiczny adres portu G0/1</span>
       ip nat inside source list 1 interface gigabitEthernet 0/1 overload
-     </div>
+     </pre>
 
      <ol class="task-list" start="5">
       <li>

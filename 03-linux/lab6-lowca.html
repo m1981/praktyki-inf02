@@ -47,7 +47,7 @@
       pomocą przychodzi <strong>grep</strong> – potężny filtr tekstu.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Wyświetl cały plik logów (ściana tekstu!)</span>
       sudo cat /var/log/auth.log
 
@@ -61,7 +61,7 @@
        "FAILED" i "Failed" naraz</span
       >
       sudo cat /var/log/auth.log | grep -i "failed"
-     </div>
+     </pre>
 
      <div
       class="golden-rule-box"
@@ -107,12 +107,12 @@
       składnia jest prosta: <code>find [GDZIE_SZUKAĆ] -name [CZEGO_SZUKAĆ]</code>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Znajdź plik o nazwie "sshd_config" szukając od samego korzenia systemu (/)</span
       >
       find / -name "sshd_config"
-     </div>
+     </pre>
 
      <p>
       <strong>Co się stało?</strong> Ekran zalała fala błędów
@@ -155,13 +155,13 @@
 
      <p>Spróbujmy wyszukać plik jeszcze raz, ale tym razem wyrzucając błędy do kosza:</p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Szukaj od korzenia (/), pliku "sshd_config", a błędy (2) wyrzuć do śmietnika (&gt;)
        (/dev/null)</span
       >
       find / -name "sshd_config" 2&gt;/dev/null
-     </div>
+     </pre>
 
      <p>
       <strong>Efekt:</strong> Czysty, profesjonalny wynik. Na ekranie pojawi się tylko jedna
@@ -187,24 +187,24 @@
       <li>Możesz użyć gwiazdki <code>*</code> jako symbolu wieloznacznego (tzw. wildcard).</li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Znajdź wszystkie pliki w katalogu /etc, które kończą się na ".yaml"</span
       >
       find /etc -name "*.yaml" 2&gt;/dev/null
-     </div>
+     </pre>
 
      <p>
       A co jeśli chcesz przeszukać <strong>zawartość</strong> wielu plików naraz? Na przykład chcesz
       znaleźć, w którym pliku konfiguracyjnym w katalogu <code>/etc/ssh</code> użyto słowa "Port"?
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Użyj grep z flagą -r (recursive - przeszukuj foldery w głąb)</span
       >
       grep -r "Port" /etc/ssh/ 2&gt;/dev/null
-     </div>
+     </pre>
 
      <div
       class="conclusion-box"

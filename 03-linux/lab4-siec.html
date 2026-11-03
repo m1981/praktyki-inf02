@@ -32,7 +32,7 @@
       obecnie adres IP.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Wyświetl wszystkie karty sieciowe i ich adresy IP</span>
       ip a
 
@@ -45,7 +45,7 @@
        ># 3. Sprawdź, czy masz wyjście na świat (przerwij wciskając Ctrl+C!)</span
       >
       ping 8.8.8.8
-     </div>
+     </pre>
 
      <div
       class="golden-rule-box"
@@ -71,7 +71,7 @@
       To jedno z najczęstszych zadań na egzaminie. Egzaminator prosi o zmianę nazwy stacji roboczej.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Sprawdź obecną nazwę komputera</span>
       hostname
 
@@ -82,7 +82,7 @@
        ># 3. Wyloguj się i zaloguj ponownie, aby zobaczyć zmianę w znaku zachęty</span
       >
       exit
-     </div>
+     </pre>
 
      <!-- REFERENCJA EGZAMINACYJNA -->
      <details class="exam-reference">
@@ -113,7 +113,7 @@
       <strong>niezwykle wrażliwy na spacje</strong>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Znajdź plik konfiguracyjny (zazwyczaj nazywa się 00-installer-config.yaml lub
        50-cloud-init.yaml)</span
@@ -124,7 +124,7 @@
        ># 2. Edytuj ten plik w nano (podmień nazwę pliku na tę, którą znalazłeś wyżej!)</span
       >
       sudo nano /etc/netplan/50-cloud-init.yaml
-     </div>
+     </pre>
 
      <p>
       W edytorze <code>nano</code> zmień konfigurację tak, aby ustawić statyczny adres IP (np.
@@ -153,7 +153,7 @@ network:
       powyżej.
      </div>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 3. Zapisz plik (Ctrl+O, Enter, Ctrl+X)</span>
 
       <span class="cli-comment"># 4. Zastosuj nową konfigurację sieci</span>
@@ -161,7 +161,7 @@ network:
 
       <span class="cli-comment"># 5. Sprawdź, czy karta dostała nowy adres IP</span>
       ip a
-     </div>
+     </pre>
 
      <!-- REFERENCJA EGZAMINACYJNA -->
      <details class="exam-reference">
@@ -195,7 +195,7 @@ network:
      aby mogli ją później sprawdzić.
     </p>
 
-    <div class="cli-block">
+    <pre class="cli-block">
      <span class="cli-comment"
       ># Zapisz wynik komendy 'ip a' do pliku o nazwie 'konfiguracja' w swoim katalogu domowym</span
      >
@@ -203,7 +203,7 @@ network:
 
      <span class="cli-comment"># Sprawdź, czy plik zawiera poprawne dane</span>
      cat ~/konfiguracja
-    </div>
+    </pre>
 
     <p>
      <strong>Gratulacje!</strong> Ukończyłeś wszystkie laboratoria z Linuxa. Potrafisz już

@@ -1,38 +1,38 @@
 <!doctype html>
 <html lang="pl">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Lab 1: Diagnostyka Sprzętu</title>
-        <link rel="stylesheet" href="../common.css" />
-    </head>
-    <body>
-        <header>
-            <h1>🐧 Lab 1: Kim jestem i na czym działam?</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem">
-                Diagnostyka sprzętu i systemu operacyjnego (Hardware Recon)
-            </p>
-        </header>
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 1: Diagnostyka Sprzętu</title>
+  <link rel="stylesheet" href="../common.css" />
+ </head>
+ <body>
+  <header>
+   <h1>🐧 Lab 1: Kim jestem i na czym działam?</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Diagnostyka sprzętu i systemu operacyjnego (Hardware Recon)
+   </p>
+  </header>
 
-        <main class="lab-container">
-            <div class="goal-box">
-                Cel: Nauczyć się odczytywać parametry sprzętowe (CPU, RAM, Dyski) z poziomu
-                terminala, tak jak robią to profesjonalni administratorzy.
-            </div>
+  <main class="lab-container">
+   <div class="goal-box">
+    Cel: Nauczyć się odczytywać parametry sprzętowe (CPU, RAM, Dyski) z poziomu terminala, tak jak
+    robią to profesjonalni administratorzy.
+   </div>
 
-            <!-- KROK 1 -->
-            <div class="lab-card ubu-orange">
-                <div class="lab-header">
-                    <h3>Krok 1: System i Jądro (Kernel)</h3>
-                    <span class="time-badge">Czas: 5 min</span>
-                </div>
-                <div class="lab-body">
-                    <p>
-                        Zanim zaczniesz cokolwiek instalować, musisz wiedzieć, na jakiej wersji
-                        systemu pracujesz. Wpisz w terminalu:
-                    </p>
+   <!-- KROK 1 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 1: System i Jądro (Kernel)</h3>
+     <span class="time-badge">Czas: 5 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      Zanim zaczniesz cokolwiek instalować, musisz wiedzieć, na jakiej wersji systemu pracujesz.
+      Wpisz w terminalu:
+     </p>
 
-                    <div class="cli-block">
+     <pre class="cli-block">
                         <span class="cli-comment"
                             ># 1. Wyświetl wszystkie informacje o systemie (nazwa, wersja jądra,
                             architektura)</span
@@ -47,38 +47,35 @@
                             tekstowy!)</span
                         >
                         cat /etc/os-release
-                    </div>
+                    </pre>
 
-                    <!-- REFERENCJA EGZAMINACYJNA -->
-                    <details class="exam-reference">
-                        <summary>Zobacz oryginalne zadanie z egzaminu</summary>
-                        <div class="exam-content">
-                            <p><strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)</p>
-                            <blockquote>
-                                <p>
-                                    <strong>Treść zadania:</strong><br />
-                                    ‒ za pomocą dostępnych narzędzi systemowych sprawdź parametry
-                                    systemu operacyjnego oraz pamięci RAM ujęte w Tabeli 1. (Nazwa i
-                                    wersja, Wersja jądra, Architektura).
-                                </p>
-                            </blockquote>
-                        </div>
-                    </details>
-                </div>
-            </div>
+     <!-- REFERENCJA EGZAMINACYJNA -->
+     <details class="exam-reference">
+      <summary>Zobacz oryginalne zadanie z egzaminu</summary>
+      <div class="exam-content">
+       <p><strong>Egzamin:</strong> Czerwiec 2021 (INF.02-01-21.06-SG)</p>
+       <blockquote>
+        <p>
+         <strong>Treść zadania:</strong><br />
+         ‒ za pomocą dostępnych narzędzi systemowych sprawdź parametry systemu operacyjnego oraz
+         pamięci RAM ujęte w Tabeli 1. (Nazwa i wersja, Wersja jądra, Architektura).
+        </p>
+       </blockquote>
+      </div>
+     </details>
+    </div>
+   </div>
 
-            <!-- KROK 2 -->
-            <div class="lab-card ubu-purple">
-                <div class="lab-header">
-                    <h3>Krok 2: Procesor (CPU) i Pamięć (RAM)</h3>
-                    <span class="time-badge">Czas: 10 min</span>
-                </div>
-                <div class="lab-body">
-                    <p>
-                        Serwer bez zasobów to martwy serwer. Sprawdźmy, ile mamy "koni pod maską":
-                    </p>
+   <!-- KROK 2 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 2: Procesor (CPU) i Pamięć (RAM)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>Serwer bez zasobów to martwy serwer. Sprawdźmy, ile mamy "koni pod maską":</p>
 
-                    <div class="cli-block">
+     <pre class="cli-block">
                         <span class="cli-comment"
                             ># 1. Wyświetl szczegóły procesora (liczba rdzeni, model,
                             taktowanie)</span
@@ -96,38 +93,34 @@
                             uprawnień root!)</span
                         >
                         sudo dmidecode -t memory
-                    </div>
+                    </pre>
 
-                    <div
-                        class="golden-rule-box"
-                        style="
-                            border-left-color: var(--ubu-purple);
-                            background: var(--ubu-purple-bg);
-                        "
-                    >
-                        <strong>💡 Złota Rada Trenera (Flaga -h):</strong>
-                        W Linuxie wiele komend (np. <code>free</code>, <code>df</code>,
-                        <code>ls</code>) domyślnie podaje wyniki w bajtach lub kilobajtach. Nikt nie
-                        ma czasu liczyć zer w głowie! Zawsze dodawaj flagę
-                        <code>-h</code> (Human-readable), a system sam przeliczy to na MB lub GB.
-                    </div>
-                </div>
-            </div>
+     <div
+      class="golden-rule-box"
+      style="border-left-color: var(--ubu-purple); background: var(--ubu-purple-bg)"
+     >
+      <strong>💡 Złota Rada Trenera (Flaga -h):</strong>
+      W Linuxie wiele komend (np. <code>free</code>, <code>df</code>, <code>ls</code>) domyślnie
+      podaje wyniki w bajtach lub kilobajtach. Nikt nie ma czasu liczyć zer w głowie! Zawsze dodawaj
+      flagę <code>-h</code> (Human-readable), a system sam przeliczy to na MB lub GB.
+     </div>
+    </div>
+   </div>
 
-            <!-- KROK 3 -->
-            <div class="lab-card ubu-orange">
-                <div class="lab-header">
-                    <h3>Krok 3: Dyski twarde i Partycje</h3>
-                    <span class="time-badge">Czas: 10 min</span>
-                </div>
-                <div class="lab-body">
-                    <p>
-                        W Linuxie dyski nazywają się inaczej niż w Windowsie. Zamiast
-                        <code>C:</code> mamy <code>/dev/sda</code> (pierwszy dysk),
-                        <code>/dev/sdb</code> (drugi dysk) itd.
-                    </p>
+   <!-- KROK 3 -->
+   <div class="lab-card ubu-orange">
+    <div class="lab-header">
+     <h3>Krok 3: Dyski twarde i Partycje</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      W Linuxie dyski nazywają się inaczej niż w Windowsie. Zamiast
+      <code>C:</code> mamy <code>/dev/sda</code> (pierwszy dysk), <code>/dev/sdb</code> (drugi dysk)
+      itd.
+     </p>
 
-                    <div class="cli-block">
+     <pre class="cli-block">
                         <span class="cli-comment"
                             ># 1. Wylistuj wszystkie dyski i partycje (List Block Devices)</span
                         >
@@ -144,125 +137,107 @@
                             root!)</span
                         >
                         sudo hdparm -I /dev/sda | grep Serial
-                    </div>
+                    </pre>
 
-                    <div
-                        class="card"
-                        style="
-                            border-top-color: #2c001e;
-                            background-color: #f8f9fa;
-                            margin-top: 15px;
-                            padding: 15px;
-                        "
-                    >
-                        <h4 style="color: #2c001e; margin-top: 0">
-                            🕵️‍♂️ Sekret Inżyniera: Hydraulika w terminalu (Rura |)
-                        </h4>
-                        <p>
-                            Zauważyłeś pionową kreskę <code>|</code> w komendzie wyżej? Nazywamy ją
-                            <strong>Rurą (Pipe)</strong>. Jak to działa?
-                        </p>
-                        <p>
-                            Wyobraź sobie, że pierwsza komenda (<code>hdparm</code>) wypluwa z
-                            siebie wiadro wody (ścianę tekstu na 50 linijek). Zamiast wylewać to
-                            wszystko na ekran, podłączamy rurę <code>|</code>. Woda leci rurą do
-                            drugiego programu (<code>grep</code>), który działa jak
-                            <strong>sitko</strong> – przepuszcza na ekran TYLKO te krople (linijki),
-                            które mają w sobie słowo "Serial". Genialne w swojej prostocie!
-                        </p>
-                    </div>
+     <div
+      class="card"
+      style="border-top-color: #2c001e; background-color: #f8f9fa; margin-top: 15px; padding: 15px"
+     >
+      <h4 style="color: #2c001e; margin-top: 0">
+       🕵️‍♂️ Sekret Inżyniera: Hydraulika w terminalu (Rura |)
+      </h4>
+      <p>
+       Zauważyłeś pionową kreskę <code>|</code> w komendzie wyżej? Nazywamy ją
+       <strong>Rurą (Pipe)</strong>. Jak to działa?
+      </p>
+      <p>
+       Wyobraź sobie, że pierwsza komenda (<code>hdparm</code>) wypluwa z siebie wiadro wody (ścianę
+       tekstu na 50 linijek). Zamiast wylewać to wszystko na ekran, podłączamy rurę <code>|</code>.
+       Woda leci rurą do drugiego programu (<code>grep</code>), który działa jak
+       <strong>sitko</strong> – przepuszcza na ekran TYLKO te krople (linijki), które mają w sobie
+       słowo "Serial". Genialne w swojej prostocie!
+      </p>
+     </div>
 
-                    <div class="pitfall-box">
-                        <strong>🚨 Najczęstszy błąd uczniów:</strong>
-                        W zadaniu z numerem seryjnym dysku (arkusz 2022) uczniowie często wpisują
-                        <code>hdparm -I /dev/sda</code> i dostają ścianę tekstu, w której nie
-                        potrafią znaleźć numeru. Użycie "rury" (<code>|</code>) i komendy
-                        <code>grep Serial</code> filtruje wynik i pokazuje TYLKO tę jedną linijkę, o
-                        którą prosi egzaminator!
-                    </div>
-                </div>
-            </div>
+     <div class="pitfall-box">
+      <strong>🚨 Najczęstszy błąd uczniów:</strong>
+      W zadaniu z numerem seryjnym dysku (arkusz 2022) uczniowie często wpisują
+      <code>hdparm -I /dev/sda</code> i dostają ścianę tekstu, w której nie potrafią znaleźć numeru.
+      Użycie "rury" (<code>|</code>) i komendy <code>grep Serial</code> filtruje wynik i pokazuje
+      TYLKO tę jedną linijkę, o którą prosi egzaminator!
+     </div>
+    </div>
+   </div>
 
-            <!-- KROK 4 -->
-            <div class="lab-card ubu-purple">
-                <div class="lab-header">
-                    <h3>Krok 4: Polowanie na Zombie (Procesy)</h3>
-                    <span class="time-badge">Czas: 10 min</span>
-                </div>
-                <div class="lab-body">
-                    <p>
-                        To zadanie pojawiło się w najnowszych arkuszach (2024). Egzaminator chce
-                        wiedzieć, czy potrafisz monitorować działające programy.
-                    </p>
+   <!-- KROK 4 -->
+   <div class="lab-card ubu-purple">
+    <div class="lab-header">
+     <h3>Krok 4: Polowanie na Zombie (Procesy)</h3>
+     <span class="time-badge">Czas: 10 min</span>
+    </div>
+    <div class="lab-body">
+     <p>
+      To zadanie pojawiło się w najnowszych arkuszach (2024). Egzaminator chce wiedzieć, czy
+      potrafisz monitorować działające programy.
+     </p>
 
-                    <div class="cli-block">
+     <pre class="cli-block">
                         <span class="cli-comment"
                             ># 1. Uruchom menedżer zadań w terminalu (aby wyjść, wciśnij klawisz
                             'q')</span
                         >
                         top
-                    </div>
+                    </pre>
 
-                    <p>
-                        Spójrz na drugą linijkę od góry (zaczyna się od słowa <em>Tasks:</em>).
-                        Znajdziesz tam informację:
-                        <code
-                            >... total, ... running, ... sleeping, ... stopped,
-                            <strong>0 zombie</strong></code
-                        >.
-                    </p>
+     <p>
+      Spójrz na drugą linijkę od góry (zaczyna się od słowa <em>Tasks:</em>). Znajdziesz tam
+      informację:
+      <code>... total, ... running, ... sleeping, ... stopped, <strong>0 zombie</strong></code
+      >.
+     </p>
 
-                    <div
-                        class="card"
-                        style="
-                            border-top-color: #2c001e;
-                            background-color: #f8f9fa;
-                            margin-top: 20px;
-                            padding: 15px;
-                        "
-                    >
-                        <h4 style="color: #2c001e; margin-top: 0">
-                            🕵️‍♂️ Sekret Inżyniera: Czym jest proces Zombie?
-                        </h4>
-                        <p>
-                            W Linuxie każdy program (proces) ma swojego "rodzica". Gdy program
-                            kończy działanie, "umiera", ale jego ciało zostaje w systemie, dopóki
-                            rodzic nie odczyta jego statusu zakończenia. Jeśli rodzic się zawiesi i
-                            tego nie zrobi, martwy proces staje się <strong>Zombie</strong>. Nie
-                            zużywa RAMu ani CPU, ale zaśmieca tablicę procesów. Jako SysOps musisz
-                            umieć je namierzyć!
-                        </p>
-                    </div>
-                </div>
-            </div>
+     <div
+      class="card"
+      style="border-top-color: #2c001e; background-color: #f8f9fa; margin-top: 20px; padding: 15px"
+     >
+      <h4 style="color: #2c001e; margin-top: 0">🕵️‍♂️ Sekret Inżyniera: Czym jest proces Zombie?</h4>
+      <p>
+       W Linuxie każdy program (proces) ma swojego "rodzica". Gdy program kończy działanie,
+       "umiera", ale jego ciało zostaje w systemie, dopóki rodzic nie odczyta jego statusu
+       zakończenia. Jeśli rodzic się zawiesi i tego nie zrobi, martwy proces staje się
+       <strong>Zombie</strong>. Nie zużywa RAMu ani CPU, ale zaśmieca tablicę procesów. Jako SysOps
+       musisz umieć je namierzyć!
+      </p>
+     </div>
+    </div>
+   </div>
 
-            <!-- WERYFIKACJA EGZAMINACYJNA -->
-            <div
-                class="exam-verify-box"
-                style="border-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
-            >
-                <h4 style="color: var(--ubu-orange)">
-                    📸 Weryfikacja Egzaminacyjna: Przekierowanie strumieni (KRYTYCZNE!)
-                </h4>
-                <p>
-                    Na egzaminie INF.02 nie wystarczy wyświetlić wyniku na ekranie. Musisz go
-                    udokumentować. Masz na to dwa sposoby:
-                </p>
+   <!-- WERYFIKACJA EGZAMINACYJNA -->
+   <div
+    class="exam-verify-box"
+    style="border-color: var(--ubu-orange); background: var(--ubu-orange-bg)"
+   >
+    <h4 style="color: var(--ubu-orange)">
+     📸 Weryfikacja Egzaminacyjna: Przekierowanie strumieni (KRYTYCZNE!)
+    </h4>
+    <p>
+     Na egzaminie INF.02 nie wystarczy wyświetlić wyniku na ekranie. Musisz go udokumentować. Masz
+     na to dwa sposoby:
+    </p>
 
-                <ol>
-                    <li>
-                        <strong>Zrzut ekranu:</strong> Robisz PrintScreen okna VirtualBoxa i
-                        wklejasz do Worda w Windowsie.
-                    </li>
-                    <li>
-                        <strong>Przekierowanie do pliku (Sposób profesjonalny):</strong> Używasz
-                        znaku <code>></code> (dzióbka), aby zapisać wynik komendy do pliku
-                        tekstowego.
-                    </li>
-                </ol>
+    <ol>
+     <li>
+      <strong>Zrzut ekranu:</strong> Robisz PrintScreen okna VirtualBoxa i wklejasz do Worda w
+      Windowsie.
+     </li>
+     <li>
+      <strong>Przekierowanie do pliku (Sposób profesjonalny):</strong> Używasz znaku
+      <code>></code> (dzióbka), aby zapisać wynik komendy do pliku tekstowego.
+     </li>
+    </ol>
 
-                <p><strong>Przećwicz to teraz:</strong></p>
-                <div class="cli-block">
+    <p><strong>Przećwicz to teraz:</strong></p>
+    <pre class="cli-block">
                     <span class="cli-comment"
                         ># Zapisz informacje o procesorze do pliku procesor.txt</span
                     >
@@ -272,27 +247,27 @@
                         ># Sprawdź, czy plik się utworzył i czy ma w sobie tekst</span
                     >
                     cat procesor.txt
-                </div>
-                <p>
-                    <em
-                        >Uwaga: Znak <code>></code> nadpisuje plik. Jeśli chcesz dopisać coś na
-                        końcu istniejącego pliku, użyj <code>>></code>.</em
-                    >
-                </p>
-            </div>
-        </main>
+                </pre>
+    <p>
+     <em
+      >Uwaga: Znak <code>></code> nadpisuje plik. Jeśli chcesz dopisać coś na końcu istniejącego
+      pliku, użyj <code>>></code>.</em
+     >
+    </p>
+   </div>
+  </main>
 
-        <!-- COURSE NAVIGATION -->
-        <div class="course-nav">
-            <a href="lab0-przetrwanie.html" class="course-btn">⬅️ Poprzedni: Lab 0 (Przetrwanie)</a>
-            <a
-                href="lab2-pliki-archiwa.html"
-                class="course-btn next"
-                style="background-color: var(--ubu-purple); color: white"
-                >Następny: Lab 2 (Pliki i Archiwa) ➡️</a
-            >
-        </div>
+  <!-- COURSE NAVIGATION -->
+  <div class="course-nav">
+   <a href="lab0-przetrwanie.html" class="course-btn">⬅️ Poprzedni: Lab 0 (Przetrwanie)</a>
+   <a
+    href="lab2-pliki-archiwa.html"
+    class="course-btn next"
+    style="background-color: var(--ubu-purple); color: white"
+    >Następny: Lab 2 (Pliki i Archiwa) ➡️</a
+   >
+  </div>
 
-        <script src="../menu.js"></script>
-    </body>
+  <script src="../menu.js"></script>
+ </body>
 </html>

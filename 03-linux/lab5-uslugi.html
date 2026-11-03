@@ -52,7 +52,7 @@
       serwera.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Upewnij się, że jesteś w katalogu domowym</span>
       cd ~
 
@@ -69,7 +69,7 @@
 
       <span class="cli-comment"># 4. Sprawdź, czy plik faktycznie tam jest</span>
       ls -l ~/KOPIE/
-     </div>
+     </pre>
 
      <!-- REFERENCJA EGZAMINACYJNA -->
      <details class="exam-reference">
@@ -102,12 +102,12 @@
       np. <strong>2222</strong>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Otwórz oryginalny plik konfiguracyjny w edytorze nano (wymaga sudo!)</span
       >
       sudo nano /etc/ssh/sshd_config
-     </div>
+     </pre>
 
      <ul class="task-list">
       <li>W edytorze odszukaj linijkę, która wygląda tak: <code>#Port 22</code>.</li>
@@ -153,7 +153,7 @@
       <strong>systemctl</strong>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Zrestartuj usługę SSH, aby wczytała nową konfigurację</span>
       sudo systemctl restart ssh
 
@@ -161,7 +161,7 @@
        ># 2. Sprawdź status usługi (czy wstała poprawnie, czy wyrzuciła błąd?)</span
       >
       sudo systemctl status ssh
-     </div>
+     </pre>
 
      <p>
       Jeśli w statusie widzisz zielony napis <strong>active (running)</strong>, a poniżej informację
@@ -209,14 +209,14 @@
       <li>
        <strong>Próba 1 (Stary port):</strong> Otwórz CMD na Windowsie i spróbuj zalogować się tak
        jak zawsze:
-       <div class="cli-block">ssh administrator@192.168.10.20</div>
+       <pre class="cli-block">ssh administrator@192.168.10.20</pre>
        <em>Wynik:</em> Po chwili powinieneś otrzymać błąd <code>Connection refused</code> (Odmowa
        połączenia). Serwer już nie nasłuchuje na porcie 22!
       </li>
       <li>
        <strong>Próba 2 (Nowy port):</strong> Musimy poinstruować klienta SSH, aby użył naszego
        nowego portu. Służy do tego flaga <code>-p</code> (małe 'p').
-       <div class="cli-block">ssh -p 2222 administrator@192.168.10.20</div>
+       <pre class="cli-block">ssh -p 2222 administrator@192.168.10.20</pre>
        <em>Wynik:</em> System poprosi o hasło. Jesteś w środku!
       </li>
      </ul>

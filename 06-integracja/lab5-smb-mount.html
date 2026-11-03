@@ -111,19 +111,20 @@
       </div>
      </details>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Zaktualizuj listę pakietów i zainstaluj narzędzia CIFS (Common Internet File System -
        protokół Windowsa)</span
       >
-      sudo apt update sudo apt install cifs-utils -y
+      sudo apt update
+      sudo apt install cifs-utils -y
 
       <span class="cli-comment"
        ># 2. Utwórz pusty katalog, który będzie naszym "portalem" (zwyczajowo robimy to w katalogu
        /mnt)</span
       >
       sudo mkdir -p /mnt/backup
-     </div>
+     </pre>
     </div>
    </div>
 
@@ -143,14 +144,14 @@
       Windows Servera!
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Składnia: sudo mount -t cifs -o username=USER,password=HASLO //IP_SERWERA/UDZIAL
        /PUNKT_MONTOWANIA</span
       >
       sudo mount -t cifs -o username=Administrator,password=ZAQ\!2wsx //192.168.10.10/Backup$
       /mnt/backup
-     </div>
+     </pre>
 
      <div class="pitfall-box danger">
       <strong>🚨 Najczęstsze błędy (Ukośniki i Znaki Specjalne):</strong>
@@ -176,16 +177,17 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Wejdź do zamontowanego katalogu</span>
       cd /mnt/backup
 
       <span class="cli-comment"
        ># Utwórz plik tekstowy (wymaga sudo, bo udział zamontował root)</span
       >
-      sudo touch kopia_z_linuxa.txt sudo sh -c 'echo "Witaj Windowsie, tu Linux!" >
+      sudo touch kopia_z_linuxa.txt
+      sudo sh -c 'echo "Witaj Windowsie, tu Linux!" >
       kopia_z_linuxa.txt'
-     </div>
+     </pre>
 
      <p>
       <strong>Teraz przejdź na maszynę z Windows Serverem.</strong> Otwórz folder
@@ -211,10 +213,10 @@
       </p>
       <p>Służy do tego plik <strong>/etc/fstab</strong> (File System Table).</p>
 
-      <div class="cli-block">
+      <pre class="cli-block">
        <span class="cli-comment"># Otwórz plik fstab w edytorze nano</span>
        sudo nano /etc/fstab
-      </div>
+      </pre>
 
       <p>
        Na samym dole pliku dopisuje się linijkę (nie rób tego teraz, jeśli nie czujesz się pewnie,

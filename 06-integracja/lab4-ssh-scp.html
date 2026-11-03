@@ -75,10 +75,10 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Składnia: ssh uzytkownik@adres_ip</span>
       ssh administrator@192.168.10.20
-     </div>
+     </pre>
 
      <div class="pitfall-box danger">
       <strong>🚨 Pułapka (Odcisk palca):</strong>
@@ -119,10 +119,11 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Tworzymy plik na Windowsie</span>
-      cd Desktop echo "Witaj Linuxie, tu Windows!" > wiadomosc.txt
-     </div>
+      cd Desktop
+      echo "Witaj Linuxie, tu Windows!" > wiadomosc.txt
+     </pre>
 
      <ul class="task-list">
       <li>
@@ -131,10 +132,10 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Składnia: scp CO_WYSYŁAM DOKĄD_WYSYŁAM</span>
       scp wiadomosc.txt administrator@192.168.10.20:~
-     </div>
+     </pre>
 
      <div class="golden-rule-box">
       <strong>💡 Złota Rada Trenera (Dwukropek to świętość):</strong>
@@ -162,7 +163,7 @@
       wpisywać haseł! Rozwiązaniem są <strong>Klucze SSH</strong>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. NA WINDOWSIE: Wygeneruj parę kluczy (wciskaj Enter na wszystkie pytania, nie podawaj
        hasła/passphrase)</span
@@ -184,7 +185,7 @@
 
       <span class="cli-comment"># 5. Wyloguj się z Linuxa</span>
       exit
-     </div>
+     </pre>
 
      <p>
       <strong>Wielki Test:</strong> Będąc z powrotem w CMD na Windowsie, wpisz ponownie

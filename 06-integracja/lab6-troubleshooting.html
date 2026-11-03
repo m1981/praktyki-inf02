@@ -90,10 +90,10 @@
       <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na Windowsie i wpisz:</li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Składnia: Test-NetConnection -ComputerName IP -Port NUMER</span>
       Test-NetConnection -ComputerName 192.168.10.20 -Port 22
-     </div>
+     </pre>
 
      <p>
       Zwróć uwagę na ostatnią linijkę wyniku: <code>TcpTestSucceeded : True</code>. To oznacza, że
@@ -121,12 +121,12 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># Flagi: -v (verbose/gadatliwy), -z (zero-I/O, tylko skanuj port, nie wysyłaj danych)</span
       >
       nc -vz 192.168.10.10 80
-     </div>
+     </pre>
      <p>
       Wynik <code>Connection to 192.168.10.10 80 port [tcp/http] succeeded!</code> oznacza sukces.
      </p>
@@ -138,10 +138,10 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Flaga -u oznacza skanowanie UDP</span>
       nc -vzu 192.168.10.10 53
-     </div>
+     </pre>
 
      <div class="pitfall-box danger">
       <strong>🚨 Diagnoza błędów (Timeout vs Refused):</strong>
@@ -186,10 +186,10 @@
       </li>
      </ul>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Obserwuj logi autoryzacji na żywo (wymaga sudo!)</span>
       sudo tail -f /var/log/auth.log
-     </div>
+     </pre>
 
      <ul class="task-list">
       <li>

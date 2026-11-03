@@ -76,15 +76,17 @@
       instalacja jest bardzo prosta.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Zaktualizuj pakiety i zainstaluj Dockera (pobierze ok. 100-200 MB)</span
       >
-      sudo apt update sudo apt install docker.io -y
+      sudo apt update
+      sudo apt install docker.io -y
 
       <span class="cli-comment"># 2. Sprawdź, czy silnik działa i włącza się po restarcie</span>
-      sudo systemctl enable --now docker sudo systemctl status docker
-     </div>
+      sudo systemctl enable --now docker
+      sudo systemctl status docker
+     </pre>
      <p><em>(Wciśnij 'q', aby wyjść ze statusu).</em></p>
     </div>
    </div>
@@ -101,14 +103,14 @@
       serwer WWW (Apache - <code>httpd</code>), ale zamkniemy go w kontenerze.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Uruchom kontener z serwerem Apache</span>
       <span class="cli-comment"
        ># Flagi: -d (działaj w tle/detached), -p (przekieruj port 8080 z Ubuntu na port 80 w
        kontenerze), --name (nazwij kontener)</span
       >
       sudo docker run -d -p 8080:80 --name moj_serwer httpd
-     </div>
+     </pre>
 
      <p><strong>Co się właśnie stało?</strong></p>
      <ol>
@@ -130,10 +132,10 @@
      <span class="time-badge">Czas: 5 min</span>
     </div>
     <div class="lab-body">
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># Sprawdź listę działających kontenerów</span>
       sudo docker ps
-     </div>
+     </pre>
      <p>
       Zobaczysz tabelę, w której widnieje Twój kontener <code>moj_serwer</code> oraz informacja o
       portach: <code>0.0.0.0:8080->80/tcp</code>.
@@ -171,7 +173,7 @@
       3 sekundy.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Zatrzymanie kontenera (strona WWW przestanie działać)</span>
       sudo docker stop moj_serwer
 
@@ -183,7 +185,7 @@
 
       <span class="cli-comment"># 3. Sprawdź, czy kontener zniknął</span>
       sudo docker ps -a
-     </div>
+     </pre>
 
      <div
       class="card engineer-secret"

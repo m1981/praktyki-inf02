@@ -387,7 +387,8 @@ _title: Sylabus Egzaminu INF.02_
 _title: Mapa Architektury: Złoty Standard_
 
 - **H1** 🗺️ Mapa Architektury (Złoty Standard)
-  - **H3** Faza 1: Tydzień 2 (Linux SysOps - Start)
-  - **H3** Faza 2: Tydzień 3 (Serce Firmy - AD)
-  - **H3** Faza 3: Tydzień 4 (Krwiobieg - DHCP & RRAS)
-  - **H3** Faza 4: Tydzień 5 (Integracja Win-Lin)
+  - **H3** Stałe elementy: maszyny, nazwy, adresy, porty
+  - **H3** Faza 1: Linux SysOps (Linux Lab 0–11)
+  - **H3** Faza 2: Serce Firmy – AD (Windows Lab 1–4)
+  - **H3** Faza 3: Krwiobieg – DHCP i RRAS (Windows Lab 4.5–5)
+  - **H3** Faza 4: Integracja Win-Lin (Integracja Lab 1–6)

@@ -57,18 +57,19 @@
       najpopularniejszego serwera WWW na świecie.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"
        ># 1. Zaktualizuj listę pakietów i zainstaluj Nginx (flaga -y automatycznie potwierdza
        instalację)</span
       >
-      sudo apt update sudo apt install nginx -y
+      sudo apt update
+      sudo apt install nginx -y
 
       <span class="cli-comment"
        ># 2. Sprawdź, czy usługa działa (powinna wstać automatycznie!)</span
       >
       sudo systemctl status nginx
-     </div>
+     </pre>
      <p><em>(Wciśnij 'q', aby wyjść ze statusu).</em></p>
     </div>
    </div>
@@ -86,7 +87,7 @@
       internetowych jest katalog <code>/var/www/html</code>.
      </p>
 
-     <div class="cli-block">
+     <pre class="cli-block">
       <span class="cli-comment"># 1. Przejdź do katalogu ze stroną</span>
       cd /var/www/html
 
@@ -100,7 +101,7 @@
       >
       sudo sh -c 'echo "&lt;h1&gt;Witaj z Linuxa! Nginx dziala blyskawicznie!&lt;/h1&gt;" >
       index.html'
-     </div>
+     </pre>
     </div>
    </div>
 
@@ -149,7 +150,7 @@
      <ul class="task-list">
       <li>
        <strong>Na Linuxie:</strong> Uruchom śledzenie logów dostępu:
-       <div class="cli-block">sudo tail -f /var/log/nginx/access.log</div>
+       <pre class="cli-block">sudo tail -f /var/log/nginx/access.log</pre>
       </li>
       <li>
        <strong>Na Windowsie:</strong> Ułóż okna tak, aby widzieć terminal Linuxa. W przeglądarce na
