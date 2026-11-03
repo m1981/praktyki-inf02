@@ -26,7 +26,7 @@ Kolejność: **10 ➔ 9 ➔ 8** (od najmniejszego). Każdy punkt to osobny commi
 
 **Gotowe, gdy:** plik nie istnieje, a żadna strona nie pokazuje pustego obrazka.
 
-#### Punkt 9 – nazwa hosta `KLIENT-01` (ok. 15 min)
+#### Punkt 9 – nazwa hosta `KLIENT-01` ✅ wykonane
 
 1. **Windows Lab 1, Krok 3:** w jednym oknie _System Properties ➔ Change_ ustaw jednocześnie
    _Computer name_: `KLIENT-01` i _Domain_: `zs1.local` (jeden restart zamiast dwóch).
@@ -127,7 +127,7 @@ działała (np. `sudo apt update sudo apt install nginx -y`, `interface … enca
 
 ### Do zrobienia później
 
-- Nazwa hosta INF02-KLIENT ➔ plan z 2026-11-03, punkt 9.
+- ✅ Nazwa hosta INF02-KLIENT = `KLIENT-01` (Windows Lab 1, 2026-11-03).
 
 ## 2026-11-02 — Panel ekspertów: `setup.html` (Dzień 0)
 

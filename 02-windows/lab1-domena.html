@@ -283,12 +283,22 @@
          <strong>to jedyna zmiana</strong>
         </li>
        </ul>
+       <p>
+        Nazwę komputera i domenę ustawiasz <strong>w jednym oknie</strong> – wtedy wystarczy jeden
+        restart:
+       </p>
        <div class="gui-path">
-        System Properties (Właściwości systemu)
-        <span class="gui-arrow">➔</span> Change settings (Zmień ustawienia)
-        <span class="gui-arrow">➔</span> Domain (Domena): zs1.local
+        <code>Win+R</code> ➔ <code>sysdm.cpl</code> <span class="gui-arrow">➔</span> Computer Name
+        (Nazwa komputera) <span class="gui-arrow">➔</span> Change… (Zmień…)
        </div>
-       <p>Podaj login i hasło Administratora domeny, aby autoryzować podłączenie.</p>
+       <ul style="margin-left: 20px; margin-top: 5px">
+        <li>Computer name (Nazwa komputera): <code>KLIENT-01</code></li>
+        <li>Member of ➔ Domain (Domena): <code>zs1.local</code></li>
+       </ul>
+       <p>
+        Kliknij OK, podaj login <code>Administrator</code> i hasło administratora domeny, potem
+        zrestartuj maszynę.
+       </p>
 
        <!-- REFERENCJA EGZAMINACYJNA -->
        <details class="exam-reference">
@@ -324,8 +334,8 @@
       <ol>
        <li>
         Na stacji roboczej (Windows 11) otwórz okno
-        <strong>Właściwości systemu</strong> (tam, gdzie widać pełną nazwę komputera i nazwę
-        domeny).
+        <strong>Właściwości systemu</strong> (<code>sysdm.cpl</code>). Pełna nazwa komputera musi
+        brzmieć <code>KLIENT-01.zs1.local</code>, a domena <code>zs1.local</code>.
        </li>
        <li>Zrób zrzut ekranu (PrintScreen lub Narzędzie Wycinanie).</li>
        <li>Otwórz edytor tekstu (Word / LibreOffice Writer), wklej zrzut ekranu.</li>
