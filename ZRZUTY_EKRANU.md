@@ -244,5 +244,5 @@ operacyjnego" "Microsoft Windows 11 Home", "Typ systemu" "Komputer z procesorem 
 
 - [ ] P1 podmienione (1–3) – widoczne od razu w `setup.html`.
 - [ ] P2/P3 dodane do `img/` – poproś o wpięcie w `setup.html` i `03-linux/setup-ubuntu.html`.
-- [ ] Usunąć nieużywany `img/vbox-client-nic1-internal.jpg`.
+- [x] Usunąć nieużywany `img/vbox-client-nic1-internal.jpg` (2026-11-03).
 - [ ] Zaktualizować status punktu 1 w `HISTORIA_ZMIAN.md`.

@@ -18,7 +18,7 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
 
 Kolejność: **10 ➔ 9 ➔ 8** (od najmniejszego). Każdy punkt to osobny commit.
 
-#### Punkt 10 – usunięcie nieużywanego obrazu (ok. 2 min)
+#### Punkt 10 – usunięcie nieużywanego obrazu ✅ wykonane
 
 1. Sprawdź: `grep -r vbox-client-nic1-internal --include=*.html .` zwraca 0 wyników.
 2. `git rm img/vbox-client-nic1-internal.jpg`.
@@ -177,7 +177,7 @@ wg kolejności: jednoznaczność > poprawność > zwięzłość > styl.
 
 - Słownik pojęć w pozostałych labach ➔ plan z 2026-11-03, punkt 8.
 - ✅ Ramki „Egzamin (Bridged) vs nasze laboratorium” – zrobione 2026-11-02.
-- Usunąć nieużywany `img/vbox-client-nic1-internal.jpg` ➔ plan z 2026-11-03, punkt 10.
+- ✅ Usunięty nieużywany `img/vbox-client-nic1-internal.jpg` (2026-11-03).
 
 ## 2026-11-02 — Dzień 0 dla trzech maszyn
 
