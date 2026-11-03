@@ -15,6 +15,16 @@
   </header>
 
   <main class="lab-container">
+   <div class="golden-rule-box" style="border-left-color: #0984e3; background: #e3f2fd">
+    <strong>🗺️ Faza 3 – zanim zaczniesz:</strong> ustaw maszyny według
+    <a href="../topology.html#faza-3">Mapy Architektury, Faza 3</a>.
+    <ul style="margin: 5px 0 0 20px">
+     <li><strong>Włącz:</strong> INF02-SERWER, INF02-KLIENT.</li>
+     <li><strong>Wyłącz:</strong> INF02-LINUX.</li>
+     <li><strong>Wymagane wcześniej:</strong> Windows Lab 1–4.</li>
+    </ul>
+   </div>
+
    <div class="lab-card">
     <div class="lab-header">
      <h3>Lab 4.5: Automatyzacja IP (Serwer DHCP)</h3>
@@ -24,17 +34,6 @@
      <div class="goal-box">
       Cel: Uruchomienie serwera DHCP na Windows Serverze, utworzenie puli adresów oraz rezerwacji
       dla konkretnego komputera.
-     </div>
-
-     <div
-      class="golden-rule-box"
-      style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
-     >
-      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Zanim zaczniesz, sprawdź obie maszyny
-      (Serwer i Windows 11): karty <code>INF02-LAN</code> są podłączone, a na kliencie
-      <strong>kabel Karty 1 (NAT) jest wypięty</strong> (<em>Devices ➔ Network</em>). Jeśli
-      zostawisz NAT, klient dostanie adres <code>10.0.2.15</code> od VirtualBoxa zamiast od Twojego
-      serwera DHCP!
      </div>
      <details class="theory-block">
       <summary>Jak działa DHCP (Proces DORA)?</summary>

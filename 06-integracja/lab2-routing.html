@@ -13,6 +13,16 @@
   </header>
 
   <main class="lab-container">
+   <div class="golden-rule-box" style="border-left-color: #0984e3; background: #e3f2fd">
+    <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
+    <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
+    <ul style="margin: 5px 0 0 20px">
+     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
+     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Wymagane wcześniej:</strong> Integracja Lab 1 oraz Windows Lab 5 (RRAS NAT).</li>
+    </ul>
+   </div>
+
    <!-- TOPOLOGIA -->
    <div
     class="topology-box"
@@ -61,22 +71,6 @@
      <div class="goal-box">
       Cel: Skonfigurować usługę RRAS (NAT), aby Linux mógł połączyć się z Internetem przez Windows
       Server.
-     </div>
-
-     <div
-      class="golden-rule-box"
-      style="border-left-color: #d63031; background: #ffefef; margin-bottom: 20px"
-     >
-      <strong>🌐 Pre-flight Check (Weryfikacja Architektury):</strong>
-      Upewnij się, że Twój Windows Server nadal ma włączone
-      <strong>dwie karty sieciowe</strong> (tak jak ustawiliśmy to na początku kursu):
-      <ul style="margin-top: 5px; margin-bottom: 0">
-       <li><strong>Adapter 1 (WAN):</strong> NAT - <em>wyjście do prawdziwego Internetu</em>.</li>
-       <li>
-        <strong>Adapter 2 (LAN):</strong> Internal Network (<code>INF02-LAN</code>) -
-        <em>połączenie z Linuxem i Windows 11</em>.
-       </li>
-      </ul>
      </div>
      <ul class="task-list">
       <li>

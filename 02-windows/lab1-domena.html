@@ -34,6 +34,19 @@
   </header>
 
   <main class="lab-container">
+   <div class="golden-rule-box" style="border-left-color: #0984e3; background: #e3f2fd">
+    <strong>🗺️ Faza 2 – zanim zaczniesz:</strong> ustaw maszyny według
+    <a href="../topology.html#faza-2">Mapy Architektury, Faza 2</a>.
+    <ul style="margin: 5px 0 0 20px">
+     <li><strong>Włącz:</strong> INF02-SERWER, INF02-KLIENT.</li>
+     <li><strong>Wyłącz:</strong> INF02-LINUX.</li>
+     <li>
+      <strong>Wymagane wcześniej:</strong> Dzień 0 oraz
+      <a href="../topology.html#faza-1">Przygotowanie Fazy 1</a> (INF02-KLIENT ma 192.168.10.30).
+     </li>
+    </ul>
+   </div>
+
    <div class="lab-card">
     <div class="lab-header">
      <h3>Lab 1: Narodziny Szefa (Kontroler Domeny)</h3>
@@ -74,18 +87,6 @@
      <div class="goal-box">
       Cel: Przygotowanie serwera (nazwa, sieć), przekształcenie go w Kontroler Domeny i podłączenie
       stacji roboczej.
-     </div>
-
-     <div
-      class="golden-rule-box"
-      style="border-left-color: #0984e3; background: #e3f2fd; margin-bottom: 20px"
-     >
-      <strong>🌐 Pre-flight Check (VirtualBox):</strong> Upewnij się, że wykonałeś
-      <a href="../setup.html">Dzień 0</a>! Serwer ma 3 karty (Karta 1 NAT, Karty 2 i 3
-      <code>INF02-LAN</code>), klient Windows 11 – 2 karty (Karta 1 NAT, Karta 2
-      <code>INF02-LAN</code>). Wszystkie karty <code>INF02-LAN</code> mają
-      <strong>Promiscuous Mode: Allow All</strong>. Stan docelowy:
-      <a href="../topology.html">Mapa Architektury, Faza 2</a>.
      </div>
      <ul class="task-list">
       <!-- KROK 0: WSTĘPNA KONFIGURACJA -->
