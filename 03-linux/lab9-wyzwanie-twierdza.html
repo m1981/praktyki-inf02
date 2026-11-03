@@ -111,13 +111,26 @@
 
      <pre class="cli-block">
       <span class="cli-comment"># 1. Zaktualizuj listę pakietów i zainstaluj Fail2ban</span>
-      sudo apt update sudo apt install fail2ban -y
+      sudo apt update && sudo apt install fail2ban -y
 
       <span class="cli-comment"
        ># 2. Sprawdź, czy usługa działa (powinna uruchomić się automatycznie)</span
       >
       sudo systemctl status fail2ban
      </pre>
+
+     <div class="pitfall-box">
+      <strong>🚨 Pułapka: Fail2ban domyślnie pilnuje portu 22.</strong> Nasz SSH działa na porcie
+      2222 (Lab 5). Bez poniższej zmiany Fail2ban pokaże adres jako „zbanowany”, ale połączenie na
+      porcie 2222 nadal przejdzie. Utwórz plik <code>/etc/fail2ban/jail.local</code>:
+      <pre class="cli-block">sudo nano /etc/fail2ban/jail.local</pre>
+      Wpisz dokładnie te 2 linijki, zapisz (Ctrl+O, Enter, Ctrl+X):
+      <pre class="cli-block">
+[sshd]
+port = 2222</pre
+      >
+      Zastosuj zmianę: <code>sudo systemctl restart fail2ban</code>
+     </div>
 
      <div
       class="card engineer-secret"
@@ -143,12 +156,13 @@
     </div>
     <div class="lab-body">
      <p>
-      Przetestujmy naszego strażnika. Wcielimy się w rolę hakera atakującego z maszyny Windows 11.
+      Przetestujmy naszego strażnika. Wcielimy się w rolę hakera atakującego z maszyny INF02-KLIENT
+      (<code>192.168.10.30</code>).
      </p>
 
      <ul class="task-list">
       <li>
-       <strong>Na Windowsie:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa.
+       <strong>Na INF02-KLIENT:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa.
        <pre class="cli-block">ssh -p 2222 administrator@192.168.10.20</pre>
       </li>
       <li>Gdy system zapyta o hasło, <strong>wpisz błędne hasło</strong> i wciśnij Enter.</li>
@@ -181,15 +195,12 @@
 
      <p>
       Na ekranie zobaczysz statystyki. W sekcji <code>Banned IP list:</code> powinien widnieć adres
-      IP Twojego Windowsa (<code>192.168.10.10</code> lub <code>192.168.10.30</code>)!
+      IP maszyny INF02-KLIENT: <code>192.168.10.30</code>.
      </p>
 
      <pre class="cli-block">
-      <span class="cli-comment"
-       ># 2. Ułaskawienie: Zdejmij bana z adresu IP Windowsa (podmień IP na to, które widziałeś
-       wyżej!)</span
-      >
-      sudo fail2ban-client set sshd unbanip 192.168.10.10
+      <span class="cli-comment"># 2. Ułaskawienie: Zdejmij bana z adresu INF02-KLIENT</span>
+      sudo fail2ban-client set sshd unbanip 192.168.10.30
 
       <span class="cli-comment"
        ># 3. Sprawdź status UFW (zobaczysz, że Fail2ban zarządza regułami za Ciebie)</span

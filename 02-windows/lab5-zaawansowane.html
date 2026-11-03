@@ -33,13 +33,21 @@
     <div class="lab-body">
      <ul class="task-list">
       <li>
-       <strong>Krok 1: Dwie karty sieciowe</strong>
+       <strong>Krok 1: Sprawdź dwa interfejsy (nic nie dodajesz)</strong>
        <p>
-        Wyłącz maszynę z Windows Serverem. W ustawieniach VirtualBox dodaj
-        <strong>drugą kartę sieciową</strong> i ustaw ją na <em>NAT</em> (to będzie nasz WAN, który
-        dostanie adres np. <code>10.0.2.15</code>). Pierwsza karta zostaje na
-        <em>Internal Network (Sieć wewnętrzna)</em> (to nasz LAN: <code>192.168.10.10</code>).
+        INF02-SERWER ma już oba interfejsy z Dnia 0 i Windows Lab 1. W <code>ncpa.cpl</code>
+        sprawdź:
        </p>
+       <ul style="margin-left: 20px">
+        <li>
+         <strong>WAN (publiczny):</strong> <code>Ethernet</code> = Karta 1 (NAT), adres
+         <code>10.0.2.15</code>.
+        </li>
+        <li>
+         <strong>LAN (prywatny):</strong> <code>LAN12</code> = zespół Kart 2 i 3, adres
+         <code>192.168.10.10</code>, <strong>bez bramy</strong>.
+        </li>
+       </ul>
       </li>
       <li>
        <strong>Krok 2: Instalacja roli RRAS</strong>
@@ -112,17 +120,18 @@
     <div class="lab-body">
      <ul class="task-list">
       <li>
-       <strong>Krok 1: Zespół kart sieciowych</strong>
+       <strong>Krok 1: Sprawdź zespół LAN12 (utworzony w Windows Lab 1)</strong>
        <div class="gui-path">
         Server Manager (Menedżer serwera)
         <span class="gui-arrow">➔</span> Local Server (Serwer lokalny)
         <span class="gui-arrow">➔</span> NIC Teaming (Zespół kart interfejsu sieciowego)
        </div>
        <p>
-        Zaznacz dwie wewnętrzne karty sieciowe, kliknij prawym ->
-        <strong>Add to New Team (Dodaj do nowego zespołu)</strong>. Nazwij go
-        <code>LAN_Zespol</code>. Teaming mode (Tryb):
-        <em>Switch Independent (Niezależny od przełącznika)</em>.
+        Zespół <code>LAN12</code> z Kart 2 i 3 utworzyłeś w Windows Lab 1.
+        <strong>Nie twórz drugiego zespołu</strong> – te karty są już zajęte. Sprawdź, czy
+        ustawienia zgadzają się z zadaniem egzaminacyjnym poniżej: nazwa <code>LAN12</code>, Teaming
+        mode: <em>Switch Independent</em>, Load balancing mode: <em>Dynamic</em>. Na egzaminie
+        robisz to od zera: zaznacz dwie karty ➔ <em>Add to New Team</em> ➔ nazwa <code>LAN12</code>.
        </p>
 
        <!-- REFERENCJA EGZAMINACYJNA -->
@@ -157,7 +166,7 @@
       <div class="golden-rule-box">
        <strong>💡 Złota Rada Trenera:</strong> Po utworzeniu zespołu (Team), Twoje dwie fizyczne
        karty tracą swoje adresy IP! Musisz wejść w ustawienia sieciowe (ncpa.cpl) i nadać adres IP
-       nowej, wirtualnej karcie o nazwie <code>LAN_Zespol</code> (użyj naszego standardowego adresu:
+       nowej, wirtualnej karcie o nazwie <code>LAN12</code> (użyj naszego standardowego adresu:
        <code>192.168.10.10</code>).
       </div>
      </ul>

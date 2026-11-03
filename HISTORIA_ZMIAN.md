@@ -2,6 +2,73 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-02 — Jedna topologia dla wszystkich labów
+
+Analiza administratora sieci laboratoryjnej: laby zakładały różne topologie (7 połączeń nie
+działało, 6 działało warunkowo).
+
+### Zasada
+
+- **`topology.html` jest jedynym źródłem prawdy.** Okablowanie w VirtualBox jest stałe od Dnia 0.
+  Konfiguracja rośnie w 4 fazach. Każda faza ma: listę labów, włączone maszyny, _Stan na start_ i
+  _Zmiany w trakcie fazy_ (lab po labie).
+- **Każdy lab ma na początku ramkę „Faza N”**: link do fazy, „Włącz”, „Wyłącz”, „Wymagane
+  wcześniej”. Stare ramki „Pre-flight” z własnymi opisami kart usunięte.
+- **„Maszyna wyłączona”** (maszyna nie działa) i **„Kabel wypięty”** (Karta 1 odłączona w
+  _Devices ➔ Network_) to dwa różne stany – zawsze nazywane tymi słowami.
+
+### Decyzje
+
+| Faza            | Laby                          | Włączone maszyny                            |
+| --------------- | ----------------------------- | ------------------------------------------- |
+| 1 – Linux       | Linux Lab 0–11                | INF02-LINUX (+ INF02-KLIENT od Linux Lab 5) |
+| 2 – AD          | Windows Lab 1–4, Sprzęt Lab 2 | INF02-SERWER, INF02-KLIENT                  |
+| 3 – DHCP i RRAS | Windows Lab 4.5–5             | INF02-SERWER, INF02-KLIENT                  |
+| 4 – Integracja  | Integracja Lab 1–6            | INF02-SERWER, INF02-LINUX                   |
+
+- **Faza 1:** INF02-KLIENT ma stały adres `192.168.10.30/24` (kabel Karty 1 wypięty). Służy do
+  testów „z Windowsa” w Linux Lab 5, 9, 10, 11.
+- **Faza 4:** rolę „Windowsa” pełni INF02-SERWER (ma wbudowany klient SSH). Zawsze 2 maszyny – mieści
+  się w 8 GB RAM.
+- **SSH na INF02-LINUX od Linux Lab 5 = port 2222** we wszystkich późniejszych labach (`ssh -p 2222`,
+  `scp -P 2222`, `Test-NetConnection -Port 2222`, Fail2ban `port = 2222`, przekierowanie portu
+  _Guest Port_ = 2222).
+
+### Poprawione połączenia
+
+| Lab              | Było                                                     | Jest                                                          |
+| ---------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
+| Linux Lab 5      | test „z Windowsa 10 lub Servera” (brak adresu w LAN)     | test z INF02-KLIENT `.30`; krok: _Guest Port_ 22 ➔ 2222       |
+| Linux Lab 9      | Fail2ban pilnował portu 22; unban `.10` lub `.30`        | `jail.local`: `port = 2222`; atak i unban z `.30`             |
+| Linux Lab 10, 11 | „maszyna Windows 11”; `ufw allow 8080` dla Dockera       | INF02-KLIENT; wyjaśnienie, że Docker omija UFW                |
+| Windows Lab 1    | klient ustawiał adres od zera                            | adres z Fazy 1, dopisuje tylko DNS `.10`                      |
+| Windows Lab 4.5  | „wpisz IP Twojego routera”; brak przełączenia klienta    | router i DNS `192.168.10.10`; klient ➔ _Obtain automatically_ |
+| Windows Lab 5a   | „dodaj drugą kartę NAT”                                  | sprawdź WAN `Ethernet` i LAN `LAN12` (nic nie dodajesz)       |
+| Windows Lab 5b   | drugi zespół `LAN_Zespol` z zajętych kart                | weryfikacja `LAN12` z Windows Lab 1                           |
+| Integracja Lab 1 | instalacja ról od nowa; test w Firefoksie                | role już są; test `curl`                                      |
+| Integracja Lab 2 | RRAS od nowa; DNS `8.8.8.8`; kabel NAT Linuxa podłączony | RRAS z Windows Lab 5; brama i DNS `.10`; kabel wypięty        |
+| Integracja Lab 4 | `ssh`/`scp` na porcie 22 z „Windows 11 / Server”         | `-p 2222` / `-P 2222` z INF02-SERWER                          |
+| Integracja Lab 6 | `-Port 22`; `nc -vzu` jako pewny test DNS                | `-Port 2222`; pułapka UDP + `nslookup`; ostrzeżenie Fail2ban  |
+
+Ramki „Inny świat” dodane w `01-sieci/index.html` (Packet Tracer), `06-integracja/index.html` i
+`scenariusze-win-lin.html` (egzamin, karta Bridged).
+
+### Sklejone komendy (naprawione)
+
+Prettier (hook pre-commit) łączył linijki w `<div class="cli-block">` – komenda po skopiowaniu nie
+działała (np. `sudo apt update sudo apt install nginx -y`, `interface … encapsulation … ip address …`).
+
+- Wszystkie 76 bloków komend to teraz `<pre class="cli-block">` – Prettier nie zmienia zawartości
+  `<pre>`. Wygląd bez zmian (`.cli-block` ma `white-space: pre`).
+- Przywrócony podział linii w 10 sklejonych miejscach: `01-sieci/lab2-vlany`, `01-sieci/lab3-routing`,
+  Linux Lab 8, 10, 11, Integracja Lab 4, 5. Linux Lab 0–3, Sprzęt Lab 2 i Poligon odtworzone z
+  poprzedniego commita przed formatowaniem.
+- **Zasada na przyszłość:** nowe bloki komend pisz jako `<pre class="cli-block">`, nigdy jako `<div>`.
+
+### Do zrobienia później
+
+- Nazwa hosta INF02-KLIENT nie jest nigdzie ustawiana (zostaje nazwa z instalatora).
+
 ## 2026-11-02 — Panel ekspertów: `setup.html` (Dzień 0)
 
 Przegląd instrukcji przez 6 ról: Uczeń-tester, Dydaktyk, Redaktor techniczny, Inżynier QA

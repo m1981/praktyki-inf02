@@ -214,14 +214,14 @@
     </div>
     <div class="lab-body">
      <p>
-      Przejdźmy na maszynę z Windowsem 10 (lub Windows Serverem), aby przetestować naszą nową
-      konfigurację.
+      Testujemy z maszyny INF02-KLIENT (adres <code>192.168.10.30</code>, ustawiony w
+      <a href="../topology.html#faza-1">Przygotowaniu Fazy 1</a>). Otwórz na niej CMD.
      </p>
 
      <ul class="task-list">
       <li>
-       <strong>Próba 1 (Stary port):</strong> Otwórz CMD na Windowsie i spróbuj zalogować się tak
-       jak zawsze:
+       <strong>Próba 1 (Stary port):</strong> W CMD na INF02-KLIENT spróbuj zalogować się tak jak
+       zawsze:
        <pre class="cli-block">ssh administrator@192.168.10.20</pre>
        <em>Wynik:</em> Po chwili powinieneś otrzymać błąd <code>Connection refused</code> (Odmowa
        połączenia). Serwer już nie nasłuchuje na porcie 22!
@@ -231,6 +231,14 @@
        nowego portu. Służy do tego flaga <code>-p</code> (małe 'p').
        <pre class="cli-block">ssh -p 2222 administrator@192.168.10.20</pre>
        <em>Wynik:</em> System poprosi o hasło. Jesteś w środku!
+      </li>
+      <li>
+       <strong>Krok obowiązkowy – SSH z laptopa:</strong> Reguła przekierowania z Dnia 0 nadal
+       wskazuje stary port 22. Popraw ją, gdy maszyna działa:
+       <em>Settings ➔ Network ➔ Adapter 1 ➔ Advanced ➔ Port Forwarding</em> ➔ w regule
+       <code>SSH</code> zmień <em>Guest Port</em> z <code>22</code> na <code>2222</code> ➔ OK. Od
+       teraz z laptopa łączysz się tak samo jak wcześniej:
+       <code>ssh -p 2222 administrator@127.0.0.1</code>.
       </li>
      </ul>
 

@@ -40,14 +40,14 @@
    >
     <div class="node windows">
      <span class="node-icon">🪟</span>
-     <span class="node-name">Windows 11 / Server</span>
+     <span class="node-name">INF02-SERWER</span>
      <span class="node-ip">Stacja Administratora</span>
     </div>
 
     <div
      style="color: var(--text-muted); font-weight: bold; text-align: center; font-size: 0.85rem"
     >
-     Port 22 (SSH)<br />
+     Port 2222 (SSH)<br />
      <span style="font-size: 1.5rem; color: #9c88ff">➔</span>
     </div>
 
@@ -80,14 +80,14 @@
        <code>192.168.10.20</code>).
       </li>
       <li>
-       <strong>Atak z Windowsa:</strong> Otwórz Wiersz poleceń (CMD) lub PowerShell na Windowsie i
-       wpisz:
+       <strong>Atak z Windowsa:</strong> Otwórz Wiersz poleceń (CMD) na INF02-SERWER i wpisz (port
+       <code>2222</code> ustawiłeś w Linux Lab 5):
       </li>
      </ul>
 
      <pre class="cli-block">
-      <span class="cli-comment"># Składnia: ssh uzytkownik@adres_ip</span>
-      ssh administrator@192.168.10.20
+      <span class="cli-comment"># Składnia: ssh -p PORT uzytkownik@adres_ip</span>
+      ssh -p 2222 administrator@192.168.10.20
      </pre>
 
      <div class="pitfall-box danger">
@@ -143,8 +143,10 @@
      </ul>
 
      <pre class="cli-block">
-      <span class="cli-comment"># Składnia: scp CO_WYSYŁAM DOKĄD_WYSYŁAM</span>
-      scp wiadomosc.txt administrator@192.168.10.20:~
+      <span class="cli-comment"
+       ># Składnia: scp -P PORT CO_WYSYŁAM DOKĄD_WYSYŁAM (w scp wielkie P!)</span
+      >
+      scp -P 2222 wiadomosc.txt administrator@192.168.10.20:~
      </pre>
 
      <div class="golden-rule-box">
@@ -183,15 +185,15 @@
       <span class="cli-comment"
        ># 2. NA WINDOWSIE: Wyślij swój klucz PUBLICZNY na Linuxa za pomocą SCP</span
       >
-      scp .ssh\id_rsa.pub administrator@192.168.10.20:~/klucz_windowsa.pub
+      scp -P 2222 .ssh\id_rsa.pub administrator@192.168.10.20:~/klucz_windowsa.pub
 
       <span class="cli-comment"># 3. Zaloguj się na Linuxa (ostatni raz z hasłem!)</span>
-      ssh administrator@192.168.10.20
+      ssh -p 2222 administrator@192.168.10.20
 
       <span class="cli-comment"
        ># 4. NA LINUXIE: Dodaj klucz Windowsa do listy zaufanych kluczy</span
       >
-      mkdir -p ~/.ssh cat ~/klucz_windowsa.pub >> ~/.ssh/authorized_keys
+      mkdir -p ~/.ssh && cat ~/klucz_windowsa.pub >> ~/.ssh/authorized_keys
 
       <span class="cli-comment"># 5. Wyloguj się z Linuxa</span>
       exit
@@ -199,8 +201,8 @@
 
      <p>
       <strong>Wielki Test:</strong> Będąc z powrotem w CMD na Windowsie, wpisz ponownie
-      <code>ssh administrator@192.168.10.20</code>. Jeśli wszystko zrobiłeś dobrze, system wpuści
-      Cię natychmiast, <strong>bez pytania o hasło!</strong>
+      <code>ssh -p 2222 administrator@192.168.10.20</code>. Jeśli wszystko zrobiłeś dobrze, system
+      wpuści Cię natychmiast, <strong>bez pytania o hasło!</strong>
      </p>
 
      <div

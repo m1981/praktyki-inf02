@@ -272,12 +272,16 @@
        <p>
         Uruchom drugą maszynę wirtualną (Windows 11) i wypnij kabel Karty 1 (NAT):
         <em>Devices ➔ Network ➔</em> odznacz <em>Connect Network Adapter 1</em>. Następnie w
-        <code>ncpa.cpl</code> na karcie <code>Ethernet 2</code> (INF02-LAN) ustaw IPv4:
+        <code>ncpa.cpl</code> sprawdź IPv4 karty <code>Ethernet 2</code> (INF02-LAN). Adres i maskę
+        masz z <a href="../topology.html#faza-1">Fazy 1</a>; dopisz tylko DNS:
        </p>
        <ul style="margin-left: 20px; margin-top: 5px">
         <li>IP: <code>192.168.10.30</code>, Maska: <code>255.255.255.0</code></li>
         <li>Brama: <strong>pusta</strong> (w sieci LAN nie ma jeszcze routera)</li>
-        <li>Preferowany DNS: <code>192.168.10.10</code> (Twój serwer)</li>
+        <li>
+         Preferowany DNS: <code>192.168.10.10</code> (Twój serwer) –
+         <strong>to jedyna zmiana</strong>
+        </li>
        </ul>
        <div class="gui-path">
         System Properties (Właściwości systemu)

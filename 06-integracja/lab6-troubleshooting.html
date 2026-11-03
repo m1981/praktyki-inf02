@@ -54,7 +54,7 @@
     <div class="node linux">
      <span class="node-icon">🐧</span>
      <span class="node-name">Ubuntu Server</span>
-     <span class="node-ip">Port 22 (SSH)</span>
+     <span class="node-ip">Port 2222 (SSH)</span>
     </div>
    </div>
 
@@ -95,14 +95,14 @@
      <ul class="task-list">
       <li>
        <strong>Zadanie:</strong> Sprawdźmy, czy na naszym Linuxie (np. <code>192.168.10.20</code>)
-       działa usługa SSH (Port 22).
+       działa usługa SSH (port <code>2222</code> z Linux Lab 5).
       </li>
-      <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na Windowsie i wpisz:</li>
+      <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na INF02-SERWER i wpisz:</li>
      </ul>
 
      <pre class="cli-block">
       <span class="cli-comment"># Składnia: Test-NetConnection -ComputerName IP -Port NUMER</span>
-      Test-NetConnection -ComputerName 192.168.10.20 -Port 22
+      Test-NetConnection -ComputerName 192.168.10.20 -Port 2222
      </pre>
 
      <p>
@@ -152,6 +152,13 @@
       <span class="cli-comment"># Flaga -u oznacza skanowanie UDP</span>
       nc -vzu 192.168.10.10 53
      </pre>
+
+     <div class="pitfall-box">
+      <strong>🚨 Pułapka UDP:</strong> UDP nie potwierdza połączenia. Netcat pokaże
+      <em>succeeded</em> także wtedy, gdy zapora po cichu odrzuca pakiety. Pewny test DNS to
+      zapytanie o nazwę: <code>nslookup zs1.local 192.168.10.10</code> – jeśli zwraca adres, usługa
+      DNS działa.
+     </div>
 
      <div class="pitfall-box danger">
       <strong>🚨 Diagnoza błędów (Timeout vs Refused):</strong>
@@ -203,8 +210,10 @@
 
      <ul class="task-list">
       <li>
-       <strong>Na Windowsie:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa, podając
-       <strong>błędne hasło</strong>. <br /><code>ssh administrator@192.168.10.20</code>
+       <strong>Na INF02-SERWER:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa, podając
+       <strong>błędne hasło</strong>. <br /><code>ssh -p 2222 administrator@192.168.10.20</code>
+       <br />Uwaga: po 5 błędnych hasłach Fail2ban (Linux Lab 9) zablokuje INF02-SERWER. Odblokujesz
+       go na Linuxie: <code>sudo fail2ban-client set sshd unbanip 192.168.10.10</code>
       </li>
       <li>
        <strong>Obserwuj Linuxa:</strong> Zobaczysz, jak na czarnym ekranie natychmiast pojawia się

@@ -110,9 +110,9 @@
        <ul style="margin-left: 20px; margin-top: 5px">
         <li>
          <strong>Router (Default Gateway / Brama domyślna):</strong>
-         Wpisz adres IP Twojego routera.
+         <code>192.168.10.10</code> (INF02-SERWER; routerem stanie się w Lab 5).
         </li>
-        <li><strong>DNS Server (Serwer DNS):</strong> Wpisz adres IP Twojego Windows Servera.</li>
+        <li><strong>DNS Server (Serwer DNS):</strong> <code>192.168.10.10</code>.</li>
        </ul>
       </li>
       <li>
@@ -162,8 +162,10 @@
       </li>
 
       <div class="golden-rule-box">
-       <strong>💡 Złota Rada Trenera (Wymuszanie DHCP):</strong> Jeśli stacja robocza nie chce
-       pobrać nowego adresu, otwórz na niej CMD i wpisz kolejno: <br />
+       <strong>💡 Złota Rada Trenera (Przełączenie klienta na DHCP):</strong> INF02-KLIENT ma stały
+       adres <code>192.168.10.30</code> z Fazy 1. Przełącz go: <code>ncpa.cpl</code> ➔
+       <code>Ethernet 2</code> ➔ IPv4 ➔ zaznacz <em>Obtain an IP address automatically</em> i
+       <em>Obtain DNS server address automatically</em> ➔ OK. Potem w CMD wpisz kolejno: <br />
        <code>ipconfig /release</code> (oddaje stary adres)<br />
        <code>ipconfig /renew</code> (prosi o nowy adres)
       </div>

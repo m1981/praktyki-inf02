@@ -74,12 +74,17 @@
      </div>
      <ul class="task-list">
       <li>
-       <strong>Krok 1: Dwie karty sieciowe (Multihoming)</strong>
+       <strong>Krok 1: Dwa interfejsy (Multihoming)</strong>
        <p>
-        Upewnij się, że Windows Server ma
-        <strong>dwie karty sieciowe</strong>. Karta 1 (WAN) ma dostęp do Internetu. Karta 2 (LAN)
-        musi mieć ustawiony statyczny adres IP, np. <code>192.168.10.10</code>.
-        <strong>Ważne:</strong> Karta LAN nie może mieć ustawionej bramy domyślnej!
+        INF02-SERWER ma <strong>dwa interfejsy</strong>: <code>Ethernet</code> (Karta 1, WAN, NAT) z
+        dostępem do Internetu i <code>LAN12</code> (LAN) ze stałym adresem
+        <code>192.168.10.10</code>. <strong>Ważne:</strong> <code>LAN12</code> nie może mieć bramy
+        domyślnej!
+       </p>
+       <p>
+        <strong>Kroki 2–3 wykonałeś w Windows Lab 5.</strong> Jeśli w
+        <code>rrasmgmt.msc</code> serwer ma zieloną strzałkę i pozycję <em>NAT</em> – przejdź od
+        razu do Kroku 4.
        </p>
       </li>
 
@@ -98,17 +103,22 @@
         Otwórz przystawkę
         <em>Routing i dostęp zdalny</em> (<code>rrasmgmt.msc</code>). Kliknij prawym przyciskiem
         myszy na nazwę serwera i wybierz <strong>Konfiguruj i włącz...</strong>. W kreatorze wybierz
-        <strong>Translacja adresów sieciowych (NAT)</strong>. Następnie wskaż Kartę 1 (WAN) jako
-        interfejs publiczny podłączony do Internetu.
+        <strong>Translacja adresów sieciowych (NAT)</strong>. Następnie wskaż
+        <code>Ethernet</code> (Karta 1, WAN) jako interfejs publiczny podłączony do Internetu.
        </p>
       </li>
 
       <li>
        <strong>Krok 4: Konfiguracja Klienta (Linux)</strong>
        <p>
-        Na Ubuntu ustaw statyczny adres IP z tej samej podsieci, np.
-        <code>192.168.10.20</code>. Jako <strong>Bramę domyślną (Gateway)</strong> wpisz adres LAN
-        Windowsa: <code>192.168.10.10</code>. Jako DNS ustaw np. <code>8.8.8.8</code>.
+        INF02-LINUX ma już adres <code>192.168.10.20/24</code> (Linux Lab 4). W pliku Netplan dla
+        <code>enp0s8</code> dopisz bramę <code>192.168.10.10</code> (sekcja
+        <code>routes: - to: default via: 192.168.10.10</code>) i DNS
+        <code>192.168.10.10</code> (sekcja <code>nameservers: addresses: [192.168.10.10]</code>),
+        potem <code>sudo netplan apply</code>. Na koniec
+        <strong>wypnij kabel Karty 1</strong> INF02-LINUX: <em>Devices ➔ Network ➔</em> odznacz
+        <em>Connect Network Adapter 1</em>. Bez tego Linux nadal wychodziłby do Internetu przez NAT
+        VirtualBoxa, a nie przez Twój serwer.
        </p>
       </li>
 

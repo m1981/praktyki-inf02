@@ -153,8 +153,10 @@
 
      <ul class="task-list">
       <li>
-       <strong>Test z Windowsa:</strong> Przejdź na maszynę Windows 11. Otwórz przeglądarkę i wpisz
-       adres IP Linuxa, ale tym razem z portem 8080: <br /><code>http://192.168.10.20:8080</code>
+       <strong>Test z Windowsa:</strong> Przejdź na maszynę INF02-KLIENT. Otwórz przeglądarkę i
+       wpisz adres IP Linuxa, ale tym razem z portem 8080: <br /><code
+        >http://192.168.10.20:8080</code
+       >
       </li>
       <li>
        Powinieneś zobaczyć wielki napis <strong>It works!</strong> (To domyślna strona serwera
@@ -164,9 +166,10 @@
 
      <div class="pitfall-box danger">
       <strong>🚨 Zapora UFW (Przypomnienie):</strong>
-      Jeśli w Wyzwaniu 2 włączyłeś zaporę UFW, musisz odblokować port 8080, aby Windows mógł się
-      połączyć!
-      <br /><code>sudo ufw allow 8080/tcp</code>
+      Docker <strong>omija</strong> zaporę UFW: port opublikowany flagą <code>-p 8080:80</code>
+      jest otwarty dla całej sieci, nawet jeśli UFW go nie wpuszcza. Reguła
+      <code>sudo ufw allow 8080/tcp</code> niczego tu nie zmienia. Wniosek: kontenera nie chroni UFW
+      – publikuj tylko te porty, które naprawdę mają być dostępne.
      </div>
     </div>
    </div>
