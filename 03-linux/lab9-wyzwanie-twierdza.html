@@ -38,8 +38,8 @@
     <strong>🗺️ Faza 1 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-1">Mapy Architektury, Faza 1</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-SERWER.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> WIN_SERVER.</li>
      <li><strong>Wymagane wcześniej:</strong> Linux Lab 5 (SSH na porcie 2222).</li>
     </ul>
    </div>
@@ -151,18 +151,18 @@ port = 2222</pre
    <!-- KROK 3 -->
    <div class="lab-card ubu-orange">
     <div class="lab-header">
-     <h3>Krok 3: Symulacja Ataku (Z Windowsa)</h3>
+     <h3>Krok 3: Symulacja Ataku (Z WIN_11)</h3>
      <span class="time-badge">Czas: 10 min</span>
     </div>
     <div class="lab-body">
      <p>
-      Przetestujmy naszego strażnika. Wcielimy się w rolę hakera atakującego z maszyny INF02-KLIENT
+      Przetestujmy naszego strażnika. Wcielimy się w rolę hakera atakującego z maszyny WIN_11
       (<code>192.168.10.30</code>).
      </p>
 
      <ul class="task-list">
       <li>
-       <strong>Na INF02-KLIENT:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa.
+       <strong>Na WIN_11:</strong> Otwórz CMD i spróbuj zalogować się na LINUX_SERVER.
        <pre class="cli-block">ssh -p 2222 administrator@192.168.10.20</pre>
       </li>
       <li>Gdy system zapyta o hasło, <strong>wpisz błędne hasło</strong> i wciśnij Enter.</li>
@@ -179,13 +179,13 @@ port = 2222</pre
    <!-- KROK 4 -->
    <div class="lab-card ubu-purple">
     <div class="lab-header">
-     <h3>Krok 4: Analiza i Ułaskawienie (Na Linuxie)</h3>
+     <h3>Krok 4: Analiza i Ułaskawienie (Na LINUX_SERVER)</h3>
      <span class="time-badge">Czas: 10 min</span>
     </div>
     <div class="lab-body">
      <p>
       Skoro Twój Windows dostał bana, nie połączysz się już przez SSH. Musisz otworzyć okno
-      VirtualBoxa z Ubuntu (konsolę lokalną), zalogować się i sprawdzić, co się stało.
+      VirtualBoxa z LINUX_SERVER (konsolę lokalną), zalogować się i sprawdzić, co się stało.
      </p>
 
      <pre class="cli-block">
@@ -195,11 +195,11 @@ port = 2222</pre
 
      <p>
       Na ekranie zobaczysz statystyki. W sekcji <code>Banned IP list:</code> powinien widnieć adres
-      IP maszyny INF02-KLIENT: <code>192.168.10.30</code>.
+      IP maszyny WIN_11: <code>192.168.10.30</code>.
      </p>
 
      <pre class="cli-block">
-      <span class="cli-comment"># 2. Ułaskawienie: Zdejmij bana z adresu INF02-KLIENT</span>
+      <span class="cli-comment"># 2. Ułaskawienie: Zdejmij bana z adresu WIN_11</span>
       sudo fail2ban-client set sshd unbanip 192.168.10.30
 
       <span class="cli-comment"
@@ -208,7 +208,7 @@ port = 2222</pre
       sudo ufw status
      </pre>
 
-     <p>Wróć na Windowsa. Połączenie SSH znów powinno działać (tym razem podaj poprawne hasło!).</p>
+     <p>Wróć na WIN_11. Połączenie SSH znów powinno działać (tym razem podaj poprawne hasło!).</p>
     </div>
    </div>
 

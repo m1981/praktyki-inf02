@@ -33,11 +33,11 @@
     <strong>🗺️ Faza 1 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-1">Mapy Architektury, Faza 1</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-SERWER.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> WIN_SERVER.</li>
      <li>
-      <strong>Wymagane wcześniej:</strong> Linux Lab 4 (INF02-LINUX ma 192.168.10.20) oraz
-      <a href="../topology.html#faza-1">Przygotowanie Fazy 1</a> (INF02-KLIENT ma 192.168.10.30).
+      <strong>Wymagane wcześniej:</strong> Linux Lab 4 (LINUX_SERVER ma 192.168.10.20) oraz
+      <a href="../topology.html#faza-1">Przygotowanie Fazy 1</a> (WIN_11 ma 192.168.10.30).
      </li>
     </ul>
    </div>
@@ -209,19 +209,18 @@
    <!-- KROK 4 -->
    <div class="lab-card ubu-purple">
     <div class="lab-header">
-     <h3>Krok 4: Wielki Test (Atak z Windowsa)</h3>
+     <h3>Krok 4: Wielki Test (Atak z WIN_11)</h3>
      <span class="time-badge">Czas: 5 min</span>
     </div>
     <div class="lab-body">
      <p>
-      Testujemy z maszyny INF02-KLIENT (adres <code>192.168.10.30</code>, ustawiony w
+      Testujemy z maszyny WIN_11 (adres <code>192.168.10.30</code>, ustawiony w
       <a href="../topology.html#faza-1">Przygotowaniu Fazy 1</a>). Otwórz na niej CMD.
      </p>
 
      <ul class="task-list">
       <li>
-       <strong>Próba 1 (Stary port):</strong> W CMD na INF02-KLIENT spróbuj zalogować się tak jak
-       zawsze:
+       <strong>Próba 1 (Stary port):</strong> W CMD na WIN_11 spróbuj zalogować się tak jak zawsze:
        <pre class="cli-block">ssh administrator@192.168.10.20</pre>
        <em>Wynik:</em> Po chwili powinieneś otrzymać błąd <code>Connection refused</code> (Odmowa
        połączenia). Serwer już nie nasłuchuje na porcie 22!

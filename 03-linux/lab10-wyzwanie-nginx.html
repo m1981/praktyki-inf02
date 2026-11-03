@@ -38,8 +38,8 @@
     <strong>🗺️ Faza 1 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-1">Mapy Architektury, Faza 1</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-SERWER.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> WIN_SERVER.</li>
      <li><strong>Wymagane wcześniej:</strong> Linux Lab 9 (UFW włączony).</li>
     </ul>
    </div>
@@ -48,9 +48,9 @@
     class="goal-box"
     style="background: var(--challenge-gold-bg); border-color: var(--challenge-gold)"
    >
-    <strong>Cel Wyzwania:</strong> Postawienie serwera WWW na Linuxie i porównanie tego procesu z
-    instalacją IIS na Windows Serverze. Zrozumienie, dlaczego większość internetu działa na
-    systemach uniksowych.
+    <strong>Cel Wyzwania:</strong> Postawienie serwera WWW na LINUX_SERVER i porównanie tego procesu
+    z instalacją IIS na WIN_SERVER. Zrozumienie, dlaczego większość internetu działa na systemach
+    uniksowych.
    </div>
 
    <!-- KROK 1 -->
@@ -61,9 +61,9 @@
     </div>
     <div class="lab-body">
      <p>
-      Przypomnij sobie, jak instalowałeś rolę <em>Serwer sieci Web (IIS)</em> na Windowsie. Menedżer
-      serwera, kreator, wybieranie ról, czekanie na pasek postępu... W Linuxie zrobimy to jednym
-      poleceniem. Użyjemy serwera <strong>Nginx</strong> (czyt. <em>Engine-X</em>) –
+      Przypomnij sobie, jak instalowałeś rolę <em>Serwer sieci Web (IIS)</em> na WIN_SERVER.
+      Menedżer serwera, kreator, wybieranie ról, czekanie na pasek postępu... W Linuxie zrobimy to
+      jednym poleceniem. Użyjemy serwera <strong>Nginx</strong> (czyt. <em>Engine-X</em>) –
       najpopularniejszego serwera WWW na świecie.
      </p>
 
@@ -118,27 +118,27 @@
    <!-- KROK 3 -->
    <div class="lab-card ubu-orange">
     <div class="lab-header">
-     <h3>Krok 3: Test z Windowsa (i pułapka!)</h3>
+     <h3>Krok 3: Test z WIN_11 (i pułapka!)</h3>
      <span class="time-badge">Czas: 10 min</span>
     </div>
     <div class="lab-body">
      <p>
-      Przejdź na maszynę <strong>INF02-KLIENT</strong>, otwórz przeglądarkę internetową i wpisz
-      adres IP swojego Linuxa: <code>http://192.168.10.20</code>.
+      Przejdź na maszynę <strong>WIN_11</strong>, otwórz przeglądarkę internetową i wpisz adres IP
+      swojego Linuxa: <code>http://192.168.10.20</code>.
      </p>
 
      <div class="pitfall-box danger">
       <strong>🚨 Strona się nie ładuje? (Jeśli robiłeś Wyzwanie 2)</strong>
       Jeśli w poprzednim wyzwaniu włączyłeś zaporę UFW (<code>sudo ufw enable</code>), to domyślnie
-      blokuje ona cały ruch z wyjątkiem SSH! Musisz wrócić na Linuxa i zrobić "dziurę" w zaporze dla
-      ruchu HTTP (port 80). <br /><br />
-      <strong>Rozwiązanie na Linuxie:</strong><br />
+      blokuje ona cały ruch z wyjątkiem SSH! Musisz wrócić na LINUX_SERVER i zrobić "dziurę" w
+      zaporze dla ruchu HTTP (port 80). <br /><br />
+      <strong>Rozwiązanie na LINUX_SERVER:</strong><br />
       <code>sudo ufw allow 80/tcp</code><br />
       <code>sudo ufw status</code>
      </div>
 
      <p>
-      Po odblokowaniu portu 80, odśwież stronę na Windowsie. Powinieneś zobaczyć swój wielki napis:
+      Po odblokowaniu portu 80, odśwież stronę na WIN_11. Powinieneś zobaczyć swój wielki napis:
       <em>Witaj z Linuxa!</em>
      </p>
     </div>
@@ -159,12 +159,12 @@
 
      <ul class="task-list">
       <li>
-       <strong>Na Linuxie:</strong> Uruchom śledzenie logów dostępu:
+       <strong>Na LINUX_SERVER:</strong> Uruchom śledzenie logów dostępu:
        <pre class="cli-block">sudo tail -f /var/log/nginx/access.log</pre>
       </li>
       <li>
-       <strong>Na Windowsie:</strong> Ułóż okna tak, aby widzieć terminal Linuxa. W przeglądarce na
-       Windowsie wciśnij <strong>F5 (Odśwież)</strong> kilka razy.
+       <strong>Na WIN_11:</strong> Ułóż okna tak, aby widzieć terminal LINUX_SERVER. W przeglądarce
+       na WIN_11 wciśnij <strong>F5 (Odśwież)</strong> kilka razy.
       </li>
       <li>
        <strong>Obserwuj Linuxa:</strong> Zobaczysz, jak z każdym odświeżeniem strony na czarnym

@@ -17,8 +17,8 @@
     <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
-     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_SERVER.</li>
+     <li><strong>Wyłącz:</strong> WIN_11.</li>
      <li><strong>Wymagane wcześniej:</strong> Integracja Lab 1 oraz Windows Lab 5 (RRAS NAT).</li>
     </ul>
    </div>
@@ -76,7 +76,7 @@
       <li>
        <strong>Krok 1: Dwa interfejsy (Multihoming)</strong>
        <p>
-        INF02-SERWER ma <strong>dwa interfejsy</strong>: <code>Ethernet</code> (Karta 1, WAN, NAT) z
+        WIN_SERVER ma <strong>dwa interfejsy</strong>: <code>Ethernet</code> (Karta 1, WAN, NAT) z
         dostępem do Internetu i <code>LAN12</code> (LAN) ze stałym adresem
         <code>192.168.10.10</code>. <strong>Ważne:</strong> <code>LAN12</code> nie może mieć bramy
         domyślnej!
@@ -111,7 +111,7 @@
       <li>
        <strong>Krok 4: Konfiguracja Klienta (Linux)</strong>
        <p>
-        <strong>1. Wypnij kabel Karty 1</strong> INF02-LINUX: w oknie maszyny
+        <strong>1. Wypnij kabel Karty 1</strong> LINUX_SERVER: w oknie maszyny
         <em>Devices ➔ Network ➔</em> odznacz <em>Connect Network Adapter 1</em>. Bez tego Linux
         nadal wychodziłby do Internetu przez NAT VirtualBoxa, a nie przez Twój serwer.
        </p>
@@ -157,8 +157,8 @@ ip route</pre
       <li>
        <strong>Krok 5: Wielki Test (Ping w świat)</strong>
        <p>
-        Otwórz terminal na Ubuntu i wpisz: <code>ping 8.8.8.8</code>. Jeśli pakiety wracają, oznacza
-        to, że Windows Server poprawnie tłumaczy adresy (NAT) i wypuszcza Linuxa w świat!
+        Otwórz terminal na LINUX_SERVER i wpisz: <code>ping 8.8.8.8</code>. Jeśli pakiety wracają,
+        oznacza to, że Windows Server poprawnie tłumaczy adresy (NAT) i wypuszcza Linuxa w świat!
        </p>
       </li>
      </ul>
@@ -174,7 +174,7 @@ ip route</pre
         zwariuje i NAT nie zadziała.
        </li>
        <li>
-        <strong>Brak Bramy na Linuxie:</strong> Jeśli zapomnisz wpisać
+        <strong>Brak Bramy na LINUX_SERVER:</strong> Jeśli zapomnisz wpisać
         <code>192.168.10.10</code> jako bramę w ustawieniach Ubuntu, Linux nie będzie wiedział, komu
         przekazać pakiety przeznaczone do Internetu. Zwróci błąd <em>Network is unreachable</em>.
        </li>
@@ -189,7 +189,7 @@ ip route</pre
      <!-- PRO TIP -->
      <div class="golden-rule-box ubu-purple">
       <strong>💡 Pro-Tip od DevOpsa:</strong>
-      Chcesz zobaczyć magię routingu na własne oczy? Na Linuxie wpisz komendę
+      Chcesz zobaczyć magię routingu na własne oczy? Na LINUX_SERVER wpisz komendę
       <code>traceroute 8.8.8.8</code> (lub <code>tracepath 8.8.8.8</code>). Zobaczysz, że pierwszym
       "przystankiem" (hop) Twoich pakietów jest adres IP Windows Servera (192.168.10.10), a dopiero
       potem lecą one do dostawcy Internetu.

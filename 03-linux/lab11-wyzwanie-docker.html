@@ -43,8 +43,8 @@
     <strong>🗺️ Faza 1 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-1">Mapy Architektury, Faza 1</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-SERWER.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> WIN_SERVER.</li>
      <li><strong>Wymagane wcześniej:</strong> Linux Lab 9 (UFW włączony).</li>
     </ul>
    </div>
@@ -116,7 +116,7 @@
      <pre class="cli-block">
       <span class="cli-comment"># Uruchom kontener z serwerem Apache</span>
       <span class="cli-comment"
-       ># Flagi: -d (działaj w tle/detached), -p (przekieruj port 8080 z Ubuntu na port 80 w
+       ># Flagi: -d (działaj w tle/detached), -p (przekieruj port 8080 z LINUX_SERVER na port 80 w
        kontenerze), --name (nazwij kontener)</span
       >
       sudo docker run -d -p 8080:80 --name moj_serwer httpd
@@ -138,7 +138,7 @@
    <!-- KROK 3 -->
    <div class="lab-card ubu-purple">
     <div class="lab-header">
-     <h3>Krok 3: Weryfikacja i Test z Windowsa</h3>
+     <h3>Krok 3: Weryfikacja i Test z WIN_11</h3>
      <span class="time-badge">Czas: 5 min</span>
     </div>
     <div class="lab-body">
@@ -153,10 +153,8 @@
 
      <ul class="task-list">
       <li>
-       <strong>Test z Windowsa:</strong> Przejdź na maszynę INF02-KLIENT. Otwórz przeglądarkę i
-       wpisz adres IP Linuxa, ale tym razem z portem 8080: <br /><code
-        >http://192.168.10.20:8080</code
-       >
+       <strong>Test z Windowsa:</strong> Przejdź na maszynę WIN_11. Otwórz przeglądarkę i wpisz
+       adres IP Linuxa, ale tym razem z portem 8080: <br /><code>http://192.168.10.20:8080</code>
       </li>
       <li>
        Powinieneś zobaczyć wielki napis <strong>It works!</strong> (To domyślna strona serwera

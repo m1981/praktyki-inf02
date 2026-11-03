@@ -29,7 +29,7 @@
   <header>
    <h1>🏫 Lab 1: Narodziny Szefa (Kontroler Domeny)</h1>
    <p style="color: var(--text-muted); font-size: 1.2rem">
-    Instalacja Active Directory i podłączanie stacji roboczej
+    Instalacja Active Directory i podłączanie WIN_11
    </p>
   </header>
 
@@ -38,11 +38,11 @@
     <strong>🗺️ Faza 2 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-2">Mapy Architektury, Faza 2</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-SERWER, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-LINUX.</li>
+     <li><strong>Włącz:</strong> WIN_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> LINUX_SERVER.</li>
      <li>
       <strong>Wymagane wcześniej:</strong> Dzień 0 oraz
-      <a href="../topology.html#faza-1">Przygotowanie Fazy 1</a> (INF02-KLIENT ma 192.168.10.30).
+      <a href="../topology.html#faza-1">Przygotowanie Fazy 1</a> (WIN_11 ma 192.168.10.30).
      </li>
     </ul>
    </div>
@@ -68,7 +68,7 @@
        <!-- KLIENT -->
        <div class="device-box">
         <i class="fa-solid fa-desktop device-icon"></i>
-        <div class="device-title">Windows 11 (Klient)</div>
+        <div class="device-title">WIN_11 (Klient)</div>
         <div class="interface-badge lan">192.168.10.30</div>
        </div>
       </div>
@@ -86,7 +86,7 @@
      </div>
      <div class="goal-box">
       Cel: Przygotowanie serwera (nazwa, sieć), przekształcenie go w Kontroler Domeny i podłączenie
-      stacji roboczej.
+      WIN_11.
      </div>
      <ul class="task-list">
       <!-- KROK 0: WSTĘPNA KONFIGURACJA -->
@@ -226,14 +226,14 @@
        </details>
 
        <div class="pitfall-box">
-        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia Windowsa 11 do domeny kończy
-        się błędem "Nie można odnaleźć domeny". Dzieje się tak, ponieważ stacja robocza nie wie,
-        gdzie szukać domeny <code>zs1.local</code>.
+        <strong>🚨 Najczęstszy błąd uczniów:</strong> Próba podłączenia WIN_11 do domeny kończy się
+        błędem "Nie można odnaleźć domeny". Dzieje się tak, ponieważ WIN_11 nie wie, gdzie szukać
+        domeny <code>zs1.local</code>.
        </div>
 
        <div class="golden-rule-box">
         <strong>💡 Złota Rada Trenera:</strong> Zanim klikniesz "Dołącz do domeny", wejdź w
-        ustawienia karty sieciowej Windows 11 (ncpa.cpl) i w polu
+        ustawienia karty sieciowej WIN_11 (ncpa.cpl) i w polu
         <strong>Preferowany serwer DNS</strong> wpisz adres IP Twojego Windows Servera
         (192.168.10.10)! Następnie otwórz CMD i wpisz <code>ping zs1.local</code>. Jeśli odpowiada –
         możesz dołączać!
@@ -268,9 +268,9 @@
 
       <!-- KROK 3: PODŁĄCZENIE STACJI -->
       <li>
-       <strong>Krok 3: Podłączenie stacji roboczej (Windows 11)</strong>
+       <strong>Krok 3: Podłączenie WIN_11</strong>
        <p>
-        Uruchom drugą maszynę wirtualną (Windows 11) i wypnij kabel Karty 1 (NAT):
+        Uruchom drugą maszynę wirtualną (WIN_11) i wypnij kabel Karty 1 (NAT):
         <em>Devices ➔ Network ➔</em> odznacz <em>Connect Network Adapter 1</em>. Następnie w
         <code>ncpa.cpl</code> sprawdź IPv4 karty <code>Ethernet 2</code> (INF02-LAN). Adres i maskę
         masz z <a href="../topology.html#faza-1">Fazy 1</a>; dopisz tylko DNS:
@@ -333,7 +333,7 @@
       <p>Na egzaminie INF.02 nikt nie uwierzy Ci na słowo. Musisz to udowodnić:</p>
       <ol>
        <li>
-        Na stacji roboczej (Windows 11) otwórz okno
+        Na WIN_11 otwórz okno
         <strong>Właściwości systemu</strong> (<code>sysdm.cpl</code>). Pełna nazwa komputera musi
         brzmieć <code>KLIENT-01.zs1.local</code>, a domena <code>zs1.local</code>.
        </li>

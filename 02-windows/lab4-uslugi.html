@@ -31,8 +31,8 @@
     <strong>🗺️ Faza 2 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-2">Mapy Architektury, Faza 2</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-SERWER, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-LINUX.</li>
+     <li><strong>Włącz:</strong> WIN_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> LINUX_SERVER.</li>
      <li><strong>Wymagane wcześniej:</strong> Windows Lab 1.</li>
     </ul>
    </div>
@@ -83,7 +83,7 @@
        <!-- KLIENT -->
        <div class="device-box">
         <i class="fa-solid fa-desktop device-icon"></i>
-        <div class="device-title">Windows 11 (Klient)</div>
+        <div class="device-title">WIN_11 (Klient)</div>
         <div class="interface-badge lan">192.168.10.30</div>
         <!-- Dodatkowy badge z DNS -->
         <div style="margin-top: 5px; font-size: 0.8rem; color: #636e72">DNS: 192.168.10.10</div>
@@ -175,9 +175,9 @@
 
       <div class="golden-rule-box">
        <strong>💡 Złota Rada Trenera (Testuj DNS przed IIS!):</strong> Zanim zaczniesz konfigurować
-       stronę WWW, otwórz CMD na stacji roboczej i wpisz <code>ping www.intranet.local</code>. Jeśli
-       ping nie rozwiązuje nazwy na IP serwera, to strona na pewno nie zadziała. Zawsze najpierw
-       naprawiaj DNS!
+       stronę WWW, otwórz CMD na WIN_11 i wpisz <code>ping www.intranet.local</code>. Jeśli ping nie
+       rozwiązuje nazwy na IP serwera, to strona na pewno nie zadziała. Zawsze najpierw naprawiaj
+       DNS!
       </div>
 
       <li>
@@ -248,7 +248,7 @@
       <h4>🙋‍♂️ Weryfikacja Egzaminacyjna (Podniesienie ręki)</h4>
       <p>W zadaniach z IIS i DNS egzaminator zazwyczaj chce zobaczyć efekt końcowy na żywo:</p>
       <ol>
-       <li>Otwórz przeglądarkę na stacji roboczej (Windows 11).</li>
+       <li>Otwórz przeglądarkę na WIN_11.</li>
        <li>Wpisz w pasku adresu: <code>http://www.intranet.local</code>.</li>
        <li>
         Gdy strona się załaduje, <strong>podnieś rękę</strong>. Egzaminator podejdzie i sprawdzi,

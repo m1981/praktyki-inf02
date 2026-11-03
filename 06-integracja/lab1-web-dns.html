@@ -19,8 +19,8 @@
     <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
-     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_SERVER.</li>
+     <li><strong>Wyłącz:</strong> WIN_11.</li>
      <li><strong>Wymagane wcześniej:</strong> Linux Lab 0–11 i Windows Lab 1–5.</li>
     </ul>
    </div>
@@ -53,7 +53,7 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Udowodnić, że Linux potrafi korzystać z usług Web i DNS hostowanych na Windows Server.
+      Cel: Udowodnić, że LINUX_SERVER potrafi korzystać z usług Web i DNS hostowanych na WIN_SERVER.
      </div>
 
      <ul class="task-list">
@@ -126,8 +126,8 @@ resolvectl query www.egzamin.local</pre
          <ul style="margin-left: 20px">
           <li>
            <code>use-dns: no</code> – Linux nie bierze DNS od VirtualBoxa (<code>10.0.2.3</code>) i
-           pyta wyłącznie INF02-SERWER. Dzięki temu nazwy z <code>egzamin.local</code> zawsze się
-           rozwiążą. Internet nadal działa: INF02-SERWER przekazuje pozostałe zapytania dalej
+           pyta wyłącznie WIN_SERVER. Dzięki temu nazwy z <code>egzamin.local</code> zawsze się
+           rozwiążą. Internet nadal działa: WIN_SERVER przekazuje pozostałe zapytania dalej
            (forwarder <code>10.0.2.3</code> z Windows Lab 1).
           </li>
           <li>
@@ -156,7 +156,7 @@ resolvectl query www.egzamin.local</pre
       <ul style="margin-top: 10px">
        <li>
         <strong>Zapora (Firewall):</strong> Strona się nie ładuje (Timeout)? Windows domyślnie
-        blokuje ruch z zewnątrz! Musisz wejść w <code>wf.msc</code> na Windowsie i utworzyć regułę
+        blokuje ruch z zewnątrz! Musisz wejść w <code>wf.msc</code> na WIN_SERVER i utworzyć regułę
         przychodzącą zezwalającą na ruch na porcie <strong>80 (TCP)</strong>.
        </li>
        <li>
@@ -170,7 +170,7 @@ resolvectl query www.egzamin.local</pre
      <!-- PRO TIP -->
      <div class="golden-rule-box ubu-purple">
       <strong>💡 Pro-Tip od DevOpsa:</strong>
-      Zamiast klikać w przeglądarkę, otwórz terminal na Ubuntu i wpisz
+      Zamiast klikać w przeglądarkę, otwórz terminal na LINUX_SERVER i wpisz
       <code>curl -v http://www.egzamin.local</code>. Zobaczysz dokładnie, czy problem leży w DNS
       (nie potrafi rozwiązać nazwy), czy w zaporze (brak połączenia), czy w uprawnieniach (kod HTTP
       403).

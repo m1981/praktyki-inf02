@@ -19,8 +19,8 @@
     <strong>🗺️ Faza 3 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-3">Mapy Architektury, Faza 3</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-SERWER, INF02-KLIENT.</li>
-     <li><strong>Wyłącz:</strong> INF02-LINUX.</li>
+     <li><strong>Włącz:</strong> WIN_SERVER, WIN_11.</li>
+     <li><strong>Wyłącz:</strong> LINUX_SERVER.</li>
      <li><strong>Wymagane wcześniej:</strong> Windows Lab 1–4.</li>
     </ul>
    </div>
@@ -32,8 +32,8 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Uruchomienie serwera DHCP na Windows Serverze, utworzenie puli adresów oraz rezerwacji
-      dla konkretnego komputera.
+      Cel: Uruchomienie serwera DHCP na WIN_SERVER, utworzenie puli adresów oraz rezerwacji dla
+      konkretnego komputera.
      </div>
      <details class="theory-block">
       <summary>Jak działa DHCP (Proces DORA)?</summary>
@@ -110,7 +110,7 @@
        <ul style="margin-left: 20px; margin-top: 5px">
         <li>
          <strong>Router (Default Gateway / Brama domyślna):</strong>
-         <code>192.168.10.10</code> (INF02-SERWER; routerem stanie się w Lab 5).
+         <code>192.168.10.10</code> (WIN_SERVER; routerem stanie się w Lab 5).
         </li>
         <li><strong>DNS Server (Serwer DNS):</strong> <code>192.168.10.10</code>.</li>
        </ul>
@@ -162,8 +162,8 @@
       </li>
 
       <div class="golden-rule-box">
-       <strong>💡 Złota Rada Trenera (Przełączenie klienta na DHCP):</strong> INF02-KLIENT ma stały
-       adres <code>192.168.10.30</code> z Fazy 1. Przełącz go: <code>ncpa.cpl</code> ➔
+       <strong>💡 Złota Rada Trenera (Przełączenie klienta na DHCP):</strong> WIN_11 ma stały adres
+       <code>192.168.10.30</code> z Fazy 1. Przełącz go: <code>ncpa.cpl</code> ➔
        <code>Ethernet 2</code> ➔ IPv4 ➔ zaznacz <em>Obtain an IP address automatically</em> i
        <em>Obtain DNS server address automatically</em> ➔ OK. Potem w CMD wpisz kolejno: <br />
        <code>ipconfig /release</code> (oddaje stary adres)<br />
@@ -173,10 +173,10 @@
 
      <div class="exam-verify-box">
       <h4>📸 Weryfikacja Egzaminacyjna (Zrzuty ekranu)</h4>
-      <p>Egzaminator musi widzieć, że stacja robocza faktycznie pobrała adres z Twojego serwera:</p>
+      <p>Egzaminator musi widzieć, że WIN_11 faktycznie pobrał adres z Twojego serwera:</p>
       <ol>
        <li>
-        Na stacji roboczej (Windows 11) otwórz CMD i wpisz
+        Na WIN_11 otwórz CMD i wpisz
         <code>ipconfig /all</code>.
        </li>
        <li>

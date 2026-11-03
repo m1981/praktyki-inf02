@@ -2,13 +2,40 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-03 — Nowe nazwy maszyn i słownik w labach (punkt 8)
+
+### Decyzja: nazwy maszyn
+
+| Było         | Jest           | Nazwa hosta (bez zmian)                  |
+| ------------ | -------------- | ---------------------------------------- |
+| INF02-SERWER | `WIN_SERVER`   | `SERWER-01`                              |
+| INF02-KLIENT | `WIN_11`       | `KLIENT-01`                              |
+| INF02-LINUX  | `LINUX_SERVER` | `serwer-linux` ➔ `STACJAX` (Linux Lab 4) |
+
+- Nowe nazwy obowiązują wszędzie: nazwy maszyn w VirtualBox, tekst labów, `topology.html`,
+  `setup.html`, README, prompty zrzutów. Stare nazwy zamienione w całym repo (288 wystąpień).
+- **Nazwy hostów zostają bez zmian:** znak `_` jest niedozwolony w nazwach hostów DNS i Active
+  Directory, a egzamin wymaga konkretnych nazw.
+- `INF02-LAN` (nazwa sieci wewnętrznej) bez zmian.
+
+### Punkt 8 – słownik w labach ✅ wykonane
+
+- 76 zdań, w których nazwa systemu oznaczała konkretną maszynę: 72 zamienione, 4 zostawione
+  (treść strony „Witaj z Linuxa!”, sytuacja egzaminacyjna „stacja robocza”, nazwa przedmiotu).
+- Poprawki ręczne: IIS w Linux Lab 10 ➔ `WIN_SERVER` (nie `WIN_11`); „kopiuj-wklej z Windowsa” w
+  setupie Ubuntu ➔ „z Twojego laptopa”; gramatyka („z WIN_11”, „WIN_11 pobrał”).
+- Bez zmian: cytaty CKE (`exam-reference`), strony z teorią (`index.html`), nazwy produktów
+  („Zapora Windows”).
+- **Sprawdzenie:** `python3 -I scripts/slownik-kandydaci.py` ➔ „Razem kandydatów: 0”. Skrypt ma listę
+  `KEEP` świadomie zostawionych zdań.
+
 ## 2026-11-03 — Netplan w Integracji, zasady dla autorów, plan punktów 8–10
 
 ### Wykonane
 
 - **Integracja Lab 1 i 2:** zamiast „wejdź w ustawienia karty sieciowej” – pełny plik Netplan do
   wpisania, komenda sprawdzająca i oczekiwany wynik. Dwie nowe linijki:
-  - `use-dns: no` na `enp0s3` – Linux pyta o nazwy tylko INF02-SERWER (usuwa ryzyko, że DNS
+  - `use-dns: no` na `enp0s3` – Linux pyta o nazwy tylko WIN_SERVER (usuwa ryzyko, że DNS
     VirtualBoxa `10.0.2.3` odpowie „nie ma takiej nazwy” dla `www.egzamin.local`);
   - `optional: true` na `enp0s3` – start Ubuntu nie czeka 2 minuty, gdy kabel Karty 1 jest wypięty.
 - **README:** sekcja „Zasady dla autorów” (sieć tylko w `topology.html`, ramka „Faza N”, bloki
@@ -31,13 +58,13 @@ Kolejność: **10 ➔ 9 ➔ 8** (od najmniejszego). Każdy punkt to osobny commi
 1. **Windows Lab 1, Krok 3:** w jednym oknie _System Properties ➔ Change_ ustaw jednocześnie
    _Computer name_: `KLIENT-01` i _Domain_: `zs1.local` (jeden restart zamiast dwóch).
 2. **Ramka weryfikacji egzaminacyjnej** w Lab 1: oczekiwana pełna nazwa `KLIENT-01.zs1.local`.
-3. **`topology.html`:** tabela „Stałe elementy” – nazwa hosta INF02-KLIENT = `KLIENT-01` (Windows
-   Lab 1); Faza 2 ➔ _Zmiany w trakcie fazy_ ➔ Windows Lab 1.
+3. **`topology.html`:** tabela „Stałe elementy” – nazwa hosta WIN*11 = `KLIENT-01` (Windows
+   Lab 1); Faza 2 ➔ \_Zmiany w trakcie fazy* ➔ Windows Lab 1.
 4. Sprawdź, czy żaden lab nie odwołuje się do starej, losowej nazwy (`DESKTOP-`).
 
 **Gotowe, gdy:** każda z 3 maszyn ma nazwę hosta zapisaną w `topology.html`.
 
-#### Punkt 8 – słownik pojęć w labach (największy)
+#### Punkt 8 – słownik pojęć w labach ✅ wykonane (wpis wyżej)
 
 Pomiar 2026-11-03 (bez cytatów CKE): „Linux” 170×, „serwer” 93×, „Ubuntu” 47×, „Windows Server”
 40×, „Windows 11” 21×, „stacja robocza” 17×, „Adapter N” 15×. **Automatyczna zamiana jest
@@ -51,7 +78,7 @@ niedopuszczalna** – większość wystąpień to nazwa systemu w teorii („w L
 | „Windows Server” jako maszyna, na której coś klikasz               | cytaty CKE (`exam-reference`) i omówienia arkuszy      |
 | „Adapter 2” w tekście (zostaje tylko jako ścieżka menu VirtualBox) | nazwy produktów przy pobieraniu i instalacji (Dzień 0) |
 
-Forma: pierwsze wystąpienie w labie `INF02-KLIENT (Windows 11)`, kolejne `INF02-KLIENT`.
+Forma: pierwsze wystąpienie w labie `WIN_11`, kolejne `WIN_11`.
 
 1. **Skrypt kandydatów:** lista zdań, w których nazwa systemu stoi przy czasowniku polecenia
    („przejdź”, „otwórz”, „wpisz”, „na …:”) lub fraza „stacja robocza” – poza `exam-reference`.
@@ -79,18 +106,18 @@ działało, 6 działało warunkowo).
 
 ### Decyzje
 
-| Faza            | Laby                          | Włączone maszyny                            |
-| --------------- | ----------------------------- | ------------------------------------------- |
-| 1 – Linux       | Linux Lab 0–11                | INF02-LINUX (+ INF02-KLIENT od Linux Lab 5) |
-| 2 – AD          | Windows Lab 1–4, Sprzęt Lab 2 | INF02-SERWER, INF02-KLIENT                  |
-| 3 – DHCP i RRAS | Windows Lab 4.5–5             | INF02-SERWER, INF02-KLIENT                  |
-| 4 – Integracja  | Integracja Lab 1–6            | INF02-SERWER, INF02-LINUX                   |
+| Faza            | Laby                          | Włączone maszyny                       |
+| --------------- | ----------------------------- | -------------------------------------- |
+| 1 – Linux       | Linux Lab 0–11                | LINUX_SERVER (+ WIN_11 od Linux Lab 5) |
+| 2 – AD          | Windows Lab 1–4, Sprzęt Lab 2 | WIN_SERVER, WIN_11                     |
+| 3 – DHCP i RRAS | Windows Lab 4.5–5             | WIN_SERVER, WIN_11                     |
+| 4 – Integracja  | Integracja Lab 1–6            | WIN_SERVER, LINUX_SERVER               |
 
-- **Faza 1:** INF02-KLIENT ma stały adres `192.168.10.30/24` (kabel Karty 1 wypięty). Służy do
+- **Faza 1:** WIN_11 ma stały adres `192.168.10.30/24` (kabel Karty 1 wypięty). Służy do
   testów „z Windowsa” w Linux Lab 5, 9, 10, 11.
-- **Faza 4:** rolę „Windowsa” pełni INF02-SERWER (ma wbudowany klient SSH). Zawsze 2 maszyny – mieści
+- **Faza 4:** rolę „Windowsa” pełni WIN_SERVER (ma wbudowany klient SSH). Zawsze 2 maszyny – mieści
   się w 8 GB RAM.
-- **SSH na INF02-LINUX od Linux Lab 5 = port 2222** we wszystkich późniejszych labach (`ssh -p 2222`,
+- **SSH na LINUX_SERVER od Linux Lab 5 = port 2222** we wszystkich późniejszych labach (`ssh -p 2222`,
   `scp -P 2222`, `Test-NetConnection -Port 2222`, Fail2ban `port = 2222`, przekierowanie portu
   _Guest Port_ = 2222).
 
@@ -98,16 +125,16 @@ działało, 6 działało warunkowo).
 
 | Lab              | Było                                                     | Jest                                                          |
 | ---------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
-| Linux Lab 5      | test „z Windowsa 10 lub Servera” (brak adresu w LAN)     | test z INF02-KLIENT `.30`; krok: _Guest Port_ 22 ➔ 2222       |
+| Linux Lab 5      | test „z Windowsa 10 lub Servera” (brak adresu w LAN)     | test z WIN*11 `.30`; krok: \_Guest Port* 22 ➔ 2222            |
 | Linux Lab 9      | Fail2ban pilnował portu 22; unban `.10` lub `.30`        | `jail.local`: `port = 2222`; atak i unban z `.30`             |
-| Linux Lab 10, 11 | „maszyna Windows 11”; `ufw allow 8080` dla Dockera       | INF02-KLIENT; wyjaśnienie, że Docker omija UFW                |
+| Linux Lab 10, 11 | „maszyna Windows 11”; `ufw allow 8080` dla Dockera       | WIN_11; wyjaśnienie, że Docker omija UFW                      |
 | Windows Lab 1    | klient ustawiał adres od zera                            | adres z Fazy 1, dopisuje tylko DNS `.10`                      |
 | Windows Lab 4.5  | „wpisz IP Twojego routera”; brak przełączenia klienta    | router i DNS `192.168.10.10`; klient ➔ _Obtain automatically_ |
 | Windows Lab 5a   | „dodaj drugą kartę NAT”                                  | sprawdź WAN `Ethernet` i LAN `LAN12` (nic nie dodajesz)       |
 | Windows Lab 5b   | drugi zespół `LAN_Zespol` z zajętych kart                | weryfikacja `LAN12` z Windows Lab 1                           |
 | Integracja Lab 1 | instalacja ról od nowa; test w Firefoksie                | role już są; test `curl`                                      |
 | Integracja Lab 2 | RRAS od nowa; DNS `8.8.8.8`; kabel NAT Linuxa podłączony | RRAS z Windows Lab 5; brama i DNS `.10`; kabel wypięty        |
-| Integracja Lab 4 | `ssh`/`scp` na porcie 22 z „Windows 11 / Server”         | `-p 2222` / `-P 2222` z INF02-SERWER                          |
+| Integracja Lab 4 | `ssh`/`scp` na porcie 22 z „Windows 11 / Server”         | `-p 2222` / `-P 2222` z WIN_SERVER                            |
 | Integracja Lab 6 | `-Port 22`; `nc -vzu` jako pewny test DNS                | `-Port 2222`; pułapka UDP + `nslookup`; ostrzeżenie Fail2ban  |
 
 Ramki „Inny świat” dodane w `01-sieci/index.html` (Packet Tracer), `06-integracja/index.html` i
@@ -127,7 +154,7 @@ działała (np. `sudo apt update sudo apt install nginx -y`, `interface … enca
 
 ### Do zrobienia później
 
-- ✅ Nazwa hosta INF02-KLIENT = `KLIENT-01` (Windows Lab 1, 2026-11-03).
+- ✅ Nazwa hosta WIN_11 = `KLIENT-01` (Windows Lab 1, 2026-11-03).
 
 ## 2026-11-02 — Panel ekspertów: `setup.html` (Dzień 0)
 
@@ -146,7 +173,7 @@ wg kolejności: jednoznaczność > poprawność > zwięzłość > styl.
   | -------------------------------------------- | -------------------------------------------- |
   | Karta 1 / 2 / 3 (VirtualBox: Adapter 1/2/3)  | adapter, NIC                                 |
   | INF02-LAN                                    | sieć wewnętrzna, Internal, piaskownica       |
-  | INF02-SERWER / INF02-KLIENT / INF02-LINUX    | serwer, Windows 11, Ubuntu, stacja robocza   |
+  | WIN_SERVER / WIN_11 / LINUX_SERVER           | serwer, Windows 11, Ubuntu, stacja robocza   |
   | laptop (komputer ucznia)                     | host, fizyczny Windows                       |
   | maszyna                                      | VM, maszyna wirtualna (poza 1. wystąpieniem) |
   | migawka (VirtualBox: Snapshot)               | snapshot, punkt przywracania                 |
@@ -181,8 +208,8 @@ wg kolejności: jednoznaczność > poprawność > zwięzłość > styl.
 
 ## 2026-11-02 — Dzień 0 dla trzech maszyn
 
-- `setup.html` przepisany: Etapy 0–5 dla INF02-SERWER (Windows Server 2022), INF02-KLIENT
-  (Windows 11 Enterprise Evaluation) i INF02-LINUX (Ubuntu Server 26.04). Każda maszyna: Karta 1
+- `setup.html` przepisany: Etapy 0–5 dla WIN_SERVER (Windows Server 2022), WIN_11
+  (Windows 11 Enterprise Evaluation) i LINUX_SERVER (Ubuntu Server 26.04). Każda maszyna: Karta 1
   NAT, Karta 2 INF02-LAN.
 - `03-linux/setup-ubuntu.html`: usunięte błędy (karta mostkowana, niewykonalny ping z laptopa),
   SSH przez przekierowanie portu 2222, powiększenie `ubuntu-lv`.

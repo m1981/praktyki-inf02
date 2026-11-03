@@ -223,9 +223,9 @@
        <thead>
         <tr>
          <th>Parametr</th>
-         <th>🪟 INF02-SERWER</th>
-         <th>💻 INF02-KLIENT</th>
-         <th>🐧 INF02-LINUX</th>
+         <th>🪟 WIN_SERVER</th>
+         <th>💻 WIN_11</th>
+         <th>🐧 LINUX_SERVER</th>
         </tr>
        </thead>
        <tbody>
@@ -282,7 +282,7 @@
      </div>
      <p style="color: var(--text-muted)">
       * Instalator Windows 11 wymaga 4 GB RAM. Na laptopie z 8 GB po instalacji zmniejsz RAM maszyny
-      INF02-KLIENT do 3072 MB.
+      WIN_11 do 3072 MB.
      </p>
 
      <ol style="margin-left: 20px">
@@ -306,7 +306,7 @@
        każdej z 3 maszyn):
        <ol type="a" style="margin-left: 20px">
         <li>
-         <em>Name and Operating System</em>: Name z tabeli (np. <code>INF02-SERWER</code>),
+         <em>Name and Operating System</em>: Name z tabeli (np. <code>WIN_SERVER</code>),
          <em>ISO Image</em>: plik z <code>C:\INF02\ISO</code>. Type i Version VirtualBox ustawi sam
          (dla Windows 11 sam włączy też EFI, Secure Boot i TPM 2.0).
         </li>
@@ -346,8 +346,8 @@
          />
         </li>
         <li>
-         <strong>Adapter 3 – tylko INF02-SERWER</strong> (wymagany do NIC Teaming): ustaw
-         identycznie jak Adapter 2.
+         <strong>Adapter 3 – tylko WIN_SERVER</strong> (wymagany do NIC Teaming): ustaw identycznie
+         jak Adapter 2.
          <img
           src="img/vbox-server-nic3-internal.jpg"
           alt="VirtualBox Adapter 3 serwera Internal Network INF02-LAN"
@@ -355,7 +355,7 @@
          />
         </li>
         <li>
-         <strong>Tylko INF02-LINUX – SSH z Twojego laptopa:</strong>
+         <strong>Tylko LINUX_SERVER – SSH z Twojego laptopa:</strong>
          <div class="gui-path">
           Adapter 1 <span class="gui-arrow">➔</span> Advanced <span class="gui-arrow">➔</span> Port
           Forwarding <span class="gui-arrow">➔</span> ➕
@@ -413,8 +413,8 @@
     <div class="lab-body">
      <div class="goal-box">
       Cel: Ręcznie zainstalować trzy systemy. Zaznacz maszynę i kliknij <em>Start</em> – wystartuje
-      z podpiętego ISO. Konta (wszędzie hasło <code>ZAQ!2wsx</code>): INF02-SERWER –
-      <code>Administrator</code>, INF02-KLIENT – <code>uczen</code>, INF02-LINUX –
+      z podpiętego ISO. Konta (wszędzie hasło <code>ZAQ!2wsx</code>): WIN_SERVER –
+      <code>Administrator</code>, WIN_11 – <code>uczen</code>, LINUX_SERVER –
       <code>administrator</code>.
      </div>
 
@@ -424,7 +424,7 @@
       <em>Input ➔ Keyboard ➔ Insert Ctrl-Alt-Del</em>.
      </div>
 
-     <h4 class="os-title">🪟 INF02-SERWER: Windows Server 2022</h4>
+     <h4 class="os-title">🪟 WIN_SERVER: Windows Server 2022</h4>
      <ol style="margin-left: 20px">
       <li>
        Language to install: <code>English</code>, Time and currency format: <code>Polish</code>,
@@ -449,7 +449,7 @@
      </div>
      <p>Nazwy komputera <strong>nie zmieniaj</strong> – zrobimy to w Lab 1.</p>
 
-     <h4 class="os-title">💻 INF02-KLIENT: Windows 11 Enterprise</h4>
+     <h4 class="os-title">💻 WIN_11: Windows 11 Enterprise</h4>
      <ol style="margin-left: 20px">
       <li>
        Language to install: <code>English</code>, Time and currency format: <code>Polish</code> ➔
@@ -492,7 +492,7 @@
       <li>Po restarcie: <em>Devices ➔ Shared Clipboard ➔ Bidirectional</em>.</li>
      </ol>
 
-     <h4 class="os-title">🐧 INF02-LINUX: Ubuntu Server 26.04</h4>
+     <h4 class="os-title">🐧 LINUX_SERVER: Ubuntu Server 26.04</h4>
      <p>
       Instalator jest tekstowy i ma kilka pułapek – przejdź go według osobnego przewodnika, a potem
       wróć tutaj do Etapu 4:
@@ -530,7 +530,7 @@
        <tbody>
         <tr>
          <td rowspan="4">
-          Na <strong>każdej</strong> z 2 maszyn Windows (INF02-SERWER i INF02-KLIENT), w CMD
+          Na <strong>każdej</strong> z 2 maszyn Windows (WIN_SERVER i WIN_11), w CMD
          </td>
          <td><code>ipconfig</code></td>
          <td>
@@ -551,7 +551,7 @@
          <td>Okno z liczbą dni do końca wersji próbnej</td>
         </tr>
         <tr>
-         <td rowspan="2">INF02-LINUX, w oknie maszyny</td>
+         <td rowspan="2">LINUX_SERVER, w oknie maszyny</td>
          <td><code>ip -br a</code></td>
          <td>
           <code>enp0s3</code> = <code>10.0.2.15</code>; <code>enp0s8</code> = UP
@@ -600,8 +600,8 @@
      <p>Zrób to dla każdej z trzech maszyn.</p>
      <div class="golden-rule-box">
       <strong>💡 Rada:</strong> Cofając się, cofaj <strong>wszystkie</strong> maszyny do tego samego
-      etapu. INF02-SERWER cofnięty do czystej instalacji „nie pamięta” domeny, do której
-      INF02-KLIENT wciąż myśli, że należy.
+      etapu. WIN_SERVER cofnięty do czystej instalacji „nie pamięta” domeny, do której WIN_11 wciąż
+      myśli, że należy.
      </div>
      <p class="done-line">
       ✅ <strong>Gotowe, gdy:</strong> każda z 3 maszyn ma migawkę
@@ -707,11 +707,11 @@
     </p>
     <ul style="margin-left: 20px">
      <li>
-      🐧 INF02-LINUX <code>192.168.10.20</code> –
+      🐧 LINUX_SERVER <code>192.168.10.20</code> –
       <a href="03-linux/lab4-siec.html">Linux Lab 4 (Netplan)</a>
      </li>
      <li>
-      🪟 INF02-SERWER <code>192.168.10.10</code> i 💻 INF02-KLIENT <code>192.168.10.30</code> –
+      🪟 WIN_SERVER <code>192.168.10.10</code> i 💻 WIN_11 <code>192.168.10.30</code> –
       <a href="02-windows/lab1-domena.html">Windows Lab 1 (Domena)</a>
      </li>
     </ul>

@@ -27,8 +27,8 @@
     <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
-     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_SERVER.</li>
+     <li><strong>Wyłącz:</strong> WIN_11.</li>
      <li><strong>Wymagane wcześniej:</strong> Integracja Lab 5.</li>
     </ul>
    </div>
@@ -72,7 +72,7 @@
       routing są poprawne.
      </p>
      <p>
-      Ale co, jeśli serwer WWW (IIS) na Windowsie się zawiesił? Ping nadal będzie działał! Aby
+      Ale co, jeśli serwer WWW (IIS) na WIN_SERVER się zawiesił? Ping nadal będzie działał! Aby
       sprawdzić, czy usługa żyje, musimy "zapukać" do konkretnych drzwi w
       <strong>Warstwie 4 (Transportowej)</strong> – czyli na konkretny
       <strong>Port TCP/UDP</strong>.
@@ -83,7 +83,7 @@
    <!-- KARTA 1: POWERSHELL -->
    <div class="lab-card int-border">
     <div class="lab-header">
-     <h3>Krok 1: Pukanie z Windowsa (PowerShell)</h3>
+     <h3>Krok 1: Pukanie z WIN_SERVER (PowerShell)</h3>
      <span class="time-badge">Czas: 10 min</span>
     </div>
     <div class="lab-body">
@@ -97,7 +97,7 @@
        <strong>Zadanie:</strong> Sprawdźmy, czy na naszym Linuxie (np. <code>192.168.10.20</code>)
        działa usługa SSH (port <code>2222</code> z Linux Lab 5).
       </li>
-      <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na INF02-SERWER i wpisz:</li>
+      <li>Otwórz <strong>PowerShell</strong> (nie CMD!) na WIN_SERVER i wpisz:</li>
      </ul>
 
      <pre class="cli-block">
@@ -198,7 +198,7 @@
        Linuxa po SSH.
       </li>
       <li>
-       <strong>Na Linuxie:</strong> Użyjemy komendy <code>tail</code> z flagą
+       <strong>Na LINUX_SERVER:</strong> Użyjemy komendy <code>tail</code> z flagą
        <code>-f</code> (follow), która na bieżąco wyświetla nowe linijki dopisywane do pliku.
       </li>
      </ul>
@@ -210,10 +210,10 @@
 
      <ul class="task-list">
       <li>
-       <strong>Na INF02-SERWER:</strong> Otwórz CMD i spróbuj zalogować się na Linuxa, podając
+       <strong>Na WIN_SERVER:</strong> Otwórz CMD i spróbuj zalogować się na LINUX_SERVER, podając
        <strong>błędne hasło</strong>. <br /><code>ssh -p 2222 administrator@192.168.10.20</code>
-       <br />Uwaga: po 5 błędnych hasłach Fail2ban (Linux Lab 9) zablokuje INF02-SERWER. Odblokujesz
-       go na Linuxie: <code>sudo fail2ban-client set sshd unbanip 192.168.10.10</code>
+       <br />Uwaga: po 5 błędnych hasłach Fail2ban (Linux Lab 9) zablokuje WIN_SERVER. Odblokujesz
+       go na LINUX_SERVER: <code>sudo fail2ban-client set sshd unbanip 192.168.10.10</code>
       </li>
       <li>
        <strong>Obserwuj Linuxa:</strong> Zobaczysz, jak na czarnym ekranie natychmiast pojawia się

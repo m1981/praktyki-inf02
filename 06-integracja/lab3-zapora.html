@@ -19,8 +19,8 @@
     <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
-     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_SERVER.</li>
+     <li><strong>Wyłącz:</strong> WIN_11.</li>
      <li><strong>Wymagane wcześniej:</strong> Integracja Lab 2.</li>
     </ul>
    </div>
@@ -62,7 +62,7 @@
 
     <div class="node windows">
      <span class="node-icon">🪟</span>
-     <span class="node-name">INF02-SERWER</span>
+     <span class="node-name">WIN_SERVER</span>
      <span class="node-ip">192.168.10.10</span>
     </div>
    </div>
@@ -89,7 +89,7 @@
       </li>
 
       <li>
-       <strong>Krok 2: Atak z Windowsa</strong>
+       <strong>Krok 2: Atak z WIN_SERVER</strong>
        <p>
         Na maszynie z Windowsem otwórz Wiersz poleceń (CMD) i wpisz:
         <code>ping 192.168.10.20</code>. Zobaczysz, że Linux grzecznie odpowiada na zapytania. Linux
@@ -100,17 +100,17 @@
       <li>
        <strong>Krok 3: Odbicie od ściany (Linux pyta Windowsa)</strong>
        <p>
-        Teraz otwórz terminal na Ubuntu i wpisz:
+        Teraz otwórz terminal na LINUX_SERVER i wpisz:
         <code>ping 192.168.10.10</code>. Zobaczysz brak odpowiedzi lub komunikat
-        <em>Request Timeout</em>. Pakiety wychodzą z Linuxa, docierają do Windowsa, ale Zapora
-        (Firewall) je niszczy i nie pozwala odpowiedzieć!
+        <em>Request Timeout</em>. Pakiety wychodzą z LINUX_SERVER, docierają do WIN_SERVER, ale
+        Zapora (Firewall) je niszczy i nie pozwala odpowiedzieć!
        </p>
       </li>
 
       <li>
        <strong>Krok 4: Robimy dziurę w murze</strong>
        <p>
-        Na Windowsie wciśnij Start, wpisz <code>wf.msc</code> i wciśnij Enter (Zapora Windows
+        Na WIN_SERVER wciśnij Start, wpisz <code>wf.msc</code> i wciśnij Enter (Zapora Windows
         Defender z zaawansowanymi zabezpieczeniami). Po lewej stronie kliknij
         <strong>Reguły przychodzące</strong>. Znajdź na liście regułę o nazwie:
         <strong>Udostępnianie plików i drukarek (żądanie echa — ICMPv4-In)</strong>. Kliknij na nią
@@ -121,7 +121,7 @@
       <li>
        <strong>Krok 5: Sukces!</strong>
        <p>
-        Wróć do terminala na Ubuntu i ponownie wpisz:
+        Wróć do terminala na LINUX_SERVER i ponownie wpisz:
         <code>ping 192.168.10.10</code>. Tym razem pakiety wrócą! Komunikacja działa w obie strony.
        </p>
       </li>

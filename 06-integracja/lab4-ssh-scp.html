@@ -27,8 +27,8 @@
     <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
-     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_SERVER.</li>
+     <li><strong>Wyłącz:</strong> WIN_11.</li>
      <li><strong>Wymagane wcześniej:</strong> Integracja Lab 3.</li>
     </ul>
    </div>
@@ -40,7 +40,7 @@
    >
     <div class="node windows">
      <span class="node-icon">🪟</span>
-     <span class="node-name">INF02-SERWER</span>
+     <span class="node-name">WIN_SERVER</span>
      <span class="node-ip">Stacja Administratora</span>
     </div>
 
@@ -71,7 +71,8 @@
 
      <p>
       W prawdziwej serwerowni serwery Linux nie mają podłączonych monitorów (nazywamy to pracą
-      <em>headless</em>). Zminimalizuj okno VirtualBoxa z Ubuntu – nie będzie Ci już potrzebne!
+      <em>headless</em>). Zminimalizuj okno VirtualBoxa z LINUX_SERVER – nie będzie Ci już
+      potrzebne!
      </p>
 
      <ul class="task-list">
@@ -80,7 +81,7 @@
        <code>192.168.10.20</code>).
       </li>
       <li>
-       <strong>Atak z Windowsa:</strong> Otwórz Wiersz poleceń (CMD) na INF02-SERWER i wpisz (port
+       <strong>Atak z Windowsa:</strong> Otwórz Wiersz poleceń (CMD) na WIN_SERVER i wpisz (port
        <code>2222</code> ustawiłeś w Linux Lab 5):
       </li>
      </ul>
@@ -114,7 +115,8 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Przesłanie pliku z Windowsa na Linuxa bez użycia pendrive'a czy udostępniania folderów.
+      Cel: Przesłanie pliku z WIN_SERVER na LINUX_SERVER bez użycia pendrive'a czy udostępniania
+      folderów.
      </div>
 
      <p>
@@ -125,12 +127,12 @@
      <ul class="task-list">
       <li>
        <strong>Przygotowanie paczki:</strong> Otwórz CMD w Windowsie (upewnij się, że nie jesteś
-       zalogowany po SSH do Linuxa!). Stwórzmy szybki plik tekstowy na pulpicie:
+       zalogowany po SSH do LINUX_SERVER!). Stwórzmy szybki plik tekstowy na pulpicie:
       </li>
      </ul>
 
      <pre class="cli-block">
-      <span class="cli-comment"># Tworzymy plik na Windowsie</span>
+      <span class="cli-comment"># Tworzymy plik na WIN_SERVER</span>
       cd Desktop
       echo "Witaj Linuxie, tu Windows!" > wiadomosc.txt
      </pre>
@@ -138,7 +140,7 @@
      <ul class="task-list">
       <li>
        <strong>Wysyłka:</strong> Teraz wyślemy ten plik prosto do katalogu domowego (<code>~</code>)
-       na Ubuntu.
+       na LINUX_SERVER.
       </li>
      </ul>
 
@@ -177,30 +179,30 @@
 
      <pre class="cli-block">
       <span class="cli-comment"
-       ># 1. NA WINDOWSIE: Wygeneruj parę kluczy (wciskaj Enter na wszystkie pytania, nie podawaj
+       ># 1. NA WIN_SERVER: Wygeneruj parę kluczy (wciskaj Enter na wszystkie pytania, nie podawaj
        hasła/passphrase)</span
       >
       ssh-keygen
 
       <span class="cli-comment"
-       ># 2. NA WINDOWSIE: Wyślij swój klucz PUBLICZNY na Linuxa za pomocą SCP</span
+       ># 2. NA WIN_SERVER: Wyślij swój klucz PUBLICZNY na LINUX_SERVER za pomocą SCP</span
       >
       scp -P 2222 .ssh\id_rsa.pub administrator@192.168.10.20:~/klucz_windowsa.pub
 
-      <span class="cli-comment"># 3. Zaloguj się na Linuxa (ostatni raz z hasłem!)</span>
+      <span class="cli-comment"># 3. Zaloguj się na LINUX_SERVER (ostatni raz z hasłem!)</span>
       ssh -p 2222 administrator@192.168.10.20
 
       <span class="cli-comment"
-       ># 4. NA LINUXIE: Dodaj klucz Windowsa do listy zaufanych kluczy</span
+       ># 4. NA LINUX_SERVER: Dodaj klucz WIN_SERVER do listy zaufanych kluczy</span
       >
       mkdir -p ~/.ssh && cat ~/klucz_windowsa.pub >> ~/.ssh/authorized_keys
 
-      <span class="cli-comment"># 5. Wyloguj się z Linuxa</span>
+      <span class="cli-comment"># 5. Wyloguj się z LINUX_SERVER</span>
       exit
      </pre>
 
      <p>
-      <strong>Wielki Test:</strong> Będąc z powrotem w CMD na Windowsie, wpisz ponownie
+      <strong>Wielki Test:</strong> Będąc z powrotem w CMD na WIN_SERVER, wpisz ponownie
       <code>ssh -p 2222 administrator@192.168.10.20</code>. Jeśli wszystko zrobiłeś dobrze, system
       wpuści Cię natychmiast, <strong>bez pytania o hasło!</strong>
      </p>

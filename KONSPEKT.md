@@ -144,7 +144,7 @@ _title: Wyzwanie 3: Konkurencja dla IIS (Nginx)_
 - **H1** 🌟 Wyzwanie 3: Konkurencja dla IIS
   - **H3** Krok 1: Błyskawiczna Instalacja (Nginx)
   - **H3** Krok 2: Własna strona WWW
-  - **H3** Krok 3: Test z Windowsa (i pułapka!)
+  - **H3** Krok 3: Test z WIN_11 (i pułapka!)
   - **H3** Krok 4: Podglądanie ruchu (Access Logs)
 
 ## [`03-linux/lab11-wyzwanie-docker.html`](03-linux/lab11-wyzwanie-docker.html)
@@ -154,7 +154,7 @@ _title: Wyzwanie 4: Wstęp do DevOps (Docker)_
 - **H1** 🐳 Wyzwanie 4: Wstęp do DevOps
   - **H3** Krok 1: Instalacja Silnika (Docker Engine)
   - **H3** Krok 2: Magia jednej komendy (Run)
-  - **H3** Krok 3: Weryfikacja i Test z Windowsa
+  - **H3** Krok 3: Weryfikacja i Test z WIN_11
   - **H3** Krok 4: Zarządzanie Kontenerami
 
 ## [`03-linux/lab2-pliki-archiwa.html`](03-linux/lab2-pliki-archiwa.html)
@@ -192,7 +192,7 @@ _title: Lab 5: Władca Usług (Systemd & SSH)_
   - **H3** Krok 1: Złota zasada SysOpsa (Backup)
   - **H3** Krok 2: Chirurgiczne cięcie (Edycja)
   - **H3** Krok 3: Przebudzenie Demona (Systemctl)
-  - **H3** Krok 4: Wielki Test (Atak z Windowsa)
+  - **H3** Krok 4: Wielki Test (Atak z WIN_11)
 
 ## [`03-linux/lab6-lowca.html`](03-linux/lab6-lowca.html)
 
@@ -231,8 +231,8 @@ _title: Wyzwanie 2: Twierdza Linux (UFW & Fail2ban)_
 - **H1** 🌟 Wyzwanie 2: Twierdza Linux
   - **H3** Krok 1: Podnoszenie Tarcz (UFW)
   - **H3** Krok 2: Aktywna Obrona (Fail2ban)
-  - **H3** Krok 3: Symulacja Ataku (Z Windowsa)
-  - **H3** Krok 4: Analiza i Ułaskawienie (Na Linuxie)
+  - **H3** Krok 3: Symulacja Ataku (Z WIN_11)
+  - **H3** Krok 4: Analiza i Ułaskawienie (Na LINUX_SERVER)
 
 ## [`03-linux/setup-ubuntu.html`](03-linux/setup-ubuntu.html)
 
@@ -322,7 +322,7 @@ _title: LAB 5: Most między systemami plików_
 _title: LAB 6: Zaawansowany Troubleshooting_
 
 - **H1** 🕵️‍♂️ LAB 6: Zaawansowany Troubleshooting
-  - **H3** Krok 1: Pukanie z Windowsa (PowerShell)
+  - **H3** Krok 1: Pukanie z WIN_SERVER (PowerShell)
   - **H3** Krok 2: Szwajcarski scyzoryk Linuxa (Netcat)
   - **H3** Krok 3: Podglądanie Matrixa (Czytanie Logów)
 

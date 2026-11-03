@@ -27,8 +27,8 @@
     <strong>🗺️ Faza 4 – zanim zaczniesz:</strong> ustaw maszyny według
     <a href="../topology.html#faza-4">Mapy Architektury, Faza 4</a>.
     <ul style="margin: 5px 0 0 20px">
-     <li><strong>Włącz:</strong> INF02-LINUX, INF02-SERWER.</li>
-     <li><strong>Wyłącz:</strong> INF02-KLIENT.</li>
+     <li><strong>Włącz:</strong> LINUX_SERVER, WIN_SERVER.</li>
+     <li><strong>Wyłącz:</strong> WIN_11.</li>
      <li><strong>Wymagane wcześniej:</strong> Integracja Lab 4.</li>
     </ul>
    </div>
@@ -66,8 +66,8 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Utworzenie ukrytego folderu na Windows Serverze, który będzie służył jako magazyn na
-      kopie zapasowe z Linuxa.
+      Cel: Utworzenie ukrytego folderu na WIN_SERVER, który będzie służył jako magazyn na kopie
+      zapasowe z LINUX_SERVER.
      </div>
 
      <ul class="task-list">
@@ -115,8 +115,8 @@
        </p>
        <p>
         <strong>Punkt montowania</strong> to po prostu pusty folder w Linuxie. Kiedy "zamontujesz" w
-        nim udział z Windowsa, ten folder staje się magicznym portalem. Cokolwiek do niego wrzucisz,
-        fizycznie poleci kablem sieciowym na dysk Windowsa!
+        nim udział z WIN_SERVER, ten folder staje się magicznym portalem. Cokolwiek do niego
+        wrzucisz, fizycznie poleci kablem sieciowym na dysk Windowsa!
        </p>
       </div>
      </details>
@@ -146,7 +146,7 @@
     </div>
     <div class="lab-body">
      <div class="goal-box">
-      Cel: Połączenie pustego katalogu w Linuxie z udostępnionym folderem na Windowsie.
+      Cel: Połączenie pustego katalogu w LINUX_SERVER z udostępnionym folderem na WIN_SERVER.
      </div>
 
      <p>
@@ -182,8 +182,8 @@
 
      <ul class="task-list">
       <li>
-       <strong>Wielki Test:</strong> Sprawdźmy, czy most działa! Będąc na Linuxie, stwórzmy plik w
-       naszym portalu:
+       <strong>Wielki Test:</strong> Sprawdźmy, czy most działa! Będąc na LINUX_SERVER, stwórzmy
+       plik w naszym portalu:
       </li>
      </ul>
 
@@ -200,7 +200,7 @@
      </pre>
 
      <p>
-      <strong>Teraz przejdź na maszynę z Windows Serverem.</strong> Otwórz folder
+      <strong>Teraz przejdź na maszynę WIN_SERVER.</strong> Otwórz folder
       <code>C:\Kopie_Linux</code>. Plik <code>kopia_z_linuxa.txt</code> powinien tam na Ciebie
       czekać!
      </p>

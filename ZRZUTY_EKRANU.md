@@ -47,7 +47,7 @@ W miejsce `[ELEMENT]` wstaw opis z pola „Ramka” przy danym zrzucie.
 - **Prompt generacji:**
 
 ```
-Oracle VirtualBox 7.2 settings dialog, window title "INF02-SERWER - Settings". Left navigation
+Oracle VirtualBox 7.2 settings dialog, window title "WIN_SERVER - Settings". Left navigation
 list: "General", "System", "Display", "Storage", "Audio", "Network" (selected), "Serial Ports",
 "USB", "Shared Folders", "User Interface". Right panel header "Network" with tabs "Adapter 1"
 (active), "Adapter 2", "Adapter 3", "Adapter 4". Checkbox "Enable Network Adapter" checked.
@@ -58,7 +58,7 @@ list: "General", "System", "Display", "Storage", "Audio", "Network" (selected), 
 Highlight the "Attached to" dropdown.
 ```
 
-- **Sprawdź:** tytuł z `INF02-SERWER`; MAC `080027A1B2C3`; _Port Forwarding_ aktywny (nie
+- **Sprawdź:** tytuł z `WIN_SERVER`; MAC `080027A1B2C3`; _Port Forwarding_ aktywny (nie
   szary); brak słowa „SLAVE”.
 
 ### 2. `img/vbox-server-nic2-internal.jpg` – Adapter 2 = INF02-LAN
@@ -69,7 +69,7 @@ Highlight the "Attached to" dropdown.
 - **Prompt generacji:**
 
 ```
-Oracle VirtualBox 7.2 settings dialog, window title "INF02-SERWER - Settings", "Network" selected
+Oracle VirtualBox 7.2 settings dialog, window title "WIN_SERVER - Settings", "Network" selected
 in the left list. Tab "Adapter 2" active. Checkbox "Enable Network Adapter" checked.
 "Attached to:" "Internal Network". "Name:" "INF02-LAN". Expanded "Advanced": "Adapter Type:"
 "Intel PRO/1000 MT Desktop (82540EM)", "Promiscuous Mode:" "Allow All", "MAC Address:"
@@ -100,7 +100,7 @@ Highlight the three rows "Attached to", "Name" and "Promiscuous Mode" together.
 
 ```
 Oracle VirtualBox 7.2 "Create Virtual Machine" wizard, section "Name and Operating System".
-Fields: "Name:" "INF02-SERWER", "Folder:" "C:\INF02\VM", "ISO Image:"
+Fields: "Name:" "WIN_SERVER", "Folder:" "C:\INF02\VM", "ISO Image:"
 "C:\INF02\ISO\SERVER_EVAL_x64FRE_en-us.iso", "Type:" "Microsoft Windows", "Version:"
 "Windows 2022 (64-bit)". Checkbox "Skip Unattended Installation" checked. Buttons "Help",
 "Expert Mode", "Back", "Next", "Cancel". Highlight the "Skip Unattended Installation" checkbox.
@@ -112,12 +112,12 @@ Fields: "Name:" "INF02-SERWER", "Folder:" "C:\INF02\VM", "ISO Image:"
 
 ### 5. `img/vbox-linux-port-forwarding.png` – reguła SSH 2222 ➔ 22
 
-- **Gdzie:** Etap 2, punkt 4, _Tylko INF02-LINUX_.
+- **Gdzie:** Etap 2, punkt 4, _Tylko LINUX_SERVER_.
 - **Ramka:** cały wiersz reguły „SSH”.
 - **Prompt generacji:**
 
 ```
-Oracle VirtualBox 7.2 dialog "Port Forwarding Rules" over the "INF02-LINUX - Settings" window.
+Oracle VirtualBox 7.2 dialog "Port Forwarding Rules" over the "LINUX_SERVER - Settings" window.
 Table with columns "Name", "Protocol", "Host IP", "Host Port", "Guest IP", "Guest Port". One
 row: "SSH", "TCP", "127.0.0.1", "2222", empty, "22". Small add and remove icons on the right.
 Buttons "Cancel" and "OK". Highlight the "SSH" row.
@@ -127,7 +127,7 @@ Buttons "Cancel" and "OK". Highlight the "SSH" row.
 
 ### 6. `img/ws2022-select-edition.png` – wybór edycji Desktop Experience
 
-- **Gdzie:** Etap 3, INF02-SERWER, krok 2 (Pułapka nr 4).
+- **Gdzie:** Etap 3, WIN_SERVER, krok 2 (Pułapka nr 4).
 - **Ramka:** wiersz „(Desktop Experience)” ze Standard Evaluation.
 - **Prompt generacji:**
 
@@ -146,7 +146,7 @@ Highlight the selected second row.
 
 ### 7. `img/win11-oobe-domain-join.png` – konto lokalne w Windows 11
 
-- **Gdzie:** Etap 3, INF02-KLIENT, krok 5 (Pułapka nr 5).
+- **Gdzie:** Etap 3, WIN_11, krok 5 (Pułapka nr 5).
 - **Ramka:** link „Domain join instead”.
 - **Prompt generacji:**
 
@@ -194,7 +194,7 @@ Buttons "Cancel" and "OK". Highlight the "English" row.
 - **Gdzie:** Etap 3, „Dodatki gościa i schowek”, krok 1. **Ramka:** pozycja menu.
 
 ```
-VirtualBox VM window titled "INF02-KLIENT [Running] - Oracle VirtualBox" showing a Windows 11
+VirtualBox VM window titled "WIN_11 [Running] - Oracle VirtualBox" showing a Windows 11
 desktop. Menu bar "File", "Machine", "View", "Input", "Devices", "Help"; the "Devices" menu is
 open with items "Optical Drives", "Audio", "Network", "USB", "Shared Folders", "Shared
 Clipboard", "Drag and Drop", "Insert Guest Additions CD image...", "Upgrade Guest Additions...".
@@ -206,7 +206,7 @@ Highlight "Insert Guest Additions CD image...".
 - **Gdzie:** Etap 5. **Ramka:** wiersz migawki.
 
 ```
-Oracle VirtualBox 7.2 main window, machine "INF02-SERWER" selected in the left list with state
+Oracle VirtualBox 7.2 main window, machine "WIN_SERVER" selected in the left list with state
 "Powered Off". Right panel "Snapshots" with a tree: "00-czysta-instalacja" and below it
 "Current State". Toolbar buttons "Take", "Delete", "Restore", "Properties", "Clone".
 Highlight the "00-czysta-instalacja" row.

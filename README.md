@@ -59,7 +59,7 @@ Plik `menu.js` automatycznie:
    W każdej fazie działają najwyżej 2 maszyny naraz – wystarczy laptop z 8 GB RAM.
 3. **Bloki komend piszesz wyłącznie jako `<pre class="cli-block">`.** Nigdy jako `<div>` – hook z
    Prettierem skleja linijki w `<div>` w jedną i komenda po skopiowaniu nie działa.
-4. **Nazwy ze słownika** w `HISTORIA_ZMIAN.md`: `INF02-SERWER`, `INF02-KLIENT`, `INF02-LINUX`,
+4. **Nazwy ze słownika** w `HISTORIA_ZMIAN.md`: `WIN_SERVER`, `WIN_11`, `LINUX_SERVER`,
    Karta 1/2/3, `INF02-LAN`, „Maszyna wyłączona” / „Kabel wypięty”. Ścieżki menu VirtualBoxa po
    angielsku.
 5. **Decyzje zapisuj w `HISTORIA_ZMIAN.md`** (najnowsze na górze).
@@ -75,8 +75,8 @@ Plik `menu.js` automatycznie:
  <strong>🗺️ Faza 1 – zanim zaczniesz:</strong> ustaw maszyny według
  <a href="../topology.html#faza-1">Mapy Architektury, Faza 1</a>.
  <ul style="margin: 5px 0 0 20px">
-  <li><strong>Włącz:</strong> INF02-LINUX, INF02-KLIENT.</li>
-  <li><strong>Wyłącz:</strong> INF02-SERWER.</li>
+  <li><strong>Włącz:</strong> LINUX_SERVER, WIN_11.</li>
+  <li><strong>Wyłącz:</strong> WIN_SERVER.</li>
   <li><strong>Wymagane wcześniej:</strong> Linux Lab 5 (SSH na porcie 2222).</li>
  </ul>
 </div>
