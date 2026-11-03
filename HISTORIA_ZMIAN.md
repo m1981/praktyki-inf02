@@ -2,6 +2,66 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-03 — Netplan w Integracji, zasady dla autorów, plan punktów 8–10
+
+### Wykonane
+
+- **Integracja Lab 1 i 2:** zamiast „wejdź w ustawienia karty sieciowej” – pełny plik Netplan do
+  wpisania, komenda sprawdzająca i oczekiwany wynik. Dwie nowe linijki:
+  - `use-dns: no` na `enp0s3` – Linux pyta o nazwy tylko INF02-SERWER (usuwa ryzyko, że DNS
+    VirtualBoxa `10.0.2.3` odpowie „nie ma takiej nazwy” dla `www.egzamin.local`);
+  - `optional: true` na `enp0s3` – start Ubuntu nie czeka 2 minuty, gdy kabel Karty 1 jest wypięty.
+- **README:** sekcja „Zasady dla autorów” (sieć tylko w `topology.html`, ramka „Faza N”, bloki
+  komend jako `<pre>`, słownik, zapis decyzji) + gotowe szablony ramki fazy i bloku komend.
+
+### Plan (do akceptacji)
+
+Kolejność: **10 ➔ 9 ➔ 8** (od najmniejszego). Każdy punkt to osobny commit.
+
+#### Punkt 10 – usunięcie nieużywanego obrazu (ok. 2 min)
+
+1. Sprawdź: `grep -r vbox-client-nic1-internal --include=*.html .` zwraca 0 wyników.
+2. `git rm img/vbox-client-nic1-internal.jpg`.
+3. Odhacz pozycję w `ZRZUTY_EKRANU.md` („Po dodaniu plików”).
+
+**Gotowe, gdy:** plik nie istnieje, a żadna strona nie pokazuje pustego obrazka.
+
+#### Punkt 9 – nazwa hosta `KLIENT-01` (ok. 15 min)
+
+1. **Windows Lab 1, Krok 3:** w jednym oknie _System Properties ➔ Change_ ustaw jednocześnie
+   _Computer name_: `KLIENT-01` i _Domain_: `zs1.local` (jeden restart zamiast dwóch).
+2. **Ramka weryfikacji egzaminacyjnej** w Lab 1: oczekiwana pełna nazwa `KLIENT-01.zs1.local`.
+3. **`topology.html`:** tabela „Stałe elementy” – nazwa hosta INF02-KLIENT = `KLIENT-01` (Windows
+   Lab 1); Faza 2 ➔ _Zmiany w trakcie fazy_ ➔ Windows Lab 1.
+4. Sprawdź, czy żaden lab nie odwołuje się do starej, losowej nazwy (`DESKTOP-`).
+
+**Gotowe, gdy:** każda z 3 maszyn ma nazwę hosta zapisaną w `topology.html`.
+
+#### Punkt 8 – słownik pojęć w labach (największy)
+
+Pomiar 2026-11-03 (bez cytatów CKE): „Linux” 170×, „serwer” 93×, „Ubuntu” 47×, „Windows Server”
+40×, „Windows 11” 21×, „stacja robocza” 17×, „Adapter N” 15×. **Automatyczna zamiana jest
+niedopuszczalna** – większość wystąpień to nazwa systemu w teorii („w Linuxie komenda …”).
+
+**Reguła zamiany:**
+
+| Zamieniamy (konkretna maszyna w naszym labie)                      | Nie zamieniamy                                         |
+| ------------------------------------------------------------------ | ------------------------------------------------------ |
+| „Przejdź na Windowsa”, „na Ubuntu wpisz”, „stacja robocza”         | system w teorii: „w Linuxie”, „Windows Server ma rolę” |
+| „Windows Server” jako maszyna, na której coś klikasz               | cytaty CKE (`exam-reference`) i omówienia arkuszy      |
+| „Adapter 2” w tekście (zostaje tylko jako ścieżka menu VirtualBox) | nazwy produktów przy pobieraniu i instalacji (Dzień 0) |
+
+Forma: pierwsze wystąpienie w labie `INF02-KLIENT (Windows 11)`, kolejne `INF02-KLIENT`.
+
+1. **Skrypt kandydatów:** lista zdań, w których nazwa systemu stoi przy czasowniku polecenia
+   („przejdź”, „otwórz”, „wpisz”, „na …:”) lub fraza „stacja robocza” – poza `exam-reference`.
+   Wynik: tabela _plik | linia | zdanie | proponowana zamiana_ (szacunkowo 60–90 wierszy).
+2. **Przegląd tabeli** – akceptacja lub odrzucenie każdego wiersza.
+3. **Wdrożenie dział po dziale:** Linux ➔ Windows ➔ Integracja (3 commity).
+
+**Gotowe, gdy:** skrypt kandydatów zwraca 0 niezaakceptowanych wierszy, a „stacja robocza”
+występuje tylko w cytatach CKE.
+
 ## 2026-11-02 — Jedna topologia dla wszystkich labów
 
 Analiza administratora sieci laboratoryjnej: laby zakładały różne topologie (7 połączeń nie
@@ -67,7 +127,7 @@ działała (np. `sudo apt update sudo apt install nginx -y`, `interface … enca
 
 ### Do zrobienia później
 
-- Nazwa hosta INF02-KLIENT nie jest nigdzie ustawiana (zostaje nazwa z instalatora).
+- Nazwa hosta INF02-KLIENT ➔ plan z 2026-11-03, punkt 9.
 
 ## 2026-11-02 — Panel ekspertów: `setup.html` (Dzień 0)
 
@@ -115,10 +175,9 @@ wg kolejności: jednoznaczność > poprawność > zwięzłość > styl.
 
 ### Do zrobienia później
 
-- Słownik pojęć w pozostałych labach („stacja robocza”, „Windows 11” ➔ INF02-KLIENT itd.).
-- `06-integracja/index.html` i `scenariusze-win-lin.html`: ramka „Egzamin (Bridged) vs nasze
-  laboratorium (INF02-LAN)”.
-- Usunąć nieużywany `img/vbox-client-nic1-internal.jpg` po wymianie zrzutów.
+- Słownik pojęć w pozostałych labach ➔ plan z 2026-11-03, punkt 8.
+- ✅ Ramki „Egzamin (Bridged) vs nasze laboratorium” – zrobione 2026-11-02.
+- Usunąć nieużywany `img/vbox-client-nic1-internal.jpg` ➔ plan z 2026-11-03, punkt 10.
 
 ## 2026-11-02 — Dzień 0 dla trzech maszyn
 

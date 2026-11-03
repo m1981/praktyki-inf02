@@ -50,11 +50,48 @@ Plik `menu.js` automatycznie:
 
 ## 📝 Dodawanie nowej zawartości
 
+### Zasady dla autorów (obowiązkowe)
+
+1. **Sieć opisuje tylko `topology.html`.** Lab nie opisuje kart sieciowych ani adresów „od siebie”.
+   Jeśli lab zmienia sieć (adres, port, usługę), dopisz to w `topology.html` w sekcji _Zmiany w
+   trakcie fazy_ odpowiedniej fazy.
+2. **Każdy lab w VirtualBox zaczyna się ramką „Faza N”** (zaraz po `<main class="lab-container">`).
+   W każdej fazie działają najwyżej 2 maszyny naraz – wystarczy laptop z 8 GB RAM.
+3. **Bloki komend piszesz wyłącznie jako `<pre class="cli-block">`.** Nigdy jako `<div>` – hook z
+   Prettierem skleja linijki w `<div>` w jedną i komenda po skopiowaniu nie działa.
+4. **Nazwy ze słownika** w `HISTORIA_ZMIAN.md`: `INF02-SERWER`, `INF02-KLIENT`, `INF02-LINUX`,
+   Karta 1/2/3, `INF02-LAN`, „Maszyna wyłączona” / „Kabel wypięty”. Ścieżki menu VirtualBoxa po
+   angielsku.
+5. **Decyzje zapisuj w `HISTORIA_ZMIAN.md`** (najnowsze na górze).
+
 ### Nowe laboratorium
 
-1. Skopiuj szablon istniejącego lab (np. `01-sieci/lab1-podstawy.html`)
+1. Skopiuj szablon istniejącego lab (np. `03-linux/lab4-siec.html`)
 2. Zmień tytuł w `<title>` (wykorzystywany w breadcrumbs)
-3. Dodaj linki Previous/Next na dole:
+3. Wstaw ramkę fazy jako pierwszy element `<main class="lab-container">`:
+
+```html
+<div class="golden-rule-box" style="border-left-color: #0984e3; background: #e3f2fd">
+ <strong>🗺️ Faza 1 – zanim zaczniesz:</strong> ustaw maszyny według
+ <a href="../topology.html#faza-1">Mapy Architektury, Faza 1</a>.
+ <ul style="margin: 5px 0 0 20px">
+  <li><strong>Włącz:</strong> INF02-LINUX, INF02-KLIENT.</li>
+  <li><strong>Wyłącz:</strong> INF02-SERWER.</li>
+  <li><strong>Wymagane wcześniej:</strong> Linux Lab 5 (SSH na porcie 2222).</li>
+ </ul>
+</div>
+```
+
+4. Komendy wstawiaj tak (każda komenda w osobnej linii, komentarz w `<span class="cli-comment">`):
+
+```html
+<pre class="cli-block">
+<span class="cli-comment"># 1. Zaktualizuj listę pakietów</span>
+sudo apt update
+sudo apt install nginx -y</pre>
+```
+
+5. Dodaj linki Previous/Next na dole:
 
 ```html
 <div class="course-nav">
@@ -65,7 +102,7 @@ Plik `menu.js` automatycznie:
 <script src="../menu.js"></script>
 ```
 
-4. Upewnij się, że ścieżka CSS to `../common.css` (subfolder) lub `common.css` (root)
+6. Upewnij się, że ścieżka CSS to `../common.css` (subfolder) lub `common.css` (root)
 
 ### Nowy filar
 
