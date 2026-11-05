@@ -240,6 +240,21 @@ operacyjnego" "Microsoft Windows 11 Home", "Typ systemu" "Komputer z procesorem 
 
 ---
 
+## P4 – Windows Lab 1
+
+### 14. `img/server-setup-02-nic-teaming.jpg` – okno New Team (podmiana)
+
+Obecny obraz pokazuje karty „Ethernet 2” i „Ethernet 3”, a lab każe najpierw zmienić ich nazwy na
+`LAN1` i `LAN2`.
+
+- **Prawdziwy zrzut:** Server Manager ➔ Local Server ➔ NIC Teaming ➔ TASKS ➔ New Team, po
+  zmianie nazw kart. Ramka: pole _Member adapters_ z zaznaczonymi LAN1 i LAN2.
+- **Sprawdź:** Team name `LAN12`; na liście tylko `LAN1` i `LAN2` (bez `Ethernet`); Teaming mode
+  `Switch Independent`; Load balancing mode `Dynamic`; Standby adapter `None (all adapters
+Active)`.
+
+---
+
 ## Po dodaniu plików
 
 - [ ] P1 podmienione (1–3) – widoczne od razu w `setup.html`.

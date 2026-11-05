@@ -108,10 +108,38 @@
        </div>
 
        <div class="step-container">
-        <strong>B. Konfiguracja NIC Teaming (Zespół kart)</strong><br />
-        W Menedżerze Serwera (Local Server) kliknij "NIC Teaming". Utwórz nowy zespół o nazwie
-        <code>LAN12</code>, zaznaczając dwie karty podłączone do sieci wewnętrznej. Tryb:
-        <em>Switch Independent / Dynamic</em>.
+        <strong>B. Nazwy kart LAN1 i LAN2, potem NIC Teaming (Zespół kart)</strong><br />
+        Egzamin (arkusz z czerwca 2025) wymaga, żeby karty w zespole nazywały się
+        <code>LAN1</code> i <code>LAN2</code>. Najpierw zmień ich nazwy:
+        <div class="gui-path">
+         <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> prawy klik na
+         <code>Ethernet 2</code> (Karta 2) <span class="gui-arrow">➔</span> Rename
+         <span class="gui-arrow">➔</span> wpisz <code>LAN1</code> ➔ Enter
+        </div>
+        <div class="gui-path">
+         <code>ncpa.cpl</code> <span class="gui-arrow">➔</span> prawy klik na
+         <code>Ethernet 3</code> (Karta 3) <span class="gui-arrow">➔</span> Rename
+         <span class="gui-arrow">➔</span> wpisz <code>LAN2</code> ➔ Enter
+        </div>
+        <p>Karty <code>Ethernet</code> (Karta 1, NAT) nie zmieniaj. Teraz utwórz zespół:</p>
+        <div class="gui-path">
+         Server Manager <span class="gui-arrow">➔</span> Local Server
+         <span class="gui-arrow">➔</span> NIC Teaming: <em>Disabled</em> (kliknij)
+         <span class="gui-arrow">➔</span> TEAMS <span class="gui-arrow">➔</span> TASKS
+         <span class="gui-arrow">➔</span> New Team
+        </div>
+        <ul>
+         <li>Team name: <code>LAN12</code></li>
+         <li>
+          Member adapters: zaznacz <code>LAN1</code> i <code>LAN2</code>.
+          <strong>Nie zaznaczaj karty <code>Ethernet</code> (NAT)!</strong>
+         </li>
+         <li>
+          Rozwiń <em>Additional properties</em>: Teaming mode: <em>Switch Independent</em>, Load
+          balancing mode: <em>Dynamic</em>, Standby adapter: <em>None (all adapters Active)</em> ➔
+          OK
+         </li>
+        </ul>
         <img
          src="../img/server-setup-02-nic-teaming.jpg"
          alt="Tworzenie zespołu NIC Teaming LAN12"
