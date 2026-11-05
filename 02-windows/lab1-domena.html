@@ -175,6 +175,11 @@
          <span class="gui-arrow">➔</span> odznacz
          <strong>Register this connection's addresses in DNS</strong>
         </div>
+        <p>
+         Przy okazji zapisz na kartce adres DNS Karty 1 – przyda się w Kroku 2b. W CMD wpisz
+         <code>ipconfig /all</code> i przy karcie <code>Ethernet</code> przepisz wartość
+         <em>DNS Servers</em> (np. <code>192.168.1.1</code> albo <code>10.0.2.3</code>).
+        </p>
        </div>
       </li>
 
@@ -283,14 +288,28 @@
          zaznaczony tylko <code>192.168.10.10</code>.
         </li>
         <li>
-         Zakładka <strong>Forwarders</strong>: <em>Edit</em> ➔ dodaj <code>10.0.2.3</code> (serwer
-         DNS VirtualBoxa w sieci NAT). Dzięki temu serwer i klienci dalej rozwiązują nazwy z
-         Internetu.
+         Zakładka <strong>Forwarders</strong>: <em>Edit</em> ➔ wpisz <code>10.0.2.3</code> (serwer
+         DNS VirtualBoxa w sieci NAT) ➔ Enter. Dzięki forwarderowi serwer i klienci dalej rozwiązują
+         nazwy z Internetu.
+        </li>
+        <li>
+         Poczekaj kilka sekund i spójrz na kolumnę <em>Validated</em>. <strong>OK</strong> ➔ kliknij
+         OK i gotowe. Błąd (np. <em>A timeout occurred during validation</em>) ➔ VirtualBox na Twoim
+         laptopie nie odpowiada pod <code>10.0.2.3</code>: zaznacz ten wpis ➔ Delete ➔ wpisz adres
+         DNS Karty 1 zapisany w Kroku 0D ➔ Enter ➔ <em>Validated</em> musi pokazać
+         <strong>OK</strong>.
         </li>
        </ul>
+       <p>Sprawdzenie na serwerze (CMD):</p>
+       <pre class="cli-block">
+<span class="cli-comment"># 1. Domena – oczekiwany wynik: tylko 192.168.10.10</span>
+nslookup zs1.local
+<span class="cli-comment"># 2. Internet przez forwarder – oczekiwany wynik: adresy IP google.com</span>
+nslookup google.com</pre>
        <p>
-        Sprawdzenie na serwerze: <code>nslookup zs1.local</code> zwraca tylko
-        <code>192.168.10.10</code>.
+        Forwarder z adresem DNS Karty 1 działa tylko w tej sieci, w której go ustawiłeś (np. w
+        domu). Jeśli w innej sieci (np. w szkole) <code>nslookup google.com</code> przestanie
+        działać, powtórz ten krok z nowym adresem z <code>ipconfig /all</code>.
        </p>
       </li>
 

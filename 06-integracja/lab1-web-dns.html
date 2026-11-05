@@ -125,10 +125,10 @@ resolvectl query www.egzamin.local</pre
         <div class="theory-content">
          <ul style="margin-left: 20px">
           <li>
-           <code>use-dns: no</code> – Linux nie bierze DNS od VirtualBoxa (<code>10.0.2.3</code>) i
-           pyta wyłącznie WIN_SERVER. Dzięki temu nazwy z <code>egzamin.local</code> zawsze się
-           rozwiążą. Internet nadal działa: WIN_SERVER przekazuje pozostałe zapytania dalej
-           (forwarder <code>10.0.2.3</code> z Windows Lab 1).
+           <code>use-dns: no</code> – Linux nie bierze DNS od VirtualBoxa (z Karty 1) i pyta
+           wyłącznie WIN_SERVER. Dzięki temu nazwy z <code>egzamin.local</code> zawsze się rozwiążą.
+           Internet nadal działa: WIN_SERVER przekazuje pozostałe zapytania dalej (forwarder z
+           Windows Lab 1).
           </li>
           <li>
            <code>optional: true</code> – start systemu nie czeka na kartę <code>enp0s3</code>. Bez
