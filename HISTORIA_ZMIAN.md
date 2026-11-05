@@ -2,6 +2,25 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-06 — Karty LAN1/LAN2, forwarder DNS z kontrolą, schemat Fazy 2
+
+- **Karty LAN1 i LAN2 (Windows Lab 1, Krok 0B):** przed utworzeniem zespołu `LAN12` uczeń
+  zmienia nazwy `Ethernet 2` (Karta 2) ➔ `LAN1` i `Ethernet 3` (Karta 3) ➔ `LAN2`. Powód: arkusz
+  INF.02 z czerwca 2025 (zad. 6) i jego zasady oceniania punktują nazwy LAN1/LAN2 w tym samym
+  kryterium co zespół. Lab 5b sprawdza teraz także te nazwy. Zrzut
+  `img/server-setup-02-nic-teaming.jpg` pokazuje jeszcze „Ethernet 2/3” – do podmiany (pozycja 14
+  w `ZRZUTY_EKRANU.md`).
+- **Forwarder DNS (Windows Lab 1, Kroki 0D i 2b):** na hoście z Windowsem NAT VirtualBoxa podaje
+  gościowi DNS hosta (zaobserwowane: `192.168.1.1`), a nie `10.0.2.3`. Nie mamy pewności, że
+  `10.0.2.3` odpowie na każdym laptopie. Dlatego: forwarder `10.0.2.3` + kontrola w kolumnie
+  _Validated_; przy błędzie uczeń wpisuje adres DNS Karty 1 zapisany w Kroku 0D. Sprawdzenie:
+  `nslookup google.com`. Integracja Lab 1 nie podaje już adresu forwardera.
+- **`topology.html`, Faza 2:** schemat połączeń po Windows Lab 1 (SVG): osobny NAT każdej maszyny,
+  zespół LAN12 z LAN1/LAN2, Kabel wypięty na WIN_11, przełącznik INF02-LAN.
+- **Do sprawdzenia:** czy `10.0.2.3` przechodzi walidację na typowym laptopie ucznia. Jeśli tak
+  na wszystkich – zostawić; jeśli nie – rozważyć `VBoxManage modifyvm WIN_SERVER --natdnsproxy1 on`
+  w Dniu 0.
+
 ## 2026-11-03 — Nowe nazwy maszyn i słownik w labach (punkt 8)
 
 ### Decyzja: nazwy maszyn

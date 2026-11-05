@@ -61,6 +61,19 @@
     margin-top: 20px;
     color: #0984e3;
    }
+   .phase-diagram {
+    display: block;
+    width: 100%;
+    min-width: 640px;
+    max-width: 760px;
+    margin: 10px 0;
+    font-size: 13px;
+    font-family: inherit;
+   }
+   .diagram-legend {
+    font-size: 0.9rem;
+    color: #636e72;
+   }
   </style>
  </head>
  <body>
@@ -290,10 +303,12 @@
      <h4 class="phase-subtitle">Zmiany w trakcie fazy</h4>
      <ul style="margin-left: 20px">
       <li>
-       <strong>Windows Lab 1:</strong> WIN_SERVER: nazwa <code>SERWER-01</code>, zespół
-       <code>LAN12</code> = <code>192.168.10.10/24</code>, DNS <code>127.0.0.1</code>, domena
-       <code>zs1.local</code>, forwarder DNS <code>10.0.2.3</code>. WIN_11: DNS
-       <code>192.168.10.10</code>, nazwa <code>KLIENT-01</code>, dołączony do domeny.
+       <strong>Windows Lab 1:</strong> WIN_SERVER: nazwa <code>SERWER-01</code>, Karty 2 i 3 nazwane
+       <code>LAN1</code> i <code>LAN2</code>, zespół <code>LAN12</code> =
+       <code>192.168.10.10/24</code>, DNS <code>127.0.0.1</code>, domena <code>zs1.local</code>,
+       forwarder DNS <code>10.0.2.3</code> (albo adres DNS Karty 1, jeśli <code>10.0.2.3</code> nie
+       przejdzie walidacji). WIN_11: DNS <code>192.168.10.10</code>, nazwa <code>KLIENT-01</code>,
+       dołączony do domeny.
       </li>
       <li><strong>Windows Lab 2:</strong> użytkownicy AD (m.in. <code>abackia</code>) i GPO.</li>
       <li><strong>Windows Lab 3:</strong> udział <code>profile$</code>, profile mobilne.</li>
@@ -302,6 +317,217 @@
        <code>www.intranet.local</code> (port 80).
       </li>
      </ul>
+     <h4 class="phase-subtitle">Schemat połączeń po Windows Lab 1</h4>
+     <div class="table-scroll">
+      <svg
+       class="phase-diagram"
+       viewBox="0 0 760 470"
+       role="img"
+       aria-label="Schemat Fazy 2: Internet, laptop z VirtualBoxem, osobny NAT dla WIN_SERVER i WIN_11, zespół LAN12 z kart LAN1 i LAN2 na WIN_SERVER, Karta 2 WIN_11 i przełącznik INF02-LAN; LINUX_SERVER wyłączona"
+      >
+       <!-- Internet i laptop -->
+       <rect
+        x="310"
+        y="10"
+        width="140"
+        height="36"
+        rx="18"
+        fill="#fdedec"
+        stroke="#d63031"
+        stroke-width="2"
+       />
+       <text x="380" y="33" text-anchor="middle" font-weight="bold">🌐 Internet</text>
+       <line x1="380" y1="46" x2="380" y2="70" stroke="#d63031" stroke-width="3" />
+       <rect
+        x="20"
+        y="70"
+        width="720"
+        height="44"
+        rx="8"
+        fill="#f8f9fa"
+        stroke="#636e72"
+        stroke-width="2"
+       />
+       <text x="380" y="97" text-anchor="middle" font-weight="bold">
+        💻 Twój laptop – VirtualBox
+       </text>
+
+       <!-- NAT: osobny dla każdej maszyny -->
+       <line x1="175" y1="114" x2="175" y2="140" stroke="#e1a800" stroke-width="3" />
+       <line x1="505" y1="114" x2="505" y2="140" stroke="#e1a800" stroke-width="3" />
+       <rect
+        x="60"
+        y="140"
+        width="230"
+        height="44"
+        rx="6"
+        fill="#fff8e1"
+        stroke="#e1a800"
+        stroke-width="2"
+       />
+       <text x="175" y="159" text-anchor="middle" font-weight="bold">NAT tylko dla WIN_SERVER</text>
+       <text x="175" y="176" text-anchor="middle" font-size="12">brama 10.0.2.2</text>
+       <rect
+        x="410"
+        y="140"
+        width="190"
+        height="44"
+        rx="6"
+        fill="#fff8e1"
+        stroke="#e1a800"
+        stroke-width="2"
+       />
+       <text x="505" y="159" text-anchor="middle" font-weight="bold">NAT tylko dla WIN_11</text>
+       <text x="505" y="176" text-anchor="middle" font-size="12">brama 10.0.2.2</text>
+
+       <!-- WIN_SERVER -->
+       <line x1="175" y1="184" x2="175" y2="225" stroke="#e1a800" stroke-width="3" />
+       <rect
+        x="20"
+        y="215"
+        width="330"
+        height="165"
+        rx="8"
+        fill="#e3f2fd"
+        stroke="#0984e3"
+        stroke-width="2"
+       />
+       <rect
+        x="60"
+        y="225"
+        width="230"
+        height="32"
+        rx="5"
+        fill="#ffffff"
+        stroke="#e1a800"
+        stroke-width="2"
+       />
+       <text x="175" y="246" text-anchor="middle" font-size="12">
+        Karta 1 · Ethernet · 10.0.2.15
+       </text>
+       <text x="185" y="280" text-anchor="middle" font-weight="bold">
+        🪟 WIN_SERVER · SERWER-01
+       </text>
+       <rect
+        x="30"
+        y="292"
+        width="310"
+        height="76"
+        rx="6"
+        fill="#e8f8f5"
+        stroke="#00b894"
+        stroke-width="2"
+        stroke-dasharray="6 4"
+       />
+       <text x="185" y="310" text-anchor="middle" font-size="12" font-weight="bold">
+        Zespół LAN12 · 192.168.10.10/24 · DNS 127.0.0.1
+       </text>
+       <rect
+        x="50"
+        y="322"
+        width="125"
+        height="34"
+        rx="5"
+        fill="#ffffff"
+        stroke="#00b894"
+        stroke-width="2"
+       />
+       <text x="112.5" y="344" text-anchor="middle" font-size="12">Karta 2 · LAN1</text>
+       <rect
+        x="205"
+        y="322"
+        width="125"
+        height="34"
+        rx="5"
+        fill="#ffffff"
+        stroke="#00b894"
+        stroke-width="2"
+       />
+       <text x="267.5" y="344" text-anchor="middle" font-size="12">Karta 3 · LAN2</text>
+       <line x1="112.5" y1="356" x2="112.5" y2="420" stroke="#00b894" stroke-width="3" />
+       <line x1="267.5" y1="356" x2="267.5" y2="420" stroke="#00b894" stroke-width="3" />
+
+       <!-- WIN_11 -->
+       <line
+        x1="505"
+        y1="184"
+        x2="505"
+        y2="225"
+        stroke="#b2bec3"
+        stroke-width="3"
+        stroke-dasharray="6 4"
+       />
+       <text x="517" y="210" font-size="12" fill="#d63031" font-weight="bold">✕ Kabel wypięty</text>
+       <rect
+        x="400"
+        y="215"
+        width="210"
+        height="165"
+        rx="8"
+        fill="#e3f2fd"
+        stroke="#0984e3"
+        stroke-width="2"
+       />
+       <rect
+        x="410"
+        y="225"
+        width="190"
+        height="32"
+        rx="5"
+        fill="#ffffff"
+        stroke="#b2bec3"
+        stroke-width="2"
+        stroke-dasharray="6 4"
+       />
+       <text x="505" y="246" text-anchor="middle" font-size="12" fill="#636e72">
+        Karta 1 · Ethernet
+       </text>
+       <text x="505" y="280" text-anchor="middle" font-weight="bold">💻 WIN_11 · KLIENT-01</text>
+       <rect
+        x="410"
+        y="296"
+        width="190"
+        height="60"
+        rx="5"
+        fill="#ffffff"
+        stroke="#00b894"
+        stroke-width="2"
+       />
+       <text x="505" y="314" text-anchor="middle" font-size="12">Karta 2 · Ethernet 2</text>
+       <text x="505" y="330" text-anchor="middle" font-size="12">192.168.10.30/24</text>
+       <text x="505" y="346" text-anchor="middle" font-size="12">DNS 192.168.10.10</text>
+       <line x1="505" y1="356" x2="505" y2="420" stroke="#00b894" stroke-width="3" />
+
+       <!-- LINUX_SERVER -->
+       <rect
+        x="630"
+        y="215"
+        width="110"
+        height="165"
+        rx="8"
+        fill="#f4f7f6"
+        stroke="#b2bec3"
+        stroke-width="2"
+        stroke-dasharray="6 4"
+       />
+       <text x="685" y="282" text-anchor="middle" font-size="11" fill="#636e72" font-weight="bold">
+        🐧 LINUX_SERVER
+       </text>
+       <text x="685" y="302" text-anchor="middle" font-size="11" fill="#636e72">Maszyna</text>
+       <text x="685" y="318" text-anchor="middle" font-size="11" fill="#636e72">wyłączona</text>
+
+       <!-- Przełącznik INF02-LAN -->
+       <rect x="20" y="420" width="720" height="40" rx="8" fill="#00b894" />
+       <text x="380" y="445" text-anchor="middle" font-weight="bold" fill="#ffffff">
+        INF02-LAN (Internal Network) · 192.168.10.0/24 · bez bramy
+       </text>
+      </svg>
+     </div>
+     <p class="diagram-legend">
+      <strong>Jak czytać:</strong> żółte linie – NAT (tylko Internet; każda maszyna ma osobny NAT,
+      więc maszyny nie widzą się przez Kartę 1). Zielone linie – <code>INF02-LAN</code> (jedyna
+      droga między maszynami). Linia przerywana – „Kabel wypięty” albo „Maszyna wyłączona”.
+     </p>
     </div>
    </div>
 
