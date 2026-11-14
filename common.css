@@ -628,6 +628,28 @@ code {
 .nav-links a:hover {
  background: #636e72;
 }
+/* Telefon: pasek w jednej linii (linki przewijane w poziomie). Zawinięty pasek był wyższy niż
+   padding-top body (70px) i zasłaniał nagłówek strony. */
+@media (max-width: 768px) {
+ #global-nav {
+  gap: 10px;
+  padding: 8px 12px;
+ }
+ .nav-brand {
+  flex-shrink: 0;
+  font-size: 1rem;
+  white-space: nowrap;
+ }
+ .nav-links {
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+ }
+ .nav-links a {
+  white-space: nowrap;
+ }
+}
 
 /* --- BREADCRUMBS --- */
 #breadcrumbs {
