@@ -1,0 +1,28 @@
+{
+ "name": "symulator-arp",
+ "private": true,
+ "version": "1.0.0",
+ "type": "module",
+ "description": "Symulator przepływu pakietu (ARP + Unicast) dla Filaru 1. Budowany do ../symulator-arp.html",
+ "scripts": {
+  "dev": "vite",
+  "typecheck": "tsc --noEmit",
+  "build": "tsc --noEmit && vite build && node scripts/publish.mjs",
+  "preview": "vite preview"
+ },
+ "dependencies": {
+  "@xyflow/react": "^12",
+  "lucide-react": "^1.72.0",
+  "react": "^19",
+  "react-dom": "^19"
+ },
+ "devDependencies": {
+  "@types/node": "24",
+  "@types/react": "^19.3.0",
+  "@types/react-dom": "^19.3.0",
+  "@vitejs/plugin-react": "^6.3.0",
+  "typescript": "^7.0.2",
+  "vite": "^8.3.8",
+  "vite-plugin-singlefile": "^2.3.4"
+ }
+}

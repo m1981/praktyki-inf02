@@ -2,6 +2,20 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-13 — Symulator ARP i Unicast (Filar 1)
+
+- **Nowa strona `01-sieci/symulator-arp.html`:** interaktywny diagram biura (Laptop, Switch,
+  Router, Serwer NAS, sieć `10.10.10.0/24`). Uczeń klika „Następny krok” i widzi: decyzję L3, ARP
+  Request (Broadcast), rozesłanie ramki przez Switch, ARP Reply (Unicast), wysłanie danych. Obok:
+  pola ramki oraz tablica ARP Laptopa i tablica MAC Switcha, które zapełniają się krok po kroku. Na
+  końcu 2 pytania „Sprawdź się”. Link z teorii: Filar 1, Krok 4 (Protokół ARP).
+- **Technologia:** źródła w `01-sieci/appka/` (React + TypeScript + React Flow, Vite). `pnpm build`
+  tworzy **jeden plik HTML** z wbudowanym JS – działa z dysku i na GitHub Pages, bez serwera. Plik
+  wynikowy jest commitowany i nie wolno go edytować ręcznie (ostrzeżenie w 2. linii pliku).
+- **Hooki:** wynikowy plik jest w `.prettierignore` (Prettier nie formatuje zminifikowanego kodu);
+  `scripts/konspekt.mjs` pomija katalog `appka`.
+- **Inny świat:** strona ma ramkę „Inny świat” – adresy symulatora nie dotyczą `topology.html`.
+
 ## 2026-11-06 — Karty LAN1/LAN2, forwarder DNS z kontrolą, schemat Fazy 2
 
 - **Karty LAN1 i LAN2 (Windows Lab 1, Krok 0B):** przed utworzeniem zespołu `LAN12` uczeń

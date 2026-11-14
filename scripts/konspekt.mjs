@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'KONSPEKT.md');
-const SKIP_DIRS = new Set(['node_modules', '.git', '.idea', '.husky', 'scripts']);
+// appka = źródła symulatora (React); do konspektu trafia gotowa strona 01-sieci/symulator-arp.html
+const SKIP_DIRS = new Set(['node_modules', '.git', '.idea', '.husky', 'scripts', 'appka']);
 
 function findHtml(dir) {
  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {

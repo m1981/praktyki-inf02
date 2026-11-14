@@ -16,6 +16,10 @@ _title: Filar 1: Sieci - Teoria_
   - **H2** Routing (Zaawansowane L3)
   - **H2** 💻 Czas na praktykę!
 
+## [`01-sieci/infografiki/siec.html`](01-sieci/infografiki/siec.html)
+
+- (brak nagłówków h1–h3)
+
 ## [`01-sieci/lab1-podstawy.html`](01-sieci/lab1-podstawy.html)
 
 _title: Lab 1: Podstawy LAN i Routing_
@@ -45,6 +49,12 @@ _title: Lab 3: DHCP, DNS, Routing i NAT_
     - **H3** Faza 2: Wyjście w Świat (Routing w GUI)
     - **H3** Faza 3: DNS (Książka Telefoniczna)
     - **H3** Faza 4: NAT (Magiczna Peleryna)
+
+## [`01-sieci/symulator-arp.html`](01-sieci/symulator-arp.html)
+
+_title: Symulator ARP i Unicast_
+
+- **H1** 🎬 Symulator: jak Laptop znajduje Serwer NAS
 
 ## [`02-windows/index.html`](02-windows/index.html)
 

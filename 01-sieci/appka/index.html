@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symulator ARP i Unicast</title>
+  <!-- common.css i menu.js dokłada plugin `site-shell` w vite.config.ts -->
+ </head>
+ <body>
+  <header>
+   <h1>🎬 Symulator: jak Laptop znajduje Serwer NAS</h1>
+   <p style="color: var(--text-muted); font-size: 1.2rem">
+    Klikaj „Następny krok” i obserwuj, jak ramka płynie między urządzeniami.
+   </p>
+  </header>
+
+  <main class="sim-page">
+   <div class="card" style="border-top-color: #fdcb6e; background-color: #fffbea">
+    <h4 style="color: #856404; margin-top: 0">🌍 Inny świat: przykładowe biuro</h4>
+    <p>
+     Sieć <code>10.10.10.0/24</code> w tym symulatorze to osobny przykład. Jej urządzenia i adresy
+     nie dotyczą maszyn w VirtualBox ani <a href="../topology.html">Mapy Architektury</a>.
+    </p>
+   </div>
+
+   <div id="root">
+    <noscript>Symulator wymaga włączonego JavaScriptu.</noscript>
+   </div>
+  </main>
+
+  <script type="module" src="/src/main.tsx"></script>
+ </body>
+</html>
