@@ -2,6 +2,12 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-15 — Konspekt tylko z plików w gicie
+
+- **`scripts/konspekt.mjs`** bierze listę stron z `git ls-files` (pliki zacommitowane i dodane przez
+  `git add`), a nie z dysku. Robocze, niezacommitowane pliki HTML nie trafiają już do `KONSPEKT.md`
+  jako martwe linki (tak trafił `01-sieci/infografiki/siec.html` – wpis usunięty).
+
 ## 2026-11-13 — Symulator ARP i Unicast (Filar 1)
 
 - **Nowa strona `01-sieci/symulator-arp.html`:** interaktywny diagram biura (Laptop, Switch,

@@ -16,10 +16,6 @@ _title: Filar 1: Sieci - Teoria_
   - **H2** Routing (Zaawansowane L3)
   - **H2** 💻 Czas na praktykę!
 
-## [`01-sieci/infografiki/siec.html`](01-sieci/infografiki/siec.html)
-
-- (brak nagłówków h1–h3)
-
 ## [`01-sieci/lab1-podstawy.html`](01-sieci/lab1-podstawy.html)
 
 _title: Lab 1: Podstawy LAN i Routing_
