@@ -361,7 +361,7 @@
     if (c.ov && c.ov !== 'none'){
       OV.forEach(x => { dev += `<g class="${ovOn ? '' : 'blink'}">${pc(x, pcY(1), ovOn ? D.sp.c : '#b9b7af', '')}</g>`; });
       dev += `<text x="550" y="${FY[1] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D.sp.c}">Sprzedaż</text>`;
-      if (!ovOn) dev += `<text x="550" y="${FY[1] + 98}" text-anchor="middle" class="lbls">czeka na port</text>`;
+      if (!ovOn) dev += `<text x="550" y="${FY[1] + 98}" text-anchor="middle" class="bad-txt">brak sieci</text>`;
     }
     if (c.wall) dev += `<text x="230" y="${FY[1] + 16}" class="good-txt appear">VLAN 20 ✕ VLAN 50 – nie widzą się</text>`;
     if (c.compare) dev += `<text x="625" y="406" text-anchor="end" class="lbls appear">Dla porównania rok 1996: 5 kabli w pionie · 5 switchy na piętrach</text>`;
@@ -375,8 +375,9 @@
     { who:'ola',  act:'Ola ciągnie dwa kable w pionie do szafy głównej…', c:{ f3:1, r3:1, anim:'r3' } },
     { who:'ola',  t:'Drugie piętro: Księgowość i Kadry. Też osobno – tam są wypłaty 🔒', c:{ f3:1, r3:1, f2:1 }, next:'🔌 Podepnij ▶' },
     { who:'ola',  act:'Ola ciągnie kolejne dwa kable w pionie…', c:{ f3:1, r3:1, f2:1, r2:1, anim:'r2' } },
-    { who:'szef', t:'Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait' } },
-    { who:'ola',  t:'Biurka na drugim są – ale sieci Sprzedaży tam nie ma.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait', hiSw:['ks','kd'] } },
+    { who:'narr', act:'Na trzecim zabrakło miejsca – trzy nowe osoby ze Sprzedaży siadają na drugim.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait' } },
+    { who:'szef', t:'Olu, moi nowi siedzą na drugim – i nie mają sieci 😬', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait' } },
+    { who:'ola',  t:'Bo na drugim jest sieć Księgowości i Kadr – Sprzedaży tam nie ma.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait', hiSw:['ks','kd'] } },
     { who:'szef', t:'To podepnij ich na chwilę do księgowości 🙏', c:{ f3:1, r3:1, f2:1, r2:1, ov:'trial' } },
     { who:'ola',  t:'I zobaczą faktury? Nie ma mowy 🙅‍♀️', c:{ f3:1, r3:1, f2:1, r2:1, ov:'cancel' } },
     { who:'ola',  t:'Trzeci switch na drugim – i piąty kabel w pionie 😩', c:{ f3:1, r3:1, f2:1, r2:1, ov:'ghost' }, next:'🔌 Podepnij ▶' },
@@ -388,8 +389,9 @@
     { who:'ola',  t:'Dziś. Te same piętra i działy – dwa kable w pionie 🤩', c:{} },
     { who:'ola',  t:'Jeden switch na piętro – kolor portu to VLAN działu.', c:{ hi:'all' } },
     { who:'ola',  t:'W pionie trunk – jeden kabel, wszystkie VLAN-y piętra.', c:{ tags:1 } },
-    { who:'szef', t:'Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬', c:{ tags:1, ov:'wait' } },
-    { who:'ola',  t:'Nie szkodzi – na drugim są wolne porty 🙂', c:{ tags:1, ov:'wait', pulseFree:1 }, next:'🔌 Podepnij ▶' },
+    { who:'narr', act:'Na trzecim zabrakło miejsca – trzy nowe osoby ze Sprzedaży siadają na drugim.', c:{ tags:1, ov:'wait' } },
+    { who:'szef', t:'Olu, moi nowi siedzą na drugim – i nie mają sieci 😬', c:{ tags:1, ov:'wait' } },
+    { who:'ola',  t:'Spokojnie – na drugim są wolne porty 🙂', c:{ tags:1, ov:'wait', pulseFree:1 }, next:'🔌 Podepnij ▶' },
     { who:'ola',  act:'Ola podpina trzy gniazdka i ustawia im VLAN 50…', c:{ tags:1, ov:'on', anim:'ports' } },
     { who:'szef', t:'I widzą resztę Sprzedaży na trzecim? 🤨', c:{ tags:1, ov:'on' } },
     { who:'ola',  t:'Tak – trunkiem w dół i trunkiem w górę. Jedna sieć.', c:{ tags:1, ov:'on', path:1 } },
@@ -804,7 +806,7 @@
     return `<div class="story"><div>${o.svg}</div>
       <aside class="dlg">
         <div class="scene">${o.sc.title}</div>
-        <div class="who"><span class="av" style="background:${sp.bg}">${sp.av}</span><span><b>${sp.n}</b>${sp.r}</span></div>
+        ${sp ? `<div class="who"><span class="av" style="background:${sp.bg}">${sp.av}</span><span><b>${sp.n}</b>${sp.r}</span></div>` : ''}
         ${cur.act ? `<div class="say act">${cur.act}</div>` : `<div class="say" ${cur.quiz ? 'style="font-size:18px"' : ''}>${cur.t}</div>`}
         ${quiz}
         <div class="dots">${steps.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${n}</span></div>

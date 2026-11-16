@@ -1,6 +1,8 @@
 # Kłopot 1: Działy na piętrach — sceny „Budynek, rok 1996” i „Budynek, dziś”
 
-Wersja 1, wdrożona w vlan.html (Kłopot 1). Wariant A+: każdy dział siedzi razem, po dwa działy na piętrze, a Sprzedaż przelewa się na drugie piętro.
+Wersja 2, wdrożona w vlan.html (Kłopot 1).
+
+Zmiany w wersji 2: przyczyna i problem rozdzielone na dwa kroki. Narracja (bez postaci) mówi, że na trzecim zabrakło miejsca, a Szefowa zgłasza to, z czym naprawdę przychodzi się do administratorki: brak sieci. Narracja i kwestia Szefowej są w obu scenach słowo w słowo takie same; różni się dopiero odpowiedź Oli. Pod czekającymi komputerami w obu scenach jest „brak sieci”. Wariant A+: każdy dział siedzi razem, po dwa działy na piętrze, a Sprzedaż przelewa się na drugie piętro.
 
 Postacie: Ola (administratorka sieci) i Szefowa Sprzedaży, na „ty”.
 
@@ -11,7 +13,7 @@ Styl jak w Kłopocie 3: jedna myśl na oddech, części zdania łączy myślnik 
 | Piętro | Działy | VLAN (dziś) |
 |---|---|---|
 | 3 | Sprzedaż · Marketing | 50 · 60 |
-| 2 | Księgowość · Kadry (+ trzy osoby ze Sprzedaży od kroku 6/11) | 20 · 30 (+ 50) |
+| 2 | Księgowość · Kadry (+ trzy osoby ze Sprzedaży: w 1996 od kroku 6, dziś od kroku 4) | 20 · 30 (+ 50) |
 | 1 | IT i szafa główna | 10 |
 
 ## Scena 1: „Budynek, rok 1996” (bez VLAN-ów)
@@ -23,15 +25,16 @@ Styl jak w Kłopocie 3: jedna myśl na oddech, części zdania łączy myślnik 
 | 3 | *akcja* | *Ola ciągnie dwa kable w pionie do szafy głównej…* | Dwa kable schodzą pionem z 3. piętra na parter. | 2 | Dalej ▶ |
 | 4 | Ola | Drugie piętro: Księgowość i Kadry. Też osobno – tam są wypłaty 🔒 | Dwa switche na 2. piętrze. | 2 | 🔌 Podepnij ▶ |
 | 5 | *akcja* | *Ola ciągnie kolejne dwa kable w pionie…* | Dwa kable z 2. piętra na parter. | 4 | Dalej ▶ |
-| 6 | Szefowa Sprzedaży | Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬 | Trzy migające komputery Sprzedaży na 2. piętrze, podpis „brak sieci”. | 4 | Dalej ▶ |
-| 7 | Ola | Biurka na drugim są – ale sieci Sprzedaży tam nie ma. | Ramki wokół switchy Księgowości i Kadr. Żaden port na 2. piętrze nie ma koloru Sprzedaży. | 4 | Dalej ▶ |
-| 8 | Szefowa Sprzedaży | To podepnij ich na chwilę do księgowości 🙏 | Przerywany kabel na próbę do switcha Księgowości. | 4 | Dalej ▶ |
-| 9 | Ola | I zobaczą faktury? Nie ma mowy 🙅‍♀️ | Kabel dostaje czerwone ✕ i znika. | 4 | Dalej ▶ |
-| 10 | Ola | Trzeci switch na drugim – i piąty kabel w pionie 😩 | Przerywany zarys trzeciego switcha na 2. piętrze. | 4 | 🔌 Podepnij ▶ |
-| 11 | *akcja* | *Ola ciągnie piąty kabel – z drugiego piętra do Sprzedaży na trzecim…* | Nowy switch na 2. piętrze, kabel pionem w górę do switcha Sprzedaży. Komputery dostają kolor Sprzedaży. | 5 | Dalej ▶ |
-| 12 | Szefowa Sprzedaży | Cały kabel przez piętro – dla trzech osób? 🤨 | Podświetlony nowy kabel 2→3. | 5 | Dalej ▶ |
-| 13 | Ola | No tak 🤷‍♀️ Tu sieć wyznacza kabel – nie biurko. | Pulsuje wszystkie pięć kabli w pionie. | 5 | Dalej ▶ |
-| 14 | *zagadka* | Co by tu pomogło? A) Szerszy pion na więcej kabli. B) Jeden kabel, który niesie wiele sieci. | Stan końcowy. | 5 | Zobacz to samo dziś ▶ |
+| 6 | *narracja* | *Na trzecim zabrakło miejsca – trzy nowe osoby ze Sprzedaży siadają na drugim.* | Pojawiają się trzy migające komputery Sprzedaży na 2. piętrze, podpis „brak sieci”. | 4 | Dalej ▶ |
+| 7 | Szefowa Sprzedaży | Olu, moi nowi siedzą na drugim – i nie mają sieci 😬 | Bez zmian. | 4 | Dalej ▶ |
+| 8 | Ola | Bo na drugim jest sieć Księgowości i Kadr – Sprzedaży tam nie ma. | Ramki wokół switchy Księgowości i Kadr. Żaden port na 2. piętrze nie ma koloru Sprzedaży. | 4 | Dalej ▶ |
+| 9 | Szefowa Sprzedaży | To podepnij ich na chwilę do księgowości 🙏 | Przerywany kabel na próbę do switcha Księgowości. | 4 | Dalej ▶ |
+| 10 | Ola | I zobaczą faktury? Nie ma mowy 🙅‍♀️ | Kabel dostaje czerwone ✕ i znika. | 4 | Dalej ▶ |
+| 11 | Ola | Trzeci switch na drugim – i piąty kabel w pionie 😩 | Przerywany zarys trzeciego switcha na 2. piętrze. | 4 | 🔌 Podepnij ▶ |
+| 12 | *akcja* | *Ola ciągnie piąty kabel – z drugiego piętra do Sprzedaży na trzecim…* | Nowy switch na 2. piętrze, kabel pionem w górę do switcha Sprzedaży. Komputery dostają kolor Sprzedaży. | 5 | Dalej ▶ |
+| 13 | Szefowa Sprzedaży | Cały kabel przez piętro – dla trzech osób? 🤨 | Podświetlony nowy kabel 2→3. | 5 | Dalej ▶ |
+| 14 | Ola | No tak 🤷‍♀️ Tu sieć wyznacza kabel – nie biurko. | Pulsuje wszystkie pięć kabli w pionie. | 5 | Dalej ▶ |
+| 15 | *zagadka* | Co by tu pomogło? A) Szerszy pion na więcej kabli. B) Jeden kabel, który niesie wiele sieci. | Stan końcowy. | 5 | Zobacz to samo dziś ▶ |
 
 Reakcje na zagadkę:
 - A: „Nie do końca – kabli dalej przybywa z każdym działem.”
@@ -44,16 +47,17 @@ Reakcje na zagadkę:
 | 1 | Ola | Dziś. Te same piętra i działy – dwa kable w pionie 🤩 | 1 | Jeden switch na piętrze, porty w kolorach VLAN-ów, dwa trunki (paski) z 3. i 2. piętra do switcha głównego na parterze. | 2 | Dalej ▶ |
 | 2 | Ola | Jeden switch na piętro – kolor portu to VLAN działu. | 2, 4 | Ramki wokół portów działów. | 2 | Dalej ▶ |
 | 3 | Ola | W pionie trunk – jeden kabel, wszystkie VLAN-y piętra. | 3, 5 | Etykiety przy trunkach: „VLAN 50 + 60” i „VLAN 20 + 30”; każdy trunk ma paski w kolorach swoich VLAN-ów. | 2 | Dalej ▶ |
-| 4 | Szefowa Sprzedaży | Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬 | 6 (dosłownie) | Trzy migające komputery na 2. piętrze. | 2 | Dalej ▶ |
-| 5 | Ola | Nie szkodzi – na drugim są wolne porty 🙂 | 7 | Pulsują wolne porty switcha 2. piętra. | 2 | 🔌 Podepnij ▶ |
-| 6 | *akcja* | *Ola podpina trzy gniazdka i ustawia im VLAN 50…* | 11 | Trzy porty zapalają się kolorem Sprzedaży, etykieta trunku z 2. piętra zmienia się na „VLAN 20 + 30 + 50”. | 2 | Dalej ▶ |
-| 7 | Szefowa Sprzedaży | I widzą resztę Sprzedaży na trzecim? 🤨 | — | Bez zmian. | 2 | Dalej ▶ |
-| 8 | Ola | Tak – trunkiem w dół i trunkiem w górę. Jedna sieć. | — | Podświetlona droga: nowy port → trunk → switch główny → trunk → porty Sprzedaży na 3. piętrze. | 2 | Dalej ▶ |
-| 9 | Szefowa Sprzedaży | A księgowość obok? Widzi moich ludzi? | 8 | Ramki wokół portów Księgowości i nowych portów Sprzedaży. | 2 | Dalej ▶ |
-| 10 | Ola | Nie – inny VLAN. Ten sam switch, osobne sieci 🔒 | 9 | Napis „VLAN 20 ✕ VLAN 50 – nie widzą się” obok nazwy piętra. | 2 | Dalej ▶ |
-| 11 | Szefowa Sprzedaży | Ile kabli w pionie dociągnęłaś? 🙂 | 12 | Podświetlony licznik. | 2 | Dalej ▶ |
-| 12 | Ola | Ani jednego 😎 Tylko trzy porty w konfiguracji. | 13 | Szare porównanie: „1996: 5 kabli w pionie · 5 switchy na piętrach”. | 2 | Dalej ▶ |
-| 13 | *zagadka* | Jak trzy osoby z drugiego piętra trafiły do sieci Sprzedaży? A) Nowym kablem na trzecie. B) VLAN-em na porcie i trunkiem. | 14 | Stan końcowy. | 2 | ↺ Wróć do roku 1996 |
+| 4 | *narracja* | *Na trzecim zabrakło miejsca – trzy nowe osoby ze Sprzedaży siadają na drugim.* | 6 (dosłownie) | Pojawiają się trzy migające komputery na 2. piętrze, podpis „brak sieci”. | 2 | Dalej ▶ |
+| 5 | Szefowa Sprzedaży | Olu, moi nowi siedzą na drugim – i nie mają sieci 😬 | 7 (dosłownie) | Bez zmian. | 2 | Dalej ▶ |
+| 6 | Ola | Spokojnie – na drugim są wolne porty 🙂 | 8 | Pulsują wolne porty switcha 2. piętra. | 2 | 🔌 Podepnij ▶ |
+| 7 | *akcja* | *Ola podpina trzy gniazdka i ustawia im VLAN 50…* | 12 | Trzy porty zapalają się kolorem Sprzedaży, etykieta trunku z 2. piętra zmienia się na „VLAN 20 + 30 + 50”. | 2 | Dalej ▶ |
+| 8 | Szefowa Sprzedaży | I widzą resztę Sprzedaży na trzecim? 🤨 | — | Bez zmian. | 2 | Dalej ▶ |
+| 9 | Ola | Tak – trunkiem w dół i trunkiem w górę. Jedna sieć. | — | Podświetlona droga: nowy port → trunk → switch główny → trunk → porty Sprzedaży na 3. piętrze. | 2 | Dalej ▶ |
+| 10 | Szefowa Sprzedaży | A księgowość obok? Widzi moich ludzi? | 9 | Ramki wokół portów Księgowości i nowych portów Sprzedaży. | 2 | Dalej ▶ |
+| 11 | Ola | Nie – inny VLAN. Ten sam switch, osobne sieci 🔒 | 10 | Napis „VLAN 20 ✕ VLAN 50 – nie widzą się” obok nazwy piętra. | 2 | Dalej ▶ |
+| 12 | Szefowa Sprzedaży | Ile kabli w pionie dociągnęłaś? 🙂 | 13 | Podświetlony licznik. | 2 | Dalej ▶ |
+| 13 | Ola | Ani jednego 😎 Tylko trzy porty w konfiguracji. | 14 | Szare porównanie: „1996: 5 kabli w pionie · 5 switchy na piętrach”. | 2 | Dalej ▶ |
+| 14 | *zagadka* | Jak trzy osoby z drugiego piętra trafiły do sieci Sprzedaży? A) Nowym kablem na trzecie. B) VLAN-em na porcie i trunkiem. | 15 | Stan końcowy. | 2 | ↺ Wróć do roku 1996 |
 
 Reakcje na zagadkę:
 - A: „Nie tym razem – nowego kabla nie było. Zrobiły to VLAN i trunk.”
