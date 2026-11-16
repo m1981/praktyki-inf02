@@ -326,3 +326,144 @@
 .sim-side > .mk-small {
  margin-top: 0;
 }
+
+/* --- Seria mikro-ćwiczeń M1–M4 (prefiks sr-) --- */
+.sr-tabs {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 6px;
+}
+.sr-tab {
+ padding: 6px 12px;
+ border: 1px solid #b2bec3;
+ border-radius: 999px;
+ background: #fff;
+ color: #2d3436;
+ font: inherit;
+ font-size: 0.85rem;
+ cursor: pointer;
+}
+.sr-tab[aria-current='step'] {
+ border-color: var(--sim-blue);
+ background: var(--sim-blue);
+ color: #fff;
+}
+.sr-tab:focus-visible,
+.sr-back:focus-visible {
+ outline: 3px solid var(--sim-blue);
+ outline-offset: 2px;
+}
+.sr-question {
+ font-size: 1.1rem;
+ font-weight: 600;
+}
+.sr-code {
+ display: inline-block;
+ margin-right: 6px;
+ padding: 0 8px;
+ border-radius: 6px;
+ background: var(--l2-bg, #e3f2fd);
+ color: var(--sim-blue);
+ font-size: 0.9rem;
+}
+.sr-board {
+ display: grid;
+ align-content: center;
+ height: 340px;
+ padding: 16px 24px;
+ background: #fff;
+ border: 1px solid var(--sim-border);
+ border-radius: 12px;
+}
+.sr-change {
+ margin-top: 10px;
+ padding: 6px 10px;
+ border-left: 3px solid #b2bec3;
+ background: #f8f9fa;
+ font-size: 0.85rem !important;
+}
+.sr-bridge {
+ margin-top: 8px;
+ padding: 6px 10px;
+ border-left: 3px solid var(--sim-purple);
+ background: var(--bridge-bg, #f3e5f5);
+ font-size: 0.85rem !important;
+}
+.sr-back {
+ align-self: flex-start;
+ display: inline-flex;
+ align-items: center;
+ gap: 2px;
+ margin-top: 6px;
+ padding: 0;
+ border: 0;
+ background: none;
+ color: var(--sim-muted);
+ font: inherit;
+ font-size: 0.8rem;
+ cursor: pointer;
+}
+.sr-back:disabled {
+ visibility: hidden;
+}
+
+/* M1: tabela porównania numerów sieci */
+.sr-compare {
+ width: 100%;
+ border-collapse: collapse;
+ font-size: 1rem;
+}
+.sr-compare th,
+.sr-compare td {
+ padding: 8px 10px;
+ border-bottom: 1px solid var(--sim-border);
+ text-align: left;
+}
+.sr-compare thead th {
+ font-size: 0.8rem;
+ color: var(--sim-muted);
+}
+.sr-net {
+ background: var(--l2-bg, #e3f2fd);
+ font-family: monospace;
+ font-weight: 700;
+ color: var(--sim-blue);
+}
+.sr-host {
+ font-family: monospace;
+ color: var(--sim-muted);
+}
+.sr-compare__ref {
+ background: #fafbfc;
+}
+.sr-compare__new {
+ animation: sr-flash 1.2s ease-out;
+}
+@keyframes sr-flash {
+ from {
+  background: #ffeaa7;
+ }
+ to {
+  background: transparent;
+ }
+}
+
+/* M2: nowy płot „wyrasta” */
+.mk-fence {
+ animation: mk-grow 0.6s ease-out;
+ transform-origin: center;
+}
+@keyframes mk-grow {
+ from {
+  transform: scaleY(0);
+ }
+ to {
+  transform: scaleY(1);
+ }
+}
+@media (prefers-reduced-motion: reduce) {
+ .mk-fence,
+ .sr-compare__new {
+  animation: none;
+ }
+}

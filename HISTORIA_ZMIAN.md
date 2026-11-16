@@ -2,6 +2,18 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-17 — Seria mikro-ćwiczeń M1–M4 (maska)
+
+- **`01-sieci/symulator-maska.html`** zaczyna się teraz od serii (PYT-009a, makiety z `audyt.md`):
+  M1 „Moja sieć czy inna?” (porównanie numerów sieci), M2 „Płot na ulicy” (przełącznik /24 ⇄ /25,
+  płot wyrasta na .128), M3 „Objazd przez Router” (ta sama decyzja na diagramie), M4 „Maska to nie
+  ściana” (Broadcast dociera do wszystkich). Każde ćwiczenie: jedno pytanie, tekst ≤ 40 słów, jeden
+  element sterujący, pytanie dla następnego ćwiczenia. Dawny pełny widok to ostatnia zakładka
+  „Tryb swobodny” (PYT-002a).
+- **Linki:** `#m1` … `#m4`, `#swobodny` otwierają konkretne ćwiczenie. Strzałki ← → przechodzą
+  przez kroki.
+- **Pomiar:** każdy krok M1–M4 i Tryb swobodny mieszczą się w 1366×768 i 1280×720 bez przewijania.
+
 ## 2026-11-17 — Jedna metafora maski, układ maski, kontrakt 1.2
 
 - **Metafora maski (PYT-003a):** w całym Filarze 1 „płot i działka”: płot = granica podsieci,

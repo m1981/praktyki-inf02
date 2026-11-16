@@ -33,61 +33,12 @@ export function AddressLine({ src, dst, prefix }: AddressLineProps) {
  const dstIp = HOSTS[dst].ip;
  const srcStart = lastOctet(networkOf(srcIp, prefix));
  const dstStart = lastOctet(networkOf(dstIp, prefix));
- const fences = Array.from({ length: 256 / block + 1 }, (_, i) => i * block);
  const srcLabel = HOSTS[src].label;
 
  return (
   <section className="sim-panel">
    <h3>🏘️ Ulica adresów: gdzie stoją płoty</h3>
-   <div
-    className="mk-line"
-    role="img"
-    aria-label={`Oś adresów od .0 do .255 z płotami co ${block}`}
-   >
-    <div className="mk-track">
-     <div
-      className="mk-block mk-block--src"
-      style={{ left: pct(srcStart), width: pct(block) }}
-      title={`Sieć: ${srcLabel}`}
-     />
-     {dstStart !== srcStart && (
-      <div className="mk-block mk-block--dst" style={{ left: pct(dstStart), width: pct(block) }} />
-     )}
-     {fences.map((f) => (
-      <div key={f} className="mk-fence" style={{ left: pct(f) }} />
-     ))}
-     {PINS.map((pin) => {
-      const octet = lastOctet(pin.ip);
-      const edge = octet < 26 ? 'start' : octet > 230 ? 'end' : 'mid';
-      const active = pin.id === src || pin.id === dst;
-      return (
-       <div
-        key={pin.id}
-        className={`mk-pin mk-pin--${pin.row} mk-pin--${edge}${active ? ' mk-pin--active' : ''}`}
-        style={{ left: pct(octet + 0.5) }}
-       >
-        <span className="mk-pin__label">
-         {pin.label} .{octet}
-        </span>
-       </div>
-      );
-     })}
-    </div>
-    <div className="mk-scale">
-     {block >= 32 ? (
-      fences.slice(0, -1).map((f) => (
-       <span key={f} style={{ left: pct(f) }}>
-        .{f}
-       </span>
-      ))
-     ) : (
-      <>
-       <span style={{ left: '0%' }}>.0</span>
-       <span style={{ left: '100%' }}>.255</span>
-      </>
-     )}
-    </div>
-   </div>
+   <FenceLine src={src} dst={dst} prefix={prefix} />
 
    <table className="sim-table mk-small">
     <tbody>
@@ -117,5 +68,68 @@ export function AddressLine({ src, dst, prefix }: AddressLineProps) {
     </tbody>
    </table>
   </section>
+ );
+}
+
+interface FenceLineProps extends AddressLineProps {
+ /** Pokaż tylko te urządzenia (domyślnie wszystkie). Mikro-ćwiczenia pokazują tylko dwa. */
+ only?: string[];
+}
+
+/** Sama oś adresów z płotami i działkami – bez tabeli. Nowy płot „wyrasta” (animacja CSS). */
+export function FenceLine({ src, dst, prefix, only }: FenceLineProps) {
+ const block = blockSize(prefix);
+ const srcStart = lastOctet(networkOf(HOSTS[src].ip, prefix));
+ const dstStart = lastOctet(networkOf(HOSTS[dst].ip, prefix));
+ const fences = Array.from({ length: 256 / block + 1 }, (_, i) => i * block);
+ const srcLabel = HOSTS[src].label;
+ const pins = only ? PINS.filter((p) => only.includes(p.id)) : PINS;
+
+ return (
+  <div className="mk-line" role="img" aria-label={`Oś adresów od .0 do .255 z płotami co ${block}`}>
+   <div className="mk-track">
+    <div
+     className="mk-block mk-block--src"
+     style={{ left: pct(srcStart), width: pct(block) }}
+     title={`Sieć: ${srcLabel}`}
+    />
+    {dstStart !== srcStart && (
+     <div className="mk-block mk-block--dst" style={{ left: pct(dstStart), width: pct(block) }} />
+    )}
+    {fences.map((f) => (
+     <div key={f} className="mk-fence" style={{ left: pct(f) }} />
+    ))}
+    {pins.map((pin) => {
+     const octet = lastOctet(pin.ip);
+     const edge = octet < 26 ? 'start' : octet > 230 ? 'end' : 'mid';
+     const active = pin.id === src || pin.id === dst;
+     return (
+      <div
+       key={pin.id}
+       className={`mk-pin mk-pin--${pin.row} mk-pin--${edge}${active ? ' mk-pin--active' : ''}`}
+       style={{ left: pct(octet + 0.5) }}
+      >
+       <span className="mk-pin__label">
+        {pin.label} .{octet}
+       </span>
+      </div>
+     );
+    })}
+   </div>
+   <div className="mk-scale">
+    {block >= 32 ? (
+     fences.slice(0, -1).map((f) => (
+      <span key={f} style={{ left: pct(f) }}>
+       .{f}
+      </span>
+     ))
+    ) : (
+     <>
+      <span style={{ left: '0%' }}>.0</span>
+      <span style={{ left: '100%' }}>.255</span>
+     </>
+    )}
+   </div>
+  </div>
  );
 }

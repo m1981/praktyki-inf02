@@ -4,15 +4,16 @@ Plan dalszych materiałów po symulatorze ARP. Źródła symulatorów: `01-sieci
 
 ## Stan (2026-11-17)
 
-| Co                                                                                | Gdzie                                       | Commit               |
-| --------------------------------------------------------------------------------- | ------------------------------------------- | -------------------- |
-| Symulator ARP i Unicast (6 kroków, tablice ARP/MAC, 2 pytania „Sprawdź się”)      | `01-sieci/symulator-arp.html`               | `e37ef02`            |
-| Link z teorii (Filar 1, Krok 4) i z Lab 1 Faza 1                                  | `01-sieci/index.html`, `lab1-podstawy.html` | `e37ef02`, `3a38b64` |
-| Pasek nawigacji na telefonie w jednej linii                                       | `common.css`                                | `1c317ef`            |
-| Konspekt tylko z plików w gicie                                                   | `scripts/konspekt.mjs`                      | `e3f35b0`            |
-| Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity | `01-sieci/symulator-maska.html`             | `288c31d`            |
-| Audyt dydaktyczny + szybkie wygrane (PYT-005)                                     | `01-sieci/appka/audyt.md`, oba symulatory   | `cceb206`            |
-| Układ maski na jednym ekranie (PYT-007), metafora „płot i działka” (PYT-003)      | oba symulatory, `index.html`, Lab 1         | `cceb206`            |
+| Co                                                                                | Gdzie                                                   | Commit                                          |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------- |
+| Symulator ARP i Unicast (6 kroków, tablice ARP/MAC, 2 pytania „Sprawdź się”)      | `01-sieci/symulator-arp.html`                           | `e37ef02`                                       |
+| Link z teorii (Filar 1, Krok 4) i z Lab 1 Faza 1                                  | `01-sieci/index.html`, `lab1-podstawy.html`             | `e37ef02`, `3a38b64`                            |
+| Pasek nawigacji na telefonie w jednej linii                                       | `common.css`                                            | `1c317ef`                                       |
+| Konspekt tylko z plików w gicie                                                   | `scripts/konspekt.mjs`                                  | `e3f35b0`                                       |
+| Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity | `01-sieci/symulator-maska.html`                         | `288c31d`                                       |
+| Audyt dydaktyczny + szybkie wygrane (PYT-005)                                     | `01-sieci/appka/audyt.md`, oba symulatory               | `cceb206`                                       |
+| Układ maski na jednym ekranie (PYT-007), metafora „płot i działka” (PYT-003)      | oba symulatory, `index.html`, Lab 1                     | `cceb206`                                       |
+| Seria M1–M4 + Tryb swobodny (PYT-009)                                             | `01-sieci/symulator-maska.html` (`src/maska/series.ts`) | stan pośredni (PYT-014a), przeróbka na plan ZS1 |
 
 ## Zasada dydaktyczna
 
