@@ -120,6 +120,14 @@
   .dlg .fb{font-size:13px;color:var(--bad);animation:fade .3s}
   .dlg .fb.ok{color:var(--good);font-weight:600}
   @media (prefers-reduced-motion:reduce){.lit{animation:none;opacity:1}.pingD,.pulseP{animation:none}.fadeout{animation:none;opacity:.4}}
+  .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:drawA 1.1s ease-in-out forwards}
+  @keyframes drawA{to{stroke-dashoffset:0}}
+  .pulseL{animation:pulseL 1.2s ease-in-out infinite}
+  @keyframes pulseL{50%{stroke-opacity:.3}}
+  .flow{fill:none;stroke:var(--accent);stroke-width:9;stroke-opacity:.55;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:14 10;animation:flowA 1s linear infinite}
+  @keyframes flowA{to{stroke-dashoffset:-24}}
+  .cntbox{fill:var(--accent-bg);stroke:var(--accent);stroke-width:2}
+  @media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.pulseL,.flow{animation:none}}
   @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
   /* svg */
@@ -179,11 +187,13 @@
     it:{c:'#2f6fb3', n:'IT', vlan:10, net:'192.168.10.0/24'},
     ks:{c:'#d9772b', n:'Księgowość', vlan:20, net:'192.168.20.0/24'},
     kd:{c:'#8e44ad', n:'Kadry', vlan:30, net:'192.168.30.0/24'},
-    gs:{c:'#2e9d5b', n:'Goście', vlan:40, net:'192.168.40.0/24'}
+    gs:{c:'#2e9d5b', n:'Goście', vlan:40, net:'192.168.40.0/24'},
+    sp:{c:'#c2185b', n:'Sprzedaż', vlan:50, net:'192.168.50.0/24'},
+    mk:{c:'#00838f', n:'Marketing', vlan:60, net:'192.168.60.0/24'}
   };
   const st = { tab:0, mode:[0,0,0,0],
     s2:{ step:0, timer:null },
-    s3:{ it:7, ks:5, kd:4, gs:6 }, s3step:[0,0], s3dir:0, s3quiz:null,
+    s3:{ it:7, ks:5, kd:4, gs:6 }, s3step:[0,0], s3dir:0, s3quiz:null, s1step:[0,0], s1dir:0, s1quiz:null,
     s4:{ bcast:0, intruder:false } };
 
   /* ---------- drawing helpers ---------- */
@@ -221,57 +231,196 @@
   const metric = (k, v, cls) => `<div class="metric ${cls||''}"><div class="v">${v}</div><div class="k">${k}</div></div>`;
   const legendDepts = keys => keys.map(k => `<span><i style="background:${D[k].c}"></i>${D[k].n}${st.mode[st.tab] ? ` = VLAN ${D[k].vlan}` : ''}</span>`).join('');
 
-  /* ---------- 1: department on two floors ---------- */
-  const S1PCS = [
-    {f:0,x:400,d:'it'},{f:0,x:480,d:'it'},{f:0,x:620,d:'ks'},{f:0,x:700,d:'ks'},
-    {f:1,x:400,d:'it'},{f:1,x:480,d:'it'},{f:1,x:620,d:'ks'},
-    {f:2,x:400,d:'it'},{f:2,x:620,d:'ks'},{f:2,x:700,d:'ks'}];
-  const FY = [20, 140, 260], FN = ['Piętro 3', 'Piętro 2', 'Piętro 1'];
+  /* ---------- 1: departments on floors (scenes from scenariusze/klopot1-budynek.md) ---------- */
+  const FY = [10, 140, 270], FN = ['Piętro 3', 'Piętro 2', 'Piętro 1'];
+  // desks: floor index (0 = 3rd floor), x, department
+  const B1 = [
+    { f:0, x:300, d:'sp' }, { f:0, x:345, d:'sp' }, { f:0, x:390, d:'sp' }, { f:0, x:470, d:'mk' }, { f:0, x:515, d:'mk' },
+    { f:1, x:280, d:'ks' }, { f:1, x:320, d:'ks' }, { f:1, x:390, d:'kd' }, { f:1, x:430, d:'kd' },
+    { f:2, x:420, d:'it' }, { f:2, x:470, d:'it' } ];
+  const OV = [510, 550, 590];                      // three new Sales people on floor 2
+  const GROUPS = [ [0, 345, 'sp'], [0, 492, 'mk'], [1, 300, 'ks'], [1, 410, 'kd'], [2, 445, 'it'] ];
+  const pcY = f => FY[f] + 60;
 
-  function s1(mode){
+  function s1base(){
     let g = '';
-    FY.forEach((y, i) => { g += `<rect x="60" y="${y}" width="740" height="120" class="floor"/><text x="${mode ? 250 : 260}" y="${y+18}" class="ttl">${FN[i]}</text>`; });
-    g += `<rect x="98" y="20" width="40" height="360" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>`;
-    g += `<text x="0" y="0" class="lbls" transform="translate(92 300) rotate(-90)">pion kablowy</text>`;
-    let cables = '', devices = '';
-    if (!mode){
-      g += `<rect x="150" y="270" width="96" height="104" rx="4" fill="none" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="198" y="388" class="lbls" text-anchor="middle">szafa</text>`;
-      const pIT = Array(8).fill(null), pKS = Array(8).fill(null);
-      let iIT = 0, iKS = 0;
-      S1PCS.forEach((p, k) => {
-        const y0 = FY[p.f], py = y0 + 62, tray = y0 + 112 - (k % 4) * 3, rx = 103 + k * 3;
-        const isIT = p.d === 'it', idx = isIT ? iIT++ : iKS++;
-        (isIT ? pIT : pKS)[idx] = D[p.d].c;
-        const sy = (isIT ? 287 : 334) + (idx % 2) * 11 - 4;
-        cables += `<path class="cab" stroke="${D[p.d].c}" d="M${p.x} ${py+13}V${tray}H${rx}V${sy}H162"/>`;
-        devices += pc(p.x, py, D[p.d].c);
-      });
-      g += cables;
-      g += sw(162, 278, pIT, 4, '').svg + `<text x="238" y="292" class="lbls">sw IT</text>`;
-      g += sw(162, 325, pKS, 4, '').svg + `<text x="238" y="339" class="lbls">sw księg.</text>`;
-      g += `<text x="118" y="14" class="bad-txt" text-anchor="middle">7 kabli w pionie!</text>`;
-      g += devices;
-    } else {
-      FY.forEach((y0, f) => {
-        const here = S1PCS.filter(p => p.f === f);
-        const ports = Array(8).fill(null);
-        here.forEach((p, k) => {
-          ports[k] = D[p.d].c;
-          const py = y0 + 62, tray = y0 + 112 - k * 3;
-          cables += `<path class="cab" stroke="${D[p.d].c}" d="M${p.x} ${py+13}V${tray}H222V${y0+66 + (k%2)*6}"/>`;
-          devices += pc(p.x, py, D[p.d].c);
-        });
-        g += sw(162, y0 + 45, ports, 4, '').svg;
-        g += `<text x="196" y="${y0+40}" class="lbls" text-anchor="middle">${f === 2 ? 'switch (rdzeń)' : 'switch piętra'}</text>`;
-      });
-      // trunks
-      const trunk = (yA, yB) => `<path d="M162 ${yA}H118V${yB}H162" fill="none" stroke="${D.it.c}" stroke-width="6"/>
-        <path d="M162 ${yA}H118V${yB}H162" fill="none" stroke="${D.ks.c}" stroke-width="6" stroke-dasharray="9 9"/>`;
-      g = g + trunk(FY[0] + 62, FY[1] + 62) + trunk(FY[1] + 62, FY[2] + 62);
-      g += `<text x="118" y="14" class="good-txt" text-anchor="middle">2 trunki w pionie</text>`;
-      g += cables + devices;
+    FY.forEach((y, i) => { g += `<rect x="60" y="${y}" width="560" height="125" class="floor"/><text x="132" y="${y + 16}" class="ttl">${FN[i]}</text>`; });
+    g += `<rect x="70" y="10" width="50" height="385" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>`;
+    g += `<text x="0" y="0" class="lbls" transform="translate(66 390) rotate(-90)">pion kablowy</text>`;
+    GROUPS.forEach(([f, x, d]) => { g += `<text x="${x}" y="${FY[f] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D[d].c}">${D[d].n}</text>`; });
+    return g;
+  }
+  // cable from a desk to a switch's right edge (yS = port height)
+  const deskCable = (x, f, k, xS, yS, col, cls) => `<path class="cab ${cls || ''}" stroke="${col}" d="M${x} ${pcY(f) + 13}V${FY[f] + 106 + k * 3}H${xS + 8 + k * 3}V${yS}H${xS}"/>`;
+  const counter = (n, good, hot, prev) => {
+    const txt = c => `<text x="95" y="406" text-anchor="middle" class="${good ? 'good-txt' : 'bad-txt'}">kable w pionie: ${c}</text>`;
+    let g = hot ? `<rect x="22" y="394" width="146" height="18" rx="9" class="cntbox"/>` : '';
+    if (prev !== undefined && prev !== n) g += `<g class="gone" style="animation-delay:1.1s">${txt(prev)}</g><g class="lit" style="animation-delay:1.1s">${txt(n)}</g>`;
+    else g += txt(n);
+    return g;
+  };
+
+  // ----- 1996: one network = one switch, one riser cable per network per floor
+  function s1old(c, dir){
+    let g = s1base(), cab = '', dev = '';
+    const anim = key => dir > 0 && c.anim === key;
+    // main closet (floor 1): each riser cable lands on its own port
+    const core = sw(150, 315, [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c, D.it.c, null, null].map((col, i) => (i < 2 && !c.r3) || (i >= 2 && i < 4 && !c.r2) ? null : col), 4, '');
+    g += core.svg + `<text x="182" y="362" text-anchor="middle" class="lbls">szafa główna</text>`;
+    B1.filter(p => p.f === 2).forEach((p, k) => { cab += deskCable(p.x, 2, k, 214, 326 + k * 6, D.it.c); });
+    // floor switches
+    const S = {};
+    if (c.f3){ S.sp = sw(150, FY[0] + 30, [D.sp.c, D.sp.c, D.sp.c, null, null, null, null, null], 4, ''); S.mk = sw(150, FY[0] + 72, [D.mk.c, D.mk.c, null, null, null, null, null, null], 4, ''); }
+    if (c.f2){ S.ks = sw(150, FY[1] + 22, [D.ks.c, D.ks.c, null, null, null, null, null, null], 4, ''); S.kd = sw(150, FY[1] + 56, [D.kd.c, D.kd.c, null, null, null, null, null, null], 4, ''); }
+    const ovOn = c.ov === 'on';
+    if (ovOn) S.ov = sw(150, FY[1] + 90, [D.sp.c, D.sp.c, D.sp.c, null, null, null, null, null], 4, '');
+    Object.values(S).forEach(x => { g += x.svg; });
+    if (c.ov === 'ghost') g += `<rect x="150" y="${FY[1] + 90}" width="64" height="32" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" class="appear"/><text x="222" y="${FY[1] + 110}" style="fill:var(--accent);font-size:11px;font-weight:700" class="appear">do kupienia</text>`;
+    (c.hiSw || []).forEach(k => { if (S[k]) g += `<rect x="145" y="${+S[k].svg.match(/y="([\d.]+)"/)[1] - 5}" width="74" height="42" rx="7" class="hl"/>`; });
+    // desk cables
+    const kk = [0, 0, 0];
+    B1.forEach(p => {
+      if (p.f === 2) return;
+      const k = kk[p.f]++;
+      const on = p.f === 0 ? c.f3 : c.f2;
+      if (on){ const sS = S[p.d], yS = +sS.svg.match(/y="([\d.]+)"/)[1] + 12 + (k % 2) * 6; cab += deskCable(p.x, p.f, k, 214, yS, D[p.d].c); }
+    });
+    // riser cables (lane x, from switch at floor, to core)
+    const riser = (x, yFrom, yTo, col, key, extra) => `<path class="cab ${anim(key) ? 'draw' : ''} ${c.pulseAll ? 'pulseL' : ''} ${extra || ''}" pathLength="1" stroke="${col}" stroke-width="3" d="M150 ${yFrom}H${x}V${yTo}H150"/>`;
+    if (c.r3){ cab += riser(80, FY[0] + 46, 320, D.sp.c, 'r3') + riser(88, FY[0] + 88, 326, D.mk.c, 'r3'); }
+    if (c.r2){ cab += riser(96, FY[1] + 38, 332, D.ks.c, 'r2') + riser(104, FY[1] + 72, 338, D.kd.c, 'r2'); }
+    if (ovOn){
+      if (c.ovHi) cab += `<path class="flow" d="M150 ${FY[1] + 106}H112V${FY[0] + 40}H150"/>`;
+      cab += riser(112, FY[1] + 106, FY[0] + 40, D.sp.c, 'ov');
     }
-    return svgWrap(820, 400, g);
+    g += cab;
+    // desks
+    B1.forEach(p => { dev += pc(p.x, pcY(p.f), D[p.d].c, ''); });
+    if (c.ov && c.ov !== 'none'){
+      const ok = ovOn, kd = FY[1] + 106;
+      OV.forEach((x, k) => {
+        if (ok) dev += deskCable(x, 1, 4 + k, 214, FY[1] + 102 + k * 4, D.sp.c, dir > 0 && c.anim === 'ov' ? 'appear' : '');
+        dev += `<g class="${ok ? 'appear' : 'blink'}">${pc(x, pcY(1), ok ? D.sp.c : '#b9b7af', '')}</g>`;
+      });
+      dev += `<text x="550" y="${FY[1] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D.sp.c}">Sprzedaż</text>`;
+      if (!ok) dev += `<text x="550" y="${FY[1] + 98}" text-anchor="middle" class="bad-txt">brak sieci</text>`;
+      if (c.ov === 'trial' || c.ov === 'cancel'){
+        const path = `M${OV[0] - 18} ${pcY(1)}C${OV[0] - 120} ${pcY(1) - 40} 300 ${FY[1] + 10} 214 ${FY[1] + 36}`;
+        if (c.ov === 'cancel') dev += `<path d="${path}" fill="none" stroke="var(--bad)" stroke-width="3" stroke-dasharray="7 5" class="fadeout"/><text x="360" y="${FY[1] + 40}" text-anchor="middle" class="fadeout" style="font-size:28px;font-weight:800;fill:var(--bad)">✕</text>`;
+        else dev += `<path d="${path}" fill="none" stroke="${D.sp.c}" stroke-width="3" stroke-dasharray="7 5" class="appear"/>`;
+      }
+    }
+    g += dev;
+    const n = (c.r3 ? 2 : 0) + (c.r2 ? 2 : 0) + (ovOn ? 1 : 0);
+    const prev = c.anim === 'r3' ? 0 : c.anim === 'r2' ? 2 : c.anim === 'ov' ? 4 : undefined;
+    g += counter(n, false, false, dir > 0 ? prev : undefined);
+    return svgWrap(630, 415, g);
+  }
+
+  // ----- dziś: one switch per floor, one trunk per floor, VLAN on each port
+  function s1new(c, dir){
+    let g = s1base(), cab = '', dev = '';
+    const ovOn = c.ov === 'on';
+    const p3 = [D.sp.c, D.sp.c, D.sp.c, D.mk.c, D.mk.c, null, null, null, null, null, null, null];
+    const p2 = [D.ks.c, D.ks.c, D.kd.c, D.kd.c].concat(ovOn ? [D.sp.c, D.sp.c, D.sp.c] : [null, null, null], [null, null, null, null, null]);
+    const animPorts = dir > 0 && c.anim === 'ports';
+    const s3w = sw(150, FY[0] + 45, p3, 6, ''), s2w = sw(150, FY[1] + 45, animPorts ? p2.map((x, i) => i >= 4 && i < 7 ? null : x) : p2, 6, '');
+    const core = sw(150, 315, ['#9a988f', '#9a988f', D.it.c, D.it.c, null, null, null, null, null, null, null, null], 6, '');
+    g += s3w.svg + s2w.svg + core.svg;
+    g += `<text x="195" y="${FY[0] + 40}" text-anchor="middle" class="lbls">switch piętra</text><text x="195" y="${FY[1] + 40}" text-anchor="middle" class="lbls">switch piętra</text><text x="195" y="362" text-anchor="middle" class="lbls">switch główny</text>`;
+    if (animPorts) [4, 5, 6].forEach((pi, j) => { const pt = s2w.port(pi), d = 0.4 + j * 0.3; g += `<rect x="${pt.x - 4.5}" y="${pt.y - 3.5}" width="9" height="7" rx="1.5" fill="${D.sp.c}" class="lit" style="animation-delay:${d}s"/><circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingD" style="animation-delay:${d}s"/>`; });
+    if (c.pulseFree) p2.forEach((col, pi) => { if (!col){ const pt = s2w.port(pi); g += `<rect x="${pt.x - 7}" y="${pt.y - 6}" width="14" height="12" rx="2.5" class="pulseP"/>`; } });
+    // frames
+    const frame = (swx, idx) => idx.forEach(pi => { const pt = swx.port(pi); g += `<rect x="${pt.x - 7}" y="${pt.y - 6}" width="14" height="12" rx="2.5" class="hl" style="stroke-width:2"/>`; });
+    if (c.hi === 'all'){ frame(s3w, [0, 1, 2, 3, 4]); frame(s2w, [0, 1, 2, 3]); frame(core, [2, 3]); }
+    if (c.hi === 'ksp'){ frame(s2w, [0, 1, 4, 5, 6]); }
+    // desk cables
+    const kk = [0, 0, 0];
+    B1.forEach(p => {
+      const k = kk[p.f]++, swx = [s3w, s2w, core][p.f];
+      cab += deskCable(p.x, p.f, k, swx.w + 150, (p.f === 2 ? 326 : FY[p.f] + 56) + (k % 2) * 6, D[p.d].c);
+    });
+    if (ovOn) OV.forEach((x, k) => { cab += deskCable(x, 1, 4 + k, s2w.w + 150, FY[1] + 62 + (k % 2) * 4, D.sp.c, animPorts ? 'appear' : ''); });
+    // trunks (striped: one stripe colour per VLAN carried)
+    const trunk = (lane, yFrom, yTo, cols) => {
+      const d = `M150 ${yFrom}H${lane}V${yTo}H150`, n = cols.length;
+      let t = `<path d="${d}" fill="none" stroke="${cols[0]}" stroke-width="6"/>`;
+      for (let i = 1; i < n; i++) t += `<path d="${d}" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="8 ${8 * (n - 1)}" stroke-dashoffset="${-8 * i}"/>`;
+      return t;
+    };
+    if (c.path) cab += `<path class="flow" d="M150 ${FY[1] + 61}H100V336H150"/><path class="flow" d="M150 322H84V${FY[0] + 61}H150"/>`;
+    cab += trunk(84, FY[0] + 61, 322, [D.sp.c, D.mk.c]);
+    cab += trunk(100, FY[1] + 61, 336, ovOn ? [D.ks.c, D.kd.c, D.sp.c] : [D.ks.c, D.kd.c]);
+    g += cab;
+    if (c.tags){
+      g += `<text x="124" y="${FY[0] + 118}" class="lbls" style="font-weight:700">VLAN 50 + 60</text>`;
+      g += `<text x="124" y="${FY[1] + 118}" class="lbls ${animPorts ? 'lit' : ''}" style="font-weight:700;${animPorts ? 'animation-delay:1.3s' : ''}">VLAN 20 + 30${ovOn ? ' + 50' : ''}</text>`;
+    }
+    // desks
+    B1.forEach(p => { dev += pc(p.x, pcY(p.f), D[p.d].c, ''); });
+    if (c.ov && c.ov !== 'none'){
+      OV.forEach(x => { dev += `<g class="${ovOn ? '' : 'blink'}">${pc(x, pcY(1), ovOn ? D.sp.c : '#b9b7af', '')}</g>`; });
+      dev += `<text x="550" y="${FY[1] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D.sp.c}">Sprzedaż</text>`;
+      if (!ovOn) dev += `<text x="550" y="${FY[1] + 98}" text-anchor="middle" class="lbls">czeka na port</text>`;
+    }
+    if (c.wall) dev += `<text x="230" y="${FY[1] + 16}" class="good-txt appear">VLAN 20 ✕ VLAN 50 – nie widzą się</text>`;
+    if (c.compare) dev += `<text x="625" y="406" text-anchor="end" class="lbls appear">Dla porównania rok 1996: 5 kabli w pionie · 5 switchy na piętrach</text>`;
+    g += dev + counter(2, true, c.cntHi);
+    return svgWrap(630, 415, g);
+  }
+
+  const S1OLD = [
+    { who:'ola',  t:'Rok 1996. Trzy piętra, pięć działów – każdy to osobna sieć.', c:{} },
+    { who:'ola',  t:'Trzecie piętro: Sprzedaż i Marketing – dwie sieci, dwa switche.', c:{ f3:1 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola ciągnie dwa kable w pionie do szafy głównej…', c:{ f3:1, r3:1, anim:'r3' } },
+    { who:'ola',  t:'Drugie piętro: Księgowość i Kadry. Też osobno – tam są wypłaty 🔒', c:{ f3:1, r3:1, f2:1 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola ciągnie kolejne dwa kable w pionie…', c:{ f3:1, r3:1, f2:1, r2:1, anim:'r2' } },
+    { who:'szef', t:'Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait' } },
+    { who:'ola',  t:'Biurka na drugim są – ale sieci Sprzedaży tam nie ma.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait', hiSw:['ks','kd'] } },
+    { who:'szef', t:'To podepnij ich na chwilę do księgowości 🙏', c:{ f3:1, r3:1, f2:1, r2:1, ov:'trial' } },
+    { who:'ola',  t:'I zobaczą faktury? Nie ma mowy 🙅‍♀️', c:{ f3:1, r3:1, f2:1, r2:1, ov:'cancel' } },
+    { who:'ola',  t:'Trzeci switch na drugim – i piąty kabel w pionie 😩', c:{ f3:1, r3:1, f2:1, r2:1, ov:'ghost' }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola ciągnie piąty kabel – z drugiego piętra do Sprzedaży na trzecim…', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on', anim:'ov' } },
+    { who:'szef', t:'Cały kabel przez piętro – dla trzech osób? 🤨', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on', ovHi:1 } },
+    { who:'ola',  t:'No tak 🤷‍♀️ Tu sieć wyznacza kabel – nie biurko.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on', pulseAll:1 } },
+    { who:'quiz', t:'Co by tu pomogło?', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on' }, quiz:true } ];
+  const S1NEW = [
+    { who:'ola',  t:'Dziś. Te same piętra i działy – dwa kable w pionie 🤩', c:{} },
+    { who:'ola',  t:'Jeden switch na piętro – kolor portu to VLAN działu.', c:{ hi:'all' } },
+    { who:'ola',  t:'W pionie trunk – jeden kabel, wszystkie VLAN-y piętra.', c:{ tags:1 } },
+    { who:'szef', t:'Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬', c:{ tags:1, ov:'wait' } },
+    { who:'ola',  t:'Nie szkodzi – na drugim są wolne porty 🙂', c:{ tags:1, ov:'wait', pulseFree:1 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina trzy gniazdka i ustawia im VLAN 50…', c:{ tags:1, ov:'on', anim:'ports' } },
+    { who:'szef', t:'I widzą resztę Sprzedaży na trzecim? 🤨', c:{ tags:1, ov:'on' } },
+    { who:'ola',  t:'Tak – trunkiem w dół i trunkiem w górę. Jedna sieć.', c:{ tags:1, ov:'on', path:1 } },
+    { who:'szef', t:'A księgowość obok? Widzi moich ludzi?', c:{ tags:1, ov:'on', hi:'ksp' } },
+    { who:'ola',  t:'Nie – inny VLAN. Ten sam switch, osobne sieci 🔒', c:{ tags:1, ov:'on', hi:'ksp', wall:1 } },
+    { who:'szef', t:'Ile kabli w pionie dociągnęłaś? 🙂', c:{ tags:1, ov:'on', cntHi:1 } },
+    { who:'ola',  t:'Ani jednego 😎 Tylko trzy porty w konfiguracji.', c:{ tags:1, ov:'on', compare:1 } },
+    { who:'quiz', t:'Jak trzy osoby z drugiego piętra trafiły do sieci Sprzedaży?', c:{ tags:1, ov:'on' }, quiz:true } ];
+  const QUIZ1 = [[
+    { id:'a', t:'A) Szerszy pion na więcej kabli.', fb:'Nie do końca – kabli dalej przybywa z każdym działem.' },
+    { id:'b', t:'B) Jeden kabel, który niesie wiele sieci.', fb:'Właśnie tak. Taki kabel to trunk – zobacz, jak to wygląda dziś.' } ], [
+    { id:'a', t:'A) Nowym kablem na trzecie.', fb:'Nie tym razem – nowego kabla nie było. Zrobiły to VLAN i trunk.' },
+    { id:'b', t:'B) VLAN-em na porcie i trunkiem.', fb:'Właśnie tak. O sieci decyduje ustawienie portu – nie kabel.' } ]];
+  const SCENE1 = [
+    { steps: S1OLD, title:'Budynek, rok 1996', end:'Zobacz to samo dziś ▶' },
+    { steps: S1NEW, title:'Budynek, dziś', end:'↺ Wróć do roku 1996' } ];
+
+  function s1story(mode){
+    const sc = SCENE1[mode], k = st.s1step[mode], cur = sc.steps[k];
+    const svg = mode ? s1new(cur.c, st.s1dir) : s1old(cur.c, st.s1dir);
+    return dlgHTML({ svg, sc, k, q: st.s1quiz, quizOpts: QUIZ1[mode], ids:['d1prev', 'd1next'], qattr:'data-q1' });
+  }
+  function step1(d){
+    const m = st.mode[0], n = SCENE1[m].steps.length, k = st.s1step[m] + d;
+    st.s1dir = d;
+    if (k < 0) return;
+    if (k >= n){ st.mode[0] = 1 - m; st.s1step[1 - m] = 0; st.s1quiz = null; }
+    else st.s1step[m] = k;
+    if (k < n - 1) st.s1quiz = null;
+    render();
+    st.s1dir = 0;
   }
 
   /* ---------- 2: person changes department ---------- */
@@ -636,6 +785,7 @@
   const SPK = {
     ola:  { n:'Ola', r:'administratorka sieci', av:'O', bg:'#d9ecf9' },
     kier: { n:'Kierownik IT', r:'szef Oli', av:'K', bg:'#f6e3c8' },
+    szef: { n:'Szefowa Sprzedaży', r:'kieruje Sprzedażą', av:'S', bg:'#f9d9e6' },
     quiz: { n:'Zagadka', r:'dla Ciebie', av:'?', bg:'var(--accent-bg)' }
   };
   const QUIZ = [[
@@ -647,25 +797,27 @@
     { steps: S1996, title:'Biuro, rok 1996', end:'Zobacz to samo dziś ▶', base:{ ks:5, kd:4, gs:6 } },
     { steps: SDZIS, title:'Biuro, dziś', end:'↺ Wróć do roku 1996', base:{ ks:5, kd:4, gs:6 } } ];
 
-  function s3story(mode){
-    const sc = SCENE[mode], steps = sc.steps, quizOpts = QUIZ[mode];
-    const k = st.s3step[mode], cur = steps[k], n = steps.length, last = k === n - 1, sp = SPK[cur.who];
-    st.s3 = { ...sc.base, ...cur.c };
-    const q = st.s3quiz;
-    const quiz = cur.quiz ? `<div class="quiz">${quizOpts.map(o => `<button data-q="${o.id}" class="${q === o.id ? (o.id === 'b' ? 'right' : 'wrong') : ''} ${!q ? 'next' : ''}">${o.t}</button>`).join('')}</div>
-      ${q ? `<div class="fb ${q === 'b' ? 'ok' : ''}">${quizOpts.find(o => o.id === q).fb}</div>` : ''}` : '';
-    return `<div class="story"><div>${s3(mode).svg}</div>
+  function dlgHTML(o){
+    const steps = o.sc.steps, k = o.k, cur = steps[k], n = steps.length, last = k === n - 1, sp = SPK[cur.who], q = o.q;
+    const quiz = cur.quiz ? `<div class="quiz">${o.quizOpts.map(x => `<button ${o.qattr}="${x.id}" class="${q === x.id ? (x.id === 'b' ? 'right' : 'wrong') : ''} ${!q ? 'next' : ''}">${x.t}</button>`).join('')}</div>
+      ${q ? `<div class="fb ${q === 'b' ? 'ok' : ''}">${o.quizOpts.find(x => x.id === q).fb}</div>` : ''}` : '';
+    return `<div class="story"><div>${o.svg}</div>
       <aside class="dlg">
-        <div class="scene">${sc.title}</div>
+        <div class="scene">${o.sc.title}</div>
         <div class="who"><span class="av" style="background:${sp.bg}">${sp.av}</span><span><b>${sp.n}</b>${sp.r}</span></div>
         ${cur.act ? `<div class="say act">${cur.act}</div>` : `<div class="say" ${cur.quiz ? 'style="font-size:18px"' : ''}>${cur.t}</div>`}
         ${quiz}
         <div class="dots">${steps.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${n}</span></div>
         <div class="actions">
-          <button id="d3prev" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Wstecz</button>
-          <button id="d3next" title="Strzałka w prawo" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? sc.end : (cur.next || 'Dalej ▶')}</button>
+          <button id="${o.ids[0]}" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Wstecz</button>
+          <button id="${o.ids[1]}" title="Strzałka w prawo" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? o.sc.end : (cur.next || 'Dalej ▶')}</button>
         </div>
       </aside></div>`;
+  }
+  function s3story(mode){
+    const sc = SCENE[mode], k = st.s3step[mode], cur = sc.steps[k];
+    st.s3 = { ...sc.base, ...cur.c };
+    return dlgHTML({ svg: s3(mode).svg, sc, k, q: st.s3quiz, quizOpts: QUIZ[mode], ids:['d3prev', 'd3next'], qattr:'data-q' });
   }
   function step3(d){
     const m = st.mode[2], n = SCENE[m].steps.length, k = st.s3step[m] + d;
@@ -751,16 +903,12 @@
 
   /* ---------- scenario definitions ---------- */
   const SC = [
-    { tab:'1. Dział na dwóch piętrach',
-      title:'Kłopot 1: księgowość siedzi na dwóch piętrach',
-      problem:'Kiedyś jedna sieć oznaczała jeden switch. Każdy komputer działu musiał mieć własny kabel do switcha tego działu, nawet jeśli stał dwa piętra wyżej.',
-      render: s1, legend:['it','ks'],
-      metrics: m => m
-        ? [metric('kabli przechodzących przez piętra', '2', 'good'), metric('nowy komputer księgowości na 3. piętrze', 'krótki kabel do switcha piętra', 'good')]
-        : [metric('kabli przechodzących przez piętra', '7', 'bad'), metric('nowy komputer księgowości na 3. piętrze', 'nowy kabel przez cały budynek', 'bad')],
-      explain: m => m
-        ? '<b>Z VLAN-ami</b> na każdym piętrze stoi jeden switch, a komputer wpina się do najbliższego. Kolor portu, czyli VLAN, decyduje o tym, do jakiego „pokoju” trafia. Piętra łączy po jednym kablu, <b>trunku</b>, który przenosi ruch wszystkich VLAN-ów naraz. Każda ramka ma naklejkę z numerem VLAN-u (paski na kablu).'
-        : '<b>Przed VLAN-ami</b> przynależność do sieci wyznaczał <b>kabel</b>, czyli to, do którego switcha był wpięty komputer. Księgowość na 3. piętrze oznacza osobny kabel w dół do switcha księgowości. Pion kablowy szybko się zapycha, a każdy nowy komputer to kucie i ciągnięcie przewodu.' },
+    { tab:'1. Działy na piętrach',
+      title:'Kłopot 1: działy na piętrach',
+      problem:'',
+      render: s1story, legend:['sp','mk','ks','kd','it'], noExplain:true,
+      metrics: () => [],
+      explain: () => '' },
     { tab:'2. Zmiana działu',
       title:'Kłopot 2: pracownik zmienia dział',
       problem:'Anna przechodzi z IT do księgowości, ale zostaje przy tym samym biurku. Jej komputer musi trafić do innej sieci.',
@@ -815,7 +963,7 @@
   $('seg').onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; setMode(+b.dataset.m); };
 
   function resetAnims(){ clearTimeout(st.s2.timer); st.s2.playing = false; cancelAnimationFrame(st.s2.raf); st.s2.step = 0; st.s2.prev = null; }
-  function setMode(m){ st.mode[st.tab] = m; st.s3quiz = null; resetAnims(); render(); }
+  function setMode(m){ st.mode[st.tab] = m; st.s3quiz = null; st.s1quiz = null; resetAnims(); render(); }
   function go(t){ st.tab = t; resetAnims(); try { history.replaceState(null, '', '#problem-' + (t + 1)); } catch(e){ location.hash = 'problem-' + (t + 1); } render(); }
 
   function stopS2(){ clearTimeout(st.s2.timer); st.s2.playing = false; }
@@ -847,7 +995,7 @@
     $('problem').textContent = typeof s.problem === 'function' ? s.problem(m) : s.problem;
     $('problem').style.display = $('problem').textContent ? '' : 'none';
     $('stage').innerHTML = s.render(m);
-    $('legend').innerHTML = legendDepts(s.legend) + (st.tab === 0 && m ? `<span><i style="background:repeating-linear-gradient(90deg,${D.it.c} 0 6px,${D.ks.c} 6px 12px)"></i>trunk: wiele VLAN-ów w jednym kablu</span>` : '');
+    $('legend').innerHTML = legendDepts(s.legend) + (st.tab === 0 && m ? `<span><i style="background:repeating-linear-gradient(90deg,${D.sp.c} 0 6px,${D.mk.c} 6px 12px)"></i>trunk: wiele VLAN-ów w jednym kablu</span>` : '');
     const gd = s.guide ? s.guide(m) : null;
     $('guide').innerHTML = gd ? gd.html : ''; $('guide').style.display = gd ? 'flex' : 'none';
     document.querySelectorAll('#seg button').forEach(b => b.classList.toggle('next', !!gd && gd.hot === 'seg' + b.dataset.m));
@@ -870,6 +1018,9 @@
     const on = (id, f) => { const el = $(id); if (el) el.onclick = f; };
     on('a2run', runS2);
     on('a2reset', () => { resetAnims(); render(); });
+    on('d1prev', () => step1(-1));
+    on('d1next', () => step1(1));
+    document.querySelectorAll('[data-q1]').forEach(b => b.onclick = () => { st.s1quiz = b.dataset.q1; render(); });
     on('d3prev', () => step3(-1));
     document.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { st.s3quiz = b.dataset.q; render(); });
     on('d3next', () => step3(1));
@@ -883,8 +1034,8 @@
   }
 
   addEventListener('keydown', e => {
-    if ((st.tab !== 1 && st.tab !== 2) || e.altKey || e.ctrlKey || e.metaKey) return;
-    const stepFn = st.tab === 1 ? stepS2 : step3;
+    if (st.tab === 3 || e.altKey || e.ctrlKey || e.metaKey) return;
+    const stepFn = [step1, stepS2, step3][st.tab];
     if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || ''))) return;
     if (e.key === 'ArrowRight'){ e.preventDefault(); stepFn(1); }
     else if (e.key === 'ArrowLeft'){ e.preventDefault(); stepFn(-1); }

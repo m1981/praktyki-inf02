@@ -1,6 +1,6 @@
 # Kłopot 1: Działy na piętrach — sceny „Budynek, rok 1996” i „Budynek, dziś”
 
-Wersja 1 (szkic do walidacji). Wariant A+: każdy dział siedzi razem, po dwa działy na piętrze, a Sprzedaż przelewa się na drugie piętro.
+Wersja 1, wdrożona w vlan.html (Kłopot 1). Wariant A+: każdy dział siedzi razem, po dwa działy na piętrze, a Sprzedaż przelewa się na drugie piętro.
 
 Postacie: Ola (administratorka sieci) i Szefowa Sprzedaży, na „ty”.
 
@@ -43,14 +43,14 @@ Reakcje na zagadkę:
 |---|---|---|---|---|---|---|
 | 1 | Ola | Dziś. Te same piętra i działy – dwa kable w pionie 🤩 | 1 | Jeden switch na piętrze, porty w kolorach VLAN-ów, dwa trunki (paski) z 3. i 2. piętra do switcha głównego na parterze. | 2 | Dalej ▶ |
 | 2 | Ola | Jeden switch na piętro – kolor portu to VLAN działu. | 2, 4 | Ramki wokół portów działów. | 2 | Dalej ▶ |
-| 3 | Ola | W pionie trunk – jeden kabel, wszystkie VLAN-y piętra. | 3, 5 | Etykiety na trunkach: „VLAN 50 + 60” i „VLAN 20 + 30”. | 2 | Dalej ▶ |
+| 3 | Ola | W pionie trunk – jeden kabel, wszystkie VLAN-y piętra. | 3, 5 | Etykiety przy trunkach: „VLAN 50 + 60” i „VLAN 20 + 30”; każdy trunk ma paski w kolorach swoich VLAN-ów. | 2 | Dalej ▶ |
 | 4 | Szefowa Sprzedaży | Olu, mam trzy nowe osoby – a na trzecim brak biurek 😬 | 6 (dosłownie) | Trzy migające komputery na 2. piętrze. | 2 | Dalej ▶ |
 | 5 | Ola | Nie szkodzi – na drugim są wolne porty 🙂 | 7 | Pulsują wolne porty switcha 2. piętra. | 2 | 🔌 Podepnij ▶ |
 | 6 | *akcja* | *Ola podpina trzy gniazdka i ustawia im VLAN 50…* | 11 | Trzy porty zapalają się kolorem Sprzedaży, etykieta trunku z 2. piętra zmienia się na „VLAN 20 + 30 + 50”. | 2 | Dalej ▶ |
 | 7 | Szefowa Sprzedaży | I widzą resztę Sprzedaży na trzecim? 🤨 | — | Bez zmian. | 2 | Dalej ▶ |
 | 8 | Ola | Tak – trunkiem w dół i trunkiem w górę. Jedna sieć. | — | Podświetlona droga: nowy port → trunk → switch główny → trunk → porty Sprzedaży na 3. piętrze. | 2 | Dalej ▶ |
 | 9 | Szefowa Sprzedaży | A księgowość obok? Widzi moich ludzi? | 8 | Ramki wokół portów Księgowości i nowych portów Sprzedaży. | 2 | Dalej ▶ |
-| 10 | Ola | Nie – inny VLAN. Ten sam switch, osobne sieci 🔒 | 9 | Napis „VLAN 20 ✕ VLAN 50”. | 2 | Dalej ▶ |
+| 10 | Ola | Nie – inny VLAN. Ten sam switch, osobne sieci 🔒 | 9 | Napis „VLAN 20 ✕ VLAN 50 – nie widzą się” obok nazwy piętra. | 2 | Dalej ▶ |
 | 11 | Szefowa Sprzedaży | Ile kabli w pionie dociągnęłaś? 🙂 | 12 | Podświetlony licznik. | 2 | Dalej ▶ |
 | 12 | Ola | Ani jednego 😎 Tylko trzy porty w konfiguracji. | 13 | Szare porównanie: „1996: 5 kabli w pionie · 5 switchy na piętrach”. | 2 | Dalej ▶ |
 | 13 | *zagadka* | Jak trzy osoby z drugiego piętra trafiły do sieci Sprzedaży? A) Nowym kablem na trzecie. B) VLAN-em na porcie i trunkiem. | 14 | Stan końcowy. | 2 | ↺ Wróć do roku 1996 |
@@ -76,3 +76,9 @@ Reakcje na zagadkę:
 - Dziś: trunki 802.1Q z tagami. VLAN 50 musi być dozwolony na trunku z 2. piętra, na switchu głównym i na trunku z 3. piętra – wtedy osoby z 2. piętra są w tej samej sieci co reszta Sprzedaży, bez routera (krok 8).
 - Dziś: Księgowość (VLAN 20) i nowe osoby Sprzedaży (VLAN 50) na tym samym switchu nie widzą się bez routera (krok 10). Routing zostawiamy na później.
 - Uproszczenie: w 1996 na piętrach mogły jeszcze stać huby zamiast switchy. Dla spójności z Kłopotem 3 zostajemy przy switchach.
+
+## Uwagi z wdrożenia
+
+- Licznik „kable w pionie” jest na dole pionu kablowego (panel wyników jest ukryty). W 1996 zmienia się po narysowaniu kabli, dziś przez całą scenę stoi na 2.
+- W 1996 w szafie głównej każdy kabel z pionu wpina się do osobnego portu (kolory sieci), bez pokazywania routera.
+- Kolory: Sprzedaż – malinowy, Marketing – morski; IT, Księgowość i Kadry jak w Kłopocie 3.
