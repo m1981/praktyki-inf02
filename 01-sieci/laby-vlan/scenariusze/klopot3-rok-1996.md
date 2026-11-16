@@ -24,8 +24,8 @@ Zatwierdzone wcześniej: kończymy zakupem piątego switcha. IT ma na starcie 10
 | 11 | Kierownik IT | To podepnij tam moich ludzi. | Przerywany kabel na próbę od komputera do portu kadr. | Dalej ▶ |
 | 12 | Ola | I trafią do sieci kadr?! Przecież tam są dane osobowe i wypłaty! | Port i komputer robią się fioletowe, zapala się plakietka „📁 dane osobowe i wypłaty”. | Dalej ▶ |
 | 13 | Kierownik IT | Aha, no to słabo 😕 | Kabel dostaje czerwone ✕ i znika, komputer znów jest niebieski i miga. | Dalej ▶ |
-| 14 | Kierownik IT | Czyli płacimy za puste porty 💸 | Pulsują wolne porty, podświetla się licznik „wykorzystanie 41%”. | Dalej ▶ |
-| 15 | Ola | I jeszcze za prąd ⚡ | Zarys staje się switchem, komputer wpina się z pierścieniem, przy pięciu switchach pojawia się ⚡. Liczniki: 5 switchy, 33%. | Dalej ▶ |
+| 14 | Kierownik IT | Czyli płacimy za puste porty? 😳 | Pulsują wolne porty, podświetla się licznik „wykorzystanie 41%”. | Dalej ▶ |
+| 15 | Ola | I jeszcze za prąd 🙃 | Zarys staje się switchem, komputer wpina się z pierścieniem, przy pięciu switchach pojawia się ⚡. Liczniki: 5 switchy, 33%. | Dalej ▶ |
 | 16 | *zagadka* | Co by tu pomogło? A) Jeden wielki switch. B) Żeby o sieci decydował port, a nie pudło. | Stan końcowy. | Zobacz to samo dziś ▶ |
 
 Reakcje na zagadkę:
