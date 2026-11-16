@@ -36,6 +36,10 @@ zob. PYT-004).
 | PYT-026 | decyzja    | zamknięte (a)    | Push commita `dd0c904` na GitHub                               |
 | PYT-027 | z-domyslna | zamknięte (a)    | Adres 10.10.10.0/24 w nagłówkach stron poza `model/`           |
 | PYT-028 | decyzja    | zamknięte (a)    | Scalenie etapu A do `main` po przeglądzie                      |
+| PYT-029 | decyzja    | zamknięte (a)    | Folder i nazwy labów VLAN i podsieci                           |
+| PYT-030 | decyzja    | zamknięte (a)    | Zakres przenoszonych plików labów                              |
+| PYT-031 | decyzja    | zamknięte (a)    | Push gałęzi `laby-vlan` i szkic PR w publicznym repo           |
+| PYT-032 | z-domyslna | zamknięte (a)    | Prettier na plikach labów osobnym commitem                     |
 
 ## Pytania
 
@@ -355,3 +359,40 @@ zob. PYT-004).
 - **Rekomendacja:** (a) – krótko żyjąca gałąź, mniejsze ryzyko konfliktów; uczeń nie widzi zmian.
 - **Skutek braku odpowiedzi:** etap A zostaje na gałęzi.
 - **Odpowiedź (2026-11-16):** „wszystko a” → (a)
+
+### PYT-029 · decyzja · zamknięte
+
+- **Kontekst:** dwa laby (podsieci, VLAN) powstały w osobnym repozytorium roboczym sesji. Mają
+  trafić do `praktyki-inf02` z historią. Konwencja repo: `index.html` w filarze to teoria.
+- **Opcje:** (a) `01-sieci/laby-vlan/`, `index.html` → `podsieci.html` w całej historii;
+  (b) osobny folder w katalogu głównym, np. `laby-interaktywne/`.
+- **Rekomendacja:** (a) – tematycznie to Filar 1; nazwa nie myli się ze stroną teorii.
+- **Skutek braku odpowiedzi:** nic nie trafia do repo.
+- **Odpowiedź (2026-11-17):** „wszystko tak jak zelecasz” → (a)
+
+### PYT-030 · decyzja · zamknięte
+
+- **Kontekst:** w repozytorium roboczym są oba laby, scenariusze `.md` i źródła talii Slides do
+  Kłopotu 2 (nieaktualne względem obecnej animacji).
+- **Opcje:** (a) przenieść wszystko; (b) bez `prezentacja-vlan/`.
+- **Rekomendacja:** (a) – pełna historia; talię można usunąć później.
+- **Skutek braku odpowiedzi:** nic nie trafia do repo.
+- **Odpowiedź (2026-11-17):** „wszystko tak jak zelecasz” → (a)
+
+### PYT-031 · decyzja · zamknięte
+
+- **Kontekst:** repo jest publiczne i ma GitHub Pages z `main`. Wypchnięta gałąź i PR są widoczne
+  od razu; na Pages laby trafią dopiero po scaleniu.
+- **Opcje:** (a) push gałęzi `laby-vlan` i szkic PR teraz; (b) wstrzymać push.
+- **Rekomendacja:** (a) – przegląd w PR, `main` bez zmian do scalenia.
+- **Skutek braku odpowiedzi:** gałąź zostaje lokalnie.
+- **Odpowiedź (2026-11-17):** „wszystko tak jak zelecasz” → (a)
+
+### PYT-032 · z-domyslna · zamknięte
+
+- **Kontekst:** hook pre-commit formatuje Prettierem pliki w commicie. Pliki labów nie były
+  formatowane.
+- **Opcje:** (a) Prettier na nowych plikach osobnym commitem; (b) zostawić bez formatowania.
+- **Rekomendacja:** (a) – zgodność z repo; działanie sprawdzone w przeglądarce.
+- **Skutek braku odpowiedzi:** pracuję według (a).
+- **Odpowiedź (2026-11-17):** „wszystko tak jak zelecasz” → (a)
