@@ -1,6 +1,5 @@
-import { BROADCAST_MAC, macOwner, type Frame } from './simulationConfig';
-import type { TableRow } from './graph';
-import type { ArpEntry, MacEntry } from './simulationConfig';
+import { BROADCAST_MAC, type Frame } from '../sim/types';
+import { macOwner, type ArpEntry, type MacEntry, type TableRow } from './scenario';
 
 function MacCell({ mac }: { mac: string }) {
  const owner = macOwner(mac);

@@ -1,28 +1,11 @@
 import { useEffect, useMemo, useReducer } from 'react';
-import {
- Background,
- ConnectionMode,
- ReactFlow,
- ReactFlowProvider,
- useReactFlow,
- useStore,
- type EdgeTypes,
- type NodeTypes
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 
-import { SIMULATION_STEPS } from './simulationConfig';
-import { initSimulation, simulationReducer } from './simulationReducer';
-import { buildEdges, buildNodes, PACKET_COLORS, tablesAt } from './graph';
-import { DeviceNode } from './DeviceNode';
-import { PacketEdge } from './PacketEdge';
+import { Diagram } from '../sim/Diagram';
+import { buildEdges, buildNodes, PACKET_COLORS } from '../sim/graph';
+import { CABLES, DEVICES, SIMULATION_STEPS, tablesAt } from './scenario';
+import { initSimulation, simulationReducer } from './reducer';
 import { FramePanel, TablesPanel } from './InfoPanels';
-
-// Typy węzłów/krawędzi poza komponentem: nowy obiekt przy każdym renderze
-// zmusiłby React Flow do przebudowy wszystkich węzłów (i daje ostrzeżenie w konsoli).
-const nodeTypes: NodeTypes = { device: DeviceNode };
-const edgeTypes: EdgeTypes = { packet: PacketEdge };
 
 export default function NetworkSimulation() {
  const [state, dispatch] = useReducer(simulationReducer, SIMULATION_STEPS.length, initSimulation);
@@ -31,8 +14,8 @@ export default function NetworkSimulation() {
  const isFirst = stepIndex === 0;
  const isLast = stepIndex === stepCount - 1;
 
- const nodes = useMemo(() => buildNodes(step), [step]);
- const edges = useMemo(() => buildEdges(step, stepIndex), [step, stepIndex]);
+ const nodes = useMemo(() => buildNodes(DEVICES, step), [step]);
+ const edges = useMemo(() => buildEdges(CABLES, step, stepIndex), [step, stepIndex]);
  const tables = useMemo(() => tablesAt(SIMULATION_STEPS, stepIndex), [stepIndex]);
 
  // Strzałki ← → na klawiaturze (wygodne przy rzutniku). Pomijamy, gdy fokus jest w polu tekstowym.
@@ -58,35 +41,7 @@ export default function NetworkSimulation() {
    </div>
 
    <div className="sim-stage">
-    <div className="sim-canvas">
-     <ReactFlowProvider>
-      <ReactFlow
-       nodes={nodes}
-       edges={edges}
-       nodeTypes={nodeTypes}
-       edgeTypes={edgeTypes}
-       // Loose: kabel może kończyć się na dowolnym punkcie zaczepienia (jeden na bok karty).
-       connectionMode={ConnectionMode.Loose}
-       fitView
-       fitViewOptions={{ padding: 0.08 }}
-       // Domyślne minZoom (0.5) nie mieści całej sieci na ekranie telefonu.
-       minZoom={0.1}
-       // To animowany slajd, a nie edytor: blokujemy przeciąganie, zoom i zaznaczanie.
-       nodesDraggable={false}
-       nodesConnectable={false}
-       elementsSelectable={false}
-       panOnDrag={false}
-       zoomOnScroll={false}
-       zoomOnPinch={false}
-       zoomOnDoubleClick={false}
-       // Kółko myszy przewija stronę, a nie „utyka” na diagramie.
-       preventScrolling={false}
-      >
-       <Background gap={20} color="#dfe6e9" />
-       <FitViewOnResize />
-      </ReactFlow>
-     </ReactFlowProvider>
-    </div>
+    <Diagram nodes={nodes} edges={edges} />
 
     <aside className="sim-side">
      <FramePanel frame={step.frame} />
@@ -146,15 +101,4 @@ export default function NetworkSimulation() {
    </section>
   </div>
  );
-}
-
-/** Dopasowuje widok po zmianie rozmiaru okna (np. obrót telefonu). `fitView` działa tylko na starcie. */
-function FitViewOnResize() {
- const { fitView } = useReactFlow();
- const width = useStore((s) => s.width);
- const height = useStore((s) => s.height);
- useEffect(() => {
-  void fitView({ padding: 0.08 });
- }, [width, height, fitView]);
- return null;
 }

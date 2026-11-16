@@ -52,6 +52,12 @@ _title: Symulator ARP i Unicast_
 
 - **H1** 🎬 Symulator: jak Laptop znajduje Serwer NAS
 
+## [`01-sieci/symulator-maska.html`](01-sieci/symulator-maska.html)
+
+_title: Wizualizacja maski podsieci_
+
+- **H1** 🚧 Maska podsieci: gdzie stoją płoty?
+
 ## [`02-windows/index.html`](02-windows/index.html)
 
 _title: Filar 2: Windows Server - Teoria_

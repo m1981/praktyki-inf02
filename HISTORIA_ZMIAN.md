@@ -2,6 +2,20 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-17 — Wizualizacja maski podsieci (Filar 1)
+
+- **Nowa strona `01-sieci/symulator-maska.html`:** suwak maski /24–/30, wybór celu (Serwer NAS,
+  Drukarka, Kamera), kierunek „Tam / Z powrotem”, pułapka „różne maski”. Trzy widoki: diagram (droga
+  ramki: bezpośrednio albo objazd przez Router), ulica adresów z płotami co rozmiar bloku, bity
+  ostatniego oktetu. 4 gotowe lekcje: /24 jedna sieć, /25 płot na .128, /26 brama za płotem,
+  pułapka (ruch asymetryczny). Link z teorii: Filar 1, Krok 5 (Subnetting).
+- **Decyzja merytoryczna:** strona wprost mówi, że maska **nie** stawia fizycznej ściany – Broadcast
+  dociera do wszystkich w Switchu. Maska to reguła nadawcy (bezpośrednio czy przez bramę), a
+  przejście między sieciami zapewnia Router. Uproszczenie: Router ma adres w każdej podsieci (jak
+  Router-on-a-Stick); brama Laptopa jest stała (10.10.10.1), żeby pokazać błąd „brama za płotem”.
+- **Kod:** wspólny silnik diagramu w `appka/src/sim/` (ARP i maska), testy logiki (Vitest) w
+  `pnpm build`. Etykieta roli urządzenia przeniesiona do rogu karty – nie zasłania już strzałek.
+
 ## 2026-11-15 — Konspekt tylko z plików w gicie
 
 - **`scripts/konspekt.mjs`** bierze listę stron z `git ls-files` (pliki zacommitowane i dodane przez

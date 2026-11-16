@@ -18,11 +18,11 @@ export function PacketEdge({
 }: EdgeProps<PacketEdgeType>) {
  const reducedMotion = usePrefersReducedMotion();
  const [path, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
- const packet = data?.packet;
+ const traffic = data?.traffic;
 
- if (!packet) return <BaseEdge id={id} path={path} className="sim-cable" />;
+ if (!traffic) return <BaseEdge id={id} path={path} className="sim-cable" />;
 
- const color = PACKET_COLORS[packet.kind];
+ const color = PACKET_COLORS[traffic.kind];
  return (
   <>
    <BaseEdge
@@ -34,7 +34,17 @@ export function PacketEdge({
     style={{ stroke: color }}
    />
    {/* Przy „ogranicz animacje” w systemie zostaje sama strzałka – kierunek nadal widać. */}
-   {!reducedMotion && <MovingPacket key={packet.runId} path={path} color={color} {...packet} />}
+   {!reducedMotion &&
+    traffic.packets.map((p, i) => (
+     <MovingPacket
+      key={`${traffic.runId}-${i}`}
+      path={path}
+      color={color}
+      reverse={p.reverse}
+      hop={p.hop}
+      hopCount={traffic.hopCount}
+     />
+    ))}
    <EdgeLabelRenderer>
     <div
      className="sim-edge-label"
@@ -43,7 +53,7 @@ export function PacketEdge({
       borderColor: color
      }}
     >
-     {packet.label}
+     {traffic.label}
     </div>
    </EdgeLabelRenderer>
   </>
@@ -59,8 +69,8 @@ interface MovingPacketProps {
 }
 
 // Kropka-ramka jadąca po kablu (SVG <animateMotion>).
-// Kroki z kilkoma skokami (NAS → Switch → Laptop) animujemy po kolei: każdy kabel ma swoje okno
-// czasowe w jednym wspólnym cyklu, więc ramka „dojeżdża” do Switcha, zanim ruszy dalej.
+// Ramki z kilkoma skokami (Laptop → Switch → Router → …) animujemy po kolei: każdy skok ma swoje
+// okno czasowe w jednym wspólnym cyklu, więc ramka „dojeżdża” do urządzenia, zanim ruszy dalej.
 function MovingPacket({ path, color, reverse, hop, hopCount }: MovingPacketProps) {
  const motionRef = useRef<SVGAnimateMotionElement>(null);
  const opacityRef = useRef<SVGAnimateElement>(null);

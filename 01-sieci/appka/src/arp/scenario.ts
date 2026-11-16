@@ -2,50 +2,17 @@
 // DLACZEGO OSOBNY PLIK BEZ REACTA: scenariusz to czyste dane. Nowy scenariusz (np. „Ruch do
 // Internetu przez Router”) to nowa tablica kroków – bez zmian w komponentach.
 
+import { assertFlowsOnCables } from '../sim/graph';
+import {
+ BROADCAST_MAC,
+ type Cable,
+ type Device,
+ type DeviceRole,
+ type DiagramState,
+ type Frame
+} from '../sim/types';
+
 export type DeviceId = 'laptop' | 'switch' | 'router' | 'nas';
-export type DeviceKind = 'laptop' | 'switch' | 'router' | 'nas';
-export type Side = 'top' | 'right' | 'bottom' | 'left';
-
-/** Co urządzenie robi w danym kroku (etykieta pod kartą urządzenia). */
-export type DeviceRole = 'analyzes' | 'sends' | 'receives' | 'forwards' | 'drops';
-
-export interface Device {
- id: DeviceId;
- kind: DeviceKind;
- label: string;
- ip?: string;
- mac?: string;
- /** Stopka karty dla urządzeń bez adresu MAC do pokazania (Switch). */
- note?: string;
- /** Nazwy portów widoczne na karcie (tylko Switch). */
- ports?: Partial<Record<Side, string>>;
- position: { x: number; y: number };
-}
-
-/** Fizyczny kabel. Kierunek a → b nie ma znaczenia dla ruchu – liczy się `Flow.from`. */
-export interface Cable {
- id: string;
- a: DeviceId;
- aSide: Side;
- b: DeviceId;
- bSide: Side;
-}
-
-export interface Frame {
- name: string;
- srcMac: string;
- dstMac: string;
- payload: string;
-}
-
-/** Jeden „skok” ramki po jednym kablu. Skoki o tym samym `hop` lecą jednocześnie. */
-export interface Flow {
- from: DeviceId;
- to: DeviceId;
- hop: number;
- /** Domyślnie: nazwa ramki z kroku. */
- label?: string;
-}
 
 export interface ArpEntry {
  ip: string;
@@ -62,22 +29,17 @@ export interface Question {
  answer: string;
 }
 
-export interface SimulationStep {
+export interface SimulationStep extends DiagramState {
  title: string;
  layer: string;
  description: string;
  roles: Partial<Record<DeviceId, DeviceRole>>;
- /** Ramka, która płynie w tym kroku. Broadcast/Unicast wynika z `dstMac` – nie wpisujemy go osobno. */
- frame?: Frame;
- flows: Flow[];
  /** Wpisy, które pojawiają się w tablicach W TYM kroku. Stan tablic liczymy z kroków 0..N. */
  learns?: { laptopArp?: ArpEntry[]; switchMac?: MacEntry[] };
  questions?: Question[];
 }
 
 // --- Stałe sieci (jedno miejsce prawdy dla adresów i portów) ---
-
-export const BROADCAST_MAC = 'FF:FF:FF:FF:FF:FF';
 
 const IP = { laptop: '10.10.10.105', nas: '10.10.10.30', router: '10.10.10.1' } as const;
 const MAC = {
@@ -238,22 +200,30 @@ export const SIMULATION_STEPS: SimulationStep[] = [
 
 /**
  * Sprawdza spójność scenariusza: każdy skok musi iść po istniejącym kablu,
- * a krok z ruchem musi mieć ramkę. Wywoływane w trybie deweloperskim – błąd w danych
- * wychodzi od razu, a nie jako „brakująca strzałka” na diagramie.
+ * a krok z ruchem musi mieć ramkę. Wywoływane w trybie deweloperskim.
  */
 export function assertScenario(steps: SimulationStep[]): void {
  steps.forEach((step, i) => {
   if (step.flows.length > 0 && !step.frame) {
    throw new Error(`Krok ${i}: są przepływy, ale brak ramki (frame).`);
   }
-  for (const flow of step.flows) {
-   if (!findCable(flow.from, flow.to)) {
-    throw new Error(`Krok ${i}: brak kabla między ${flow.from} a ${flow.to}.`);
-   }
-  }
+  assertFlowsOnCables(CABLES, step.flows, `Krok ${i}`);
  });
 }
 
-export function findCable(x: DeviceId, y: DeviceId): Cable | undefined {
- return CABLES.find((c) => (c.a === x && c.b === y) || (c.a === y && c.b === x));
+export interface TableRow<T> {
+ entry: T;
+ isNew: boolean;
+}
+
+/** Stan tablic ARP (Laptop) i MAC (Switch) po wykonaniu kroków 0..stepIndex. */
+export function tablesAt(steps: SimulationStep[], stepIndex: number) {
+ const arp: TableRow<ArpEntry>[] = [];
+ const mac: TableRow<MacEntry>[] = [];
+ steps.slice(0, stepIndex + 1).forEach((step, i) => {
+  const isNew = i === stepIndex;
+  step.learns?.laptopArp?.forEach((entry) => arp.push({ entry, isNew }));
+  step.learns?.switchMac?.forEach((entry) => mac.push({ entry, isNew }));
+ });
+ return { arp, mac };
 }

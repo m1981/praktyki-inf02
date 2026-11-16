@@ -1,14 +1,16 @@
 import { memo } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { HardDrive, Laptop, Network, Router, type LucideIcon } from 'lucide-react';
-import type { DeviceKind, DeviceRole, Side } from './simulationConfig';
+import { Cctv, HardDrive, Laptop, Network, Printer, Router, type LucideIcon } from 'lucide-react';
+import type { DeviceKind, DeviceRole, Side } from './types';
 import type { DeviceNodeType } from './graph';
 
 const ICONS: Record<DeviceKind, LucideIcon> = {
  laptop: Laptop,
  switch: Network,
  router: Router,
- nas: HardDrive
+ nas: HardDrive,
+ printer: Printer,
+ camera: Cctv
 };
 
 const ROLE_TEXT: Record<DeviceRole, string> = {
@@ -16,7 +18,8 @@ const ROLE_TEXT: Record<DeviceRole, string> = {
  sends: '📤 Wysyła',
  receives: '📥 Odbiera',
  forwards: '🔀 Przełącza',
- drops: '🚫 Odrzuca'
+ drops: '🚫 Odrzuca',
+ blocked: '⛔ Nie może wysłać'
 };
 
 const SIDES: { side: Side; position: Position }[] = [
@@ -28,13 +31,18 @@ const SIDES: { side: Side; position: Position }[] = [
 
 // memo: React Flow re-renderuje węzły przy każdej zmianie widoku – karta zmienia się tylko z danymi.
 export const DeviceNode = memo(function DeviceNode({ data }: NodeProps<DeviceNodeType>) {
- const { device, role } = data;
+ const { device, role, tone } = data;
  const Icon = ICONS[device.kind];
+ const classes = [
+  'sim-device',
+  role && `sim-device--active sim-device--${role}`,
+  tone && `sim-device--tone-${tone}`
+ ];
 
  return (
-  <div className={`sim-device${role ? ` sim-device--${role}` : ''}`}>
+  <div className={classes.filter(Boolean).join(' ')}>
    {/* Jeden niewidoczny punkt zaczepienia na każdym boku. Dzięki ConnectionMode.Loose
-          (w NetworkSimulation) kabel może się do niego podłączyć z obu stron. */}
+       (w Diagram.tsx) kabel może się do niego podłączyć z obu stron. */}
    {SIDES.map(({ side, position }) => (
     <Handle
      key={side}

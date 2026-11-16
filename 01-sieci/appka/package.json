@@ -1,13 +1,14 @@
 {
- "name": "symulator-arp",
+ "name": "symulatory-sieci",
  "private": true,
  "version": "1.0.0",
  "type": "module",
- "description": "Symulator przepływu pakietu (ARP + Unicast) dla Filaru 1. Budowany do ../symulator-arp.html",
+ "description": "Symulatory sieciowe Filaru 1. Budowane do ../symulator-<strona>.html",
  "scripts": {
   "dev": "vite",
+  "test": "vitest run",
   "typecheck": "tsc --noEmit",
-  "build": "tsc --noEmit && vite build && node scripts/publish.mjs",
+  "build": "tsc --noEmit && vitest run && vite build --mode arp && vite build --mode maska",
   "preview": "vite preview"
  },
  "dependencies": {
@@ -23,6 +24,7 @@
   "@vitejs/plugin-react": "^6.3.0",
   "typescript": "^7.0.2",
   "vite": "^8.3.8",
-  "vite-plugin-singlefile": "^2.3.4"
+  "vite-plugin-singlefile": "^2.3.4",
+  "vitest": "^5.1.0"
  }
 }
