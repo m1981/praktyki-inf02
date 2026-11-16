@@ -46,6 +46,68 @@ _title: Lab 3: DHCP, DNS, Routing i NAT_
     - **H3** Faza 3: DNS (Książka Telefoniczna)
     - **H3** Faza 4: NAT (Magiczna Peleryna)
 
+## [`01-sieci/laby-vlan/podsieci.html`](01-sieci/laby-vlan/podsieci.html)
+
+_title: Laboratorium podsieci – dziel sieć klikając_
+
+- **H1** Laboratorium podsieci
+  - **H2** 1. Sieć, którą dzielimy
+  - **H2** 2. Gotowe scenariusze
+  - **H2** 3. Plan budynku: podsieci jako pomieszczenia
+  - **H2** 4. Przestrzeń adresowa
+  - **H2** 5. Co mówią bity
+  - **H2** 6. Zaznaczona podsieć
+  - **H2** 7. Drzewo podziału
+  - **H2** 8. Tabela podsieci
+  - **H2** Jak to czytać
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/cover.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/cover.html)
+
+- **H1** Pracownik zmienia dział
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-kroki.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-kroki.html)
+
+- **H2** Z VLAN-ami: co trzeba zrobić
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-schemat.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-schemat.html)
+
+- **H2** Z VLAN-ami: sieć wyznacza ustawienie portu
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-wynik.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-wynik.html)
+
+- (brak nagłówków h1–h3)
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/porownanie.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/porownanie.html)
+
+- **H2** Porównanie
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-kroki.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-kroki.html)
+
+- **H2** Przed VLAN-ami: co trzeba zrobić
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-schemat.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-schemat.html)
+
+- **H2** Przed VLAN-ami: sieć wyznacza kabel
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-wynik.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-wynik.html)
+
+- (brak nagłówków h1–h3)
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/sytuacja.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/sytuacja.html)
+
+- **H2** Anna przechodzi z IT do księgowości
+
+## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/wniosek.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/wniosek.html)
+
+- **H1** VLAN oddziela to, do jakiej sieci należysz, od tego, gdzie biegnie kabel.
+
+## [`01-sieci/laby-vlan/vlan.html`](01-sieci/laby-vlan/vlan.html)
+
+_title: Laboratorium VLAN – po co nam VLAN-y?_
+
+- **H1** Laboratorium VLAN: po co nam VLAN-y?
+  - **H2** 
+
 ## [`01-sieci/symulator-arp.html`](01-sieci/symulator-arp.html)
 
 _title: Symulator ARP i Unicast_

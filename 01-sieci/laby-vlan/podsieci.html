@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="pl">
+ <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laboratorium podsieci – dziel sieć klikając</title>
+  <style>
+   :root {
+    --bg: #f7f6f2;
+    --panel: #ffffff;
+    --ink: #1d1d1b;
+    --muted: #6b6a65;
+    --line: #e3e1da;
+    --net: #9a988f;
+    --sub: #d9772b;
+    --host: #2f6fb3;
+    --sel: #111;
+    --internal: #ecebe5;
+    --internal-ink: #77756e;
+    --L: 62%;
+    --S: 58%;
+   }
+   @media (prefers-color-scheme: dark) {
+    :root {
+     --bg: #1a1a19;
+     --panel: #242422;
+     --ink: #ecebe6;
+     --muted: #a3a19a;
+     --line: #3a3936;
+     --net: #8a8880;
+     --sub: #f0954a;
+     --host: #6aa6e8;
+     --sel: #fff;
+     --internal: #2e2e2b;
+     --internal-ink: #9b998f;
+     --L: 46%;
+     --S: 50%;
+    }
+   }
+   * {
+    box-sizing: border-box;
+   }
+   body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font:
+     15px/1.5 system-ui,
+     -apple-system,
+     'Segoe UI',
+     Roboto,
+     sans-serif;
+   }
+   .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 18px 60px;
+   }
+   h1 {
+    font-size: 24px;
+    margin: 0 0 4px;
+   }
+   .lead {
+    color: var(--muted);
+    margin: 0 0 20px;
+   }
+   .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+   }
+   .card h2 {
+    font-size: 15px;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+   }
+   .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+   }
+   label {
+    font-size: 13px;
+    color: var(--muted);
+   }
+   input[type='text'],
+   select {
+    font: inherit;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--ink);
+   }
+   input[type='text'] {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+   }
+   button {
+    font: inherit;
+    font-size: 14px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    cursor: pointer;
+   }
+   button:hover:not(:disabled) {
+    border-color: var(--ink);
+   }
+   button.primary {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+   }
+   button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+   }
+   .mono {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+   }
+   .hint {
+    font-size: 13px;
+    color: var(--muted);
+   }
+
+   /* address bar */
+   .bar {
+    display: flex;
+    height: 64px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+   }
+   .seg {
+    position: relative;
+    border-right: 2px solid var(--panel);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    min-width: 2px;
+    transition: filter 0.1s;
+   }
+   .seg:last-child {
+    border-right: none;
+   }
+   .seg:hover {
+    filter: brightness(1.08);
+   }
+   .seg.sel {
+    outline: 3px solid var(--sel);
+    outline-offset: -3px;
+    z-index: 2;
+   }
+   .seg b {
+    font-size: 13px;
+   }
+   .seg small {
+    opacity: 0.9;
+   }
+   .seg small.dev {
+    font-weight: 600;
+    opacity: 1;
+   }
+   .devrow {
+    display: flex;
+    margin-top: 3px;
+    min-height: 20px;
+   }
+   .devrow.tall {
+    min-height: 34px;
+   }
+   .devcell {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: visible;
+    border-top: 2px solid transparent;
+    cursor: default;
+    line-height: 1.3;
+    padding-top: 1px;
+   }
+   .devcell:not(:empty) {
+    border-top-color: var(--line);
+    cursor: pointer;
+   }
+   .devcell.sel:not(:empty) {
+    border-top-color: var(--sel);
+   }
+   .devcell.vert {
+    writing-mode: vertical-rl;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 10px;
+    text-orientation: upright;
+    letter-spacing: -2px;
+    line-height: 1;
+   }
+   .scale {
+    position: relative;
+    height: 18px;
+    margin-top: 3px;
+   }
+   .plan {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    aspect-ratio: 1/1;
+    margin: 0 auto;
+    border: 4px solid var(--ink);
+    border-radius: 4px;
+    background: var(--bg);
+   }
+   .room {
+    position: absolute;
+    border: 2px solid var(--ink);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding: 4px 5px;
+    gap: 3px;
+   }
+   .room.sel {
+    box-shadow: inset 0 0 0 3px var(--sel);
+    z-index: 2;
+   }
+   .room .rh {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: nowrap;
+   }
+   .room .rh b {
+    font-size: 12px;
+   }
+   .room .rl {
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+   }
+   .room .pcs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    align-content: flex-start;
+   }
+   .room .pc {
+    width: 18px;
+    height: 18px;
+    color: var(--ink);
+    opacity: 0.85;
+   }
+   .room .more {
+    font-size: 11px;
+    font-weight: 700;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    padding: 0 3px;
+    border-radius: 4px;
+    background: var(--panel);
+   }
+   .scale span {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--muted);
+   }
+   .scale span:first-child {
+    transform: none;
+   }
+
+   /* tree */
+   .tree {
+    position: relative;
+   }
+   .lvl {
+    position: relative;
+    height: 34px;
+    margin-bottom: 4px;
+   }
+   .lvl-label {
+    position: absolute;
+    left: -46px;
+    top: 7px;
+    width: 40px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+   }
+   .tnode {
+    position: absolute;
+    top: 0;
+    height: 34px;
+    border-radius: 6px;
+    border: 2px solid var(--panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+   }
+   .tnode.internal {
+    background: var(--internal);
+    color: var(--internal-ink);
+   }
+   .tnode.leaf {
+    color: #fff;
+    font-weight: 600;
+   }
+   .tnode.sel {
+    outline: 3px solid var(--sel);
+    outline-offset: -3px;
+    z-index: 2;
+   }
+   .tnode .bit {
+    display: inline-block;
+    font-size: 10px;
+    padding: 0 4px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.18);
+    margin-right: 5px;
+   }
+   .tree-outer {
+    padding-left: 50px;
+    overflow-x: auto;
+   }
+
+   /* detail */
+   .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+   }
+   @media (max-width: 820px) {
+    .grid2 {
+     grid-template-columns: 1fr;
+    }
+   }
+   .kv {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 14px;
+    font-size: 14px;
+   }
+   .kv dt {
+    color: var(--muted);
+   }
+   .kv dd {
+    margin: 0;
+   }
+   .bits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0 2px;
+   }
+   .oct {
+    display: flex;
+    gap: 1px;
+   }
+   .b {
+    width: 17px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 13px;
+    border-radius: 3px;
+    color: #fff;
+   }
+   .b-net {
+    background: var(--net);
+   }
+   .b-sub {
+    background: var(--sub);
+   }
+   .b-host {
+    background: var(--host);
+   }
+   .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+   }
+   .legend i {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: -1px;
+   }
+   .explain {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    margin-top: 10px;
+   }
+
+   table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+   }
+   th,
+   td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--line);
+   }
+   th {
+    color: var(--muted);
+    font-weight: 500;
+   }
+   tr.sel td {
+    background: var(--bg);
+    font-weight: 600;
+   }
+   tbody tr {
+    cursor: pointer;
+   }
+   .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: -1px;
+   }
+   .msg {
+    font-size: 13px;
+    margin-top: 8px;
+   }
+   .msg.err {
+    color: #c0392b;
+   }
+   .tabs-intro ol {
+    margin: 6px 0 0;
+    padding-left: 20px;
+   }
+   .tabs-intro li {
+    margin-bottom: 4px;
+   }
+  </style>
+ </head>
+ <body>
+  <div class="wrap">
+   <h1>Laboratorium podsieci</h1>
+   <p class="lead">
+    Klikaj i dziel sieć na kawałki. Każde przecięcie bloku na pół to wydłużenie maski o 1 bit.
+   </p>
+
+   <div class="card">
+    <h2>1. Sieć, którą dzielimy</h2>
+    <div class="row">
+     <label for="baseIp">Adres sieci</label>
+     <input type="text" id="baseIp" value="192.168.1.0" size="16" />
+     <label for="basePrefix">maska</label>
+     <select id="basePrefix"></select>
+     <button id="applyBase" class="primary">Ustaw</button>
+     <span class="hint" id="baseInfo"></span>
+    </div>
+    <div class="msg err" id="baseErr"></div>
+   </div>
+
+   <div class="card">
+    <h2>2. Gotowe scenariusze</h2>
+    <div class="row">
+     <button data-preset="reset">Cała sieć (bez podziału)</button>
+     <button data-preset="eq1">Równo na 2</button>
+     <button data-preset="eq2">Równo na 4</button>
+     <button data-preset="eq3">Równo na 8</button>
+     <button data-preset="one">Drzewo jednostronne</button>
+     <button data-preset="mix">Mieszany</button>
+    </div>
+    <div class="row" style="margin-top: 12px">
+     <label for="needs">Planer VLSM: ile urządzeń potrzebuje każda podsieć?</label>
+     <input type="text" id="needs" value="100, 50, 20, 2, 2" size="22" />
+     <button id="plan">Rozplanuj</button>
+    </div>
+    <div class="msg" id="planMsg"></div>
+   </div>
+
+   <div class="card">
+    <h2>3. Plan budynku: podsieci jako pomieszczenia</h2>
+    <p class="hint" style="margin-top: 0">
+     Ten sam podział co w drzewie, tylko narysowany jak plan piętra. Cały kwadrat to sieć wyjściowa.
+     Każde przecięcie dzieli pokój na pół, raz w pionie, raz w poziomie. Pokoje to liście drzewa,
+     czyli prawdziwe podsieci. Powierzchnia pokoju odpowiada liczbie adresów. Ikonki pokazują
+     urządzenia poglądowo: gdy się nie mieszczą, reszta jest jako „+N”.
+    </p>
+    <div class="plan" id="plan-view"></div>
+    <div class="legend" style="margin-top: 8px">
+     <span
+      >Ściana między pokojami = granica podsieci. Żeby komputer z jednego pokoju „pogadał” z innym
+      pokojem, ruch musi przejść przez router.</span
+     >
+    </div>
+   </div>
+
+   <div class="card">
+    <h2>4. Przestrzeń adresowa</h2>
+    <div class="bar" id="bar"></div>
+    <div class="devrow" id="devrow"></div>
+    <div class="scale" id="scale"></div>
+    <p class="hint" style="margin: 6px 0 0">
+     Kliknij blok, żeby go zaznaczyć. Kliknij dwa razy, żeby go podzielić na pół. Liczba w nawiasie
+     to ile urządzeń zmieści się w podsieci (adresy minus adres sieci i broadcast). Gdy blok jest za
+     wąski, liczba przechodzi pod pasek.
+    </p>
+   </div>
+
+   <div class="card">
+    <h2>5. Co mówią bity</h2>
+    <div style="font-size: 13px; color: var(--muted)">Adres sieci binarnie:</div>
+    <div class="bits" id="bitsAddr"></div>
+    <div style="font-size: 13px; color: var(--muted); margin-top: 8px">Maska binarnie:</div>
+    <div class="bits" id="bitsMask"></div>
+    <div class="legend">
+     <span><i style="background: var(--net)"></i>bity sieci wyjściowej</span>
+     <span><i style="background: var(--sub)"></i>bity „pożyczone” na podsieci</span>
+     <span><i style="background: var(--host)"></i>bity hosta (urządzenia)</span>
+    </div>
+    <div class="explain" id="explain"></div>
+   </div>
+
+   <div class="card">
+    <h2>6. Zaznaczona podsieć</h2>
+    <div class="row" style="margin-bottom: 12px">
+     <button id="splitBtn" class="primary">✂ Podziel na pół</button>
+     <button id="mergeBtn">⤒ Scal z sąsiadem</button>
+    </div>
+    <dl class="kv" id="detail"></dl>
+   </div>
+
+   <div class="card">
+    <h2>7. Drzewo podziału</h2>
+    <p class="hint" style="margin-top: 0">
+     Każdy poziom to jeden bit maski więcej. Szare bloki zostały podzielone, kolorowe to faktyczne
+     podsieci (liście drzewa). Mała etykieta 0 lub 1 to wartość bitu, który zdecydował, czy blok
+     jest lewą, czy prawą połówką.
+    </p>
+    <div class="tree-outer"><div class="tree" id="tree"></div></div>
+   </div>
+
+   <div class="card">
+    <h2>8. Tabela podsieci</h2>
+    <div style="overflow-x: auto">
+     <table>
+      <thead>
+       <tr>
+        <th>#</th>
+        <th>Podsieć</th>
+        <th>Maska</th>
+        <th>Pierwszy – ostatni host</th>
+        <th>Broadcast</th>
+        <th>Hostów</th>
+        <th>Przeznaczenie</th>
+       </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+     </table>
+    </div>
+   </div>
+
+   <div class="card tabs-intro">
+    <h2>Jak to czytać</h2>
+    <ol>
+     <li>
+      <b>Podział zawsze idzie na pół.</b> Maska dokłada jeden bit. Ten bit może mieć wartość 0 (lewa
+      połówka) albo 1 (prawa), więc z jednego bloku robią się dwa.
+     </li>
+     <li>
+      <b>Drzewo równe</b> (np. „Równo na 4”) daje podsieci jednakowej wielkości. Wszystkie mają tę
+      samą maskę.
+     </li>
+     <li>
+      <b>Drzewo jednostronne</b> dzieli w kółko tylko jedną połówkę. Wychodzą podsieci coraz
+      mniejsze: /25, /26, /27… Tak powstaje VLSM, czyli maski o zmiennej długości.
+     </li>
+     <li>
+      <b>Podsieć zawsze zaczyna się na „równej” granicy.</b> Podsieć /26 (64 adresy) może zacząć się
+      tylko od .0, .64, .128 lub .192. Dlatego planer najpierw układa największe podsieci.
+     </li>
+     <li>
+      <b>Hostów jest o 2 mniej niż adresów.</b> Pierwszy adres to adres sieci, ostatni to broadcast.
+     </li>
+    </ol>
+   </div>
+  </div>
+
+  <script>
+   (function () {
+    const MAXP = 30;
+    const ipToInt = (s) => {
+     const p = s.trim().split('.');
+     if (p.length !== 4) return null;
+     let n = 0;
+     for (const x of p) {
+      if (!/^\d{1,3}$/.test(x)) return null;
+      const v = +x;
+      if (v > 255) return null;
+      n = n * 256 + v;
+     }
+     return n >>> 0;
+    };
+    const intToIp = (n) => [24, 16, 8, 0].map((s) => (n >>> s) & 255).join('.');
+    const maskInt = (p) => (p === 0 ? 0 : (0xffffffff << (32 - p)) >>> 0);
+    const size = (p) => 2 ** (32 - p);
+    const hosts = (p) => (p >= 31 ? 0 : size(p) - 2);
+    const isDark = () => {
+     try {
+      return matchMedia('(prefers-color-scheme: dark)').matches;
+     } catch (e) {
+      return false;
+     }
+    };
+
+    let base,
+     baseP,
+     root,
+     selected,
+     uid = 0;
+
+    function mk(net, p, parent) {
+     return {
+      id: ++uid,
+      net: net >>> 0,
+      p,
+      kids: null,
+      parent: parent || null,
+      label: null,
+      need: 0
+     };
+    }
+    function color(p) {
+     const hue = (p * 53 + 190) % 360;
+     return isDark() ? `hsl(${hue} 50% 44%)` : `hsl(${hue} 55% 50%)`;
+    }
+    function leaves(n = root, out = []) {
+     if (!n.kids) out.push(n);
+     else {
+      leaves(n.kids[0], out);
+      leaves(n.kids[1], out);
+     }
+     return out;
+    }
+    function allNodes(n = root, out = []) {
+     out.push(n);
+     if (n.kids) {
+      allNodes(n.kids[0], out);
+      allNodes(n.kids[1], out);
+     }
+     return out;
+    }
+
+    function split(n) {
+     if (!n || n.kids || n.p >= MAXP) return false;
+     const h = size(n.p + 1);
+     n.kids = [mk(n.net, n.p + 1, n), mk(n.net + h, n.p + 1, n)];
+     n.label = null;
+     n.need = 0;
+     return true;
+    }
+    function canMerge(n) {
+     return n && n.parent && !n.parent.kids[0].kids && !n.parent.kids[1].kids;
+    }
+    function merge(n) {
+     if (!canMerge(n)) return null;
+     const par = n.parent;
+     par.kids = null;
+     par.label = null;
+     par.need = 0;
+     return par;
+    }
+
+    function reset() {
+     root = mk(base, baseP, null);
+     selected = root;
+    }
+
+    /* ---------- base ---------- */
+    const sel = document.getElementById('basePrefix');
+    for (let p = 16; p <= 28; p++) {
+     const o = document.createElement('option');
+     o.value = p;
+     o.textContent = `/${p}  (${intToIp(maskInt(p))})`;
+     if (p === 24) o.selected = true;
+     sel.appendChild(o);
+    }
+
+    function applyBase() {
+     const ip = ipToInt(document.getElementById('baseIp').value);
+     const err = document.getElementById('baseErr');
+     if (ip === null) {
+      err.textContent =
+       'To nie jest poprawny adres IPv4. Wpisz cztery liczby 0–255 rozdzielone kropkami.';
+      return;
+     }
+     err.textContent = '';
+     baseP = +sel.value;
+     const net = (ip & maskInt(baseP)) >>> 0;
+     if (net !== ip) {
+      err.textContent = `Uwaga: ${intToIp(ip)} nie jest początkiem sieci /${baseP}, więc używam adresu sieci ${intToIp(net)} (to wynik operacji AND z maską).`;
+     }
+     base = net;
+     document.getElementById('baseIp').value = intToIp(net);
+     document.getElementById('baseInfo').textContent =
+      `${size(baseP)} adresów, ${hosts(baseP)} hostów`;
+     document.getElementById('planMsg').textContent = '';
+     reset();
+     render();
+    }
+    document.getElementById('applyBase').onclick = applyBase;
+    document.getElementById('baseIp').addEventListener('keydown', (e) => {
+     if (e.key === 'Enter') applyBase();
+    });
+
+    /* ---------- presets ---------- */
+    function equal(k) {
+     reset();
+     for (let i = 0; i < k; i++) leaves().forEach(split);
+     selected = leaves()[0];
+    }
+    function oneSided() {
+     reset();
+     let n = root;
+     for (let i = 0; i < 6 && n.p < MAXP; i++) {
+      split(n);
+      n = n.kids[1];
+     }
+     selected = root.kids ? root.kids[0] : root;
+    }
+    function mixed() {
+     reset();
+     split(root);
+     split(root.kids[0]);
+     split(root.kids[1]);
+     const r = root.kids[1].kids[1];
+     split(r);
+     split(r.kids[0]);
+     selected = root.kids[0].kids[0];
+    }
+    document.querySelectorAll('[data-preset]').forEach(
+     (b) =>
+      (b.onclick = () => {
+       const v = b.dataset.preset;
+       document.getElementById('planMsg').textContent = '';
+       if (v === 'reset') reset();
+       else if (v === 'eq1') equal(1);
+       else if (v === 'eq2') equal(2);
+       else if (v === 'eq3') equal(3);
+       else if (v === 'one') oneSided();
+       else if (v === 'mix') mixed();
+       render();
+      })
+    );
+
+    /* ---------- VLSM planner ---------- */
+    document.getElementById('plan').onclick = () => {
+     const msg = document.getElementById('planMsg');
+     msg.className = 'msg';
+     const raw = document
+      .getElementById('needs')
+      .value.split(/[,;\s]+/)
+      .filter(Boolean)
+      .map(Number);
+     if (!raw.length || raw.some((x) => !Number.isInteger(x) || x < 1)) {
+      msg.className = 'msg err';
+      msg.textContent = 'Wpisz liczby całkowite większe od zera, np. 100, 50, 20.';
+      return;
+     }
+     const reqs = raw
+      .map((n, i) => ({ n, i, p: Math.min(MAXP, 32 - Math.ceil(Math.log2(n + 2))) }))
+      .sort((a, b) => a.p - b.p || b.n - a.n);
+     reset();
+     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+     const lines = [];
+     let first = null;
+     for (const r of reqs) {
+      if (r.p < baseP) {
+       msg.className = 'msg err';
+       msg.textContent = `Podsieć na ${r.n} urządzeń nie zmieści się nawet w całej sieci /${baseP} (${hosts(baseP)} hostów).`;
+       reset();
+       render();
+       return;
+      }
+      let leaf = leaves().find((l) => !l.label && l.p <= r.p);
+      if (!leaf) {
+       msg.className = 'msg err';
+       msg.textContent = `Zabrakło miejsca na podsieć dla ${r.n} urządzeń. Spróbuj większej sieci wyjściowej albo mniejszych potrzeb.`;
+       reset();
+       render();
+       return;
+      }
+      while (leaf.p < r.p) {
+       split(leaf);
+       leaf = leaf.kids[0];
+      }
+      leaf.label = `${letters[r.i % 26]}: ${r.n} urządz.`;
+      leaf.need = r.n;
+      if (!first) first = leaf;
+      lines.push(`${letters[r.i % 26]} (${r.n}) → /${r.p}, ${hosts(r.p)} hostów`);
+     }
+     selected = first;
+     msg.innerHTML =
+      'Ułożone od największej do najmniejszej: ' +
+      lines.join(' · ') +
+      '. Bloki bez opisu zostają wolne na przyszłość.';
+     render();
+    };
+
+    /* ---------- address bar with device counts ---------- */
+    const plural = (n) => {
+     if (n === 1) return 'urządzenie';
+     const d = n % 10,
+      dd = n % 100;
+     return d >= 2 && d <= 4 && !(dd >= 12 && dd <= 14) ? 'urządzenia' : 'urządzeń';
+    };
+    const ctx = document.createElement('canvas').getContext('2d');
+    const textW = (t, font) => {
+     ctx.font = font;
+     return ctx.measureText(t).width;
+    };
+    const FONT_S = '12px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+    const FONT_B = 'bold 13px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+    const FONT_D = '600 11px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+
+    function renderBar(total, L) {
+     const bar = document.getElementById('bar');
+     const row = document.getElementById('devrow');
+     bar.innerHTML = '';
+     row.innerHTML = '';
+     const barW = bar.clientWidth || 800;
+     const PAD = 10;
+     let below = 0,
+      vertical = false;
+
+     L.forEach((n) => {
+      const frac = size(n.p) / total,
+       px = barW * frac;
+      const h = hosts(n.p);
+      const range =
+       '.' +
+       intToIp(n.net).split('.').pop() +
+       '–.' +
+       intToIp(n.net + size(n.p) - 1)
+        .split('.')
+        .pop();
+      const line2 = n.label || range;
+      const devLong = `(${h} ${plural(h)})`,
+       devMid = `(${h} urz.)`,
+       devShort = `(${h})`;
+
+      const d = document.createElement('div');
+      d.className = 'seg' + (n === selected ? ' sel' : '');
+      d.style.flex = `0 0 ${frac * 100}%`;
+      d.style.background = color(n.p);
+      d.title = `${intToIp(n.net)}/${n.p}: ${range}, ${h} ${plural(h)}${n.label ? ' — ' + n.label : ''}`;
+
+      const fits = (t, f) => textW(t, f) + PAD <= px;
+      let html = '',
+       dev = null;
+      if (fits('/' + n.p, FONT_B)) html += `<b>/${n.p}</b>`;
+      if (fits(line2, FONT_S)) html += `<small>${line2}</small>`;
+      if (fits(devLong, FONT_S)) html += `<small class="dev">${devLong}</small>`;
+      else if (fits(devMid, FONT_S)) html += `<small class="dev">${devMid}</small>`;
+      else dev = devShort; // not enough room inside: move it below the bar
+      d.innerHTML = html;
+      d.onclick = () => {
+       selected = n;
+       render();
+      };
+      d.ondblclick = () => {
+       if (split(n)) {
+        selected = n.kids[0];
+        render();
+       }
+      };
+      bar.appendChild(d);
+
+      const c = document.createElement('div');
+      c.className = 'devcell' + (n === selected ? ' sel' : '');
+      c.style.flex = `0 0 ${frac * 100}%`;
+      if (dev) {
+       below++;
+       const needH = textW(dev, FONT_D) + 4 > px;
+       if (needH) {
+        c.classList.add('vert');
+        vertical = true;
+        c.textContent = String(h);
+       } else c.textContent = dev;
+       c.title = d.title;
+       c.onclick = d.onclick;
+      }
+      row.appendChild(c);
+     });
+     row.style.display = below ? 'flex' : 'none';
+     row.classList.toggle('tall', vertical);
+    }
+
+    let rz;
+    try {
+     new ResizeObserver(() => {
+      clearTimeout(rz);
+      rz = setTimeout(() => {
+       if (root) render();
+      }, 60);
+     }).observe(document.getElementById('bar'));
+    } catch (e) {
+     addEventListener('resize', () => {
+      if (root) render();
+     });
+    }
+
+    /* ---------- floor plan (leaves as rooms) ---------- */
+    const PC_SVG =
+     '<svg class="pc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="3.5" width="19" height="12" rx="1.5"/><path d="M12 15.5v4M8 20h8"/></svg>';
+    function tint(p) {
+     const hue = (p * 53 + 190) % 360;
+     return isDark() ? `hsl(${hue} 35% 24%)` : `hsl(${hue} 60% 90%)`;
+    }
+    function renderPlan() {
+     const box = document.getElementById('plan-view');
+     box.innerHTML = '';
+     const W = box.clientWidth - 8 || 600; // inner size in px (minus border)
+     const rooms = [];
+     (function lay(n, x, y, w, h) {
+      if (!n.kids) {
+       rooms.push({ n, x, y, w, h });
+       return;
+      }
+      if (w >= h) {
+       lay(n.kids[0], x, y, w / 2, h);
+       lay(n.kids[1], x + w / 2, y, w / 2, h);
+      } else {
+       lay(n.kids[0], x, y, w, h / 2);
+       lay(n.kids[1], x, y + h / 2, w, h / 2);
+      }
+     })(root, 0, 0, 1, 1);
+
+     rooms.forEach(({ n, x, y, w, h }) => {
+      const r = document.createElement('div');
+      r.className = 'room' + (n === selected ? ' sel' : '');
+      Object.assign(r.style, {
+       left: x * 100 + '%',
+       top: y * 100 + '%',
+       width: w * 100 + '%',
+       height: h * 100 + '%',
+       background: tint(n.p)
+      });
+      const pw = w * W,
+       ph = h * W,
+       hcount = hosts(n.p);
+      const range =
+       '.' +
+       intToIp(n.net).split('.').pop() +
+       '–.' +
+       intToIp(n.net + size(n.p) - 1)
+        .split('.')
+        .pop();
+      r.title = `${intToIp(n.net)}/${n.p}: ${range}, ${hcount} ${plural(hcount)}${n.label ? ' — ' + n.label : ''}`;
+
+      let html = '';
+      let usedH = 8;
+      if (pw >= 70 && ph >= 26) {
+       html += `<div class="rh"><b>/${n.p}</b>${pw >= 120 ? `<span class="mono">${range}</span>` : ''}</div>`;
+       usedH += 18;
+      } else if (pw >= 24 && ph >= 16) {
+       html += `<div class="rh"><b>/${n.p}</b></div>`;
+       usedH += 18;
+      }
+      if (n.label && pw >= 70 && ph >= 60) {
+       html += `<div class="rl">${n.label}</div>`;
+       usedH += 17;
+      }
+      if (pw >= 70 && ph >= 44) {
+       html += `<div class="rh"><span>${pw >= 150 ? `pojemność: ${hcount} ${plural(hcount)}` : `poj. ${hcount}`}</span></div>`;
+       usedH += 17;
+      }
+
+      // how many 18px icons (+3px gap) fit in the rest of the room
+      const cols = Math.floor((pw - 10 + 3) / 21),
+       rowsN = Math.floor((ph - usedH + 3) / 21);
+      const slots = Math.max(0, cols * rowsN);
+      if (slots > 0) {
+       const MAX_ICONS = 20; // a sample, not every device
+       const want = n.need || hcount; // planned rooms: draw the devices actually needed
+       const room = Math.min(slots, MAX_ICONS + 1);
+       let icons = '',
+        show = Math.min(want, room);
+       if (want > room) show = room - 1; // leave a slot for "+N"
+       for (let i = 0; i < show; i++) icons += PC_SVG;
+       if (want > show) icons += `<span class="more">+${want - show}</span>`;
+       html += `<div class="pcs">${icons}</div>`;
+      }
+      r.innerHTML = html;
+      r.onclick = () => {
+       selected = n;
+       render();
+      };
+      r.ondblclick = () => {
+       if (split(n)) {
+        selected = n.kids[0];
+        render();
+       }
+      };
+      box.appendChild(r);
+     });
+    }
+
+    /* ---------- render ---------- */
+    function render() {
+     const total = size(baseP);
+     const L = leaves();
+     if (!allNodes().includes(selected)) selected = L[0];
+
+     renderBar(total, L);
+     // scale
+     const sc = document.getElementById('scale');
+     sc.innerHTML = '';
+     const scW = sc.clientWidth || 800;
+     let lastEnd = -Infinity;
+     L.forEach((n) => {
+      const t =
+       '.' +
+       intToIp(n.net)
+        .split('.')
+        .slice(baseP <= 16 ? 2 : 3)
+        .join('.');
+      const x = ((n.net - base) / total) * scW,
+       tw = textW(t, '11px system-ui,sans-serif');
+      const start = n.net === base ? x : x - tw / 2;
+      if (start < lastEnd + 6) return; // too close to the previous label: skip it
+      lastEnd = start + tw;
+      const s = document.createElement('span');
+      s.style.left = ((n.net - base) / total) * 100 + '%';
+      s.textContent = t;
+      sc.appendChild(s);
+     });
+
+     // detail
+     const n = selected;
+     const first = n.p >= 31 ? n.net : n.net + 1,
+      lastH = n.p >= 31 ? n.net + size(n.p) - 1 : n.net + size(n.p) - 2;
+     document.getElementById('detail').innerHTML = `
+      <dt>Podsieć</dt><dd class="mono"><b>${intToIp(n.net)}/${n.p}</b></dd>
+      <dt>Maska</dt><dd class="mono">${intToIp(maskInt(n.p))}</dd>
+      <dt>Adres sieci</dt><dd class="mono">${intToIp(n.net)}</dd>
+      <dt>Hosty</dt><dd class="mono">${intToIp(first)} – ${intToIp(lastH)}</dd>
+      <dt>Broadcast</dt><dd class="mono">${intToIp(n.net + size(n.p) - 1)}</dd>
+      <dt>Adresów / hostów</dt><dd>${size(n.p)} / ${hosts(n.p)}</dd>
+      ${n.label ? `<dt>Przeznaczenie</dt><dd>${n.label}</dd>` : ''}
+      ${n.kids ? `<dt>Stan</dt><dd>ten blok jest już podzielony</dd>` : ''}`;
+     document.getElementById('splitBtn').disabled = !!n.kids || n.p >= MAXP;
+     document.getElementById('mergeBtn').disabled = !canMerge(n);
+
+     // bits
+     const bitsHtml = (val, p) => {
+      let h = '';
+      for (let o = 0; o < 4; o++) {
+       h += '<div class="oct">';
+       for (let b = 0; b < 8; b++) {
+        const i = o * 8 + b,
+         bit = (val >>> (31 - i)) & 1;
+        const cls = i < baseP ? 'b-net' : i < p ? 'b-sub' : 'b-host';
+        h += `<span class="b ${cls}">${bit}</span>`;
+       }
+       h += '</div>';
+      }
+      return h;
+     };
+     document.getElementById('bitsAddr').innerHTML = bitsHtml(n.net, n.p);
+     document.getElementById('bitsMask').innerHTML = bitsHtml(maskInt(n.p), n.p);
+
+     const borrowed = n.p - baseP;
+     let ex;
+     if (borrowed === 0) {
+      ex = `To cała sieć wyjściowa /${baseP}. Wszystkie bity za maską (niebieskie) służą do numerowania urządzeń: ${32 - n.p} bitów daje 2<sup>${32 - n.p}</sup> = ${size(n.p)} adresów. Podziel blok, a jeden niebieski bit zmieni się w pomarańczowy.`;
+     } else {
+      const subBits = ((n.net - base) / size(n.p)).toString(2).padStart(borrowed, '0');
+      ex = `Maska /${n.p} to /${baseP} + <b>${borrowed}</b> pożyczon${borrowed === 1 ? 'y bit' : borrowed < 5 ? 'e bity' : 'ych bitów'}. Pomarańczowe bity tej podsieci mają wartość <b class="mono">${subBits}</b>, i to one mówią, którą „szufladą” z ${2 ** borrowed} możliwych o tym rozmiarze jest ta podsieć. Zostaje ${32 - n.p} bitów hosta, czyli ${size(n.p)} adresów (${hosts(n.p)} na urządzenia).`;
+      if (n.p >= 24 && baseP >= 24)
+       ex += ` Dlatego podsieci /${n.p} zaczynają się co ${size(n.p)}: .0, .${size(n.p)}, .${2 * size(n.p)}…`;
+     }
+     document.getElementById('explain').innerHTML = ex;
+
+     // tree
+     const tree = document.getElementById('tree');
+     tree.innerHTML = '';
+     const nodes = allNodes();
+     const maxP = Math.max(...nodes.map((x) => x.p));
+     for (let p = baseP; p <= maxP; p++) {
+      const row = document.createElement('div');
+      row.className = 'lvl';
+      row.innerHTML = `<span class="lvl-label">/${p}</span>`;
+      nodes
+       .filter((x) => x.p === p)
+       .forEach((x) => {
+        const d = document.createElement('div');
+        const w = (size(x.p) / total) * 100;
+        d.className = 'tnode ' + (x.kids ? 'internal' : 'leaf') + (x === selected ? ' sel' : '');
+        d.style.left = ((x.net - base) / total) * 100 + '%';
+        d.style.width = w + '%';
+        if (!x.kids) d.style.background = color(x.p);
+        const bit = x.parent ? (x.parent.kids[0] === x ? '0' : '1') : '';
+        const last = '.' + intToIp(x.net).split('.').pop();
+        let txt = '';
+        if (w >= 14)
+         txt = `${bit ? `<span class="bit">${bit}</span>` : ''}${baseP >= 24 ? last : intToIp(x.net)}/${x.p}`;
+        else if (w >= 5) txt = `${bit ? `<span class="bit">${bit}</span>` : ''}${last}`;
+        else if (w >= 2.5) txt = bit;
+        d.innerHTML = txt;
+        d.title = `${intToIp(x.net)}/${x.p}${x.kids ? ' (podzielony)' : ''}`;
+        d.onclick = () => {
+         selected = x;
+         render();
+        };
+        d.ondblclick = () => {
+         if (split(x)) {
+          selected = x.kids[0];
+          render();
+         }
+        };
+        row.appendChild(d);
+       });
+      tree.appendChild(row);
+     }
+
+     renderPlan();
+
+     // table
+     const tb = document.getElementById('tbody');
+     tb.innerHTML = '';
+     L.forEach((x, i) => {
+      const tr = document.createElement('tr');
+      if (x === selected) tr.className = 'sel';
+      const f = x.p >= 31 ? x.net : x.net + 1,
+       l = x.p >= 31 ? x.net + size(x.p) - 1 : x.net + size(x.p) - 2;
+      tr.innerHTML = `<td>${i + 1}</td><td class="mono"><span class="dot" style="background:${color(x.p)}"></span>${intToIp(x.net)}/${x.p}</td><td class="mono">${intToIp(maskInt(x.p))}</td><td class="mono">${intToIp(f)} – ${intToIp(l)}</td><td class="mono">${intToIp(x.net + size(x.p) - 1)}</td><td>${hosts(x.p)}</td><td>${x.label || '<span class="hint">wolna</span>'}</td>`;
+      tr.onclick = () => {
+       selected = x;
+       render();
+      };
+      tb.appendChild(tr);
+     });
+    }
+
+    document.getElementById('splitBtn').onclick = () => {
+     if (split(selected)) {
+      selected = selected.kids[0];
+      render();
+     }
+    };
+    document.getElementById('mergeBtn').onclick = () => {
+     const p = merge(selected);
+     if (p) {
+      selected = p;
+      render();
+     }
+    };
+
+    applyBase();
+   })();
+  </script>
+ </body>
+</html>

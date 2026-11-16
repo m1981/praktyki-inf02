@@ -2,6 +2,26 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-17 — Laby VLAN i podsieci dołączone z historią (`01-sieci/laby-vlan/`)
+
+- **Nowy folder `01-sieci/laby-vlan/`** (PYT-029a): dwa samodzielne laby powstałe w osobnej
+  sesji pracy, dołączone razem z pełną historią (33 commity; `git log -- 01-sieci/laby-vlan`).
+  - `podsieci.html` – Laboratorium podsieci: dzielenie sieci klikaniem, plan budynku (podsieci
+    jako pomieszczenia), bity maski, drzewo podziału, planer VLSM. W historii nazywał się
+    `index.html`; zmieniona nazwa, żeby nie udawał strony teorii filaru.
+  - `vlan.html` – Laboratorium VLAN „po co nam VLAN-y?”: cztery kłopoty sprzed VLAN-ów, każdy
+    z przełącznikiem „Przed / Z VLAN-ami”. Kłopoty 1 i 3 to sceny dialogowe (Ola, Kierownik IT,
+    Szefowa Sprzedaży) „rok 1996” i „dziś”; Kłopot 2 to animacja krok po kroku; Kłopot 4 –
+    broadcast i obcy laptop w płaskiej sieci. Linki `#problem-1` … `#problem-4`.
+  - `scenariusze/` – scenariusze scen (źródło prawdy dla kwestii w `vlan.html`).
+  - `prezentacja-vlan/` – źródła talii Slides do Kłopotu 2 (PYT-030a; nieaktualna względem
+    obecnej animacji).
+- **Stan:** laby nie korzystają jeszcze z `common.css` ani `menu.js` (brak paska nawigacji
+  i okruszków) i nie są podlinkowane z `01-sieci/index.html`. Tematycznie pokrywają się
+  z `lab2-vlany.html` i `symulator-maska.html` – wpięcie w filar to osobna decyzja.
+- **Formatowanie:** Prettier na nowych plikach osobnym commitem (PYT-032a); zrzuty ekranu przed
+  i po formatowaniu identyczne co do piksela.
+
 ## 2026-11-16 — Seria mikro-ćwiczeń M1–M4 (maska)
 
 - **`01-sieci/symulator-maska.html`** zaczyna się teraz od serii (PYT-009a, makiety z `audyt.md`):
