@@ -1,10 +1,10 @@
-// Scenariusz symulacji ARP: układ diagramu, ramki i kroki.
-// DLACZEGO OSOBNY PLIK BEZ REACTA: scenariusz to czyste dane. Nowy scenariusz (np. „Ruch do
-// Internetu przez Router”) to nowa tablica kroków – bez zmian w komponentach.
+// Symulator ARP: układ diagramu, ramki i kroki scenariusza.
+// DLACZEGO DANE, A NIE KOMPONENTY: scenariusz to czyste dane. Nowy scenariusz (np. „Ruch do
+// Internetu przez Router”) to nowa tablica kroków – bez zmian w `engine/` i `ui/`.
 
+import type { Course, Step } from '../engine/types';
 import {
  device,
- deviceByMac,
  deviceCidr,
  deviceIpText,
  deviceMac,
@@ -13,26 +13,23 @@ import {
  zoneCidr,
  type DeviceId as ModelDeviceId
 } from '../model/siec';
-import { GLOSSARY, nameOf } from '../model/glossary';
-import { arpReply, arpRequest, type Learns } from '../net/arp';
+import { nameOf } from '../model/glossary';
+import { arpReply, arpRequest, arpTableAt, macTableAt, type Learn } from '../net/arp';
 import { BROADCAST_MAC, type Frame } from '../net/frame';
-import { assertFlowsOnCables, cable } from '../ui/diagram/graph';
+import { cable } from '../ui/diagram/graph';
 import type { Cable, Device, DeviceRole, DiagramState } from '../ui/diagram/types';
+import type { Question } from '../ui/panels/QuestionsPanel';
 
-export type DeviceId = Extract<ModelDeviceId, 'laptop' | 'switch' | 'router' | 'nas'>;
+type DeviceId = Extract<ModelDeviceId, 'laptop' | 'switch' | 'router' | 'nas'>;
 
-export interface Question {
- question: string;
- answer: string;
-}
-
-export interface SimulationStep extends DiagramState {
+/** Krok scenariusza tak, jak go pisze autor. Kształt dla szablonu ekranu (`Step`) powstaje niżej. */
+export interface ScenarioStep extends DiagramState {
  title: string;
  layer: string;
  description: string;
  roles: Partial<Record<DeviceId, DeviceRole>>;
- /** Wpisy, które pojawiają się w tablicach W TYM kroku. Stan tablic liczymy z kroków 0..N. */
- learns?: Learns;
+ /** Czego urządzenia uczą się W TYM kroku. Stan tablic liczymy z kroków 0..N. */
+ learns?: Learn[];
  questions?: Question[];
 }
 
@@ -82,13 +79,6 @@ export const CABLES: Cable[] = [
  cable('switch', 'right', 'nas', 'left')
 ];
 
-/** Nazwa urządzenia dla adresu MAC – do podpisów w tabelach. */
-export function macOwner(mac: string): string | undefined {
- if (mac === BROADCAST_MAC) return 'Broadcast – do wszystkich';
- const owner = deviceByMac(mac);
- return owner && GLOSSARY[owner.kind].nom;
-}
-
 // --- Ramki użyte w scenariuszu ---
 
 const ARP_REQUEST = arpRequest(MAC.laptop, `Kto ma ${IP.nas}? Odpowiedz do ${IP.laptop}`);
@@ -104,7 +94,7 @@ const DATA: Frame = {
 
 // --- Scenariusz: komunikacja w jednej sieci LAN (ARP + Unicast) ---
 
-export const SIMULATION_STEPS: SimulationStep[] = [
+export const SCENARIO: ScenarioStep[] = [
  {
   title: 'Start: Laptop chce zapisać plik na Serwerze NAS',
   layer: 'Brak ruchu',
@@ -126,7 +116,7 @@ export const SIMULATION_STEPS: SimulationStep[] = [
   roles: { laptop: 'sends', switch: 'receives' },
   frame: ARP_REQUEST,
   flows: [{ from: 'laptop', to: 'switch', hop: 0 }],
-  learns: { switchMac: [{ mac: MAC.laptop, port: PORT.laptop }] }
+  learns: [{ device: 'switch', mac: [{ mac: MAC.laptop, port: PORT.laptop }] }]
  },
  {
   title: 'Krok 3: Switch rozsyła kopie na wszystkie porty',
@@ -146,7 +136,7 @@ export const SIMULATION_STEPS: SimulationStep[] = [
   roles: { nas: 'sends', switch: 'receives' },
   frame: ARP_REPLY,
   flows: [{ from: 'nas', to: 'switch', hop: 0 }],
-  learns: { switchMac: [{ mac: MAC.nas, port: PORT.nas }] }
+  learns: [{ device: 'switch', mac: [{ mac: MAC.nas, port: PORT.nas }] }]
  },
  {
   title: 'Krok 5: Switch wysyła odpowiedź tylko do Laptopa',
@@ -155,7 +145,7 @@ export const SIMULATION_STEPS: SimulationStep[] = [
   roles: { switch: 'forwards', laptop: 'receives' },
   frame: ARP_REPLY,
   flows: [{ from: 'switch', to: 'laptop', hop: 0 }],
-  learns: { laptopArp: [{ ip: IP.nas, mac: MAC.nas }] }
+  learns: [{ device: 'laptop', arp: [{ ip: IP.nas, mac: MAC.nas }] }]
  },
  {
   title: 'Krok 6: Wysłanie danych (Unicast)',
@@ -181,15 +171,44 @@ export const SIMULATION_STEPS: SimulationStep[] = [
  }
 ];
 
-/**
- * Sprawdza spójność scenariusza: każdy skok musi iść po istniejącym kablu,
- * a krok z ruchem musi mieć ramkę. Wywoływane w trybie deweloperskim.
- */
-export function assertScenario(steps: SimulationStep[]): void {
- steps.forEach((step, i) => {
-  if (step.flows.length > 0 && !step.frame) {
-   throw new Error(`Krok ${i}: są przepływy, ale brak ramki (frame).`);
-  }
-  assertFlowsOnCables(CABLES, step.flows, `Krok ${i}`);
- });
+// --- Scenariusz → kurs dla szablonu ekranu ---
+
+/** Krok dla szablonu: diagram jako scena, pod nią ramka, tablice i (na końcu) pytania. */
+function toStep(scenario: ScenarioStep, index: number): Step {
+ const { title, layer, description, roles, flows, frame, questions } = scenario;
+ return {
+  intro: index === 0,
+  layer,
+  title,
+  text: description,
+  view: { type: 'diagram', devices: DEVICES, cables: CABLES, state: { roles, flows, frame } },
+  panels: [
+   { type: 'frame', frame },
+   {
+    type: 'tables',
+    tables: [
+     { kind: 'arp', device: 'laptop', rows: arpTableAt(SCENARIO, index, 'laptop') },
+     { kind: 'mac', device: 'switch', rows: macTableAt(SCENARIO, index, 'switch') }
+    ]
+   },
+   ...(questions ? [{ type: 'questions' as const, items: questions }] : [])
+  ],
+  control: { type: 'stepper' }
+ };
 }
+
+export const ARP: Course = {
+ id: 'arp',
+ title: 'Symulator ARP',
+ exercises: [
+  {
+   code: 'ARP',
+   title: 'Jak Laptop znajduje Serwer NAS',
+   legend: [
+    { color: 'broadcast', text: 'Broadcast – ramka do wszystkich' },
+    { color: 'unicast', text: 'Unicast – ramka do jednego urządzenia' }
+   ],
+   steps: SCENARIO.map(toStep)
+  }
+ ]
+};

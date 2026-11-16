@@ -24,25 +24,48 @@ export interface MacEntry {
  port: string;
 }
 
-/** Wpisy, które pojawiają się w tablicach w jednym kroku. */
-export interface Learns {
- laptopArp?: ArpEntry[];
- switchMac?: MacEntry[];
-}
+/**
+ * Czego jedno urządzenie uczy się w jednym kroku: komputer dopisuje wpisy do tablicy ARP,
+ * Switch – do tablicy MAC. Każde urządzenie ma własne tablice.
+ */
+export type Learn = { device: string; arp: ArpEntry[] } | { device: string; mac: MacEntry[] };
 
 export interface TableRow<T> {
  entry: T;
+ /** Wpis pojawił się w bieżącym kroku. */
  isNew: boolean;
 }
 
-/** Stan tablic ARP (Laptop) i MAC (Switch) po wykonaniu kroków 0..stepIndex. */
-export function tablesAt(steps: readonly { learns?: Learns }[], stepIndex: number) {
- const arp: TableRow<ArpEntry>[] = [];
- const mac: TableRow<MacEntry>[] = [];
- steps.slice(0, stepIndex + 1).forEach((step, i) => {
-  const isNew = i === stepIndex;
-  step.learns?.laptopArp?.forEach((entry) => arp.push({ entry, isNew }));
-  step.learns?.switchMac?.forEach((entry) => mac.push({ entry, isNew }));
- });
- return { arp, mac };
+interface LearningStep {
+ learns?: readonly Learn[];
+}
+
+function rowsAt<T>(
+ steps: readonly LearningStep[],
+ stepIndex: number,
+ pick: (learn: Learn) => T[]
+): TableRow<T>[] {
+ return steps
+  .slice(0, stepIndex + 1)
+  .flatMap((step, i) =>
+   (step.learns ?? []).flatMap(pick).map((entry) => ({ entry, isNew: i === stepIndex }))
+  );
+}
+
+/** Tablica ARP urządzenia po wykonaniu kroków 0..stepIndex. */
+export function arpTableAt(
+ steps: readonly LearningStep[],
+ stepIndex: number,
+ device: string
+): TableRow<ArpEntry>[] {
+ return rowsAt(steps, stepIndex, (l) => (l.device === device && 'arp' in l ? l.arp : []));
+}
+
+/** Tablica MAC Switcha po wykonaniu kroków 0..stepIndex. */
+export function macTableAt(
+ steps: readonly LearningStep[],
+ stepIndex: number,
+ device: string
+): TableRow<MacEntry>[] {
+ return rowsAt(steps, stepIndex, (l) => (l.device === device && 'mac' in l ? l.mac : []));
 }

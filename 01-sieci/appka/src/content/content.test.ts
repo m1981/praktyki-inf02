@@ -8,10 +8,11 @@ import { GLOSSARY } from '../model/glossary';
 import { DEVICES } from '../model/siec';
 import { MAX_PREFIX, MIN_PREFIX, TARGETS } from '../net/mask';
 import { assertFlowsOnCables } from '../ui/diagram/graph';
+import { ARP, SCENARIO } from './arp';
 import { MASKA } from './maska';
 import { FREE_MODE, PRESETS } from './maska-swobodny';
 
-const COURSES: Course[] = [MASKA];
+const COURSES: Course[] = [ARP, MASKA];
 
 const steps = COURSES.flatMap((course) =>
  course.exercises.flatMap((ex) =>
@@ -33,6 +34,12 @@ const sentences: [string, string][] = [
   [`${name} tekst`, step.text],
   [`${name} zmiana`, step.change ?? '']
  ]),
+ ...SCENARIO.flatMap((step, i): [string, string][] =>
+  (step.questions ?? []).flatMap((q, n): [string, string][] => [
+   [`ARP krok ${i + 1} pytanie ${n + 1}`, q.question],
+   [`ARP krok ${i + 1} odpowiedź ${n + 1}`, q.answer]
+  ])
+ ),
  ...PRESETS.flatMap((p): [string, string][] => [
   [`przykład ${p.id} tytuł`, p.title],
   [`przykład ${p.id} lekcja`, p.lesson]
@@ -99,6 +106,19 @@ describe('nazwy urządzeń tylko ze słownika', () => {
   // „NAS” występuje tylko jako część nazwy „Serwer NAS”.
   const nasAlone = text.match(/(?<!Serwer\p{L}* )(?<![\p{L}])NAS(?![\p{L}])/gu) ?? [];
   expect(nasAlone).toEqual([]);
+ });
+});
+
+describe('Symulator ARP', () => {
+ it('krok z ruchem ma ramkę', () => {
+  for (const step of SCENARIO) {
+   if (step.flows.length > 0) expect(step.frame).toBeDefined();
+  }
+ });
+
+ it('pytania „Sprawdź się” są na ostatnim kroku', () => {
+  const last = ARP.exercises[0].steps.at(-1);
+  expect(last?.panels?.some((p) => p.type === 'questions')).toBe(true);
  });
 });
 

@@ -3,6 +3,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MASKA } from '../content/maska';
 import { FREE_MODE } from '../content/maska-swobodny';
+import { assertCourse } from '../engine/check';
 import type { Course } from '../engine/types';
 import { MaskExplorer } from '../ui/free/MaskExplorer';
 import { LessonShell } from '../ui/LessonShell';
@@ -19,6 +20,8 @@ const course: Course = {
   component: () => <MaskExplorer content={FREE_MODE} />
  }
 };
+
+if (import.meta.env.DEV) assertCourse(course);
 
 createRoot(document.getElementById('root')!).render(
  <StrictMode>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { arpReply, arpRequest, tablesAt } from './arp';
+import { arpReply, arpRequest, arpTableAt, macTableAt } from './arp';
 import { decideRoute } from './decide';
 import { BROADCAST_MAC, isBroadcast } from './frame';
 import { parseIp } from '../lib/ipv4';
@@ -88,13 +88,31 @@ describe('ARP', () => {
  it('tablice rosną krok po kroku, a „nowy wpis” dotyczy tylko bieżącego kroku', () => {
   const steps = [
    {},
-   { learns: { switchMac: [{ mac: 'AA', port: 'Fa0/1' }] } },
-   { learns: { laptopArp: [{ ip: '1.2.3.4', mac: 'BB' }] } }
+   { learns: [{ device: 'sw', mac: [{ mac: 'AA', port: 'Fa0/1' }] }] },
+   { learns: [{ device: 'pc', arp: [{ ip: '1.2.3.4', mac: 'BB' }] }] }
   ];
-  expect(tablesAt(steps, 0)).toEqual({ arp: [], mac: [] });
-  expect(tablesAt(steps, 1).mac).toEqual([{ entry: { mac: 'AA', port: 'Fa0/1' }, isNew: true }]);
-  const last = tablesAt(steps, 2);
-  expect(last.mac[0].isNew).toBe(false);
-  expect(last.arp[0].isNew).toBe(true);
+  expect(arpTableAt(steps, 0, 'pc')).toEqual([]);
+  expect(macTableAt(steps, 0, 'sw')).toEqual([]);
+  expect(macTableAt(steps, 1, 'sw')).toEqual([
+   { entry: { mac: 'AA', port: 'Fa0/1' }, isNew: true }
+  ]);
+  expect(macTableAt(steps, 2, 'sw')[0].isNew).toBe(false);
+  expect(arpTableAt(steps, 2, 'pc')[0].isNew).toBe(true);
+ });
+
+ it('każde urządzenie ma własne tablice', () => {
+  const steps = [
+   {
+    learns: [
+     { device: 'pc1', arp: [{ ip: '1.2.3.4', mac: 'BB' }] },
+     { device: 'pc2', arp: [{ ip: '1.2.3.5', mac: 'CC' }] },
+     { device: 'sw', mac: [{ mac: 'BB', port: 'Fa0/2' }] }
+    ]
+   }
+  ];
+  expect(arpTableAt(steps, 0, 'pc1').map((r) => r.entry.mac)).toEqual(['BB']);
+  expect(arpTableAt(steps, 0, 'pc2').map((r) => r.entry.mac)).toEqual(['CC']);
+  expect(arpTableAt(steps, 0, 'sw')).toEqual([]);
+  expect(macTableAt(steps, 0, 'pc1')).toEqual([]);
  });
 });

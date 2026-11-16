@@ -1,9 +1,9 @@
 # Symulatory sieciowe Filaru 1 (źródła)
 
-| Strona (plik generowany – **nie edytuj ręcznie**)          | Źródła                                         | Wejście HTML |
-| ---------------------------------------------------------- | ---------------------------------------------- | ------------ |
-| [`01-sieci/symulator-arp.html`](../symulator-arp.html)     | `src/arp/`                                     | `arp.html`   |
-| [`01-sieci/symulator-maska.html`](../symulator-maska.html) | `src/pages/maska.tsx`, `src/content/maska*.ts` | `maska.html` |
+| Strona (plik generowany – **nie edytuj ręcznie**)          | Wejście strony        | Treść                   | Wejście HTML |
+| ---------------------------------------------------------- | --------------------- | ----------------------- | ------------ |
+| [`01-sieci/symulator-arp.html`](../symulator-arp.html)     | `src/pages/arp.tsx`   | `src/content/arp.ts`    | `arp.html`   |
+| [`01-sieci/symulator-maska.html`](../symulator-maska.html) | `src/pages/maska.tsx` | `src/content/maska*.ts` | `maska.html` |
 
 Plan kolejnych symulatorów: [`plan.md`](plan.md).
 
@@ -40,8 +40,8 @@ jest w innym miejscu niż domyślne, ustaw zmienną `CHROME_PATH`.
 ## Gdzie co jest
 
 Warstwy według [`architektura.md`](architektura.md), rozdz. 2. Zależności idą tylko w dół:
-`pages → content → engine / ui → net → model → lib`. Stan po kroku 3 migracji: strona maski działa na
-silniku; Symulator ARP (`src/arp/`) przejdzie na niego w kroku 4.
+`pages → content → engine / ui → net → model → lib`. Stan po kroku 4 migracji: obie strony działają na
+jednym silniku i jednym szablonie ekranu.
 
 | Katalog        | Rola                                                                                      |
 | -------------- | ----------------------------------------------------------------------------------------- |
@@ -87,6 +87,7 @@ i jedna linia w rejestrze `src/engine/registry.tsx`.
 
 ## Nowy scenariusz ARP-owy (kroki)
 
-Edytujesz tylko `src/arp/scenario.ts` (adresy i nazwy urządzeń bierzesz z `src/model/`). Broadcast/Unicast wynika z `frame.dstMac`, kierunek strzałki
-z `flow.from` → `flow.to`, tablice ARP/MAC z pól `learns`. W `pnpm dev` funkcja `assertScenario`
-zgłosi błąd, gdy skok nie idzie po istniejącym kablu.
+Edytujesz tylko `src/content/arp.ts` (adresy i nazwy urządzeń bierzesz z `src/model/`). Broadcast/Unicast
+wynika z `frame.dstMac`, kierunek strzałki z `flow.from` → `flow.to`, tablice ARP/MAC z pól `learns`
+(każde urządzenie ma własne tablice: `{ device: 'laptop', arp: [...] }`, `{ device: 'switch', mac: [...] }`).
+W `pnpm dev` funkcja `assertCourse` zgłosi błąd, gdy skok nie idzie po istniejącym kablu.

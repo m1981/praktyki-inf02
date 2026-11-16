@@ -3,10 +3,10 @@
 
 import type { ComponentType } from 'react';
 import type { PacketKind } from '../ui/tokens';
-import type { ControlSpec, ViewSpec } from './registry';
+import type { ControlSpec, PanelSpec, ViewSpec } from './registry';
 import type { CourseShape } from './nav';
 
-export type { ControlSpec, ViewSpec };
+export type { ControlSpec, PanelSpec, ViewSpec };
 
 export interface Step {
  /** Krok wstępny: ma etykietę „Start” i nie liczy się do numeracji kroków. */
@@ -20,6 +20,8 @@ export interface Step {
  change?: string;
  /** Scena: co widać obok tekstu. */
  view: ViewSpec;
+ /** Panele pod sceną (ramka, tablice, pytania). */
+ panels?: PanelSpec[];
  /** Jeden element sterujący kroku. */
  control: ControlSpec;
 }

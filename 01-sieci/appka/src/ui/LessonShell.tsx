@@ -1,11 +1,12 @@
-import { Control, View } from '../engine/registry';
+import { Control, Panel, View } from '../engine/registry';
 import type { StepNav } from '../engine/nav';
 import { hasTabs, type Course, type Exercise, type LegendItem } from '../engine/types';
 import { useCourseNav } from '../engine/useCourseNav';
 import { COLOR_VARS, PACKET_COLORS } from './tokens';
 
 // JEDYNE miejsce układu ekranu (audyt.md, rozdz. 5.0): zakładki ćwiczeń · pytanie · scena po lewej ·
-// tekst kroku i jeden element sterujący po prawej. Wzrok nie opuszcza jednego obszaru.
+// tekst kroku i jeden element sterujący po prawej · panele pod sceną. Wzrok nie opuszcza jednego
+// obszaru.
 // Szablon nie zna ARP ani masek: pokazuje to, co opisują dane kursu (`content/`).
 export function LessonShell({ course }: { course: Course }) {
  const { state, dispatch, isFree } = useCourseNav(course);
@@ -107,6 +108,14 @@ function ExerciseScreen({ exercise: ex, runId, nav }: ExerciseScreenProps) {
      <Control spec={step.control} nav={nav} />
     </section>
    </div>
+
+   {step.panels && step.panels.length > 0 && (
+    <div className="sim-details">
+     {step.panels.map((panel) => (
+      <Panel key={panel.type} spec={panel} />
+     ))}
+    </div>
+   )}
   </>
  );
 }

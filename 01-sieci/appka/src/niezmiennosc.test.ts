@@ -3,7 +3,7 @@
 // Wzorzec wolno odświeżyć (`pnpm test -u`) tylko przy zatwierdzonej zmianie treści (etap C).
 
 import { describe, expect, it } from 'vitest';
-import { CABLES as ARP_CABLES, DEVICES as ARP_DEVICES, SIMULATION_STEPS } from './arp/scenario';
+import { CABLES as ARP_CABLES, DEVICES as ARP_DEVICES, SCENARIO } from './content/arp';
 import { COMPARE_ROWS, MASKA } from './content/maska';
 import { PRESETS } from './content/maska-swobodny';
 import { CABLES as MASK_CABLES, devicesFor, maskDiagram } from './content/maska-uklad';
@@ -28,6 +28,11 @@ function legacyVisual(view: Step['view']) {
  return { kind: 'diagram', devices: view.devices, cables: view.cables, state: view.state };
 }
 
+function legacyControl(control: Step['control'], stepIndex: number) {
+ if (control.type === 'toggle') return control.options[stepIndex];
+ return control.type === 'next' ? control.label : undefined;
+}
+
 function legacyExercises() {
  return MASKA.exercises.map((ex) => ({
   code: ex.code,
@@ -38,15 +43,31 @@ function legacyExercises() {
    text: step.text,
    change: step.change,
    visual: legacyVisual(step.view),
-   control: step.control.type === 'toggle' ? step.control.options[i] : step.control.label
+   control: legacyControl(step.control, i)
   })),
   nextQuestion: ex.nextQuestion
  }));
 }
 
+/** Stary kształt wpisów do tablic: jedna tablica ARP (Laptop) i jedna tablica MAC (Switch). */
+function legacyScenario() {
+ return SCENARIO.map(({ learns, ...step }) => {
+  if (!learns) return step;
+  const laptopArp = learns.flatMap((l) => (l.device === 'laptop' && 'arp' in l ? l.arp : []));
+  const switchMac = learns.flatMap((l) => (l.device === 'switch' && 'mac' in l ? l.mac : []));
+  return {
+   ...step,
+   learns: {
+    ...(laptopArp.length > 0 ? { laptopArp } : {}),
+    ...(switchMac.length > 0 ? { switchMac } : {})
+   }
+  };
+ });
+}
+
 describe('refaktor nie zmienia danych ani tekstów', () => {
  it('ARP: urządzenia, kable i kroki scenariusza', () => {
-  expect({ devices: ARP_DEVICES, cables: ARP_CABLES, steps: SIMULATION_STEPS }).toMatchSnapshot();
+  expect({ devices: ARP_DEVICES, cables: ARP_CABLES, steps: legacyScenario() }).toMatchSnapshot();
  });
 
  it('maska: gotowe przykłady i kable', () => {
