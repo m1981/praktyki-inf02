@@ -14,7 +14,7 @@ Zatwierdzone wcześniej: kończymy zakupem piątego switcha. IT ma na starcie 10
 | 1 | Ola | Rok 1996. Cztery działy, cztery switche. Na razie wszystko gra. | Ujęcie wprowadzające, IT ma 10 z 24. | Dalej ▶ |
 | 2 | Ola | Zatrudniamy w IT. Mam podpiąć siedem gniazdek. | Bez zmian, IT ma 10 z 24. | 🔌 Podepnij ▶ |
 | 3 | *akcja* | *Ola podpina siedem gniazdek…* | Porty IT zapalają się po kolei, 17 z 24. | Dalej ▶ |
-| 4 | Ola | Druga grupa. Kolejne siedem gniazdek. Na styk. | Bez zmian, IT ma 17 z 24. | 🔌 Podepnij ▶ |
+| 4 | Ola | Kolejne siedem nowych osób – to będzie na styk 😬 | Bez zmian, IT ma 17 z 24. | 🔌 Podepnij ▶ |
 | 5 | *akcja* | *Ola podpina kolejne siedem gniazdek…* | Porty IT zapalają się po kolei, 24 z 24, „wolne 0” na czerwono. | Dalej ▶ |
 | 6 | Ola | I jeszcze jedna osoba. A portów już nie ma. | Migający komputer „brak portu”. | Dalej ▶ |
 | 7 | Kierownik IT | Olu, jak to, nowy switch? Przecież to będzie piąty. | Przerywany zarys piątego switcha „do kupienia”. | Dalej ▶ |
