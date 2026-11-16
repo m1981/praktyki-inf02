@@ -14,8 +14,8 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
     Szefowa Sprzedaży) „rok 1996” i „dziś”; Kłopot 2 to animacja krok po kroku; Kłopot 4 –
     broadcast i obcy laptop w płaskiej sieci. Linki `#problem-1` … `#problem-4`.
   - `scenariusze/` – scenariusze scen (źródło prawdy dla kwestii w `vlan.html`).
-  - `prezentacja-vlan/` – źródła talii Slides do Kłopotu 2 (PYT-030a; nieaktualna względem
-    obecnej animacji).
+  - `prezentacja-vlan/` (źródła talii Slides do Kłopotu 2) – dołączony z historią (PYT-030a),
+    potem usunięty na prośbę operatora; zostaje w historii gita.
 - **Stan:** laby nie korzystają jeszcze z `common.css` ani `menu.js` (brak paska nawigacji
   i okruszków) i nie są podlinkowane z `01-sieci/index.html`. Tematycznie pokrywają się
   z `lab2-vlany.html` i `symulator-maska.html` – wpięcie w filar to osobna decyzja.
@@ -24,6 +24,9 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
 - **Etykiety switchy:** jedna konwencja w `vlan.html` – „switch” + czyj albo jaki, bez dwukropka
   i skrótów (np. „switch Księgowości”, „switch IT #2”, „switch piętra”); pisownia „switche” zamiast
   „switch'e”. W Kłopocie 1 (rok 1996) etykiety nad każdym switchem.
+- **Szafa główna w Kłopocie 1 (PYT-033a):** w 1996 router z osobnym portem dla każdej sieci
+  i switch IT; dziś switch główny i router na jednym trunku. Wcześniej jedno urządzenie bez
+  nazwy sugerowało switch, który połączyłby wszystkie sieci w jedną.
 
 ## 2026-11-16 — Seria mikro-ćwiczeń M1–M4 (maska)
 

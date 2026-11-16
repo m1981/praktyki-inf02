@@ -993,6 +993,16 @@
     // cable from a desk to a switch's right edge (yS = port height)
     const deskCable = (x, f, k, xS, yS, col, cls) =>
      `<path class="cab ${cls || ''}" stroke="${col}" d="M${x} ${pcY(f) + 13}V${FY[f] + 106 + k * 3}H${xS + 8 + k * 3}V${yS}H${xS}"/>`;
+    const stripes = (d, cols) => {
+     const n = cols.length;
+     let t = `<path d="${d}" fill="none" stroke="${cols[0]}" stroke-width="6"/>`;
+     for (let i = 1; i < n; i++)
+      t += `<path d="${d}" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="8 ${8 * (n - 1)}" stroke-dashoffset="${-8 * i}"/>`;
+     return t;
+    };
+    // main closet on floor 1 (PYT-033a): outline + caption
+    const closet = () =>
+     `<rect x="142" y="296" width="236" height="58" rx="6" fill="none" stroke="var(--muted)" stroke-dasharray="4 4"/><text x="142" y="367" class="swl">szafa główna</text>`;
     const counter = (n, good, hot, prev) => {
      const txt = (c) =>
       `<text x="95" y="406" text-anchor="middle" class="${good ? 'good-txt' : 'bad-txt'}">kable w pionie: ${c}</text>`;
@@ -1009,19 +1019,26 @@
       cab = '',
       dev = '';
      const anim = (key) => dir > 0 && c.anim === key;
-     // main closet (floor 1): each riser cable lands on its own port
+     // main closet (floor 1, PYT-033a): a router with a separate port for every network
+     // (each riser cable needs its own port), and a switch for IT's own desks
      const core = sw(
       150,
       315,
-      [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c, D.it.c, null, null].map((col, i) =>
+      [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c, null, null, null].map((col, i) =>
        (i < 2 && !c.r3) || (i >= 2 && i < 4 && !c.r2) ? null : col
       ),
       4,
       ''
      );
-     g += core.svg + `<text x="150" y="311" class="swl">szafa główna</text>`;
+     const swIT = sw(300, 322, [D.it.c, D.it.c, D.it.c, null], 4, '');
+     g +=
+      closet() +
+      core.svg +
+      swIT.svg +
+      `<text x="150" y="311" class="swl">router – port na każdą sieć</text><text x="300" y="318" class="swl">switch IT</text>`;
+     cab += `<path class="cab" stroke="${D.it.c}" d="M214 ${core.port(4).y}H258V${swIT.port(0).y}H300"/>`;
      B1.filter((p) => p.f === 2).forEach((p, k) => {
-      cab += deskCable(p.x, 2, k, 214, 326 + k * 6, D.it.c);
+      cab += deskCable(p.x, 2, k, 364, 329 + k * 6, D.it.c);
      });
      // floor switches: one row of 4 ports, label above (every department has at most 3 desks)
      const S = {};
@@ -1147,12 +1164,16 @@
      const core = sw(
       150,
       315,
-      ['#9a988f', '#9a988f', D.it.c, D.it.c, null, null, null, null, null, null, null, null],
+      ['#9a988f', '#9a988f', '#9a988f', D.it.c, D.it.c, null, null, null, null, null, null, null],
       6,
       ''
      );
      g += s3w.svg + s2w.svg + core.svg;
+     g += closet();
      g += `<text x="150" y="${FY[0] + 41}" class="swl">switch piętra</text><text x="150" y="${FY[1] + 41}" class="swl">switch piętra</text><text x="150" y="311" class="swl">switch główny</text>`;
+     // router (PYT-033a): one trunk with every VLAN instead of a port per network
+     g += stripes('M240 321H300', [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c]);
+     g += `<rect x="300" y="310" width="64" height="22" rx="4" class="swb"/><text x="332" y="325" text-anchor="middle" style="fill:var(--bg);font-size:11px;font-weight:700">router</text><text x="300" y="346" class="swl">jeden trunk</text>`;
      if (animPorts)
       [4, 5, 6].forEach((pi, j) => {
        const pt = s2w.port(pi),
@@ -1207,14 +1228,7 @@
        );
       });
      // trunks (striped: one stripe colour per VLAN carried)
-     const trunk = (lane, yFrom, yTo, cols) => {
-      const d = `M150 ${yFrom}H${lane}V${yTo}H150`,
-       n = cols.length;
-      let t = `<path d="${d}" fill="none" stroke="${cols[0]}" stroke-width="6"/>`;
-      for (let i = 1; i < n; i++)
-       t += `<path d="${d}" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="8 ${8 * (n - 1)}" stroke-dashoffset="${-8 * i}"/>`;
-      return t;
-     };
+     const trunk = (lane, yFrom, yTo, cols) => stripes(`M150 ${yFrom}H${lane}V${yTo}H150`, cols);
      if (c.path)
       cab += `<path class="flow" d="M150 ${FY[1] + 61}H100V336H150"/><path class="flow" d="M150 322H84V${FY[0] + 61}H150"/>`;
      cab += trunk(84, FY[0] + 61, 322, [D.sp.c, D.mk.c]);
