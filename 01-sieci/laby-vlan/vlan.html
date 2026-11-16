@@ -440,21 +440,27 @@
   }
 
   const B = { it:7, ks:5, kd:4, gs:6 };
+  const B25 = {...B, it:25}, ALL = ['it','ks','kd','gs'];
   const S3STORY = [
-    [ { t:'Mamy 4 działy. Każdy ma własną sieć.', c:B },
-      { t:'Bez VLAN-ów jedna sieć to jeden switch. Kupuję cztery.', c:B, hi:['it','ks','kd','gs'] },
-      { t:'Kadry: 4 osoby. 20 portów się kurzy.', c:B, hi:['kd'] },
-      { t:'IT zatrudnia 10 osób. Jeszcze się mieszczą.', c:{...B, it:17}, last:'it' },
-      { t:'Kolejne 7 osób. Switch IT pełny: 24 z 24.', c:{...B, it:24}, last:'it' },
-      { t:'Przychodzi 25. osoba. Brak portu! Kupuję piąty switch.', c:{...B, it:25}, last:'it', hi:['it'] },
-      { t:'A obok stoi 57 wolnych portów. Nie mogę ich użyć.', c:{...B, it:25}, hi:['ks','kd','gs'] },
-      { t:'Bilans: 5 switchy. Zajęty tylko co trzeci port.', c:{...B, it:25} } ],
-    [ { t:'Te same 4 działy. Jeden wspólny switch.', c:B },
-      { t:'Kolor portu to VLAN. Sieć wyznacza ustawienie, nie pudełko.', c:B, hi:['it','ks','kd','gs'] },
-      { t:'Kadry biorą 4 porty. Reszta pracuje dla innych.', c:B, hi:['kd'] },
-      { t:'IT zatrudnia 10 osób. Teraz portów naprawdę brakuje, więc kupuję drugi switch.', c:{...B, it:17}, last:'it' },
-      { t:'Kolejne 8 osób. Po prostu zajmują wolne porty.', c:{...B, it:25}, last:'it' },
-      { t:'Bilans: 2 switche zamiast 5. Zajęte 40 z 48 portów.', c:{...B, it:25} } ]
+    [ { t:'Cześć, jestem Ola! Opiekuję się siecią w tej firmie. Pokażę Ci nasz kłopot.', c:B },
+      { t:'Mamy 4 działy. Każdy ma swoją osobną sieć.', c:B },
+      { t:'Nie mamy VLAN-ów, więc każda sieć to osobny switch. Kupiłam cztery.', c:B, hi:ALL },
+      { t:'Spójrz na Kadry: 4 osoby, a 20 portów się kurzy.', c:B, hi:['kd'] },
+      { t:'IT zatrudnia 10 osób. Uff, jeszcze się mieszczą.', c:{...B, it:17}, last:'it' },
+      { t:'Kolejne 7 osób. Switch IT jest pełny: 24 z 24.', c:{...B, it:24}, last:'it' },
+      { t:'I przychodzi 25. osoba. Brak portu! Muszę kupić piąty switch.', c:B25, last:'it', hi:['it'] },
+      { t:'A obok stoi 57 wolnych portów. Nie mogę ich użyć, bo to inne sieci.', c:B25, hi:['ks','kd','gs'] },
+      { t:'Widzisz bilans? 5 switchy, a zajęty tylko co trzeci port.', c:B25 },
+      { t:'Musi być lepszy sposób. Chodź, pokażę Ci tę samą firmę z VLAN-ami.', c:B25 } ],
+    [ { t:'Cześć, tu Ola! Kiedyś nie mieliśmy VLAN-ów i każdy dział miał własny, pół-pusty switch.', c:B },
+      { t:'Jak dobrze, że teraz mamy VLAN-y! Zobacz: te same 4 działy na jednym switchu.', c:B },
+      { t:'Kolor portu to VLAN. O sieci decyduje ustawienie portu, a nie pudełko.', c:B, hi:ALL },
+      { t:'Kadry? Biorą 4 porty. Reszta pracuje dla innych działów.', c:B, hi:['kd'] },
+      { t:'IT zatrudnia 10 osób. Teraz portów naprawdę brakuje, więc dokupuję switch.', c:{...B, it:17}, last:'it' },
+      { t:'Kolejne 8 osób? Żaden problem. Po prostu zajmują wolne porty.', c:B25, last:'it' },
+      { t:'Pamiętasz 57 zmarnowanych portów? Teraz wolnych jest 8 i może z nich skorzystać każdy dział.', c:B25 },
+      { t:'Bilans: 2 switche zamiast 5. Zajęte 40 z 48 portów.', c:B25 },
+      { t:'I to cały sekret: VLAN-y dzielą jeden switch na wiele sieci. Dzięki za wspólny spacer!', c:B25 } ]
   ];
   function s3story(mode){
     const steps = S3STORY[mode], k = st.s3step[mode], cur = steps[k], last = k === steps.length - 1;
@@ -592,7 +598,7 @@
       render: s3story, legend:['it','ks','kd','gs'], noExplain:true,
       metrics: m => {
         const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
-        return [metric('switchy do kupienia, zasilania i skonfigurowania', r.length, m ? 'good' : 'bad'),
+        return [metric((r.length === 1 ? 'switch' : r.length < 5 ? 'switche' : 'switchy') + ' do kupienia, zasilania i skonfigurowania', r.length, m ? 'good' : 'bad'),
                 metric('zajęte porty', `${used} / ${all}`), metric('wykorzystanie portów', Math.round(used / all * 100) + '%', m ? 'good' : 'bad')];
       },
       explain: m => m
