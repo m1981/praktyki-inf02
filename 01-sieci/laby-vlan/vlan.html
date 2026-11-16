@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratorium VLAN – po co nam VLAN-y?</title>
+<style>
+  :root{
+    --bg:#f7f6f2; --panel:#fff; --ink:#1d1d1b; --muted:#6b6a65; --line:#e3e1da;
+    --floor:#fbfaf6; --sw:#3b3a37; --port:#c9c7bf; --cable:#b9b7af; --bad:#c0392b; --good:#1e8449; --btn:#b3b0a5; --accent:#c98a00; --accent-bg:#fdf3d7;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1a19; --panel:#242422; --ink:#ecebe6; --muted:#a3a19a; --line:#3a3936;
+      --floor:#202020; --sw:#d6d4cc; --port:#5a5955; --cable:#5f5e59; --bad:#ff7b6b; --good:#5fd38d; --btn:#66645e; --accent:#f2b632; --accent-bg:#3a3118;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px 18px 60px}
+  h1{font-size:24px;margin:0 0 4px}
+  .lead{color:var(--muted);margin:0 0 16px}
+  .top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px}
+  .tab{font:inherit;font-size:14px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+  .tab.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .era{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;cursor:pointer;user-select:none;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 8px}
+  .knob{width:46px;height:26px;border-radius:999px;background:var(--port);position:relative;transition:background .2s}
+  .knob::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .era.on .knob{background:var(--good)} .era.on .knob::after{left:23px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+  .head{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between}
+  .head h2{margin:0;font-size:20px}
+  .problem{color:var(--muted);margin:4px 0 0;max-width:640px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex-shrink:0}
+  .seg button{font:inherit;font-size:14px;padding:8px 14px;border:0;background:var(--bg);color:var(--ink);cursor:pointer}
+  .seg button.on.before{background:var(--bad);color:#fff}
+  .seg button.on.after{background:var(--good);color:#fff}
+  .stage{margin-top:14px;border-radius:10px;background:var(--bg);padding:8px}
+  .stage svg{width:100%;height:auto;display:block}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .actions button{font:inherit;font-size:14px;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+  .actions button:hover:not(:disabled){border-color:var(--ink)}
+  .actions button.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .actions button:disabled{opacity:.4;cursor:not-allowed}
+  .actions{align-items:center}
+  .stepinfo{font-size:14px;padding:0 6px;font-variant-numeric:tabular-nums}
+  .actions .hint{font-size:12px;color:var(--muted);margin-left:auto}
+  .metrics{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .metric{flex:1 1 170px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .metric .v{font-size:22px;font-weight:700}
+  .metric .k{font-size:12px;color:var(--muted)}
+  .metric.bad .v{color:var(--bad)} .metric.good .v{color:var(--good)}
+  .explain{margin-top:12px;padding:10px 14px;border-left:4px solid var(--bad);background:var(--bg);border-radius:0 8px 8px 0}
+  .explain.after{border-left-color:var(--good)}
+  .log{margin:10px 0 0;padding:0;list-style:none;font-size:14px}
+  .log li{padding:4px 0;border-bottom:1px dashed var(--line);animation:fade .3s}
+  .log li .t{display:inline-block;min-width:74px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .log code{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:13px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin-top:8px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  /* everything clickable looks raised; results look flat */
+  .tab,.actions button,.seg{border-color:var(--btn);box-shadow:0 2px 0 var(--btn)}
+  .tab,.actions button{transition:transform .05s, box-shadow .05s}
+  .tab:active,.actions button:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+  .tab:hover,.seg button:hover{filter:brightness(.96)}
+  .actions button:disabled{box-shadow:none;border-style:dashed;opacity:.45}
+  button:focus-visible,.era:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  /* results panel hidden for now (kept in code): set display back to show it */
+  .metrics-h,.metrics{display:none!important}
+  .metrics-h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 0}
+  .metric{border:0;border-left:3px solid var(--line);border-radius:0;padding:2px 12px}
+  .guide{display:flex;gap:10px;align-items:baseline;margin-top:12px;padding:9px 12px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent)}
+  .guide .gs{font-size:12px;font-weight:700;white-space:nowrap;color:var(--accent);text-transform:uppercase;letter-spacing:.04em}
+  .guide .gl{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+  @media (max-width:700px){.guide{flex-wrap:wrap}.guide .gl{margin-left:0}}
+  .next{position:relative;border-color:var(--accent)!important;animation:nextp 1.2s ease-in-out infinite}
+  @keyframes nextp{0%,100%{box-shadow:0 0 0 0 var(--accent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 35%,transparent)}}
+  .pingS{fill:none;stroke:var(--accent);stroke-width:3;animation:pingS .9s ease-out 2 forwards}
+  @keyframes pingS{0%{r:6;opacity:1}100%{r:22;opacity:0}}
+  @media (prefers-reduced-motion:reduce){.next{animation:none;outline:3px solid var(--accent);outline-offset:2px}.pingS{animation:none;r:11}}
+  .story{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(250px,1fr);gap:10px;align-items:stretch}
+  @media (max-width:760px){.story{grid-template-columns:1fr}}
+  .dlg{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:250px}
+  .dlg .who{display:flex;gap:9px;align-items:center;font-size:13px;color:var(--muted)}
+  .dlg .who b{color:var(--ink);display:block;font-size:14px}
+  .dlg .av{width:36px;height:36px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--accent);flex-shrink:0}
+  .dlg .say{font-size:17px;line-height:1.45;font-weight:500;flex:1;animation:fade .3s}
+  .dlg .dots{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+  .dlg .dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .dlg .dots i.on{background:var(--ink)}
+  .dlg .dots span{margin-left:auto;font-variant-numeric:tabular-nums}
+  .dlg .actions{margin-top:0}
+  .dlg .actions button.primary{flex:1}
+  .dlg .you{align-self:flex-end;font-size:13px;color:var(--muted);background:var(--bg);border-radius:10px 10px 2px 10px;padding:5px 10px;animation:fade .3s}
+  .dlg .lab{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:-6px}
+  .dlg .actions button.primary{text-align:left;line-height:1.3}
+  .dlg{gap:10px}
+  .dlg .keys{font-size:11px;color:var(--muted)}
+  .hl{fill:none;stroke:var(--accent);stroke-width:3;animation:fade .3s}
+  .lit{opacity:0;animation:litA .2s ease-out forwards}
+  .gone{animation:goneA .01s linear forwards}
+  @keyframes goneA{to{opacity:0}}
+  @keyframes litA{to{opacity:1}}
+  .pingD{fill:none;stroke:var(--accent);stroke-width:3;opacity:0;animation:pingD .8s ease-out both}
+  @keyframes pingD{0%{r:6;opacity:0}1%{r:6;opacity:1}100%{r:20;opacity:0}}
+  .pulseP{fill:none;stroke:var(--accent);stroke-width:2;animation:pulseP 1.3s ease-in-out infinite}
+  @keyframes pulseP{0%,100%{opacity:.25}50%{opacity:1}}
+  .fadeout{animation:fadeout 1.6s ease-in forwards}
+  @keyframes fadeout{0%,40%{opacity:1}100%{opacity:0}}
+  .metric.hot{border-left-color:var(--accent);background:var(--accent-bg);animation:hotA 1s ease-in-out 3}
+  @keyframes hotA{50%{transform:scale(1.04)}}
+  .dlg .say.act{font-style:italic;font-weight:500;color:var(--muted)}
+  .dlg .scene{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .dlg .who .av{color:#1d1d1b;font-weight:800}
+  .dlg .quiz{display:flex;flex-direction:column;gap:6px}
+  .dlg .quiz button{font:inherit;font-size:14px;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid var(--btn);box-shadow:0 2px 0 var(--btn);background:var(--bg);color:var(--ink);cursor:pointer}
+  .dlg .quiz button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 15%,var(--bg))}
+  .dlg .quiz button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--bg))}
+  .dlg .fb{font-size:13px;color:var(--bad);animation:fade .3s}
+  .dlg .fb.ok{color:var(--good);font-weight:600}
+  @media (prefers-reduced-motion:reduce){.lit{animation:none;opacity:1}.pingD,.pulseP{animation:none}.fadeout{animation:none;opacity:.4}}
+  .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:drawA 1.1s ease-in-out forwards}
+  @keyframes drawA{to{stroke-dashoffset:0}}
+  .pulseL{animation:pulseL 1.2s ease-in-out infinite}
+  @keyframes pulseL{50%{stroke-opacity:.3}}
+  .flow{fill:none;stroke:var(--accent);stroke-width:9;stroke-opacity:.55;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:14 10;animation:flowA 1s linear infinite}
+  @keyframes flowA{to{stroke-dashoffset:-24}}
+  .cntbox{fill:var(--accent-bg);stroke:var(--accent);stroke-width:2}
+  @media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.pulseL,.flow{animation:none}}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+
+  /* svg */
+  .ink{fill:var(--ink)} .mut{fill:var(--muted)}
+  .stk{stroke:var(--ink);fill:none}
+  .lbl{fill:var(--ink);font-size:12px}
+  .lbls{fill:var(--muted);font-size:11px}
+  .ttl{fill:var(--ink);font-size:13px;font-weight:700}
+  .floor{fill:var(--floor);stroke:var(--line);stroke-width:1.5}
+  .swb{fill:var(--sw)}
+  .cab{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .gray{stroke:var(--cable)}
+  .ping{fill:none;stroke-width:3;animation:ping 1.1s ease-out 3}
+  @keyframes ping{0%{r:18;opacity:1}100%{r:40;opacity:0}}
+  .wave{animation:wave 1.1s ease-out 3}
+  @keyframes wave{0%{stroke-opacity:1}100%{stroke-opacity:.15}}
+  .appear{animation:fade .4s}
+  .blink{animation:blink 1s ease-in-out infinite}
+  @keyframes blink{50%{opacity:.35}}
+  .bad-txt{fill:var(--bad);font-weight:700;font-size:12px}
+  .good-txt{fill:var(--good);font-weight:700;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Laboratorium VLAN: po co nam VLAN-y?</h1>
+
+  <div class="top">
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <div>
+        <h2 id="title"></h2>
+        <p class="problem" id="problem"></p>
+      </div>
+      <div class="seg" id="seg">
+        <button class="before" data-m="0">Przed VLAN-ami</button>
+        <button class="after" data-m="1">Z VLAN-ami</button>
+      </div>
+    </div>
+    <div class="stage" id="stage"></div>
+    <div class="legend" id="legend"></div>
+    <div class="guide" id="guide"></div>
+    <div class="actions" id="actions"></div>
+    <ul class="log" id="log"></ul>
+    <div class="metrics-h">Wynik (tylko do czytania)</div>
+    <div class="metrics" id="metrics"></div>
+    <div class="explain" id="explain"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const D = {
+    it:{c:'#2f6fb3', n:'IT', vlan:10, net:'192.168.10.0/24'},
+    ks:{c:'#d9772b', n:'Księgowość', vlan:20, net:'192.168.20.0/24'},
+    kd:{c:'#8e44ad', n:'Kadry', vlan:30, net:'192.168.30.0/24'},
+    gs:{c:'#2e9d5b', n:'Goście', vlan:40, net:'192.168.40.0/24'},
+    sp:{c:'#c2185b', n:'Sprzedaż', vlan:50, net:'192.168.50.0/24'},
+    mk:{c:'#00838f', n:'Marketing', vlan:60, net:'192.168.60.0/24'}
+  };
+  const st = { tab:0, mode:[0,0,0,0],
+    s2:{ step:0, timer:null },
+    s3:{ it:7, ks:5, kd:4, gs:6 }, s3step:[0,0], s3dir:0, s3quiz:null, s1step:[0,0], s1dir:0, s1quiz:null,
+    s4:{ bcast:0, intruder:false } };
+
+  /* ---------- drawing helpers ---------- */
+  function pc(x, y, col, label, extra){
+    return `<g ${extra||''}><rect x="${x-16}" y="${y-13}" width="32" height="21" rx="3" fill="${col}"/>
+      <rect x="${x-12}" y="${y-9}" width="24" height="13" rx="1" fill="rgba(255,255,255,.28)"/>
+      <path d="M${x} ${y+8}v5M${x-7} ${y+13}h14" class="stk" stroke-width="2"/>
+      ${label ? `<text x="${x}" y="${y+28}" class="lbl" text-anchor="middle">${label}</text>` : ''}</g>`;
+  }
+  function server(x, y, col, label){
+    return `<g><rect x="${x-13}" y="${y-18}" width="26" height="34" rx="3" fill="${col}"/>
+      <path d="M${x-8} ${y-9}h16M${x-8} ${y-1}h16M${x-8} ${y+7}h16" stroke="rgba(255,255,255,.6)" stroke-width="2"/>
+      ${label ? `<text x="${x}" y="${y+30}" class="lbl" text-anchor="middle">${label}</text>` : ''}</g>`;
+  }
+  // switch: ports = array of colors (null = empty), cols per row
+  function sw(x, y, ports, cols, label, opts){
+    opts = opts || {};
+    const pw = opts.pw || 9, ph = opts.ph || 7, gap = opts.gap || 4;
+    const rows = Math.ceil(ports.length / cols);
+    const w = cols * (pw + gap) - gap + 16, h = rows * (ph + gap) - gap + 14;
+    let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" class="swb"/>`;
+    ports.forEach((c, i) => {
+      const px = x + 8 + (i % cols) * (pw + gap), py = y + 7 + Math.floor(i / cols) * (ph + gap);
+      s += `<rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="1.5" fill="${c || 'var(--port)'}"/>`;
+    });
+    if (label) s += `<text x="${x + (opts.labelRight ? w + 8 : w / 2)}" y="${opts.labelRight ? y + h / 2 + 4 : y - 6}" class="lbl" text-anchor="${opts.labelRight ? 'start' : 'middle'}">${label}</text>`;
+    return { svg: s, w, h, port: i => ({ x: x + 8 + (i % cols) * (pw + gap) + pw / 2, y: y + 7 + Math.floor(i / cols) * (ph + gap) + ph / 2 }) };
+  }
+  function person(x, y, label, col){
+    return `<g class="appear"><circle cx="${x}" cy="${y-16}" r="7" fill="${col||'var(--ink)'}"/>
+      <path d="M${x-10} ${y+8}q10-22 20 0z" fill="${col||'var(--ink)'}"/>
+      <text x="${x}" y="${y+22}" class="lbl" text-anchor="middle">${label}</text></g>`;
+  }
+  const svgWrap = (w, h, inner) => `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" role="img">${inner}</svg>`;
+  const metric = (k, v, cls) => `<div class="metric ${cls||''}"><div class="v">${v}</div><div class="k">${k}</div></div>`;
+  const legendDepts = keys => keys.map(k => `<span><i style="background:${D[k].c}"></i>${D[k].n}${st.mode[st.tab] ? ` = VLAN ${D[k].vlan}` : ''}</span>`).join('');
+
+  /* ---------- 1: departments on floors (scenes from scenariusze/klopot1-budynek.md) ---------- */
+  const FY = [10, 140, 270], FN = ['Piętro 3', 'Piętro 2', 'Piętro 1'];
+  // desks: floor index (0 = 3rd floor), x, department
+  const B1 = [
+    { f:0, x:300, d:'sp' }, { f:0, x:345, d:'sp' }, { f:0, x:390, d:'sp' }, { f:0, x:470, d:'mk' }, { f:0, x:515, d:'mk' },
+    { f:1, x:280, d:'ks' }, { f:1, x:320, d:'ks' }, { f:1, x:390, d:'kd' }, { f:1, x:430, d:'kd' },
+    { f:2, x:420, d:'it' }, { f:2, x:470, d:'it' } ];
+  const OV = [510, 550, 590];                      // three new Sales people on floor 2
+  const GROUPS = [ [0, 345, 'sp'], [0, 492, 'mk'], [1, 300, 'ks'], [1, 410, 'kd'], [2, 445, 'it'] ];
+  const pcY = f => FY[f] + 60;
+
+  function s1base(){
+    let g = '';
+    FY.forEach((y, i) => { g += `<rect x="60" y="${y}" width="560" height="125" class="floor"/><text x="132" y="${y + 16}" class="ttl">${FN[i]}</text>`; });
+    g += `<rect x="70" y="10" width="50" height="385" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>`;
+    g += `<text x="0" y="0" class="lbls" transform="translate(66 390) rotate(-90)">pion kablowy</text>`;
+    GROUPS.forEach(([f, x, d]) => { g += `<text x="${x}" y="${FY[f] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D[d].c}">${D[d].n}</text>`; });
+    return g;
+  }
+  // cable from a desk to a switch's right edge (yS = port height)
+  const deskCable = (x, f, k, xS, yS, col, cls) => `<path class="cab ${cls || ''}" stroke="${col}" d="M${x} ${pcY(f) + 13}V${FY[f] + 106 + k * 3}H${xS + 8 + k * 3}V${yS}H${xS}"/>`;
+  const counter = (n, good, hot, prev) => {
+    const txt = c => `<text x="95" y="406" text-anchor="middle" class="${good ? 'good-txt' : 'bad-txt'}">kable w pionie: ${c}</text>`;
+    let g = hot ? `<rect x="22" y="394" width="146" height="18" rx="9" class="cntbox"/>` : '';
+    if (prev !== undefined && prev !== n) g += `<g class="gone" style="animation-delay:1.1s">${txt(prev)}</g><g class="lit" style="animation-delay:1.1s">${txt(n)}</g>`;
+    else g += txt(n);
+    return g;
+  };
+
+  // ----- 1996: one network = one switch, one riser cable per network per floor
+  function s1old(c, dir){
+    let g = s1base(), cab = '', dev = '';
+    const anim = key => dir > 0 && c.anim === key;
+    // main closet (floor 1): each riser cable lands on its own port
+    const core = sw(150, 315, [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c, D.it.c, null, null].map((col, i) => (i < 2 && !c.r3) || (i >= 2 && i < 4 && !c.r2) ? null : col), 4, '');
+    g += core.svg + `<text x="182" y="362" text-anchor="middle" class="lbls">szafa główna</text>`;
+    B1.filter(p => p.f === 2).forEach((p, k) => { cab += deskCable(p.x, 2, k, 214, 326 + k * 6, D.it.c); });
+    // floor switches
+    const S = {};
+    if (c.f3){ S.sp = sw(150, FY[0] + 30, [D.sp.c, D.sp.c, D.sp.c, null, null, null, null, null], 4, ''); S.mk = sw(150, FY[0] + 72, [D.mk.c, D.mk.c, null, null, null, null, null, null], 4, ''); }
+    if (c.f2){ S.ks = sw(150, FY[1] + 22, [D.ks.c, D.ks.c, null, null, null, null, null, null], 4, ''); S.kd = sw(150, FY[1] + 56, [D.kd.c, D.kd.c, null, null, null, null, null, null], 4, ''); }
+    const ovOn = c.ov === 'on';
+    if (ovOn) S.ov = sw(150, FY[1] + 90, [D.sp.c, D.sp.c, D.sp.c, null, null, null, null, null], 4, '');
+    Object.values(S).forEach(x => { g += x.svg; });
+    if (c.ov === 'ghost') g += `<rect x="150" y="${FY[1] + 90}" width="64" height="32" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" class="appear"/><text x="222" y="${FY[1] + 110}" style="fill:var(--accent);font-size:11px;font-weight:700" class="appear">do kupienia</text>`;
+    (c.hiSw || []).forEach(k => { if (S[k]) g += `<rect x="145" y="${+S[k].svg.match(/y="([\d.]+)"/)[1] - 5}" width="74" height="42" rx="7" class="hl"/>`; });
+    // desk cables
+    const kk = [0, 0, 0];
+    B1.forEach(p => {
+      if (p.f === 2) return;
+      const k = kk[p.f]++;
+      const on = p.f === 0 ? c.f3 : c.f2;
+      if (on){ const sS = S[p.d], yS = +sS.svg.match(/y="([\d.]+)"/)[1] + 12 + (k % 2) * 6; cab += deskCable(p.x, p.f, k, 214, yS, D[p.d].c); }
+    });
+    // riser cables (lane x, from switch at floor, to core)
+    const riser = (x, yFrom, yTo, col, key, extra) => `<path class="cab ${anim(key) ? 'draw' : ''} ${c.pulseAll ? 'pulseL' : ''} ${extra || ''}" pathLength="1" stroke="${col}" stroke-width="3" d="M150 ${yFrom}H${x}V${yTo}H150"/>`;
+    if (c.r3){ cab += riser(80, FY[0] + 46, 320, D.sp.c, 'r3') + riser(88, FY[0] + 88, 326, D.mk.c, 'r3'); }
+    if (c.r2){ cab += riser(96, FY[1] + 38, 332, D.ks.c, 'r2') + riser(104, FY[1] + 72, 338, D.kd.c, 'r2'); }
+    if (ovOn){
+      if (c.ovHi) cab += `<path class="flow" d="M150 ${FY[1] + 106}H112V${FY[0] + 40}H150"/>`;
+      cab += riser(112, FY[1] + 106, FY[0] + 40, D.sp.c, 'ov');
+    }
+    g += cab;
+    // desks
+    B1.forEach(p => { dev += pc(p.x, pcY(p.f), D[p.d].c, ''); });
+    if (c.ov && c.ov !== 'none'){
+      const ok = ovOn, kd = FY[1] + 106;
+      OV.forEach((x, k) => {
+        if (ok) dev += deskCable(x, 1, 4 + k, 214, FY[1] + 102 + k * 4, D.sp.c, dir > 0 && c.anim === 'ov' ? 'appear' : '');
+        dev += `<g class="${ok ? 'appear' : 'blink'}">${pc(x, pcY(1), ok ? D.sp.c : '#b9b7af', '')}</g>`;
+      });
+      dev += `<text x="550" y="${FY[1] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D.sp.c}">Sprzedaż</text>`;
+      if (!ok) dev += `<text x="550" y="${FY[1] + 98}" text-anchor="middle" class="bad-txt">brak sieci</text>`;
+      if (c.ov === 'trial' || c.ov === 'cancel'){
+        const path = `M${OV[0] - 18} ${pcY(1)}C${OV[0] - 120} ${pcY(1) - 40} 300 ${FY[1] + 10} 214 ${FY[1] + 36}`;
+        if (c.ov === 'cancel') dev += `<path d="${path}" fill="none" stroke="var(--bad)" stroke-width="3" stroke-dasharray="7 5" class="fadeout"/><text x="360" y="${FY[1] + 40}" text-anchor="middle" class="fadeout" style="font-size:28px;font-weight:800;fill:var(--bad)">✕</text>`;
+        else dev += `<path d="${path}" fill="none" stroke="${D.sp.c}" stroke-width="3" stroke-dasharray="7 5" class="appear"/>`;
+      }
+    }
+    g += dev;
+    const n = (c.r3 ? 2 : 0) + (c.r2 ? 2 : 0) + (ovOn ? 1 : 0);
+    const prev = c.anim === 'r3' ? 0 : c.anim === 'r2' ? 2 : c.anim === 'ov' ? 4 : undefined;
+    g += counter(n, false, false, dir > 0 ? prev : undefined);
+    return svgWrap(630, 415, g);
+  }
+
+  // ----- dziś: one switch per floor, one trunk per floor, VLAN on each port
+  function s1new(c, dir){
+    let g = s1base(), cab = '', dev = '';
+    const ovOn = c.ov === 'on';
+    const p3 = [D.sp.c, D.sp.c, D.sp.c, D.mk.c, D.mk.c, null, null, null, null, null, null, null];
+    const p2 = [D.ks.c, D.ks.c, D.kd.c, D.kd.c].concat(ovOn ? [D.sp.c, D.sp.c, D.sp.c] : [null, null, null], [null, null, null, null, null]);
+    const animPorts = dir > 0 && c.anim === 'ports';
+    const s3w = sw(150, FY[0] + 45, p3, 6, ''), s2w = sw(150, FY[1] + 45, animPorts ? p2.map((x, i) => i >= 4 && i < 7 ? null : x) : p2, 6, '');
+    const core = sw(150, 315, ['#9a988f', '#9a988f', D.it.c, D.it.c, null, null, null, null, null, null, null, null], 6, '');
+    g += s3w.svg + s2w.svg + core.svg;
+    g += `<text x="195" y="${FY[0] + 40}" text-anchor="middle" class="lbls">switch piętra</text><text x="195" y="${FY[1] + 40}" text-anchor="middle" class="lbls">switch piętra</text><text x="195" y="362" text-anchor="middle" class="lbls">switch główny</text>`;
+    if (animPorts) [4, 5, 6].forEach((pi, j) => { const pt = s2w.port(pi), d = 0.4 + j * 0.3; g += `<rect x="${pt.x - 4.5}" y="${pt.y - 3.5}" width="9" height="7" rx="1.5" fill="${D.sp.c}" class="lit" style="animation-delay:${d}s"/><circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingD" style="animation-delay:${d}s"/>`; });
+    if (c.pulseFree) p2.forEach((col, pi) => { if (!col){ const pt = s2w.port(pi); g += `<rect x="${pt.x - 7}" y="${pt.y - 6}" width="14" height="12" rx="2.5" class="pulseP"/>`; } });
+    // frames
+    const frame = (swx, idx) => idx.forEach(pi => { const pt = swx.port(pi); g += `<rect x="${pt.x - 7}" y="${pt.y - 6}" width="14" height="12" rx="2.5" class="hl" style="stroke-width:2"/>`; });
+    if (c.hi === 'all'){ frame(s3w, [0, 1, 2, 3, 4]); frame(s2w, [0, 1, 2, 3]); frame(core, [2, 3]); }
+    if (c.hi === 'ksp'){ frame(s2w, [0, 1, 4, 5, 6]); }
+    // desk cables
+    const kk = [0, 0, 0];
+    B1.forEach(p => {
+      const k = kk[p.f]++, swx = [s3w, s2w, core][p.f];
+      cab += deskCable(p.x, p.f, k, swx.w + 150, (p.f === 2 ? 326 : FY[p.f] + 56) + (k % 2) * 6, D[p.d].c);
+    });
+    if (ovOn) OV.forEach((x, k) => { cab += deskCable(x, 1, 4 + k, s2w.w + 150, FY[1] + 62 + (k % 2) * 4, D.sp.c, animPorts ? 'appear' : ''); });
+    // trunks (striped: one stripe colour per VLAN carried)
+    const trunk = (lane, yFrom, yTo, cols) => {
+      const d = `M150 ${yFrom}H${lane}V${yTo}H150`, n = cols.length;
+      let t = `<path d="${d}" fill="none" stroke="${cols[0]}" stroke-width="6"/>`;
+      for (let i = 1; i < n; i++) t += `<path d="${d}" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="8 ${8 * (n - 1)}" stroke-dashoffset="${-8 * i}"/>`;
+      return t;
+    };
+    if (c.path) cab += `<path class="flow" d="M150 ${FY[1] + 61}H100V336H150"/><path class="flow" d="M150 322H84V${FY[0] + 61}H150"/>`;
+    cab += trunk(84, FY[0] + 61, 322, [D.sp.c, D.mk.c]);
+    cab += trunk(100, FY[1] + 61, 336, ovOn ? [D.ks.c, D.kd.c, D.sp.c] : [D.ks.c, D.kd.c]);
+    g += cab;
+    if (c.tags){
+      g += `<text x="124" y="${FY[0] + 118}" class="lbls" style="font-weight:700">VLAN 50 + 60</text>`;
+      g += `<text x="124" y="${FY[1] + 118}" class="lbls ${animPorts ? 'lit' : ''}" style="font-weight:700;${animPorts ? 'animation-delay:1.3s' : ''}">VLAN 20 + 30${ovOn ? ' + 50' : ''}</text>`;
+    }
+    // desks
+    B1.forEach(p => { dev += pc(p.x, pcY(p.f), D[p.d].c, ''); });
+    if (c.ov && c.ov !== 'none'){
+      OV.forEach(x => { dev += `<g class="${ovOn ? '' : 'blink'}">${pc(x, pcY(1), ovOn ? D.sp.c : '#b9b7af', '')}</g>`; });
+      dev += `<text x="550" y="${FY[1] + 36}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:${D.sp.c}">Sprzedaż</text>`;
+      if (!ovOn) dev += `<text x="550" y="${FY[1] + 98}" text-anchor="middle" class="bad-txt">brak sieci</text>`;
+    }
+    if (c.wall) dev += `<text x="230" y="${FY[1] + 16}" class="good-txt appear">VLAN 20 ✕ VLAN 50 – nie widzą się</text>`;
+    if (c.compare) dev += `<text x="625" y="406" text-anchor="end" class="lbls appear">Dla porównania rok 1996: 5 kabli w pionie · 5 switchy na piętrach</text>`;
+    g += dev + counter(2, true, c.cntHi);
+    return svgWrap(630, 415, g);
+  }
+
+  const S1OLD = [
+    { who:'ola',  t:'Rok 1996. Trzy piętra, pięć działów – każdy to osobna sieć.', c:{} },
+    { who:'ola',  t:'Trzecie piętro: Sprzedaż i Marketing – dwie sieci, dwa switche.', c:{ f3:1 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola ciągnie dwa kable w pionie do szafy głównej…', c:{ f3:1, r3:1, anim:'r3' } },
+    { who:'ola',  t:'Drugie piętro: Księgowość i Kadry. Też osobno – tam są wypłaty 🔒', c:{ f3:1, r3:1, f2:1 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola ciągnie kolejne dwa kable w pionie…', c:{ f3:1, r3:1, f2:1, r2:1, anim:'r2' } },
+    { who:'narr', act:'Na trzecim zabrakło miejsca – trzy nowe osoby ze Sprzedaży siadają na drugim.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait' } },
+    { who:'szef', t:'Olu, moi nowi siedzą na drugim – i nie mają sieci 😬', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait' } },
+    { who:'ola',  t:'Bo na drugim jest sieć Księgowości i Kadr – Sprzedaży tam nie ma.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'wait', hiSw:['ks','kd'] } },
+    { who:'szef', t:'To podepnij ich na chwilę do księgowości 🙏', c:{ f3:1, r3:1, f2:1, r2:1, ov:'trial' } },
+    { who:'ola',  t:'I zobaczą faktury? Nie ma mowy 🙅‍♀️', c:{ f3:1, r3:1, f2:1, r2:1, ov:'cancel' } },
+    { who:'ola',  t:'Trzeci switch na drugim – i piąty kabel w pionie 😩', c:{ f3:1, r3:1, f2:1, r2:1, ov:'ghost' }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola ciągnie piąty kabel – z drugiego piętra do Sprzedaży na trzecim…', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on', anim:'ov' } },
+    { who:'szef', t:'Cały kabel przez piętro – dla trzech osób? 🤨', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on', ovHi:1 } },
+    { who:'ola',  t:'No tak 🤷‍♀️ Tu sieć wyznacza kabel – nie biurko.', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on', pulseAll:1 } },
+    { who:'quiz', t:'Co by tu pomogło?', c:{ f3:1, r3:1, f2:1, r2:1, ov:'on' }, quiz:true } ];
+  const S1NEW = [
+    { who:'ola',  t:'Dziś. Te same piętra i działy – dwa kable w pionie 🤩', c:{} },
+    { who:'ola',  t:'Jeden switch na piętro – kolor portu to VLAN działu.', c:{ hi:'all' } },
+    { who:'ola',  t:'W pionie trunk – jeden kabel, wszystkie VLAN-y piętra.', c:{ tags:1 } },
+    { who:'narr', act:'Na trzecim zabrakło miejsca – trzy nowe osoby ze Sprzedaży siadają na drugim.', c:{ tags:1, ov:'wait' } },
+    { who:'szef', t:'Olu, moi nowi siedzą na drugim – i nie mają sieci 😬', c:{ tags:1, ov:'wait' } },
+    { who:'ola',  t:'Spokojnie – na drugim są wolne porty 🙂', c:{ tags:1, ov:'wait', pulseFree:1 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina trzy gniazdka i ustawia im VLAN 50…', c:{ tags:1, ov:'on', anim:'ports' } },
+    { who:'szef', t:'I widzą resztę Sprzedaży na trzecim? 🤨', c:{ tags:1, ov:'on' } },
+    { who:'ola',  t:'Tak – trunkiem w dół i trunkiem w górę. Jedna sieć.', c:{ tags:1, ov:'on', path:1 } },
+    { who:'szef', t:'A księgowość obok? Widzi moich ludzi?', c:{ tags:1, ov:'on', hi:'ksp' } },
+    { who:'ola',  t:'Nie – inny VLAN. Ten sam switch, osobne sieci 🔒', c:{ tags:1, ov:'on', hi:'ksp', wall:1 } },
+    { who:'szef', t:'Ile kabli w pionie dociągnęłaś? 🙂', c:{ tags:1, ov:'on', cntHi:1 } },
+    { who:'ola',  t:'Ani jednego 😎 Tylko trzy porty w konfiguracji.', c:{ tags:1, ov:'on', compare:1 } },
+    { who:'quiz', t:'Jak trzy osoby z drugiego piętra trafiły do sieci Sprzedaży?', c:{ tags:1, ov:'on' }, quiz:true } ];
+  const QUIZ1 = [[
+    { id:'a', t:'A) Szerszy pion na więcej kabli.', fb:'Nie do końca – kabli dalej przybywa z każdym działem.' },
+    { id:'b', t:'B) Jeden kabel, który niesie wiele sieci.', fb:'Właśnie tak. Taki kabel to trunk – zobacz, jak to wygląda dziś.' } ], [
+    { id:'a', t:'A) Nowym kablem na trzecie.', fb:'Nie tym razem – nowego kabla nie było. Zrobiły to VLAN i trunk.' },
+    { id:'b', t:'B) VLAN-em na porcie i trunkiem.', fb:'Właśnie tak. O sieci decyduje ustawienie portu – nie kabel.' } ]];
+  const SCENE1 = [
+    { steps: S1OLD, title:'Budynek, rok 1996', end:'Zobacz to samo dziś ▶' },
+    { steps: S1NEW, title:'Budynek, dziś', end:'↺ Wróć do roku 1996' } ];
+
+  function s1story(mode){
+    const sc = SCENE1[mode], k = st.s1step[mode], cur = sc.steps[k];
+    const svg = mode ? s1new(cur.c, st.s1dir) : s1old(cur.c, st.s1dir);
+    return dlgHTML({ svg, sc, k, q: st.s1quiz, quizOpts: QUIZ1[mode], ids:['d1prev', 'd1next'], qattr:'data-q1' });
+  }
+  function step1(d){
+    const m = st.mode[0], n = SCENE1[m].steps.length, k = st.s1step[m] + d;
+    st.s1dir = d;
+    if (k < 0) return;
+    if (k >= n){ st.mode[0] = 1 - m; st.s1step[1 - m] = 0; st.s1quiz = null; }
+    else st.s1step[m] = k;
+    if (k < n - 1) st.s1quiz = null;
+    render();
+    st.s1dir = 0;
+  }
+
+  /* ---------- 2: person changes department ---------- */
+  const S2PCS = [
+    {n:'Bartek', x:110, y:120, d:'it'}, {n:'Celina', x:230, y:120, d:'it'}, {n:'Anna', x:350, y:120, d:'it', anna:true},
+    {n:'Dorota', x:170, y:250, d:'ks'}, {n:'Ewa', x:290, y:250, d:'ks'}];
+  const S2STEPS = [
+    [ {t:'0 min',  h:'📞 Zgłoszenie: od jutra Anna pracuje w księgowości, przy tym samym biurku.'},
+      {t:'+20 min', h:'🚶 Technik szuka klucza i idzie do szafy (zamknięte pomieszczenie, inne piętro?).'},
+      {t:'+10 min', h:'🔍 Szuka, który z setek kabli w szafie to kabel Anny.'},
+      {t:'+5 min',  h:'🔌 Odpina patchcord Anny ze switcha IT. Anna jest bez sieci.'},
+      {t:'+5 min',  h:'🔌 Wpina go do switcha księgowości. Na szczęście jest wolny port, a jeśli nie, trzeba dokupić switch.'},
+      {t:'+15 min', h:'⌨ Zmiana adresu IP Anny na adres z podsieci księgowości. Gotowe, razem około godziny.'} ],
+    [ {t:'0 min',  h:'📞 Zgłoszenie: od jutra Anna pracuje w księgowości, przy tym samym biurku.'},
+      {t:'+1 min', h:'💻 Admin łączy się zdalnie ze switchem, nie wstając zza biurka.'},
+      {t:'+1 min', h:'⌨ Wpisuje: <code>interface Gi0/3</code> → <code>switchport access vlan 20</code>'},
+      {t:'+1 min', h:'🔄 Komputer Anny dostaje z DHCP adres z podsieci księgowości. Gotowe, razem około 3 minut. Żaden kabel nie został ruszony.'} ]
+  ];
+
+  // Anna's cable is drawn once in its PREVIOUS state, then animated to the new one (animS2),
+  // so it never disappears: the plug is pulled out, hangs loose, and flies over to the new port.
+  const cordPath = (a, b) => `M${a.x} ${a.y+6}C${a.x} ${a.y+50} ${b.x} ${b.y-40} ${b.x} ${b.y}`;
+  const TECH_HIDDEN = { x: 790, y: 330, o: 0 };
+
+  function s2target(mode, step, panel, swA, swB){
+    const a = panel.port(2);
+    if (!mode){
+      const itP = swA.port(2), ksP = swB.port(2), loose = { x: 705, y: 228 };
+      const at = step < 4 ? 'it' : step === 4 ? 'loose' : 'ks';
+      const end = at === 'it' ? itP : at === 'loose' ? loose : ksP;
+      const tech = step < 2 || step >= 6 ? TECH_HIDDEN
+        : step === 2 ? { x: 760, y: 300, o: 1 }
+        : step === 3 ? { x: 740, y: 138, o: 1 }
+        : step === 4 ? { x: loose.x + 62, y: loose.y + 4, o: 1 }
+        : { x: ksP.x + 60, y: ksP.y + 52, o: 1 };
+      return { a, end, at, tech,
+        cordCol: at === 'it' ? D.it.c : at === 'loose' ? '#9a988f' : D.ks.c,
+        pcCol: step < 4 ? D.it.c : step < 6 ? '#b9b7af' : D.ks.c };
+    }
+    const vp = swA.port(2);
+    return { a, end: vp, at: 'v', tech: TECH_HIDDEN,
+      cordCol: step >= 3 ? D.ks.c : D.it.c, vCol: step >= 3 ? D.ks.c : D.it.c,
+      pcCol: step >= 4 ? D.ks.c : D.it.c };
+  }
+
+  function s2(mode){
+    const step = st.s2.step, steps = S2STEPS[mode], done = step >= steps.length;
+    let g = `<rect x="20" y="40" width="410" height="300" class="floor"/><text x="34" y="62" class="ttl">Biuro, piętro 2</text>
+      <rect x="470" y="40" width="330" height="300" class="floor"/><text x="484" y="62" class="ttl">Szafa sieciowa</text>`;
+    const panel = sw(520, 76, Array(8).fill('var(--cable)'), 8, '', {pw:22, ph:12, gap:6});
+    g += panel.svg + `<text x="${520 + panel.w + 6}" y="92" class="lbls">patch panel</text>`;
+    // fixed wall cables (installation)
+    S2PCS.forEach((p, i) => {
+      const pp = panel.port(i), tray = 330 - i * 4, wall = 450 + i * 3;
+      g += `<path class="cab gray" d="M${p.x} ${p.y+13}V${tray}H${wall}V${pp.y}H${pp.x - 11}"/>`;
+    });
+
+    let T, swA, swB = null, cords = '';
+    if (!mode){
+      swA = sw(560, 170, [D.it.c, D.it.c, null, null, null, null, null, null], 8, 'switch IT', {labelRight:true});
+      swB = sw(560, 260, [D.ks.c, D.ks.c, null, null, null, null, null, null], 8, 'switch księg.', {labelRight:true});
+      g += swA.svg + swB.svg;
+      T = s2target(0, step, panel, swA, swB);
+      const P = st.s2.prev || T;
+      const pa = swA.port(2), pb = swB.port(2);
+      g += `<rect id="annaPortIT" x="${pa.x-4.5}" y="${pa.y-3.5}" width="9" height="7" rx="1.5" fill="${P.at === 'it' ? D.it.c : 'var(--port)'}"/>`;
+      g += `<rect id="annaPortKS" x="${pb.x-4.5}" y="${pb.y-3.5}" width="9" height="7" rx="1.5" fill="${P.at === 'ks' ? D.ks.c : 'var(--port)'}"/>`;
+      // other people's cords (static)
+      [[0, swA, 0, 'it'], [1, swA, 1, 'it'], [3, swB, 0, 'ks'], [4, swB, 1, 'ks']].forEach(([i, s, idx, d]) => {
+        cords += `<path class="cab" stroke="${D[d].c}" stroke-width="3" d="${cordPath(panel.port(i), s.port(idx))}"/>`;
+      });
+      g += cords;
+      if (step === 3) g += `<text x="640" y="158" class="bad-txt blink" text-anchor="middle">który to kabel…?</text>`;
+    } else {
+      const ports = [D.it.c, D.it.c, null, D.ks.c, D.ks.c, null, null, null];
+      swA = sw(560, 200, ports, 8, '');
+      g += swA.svg + `<text x="${560 + swA.w / 2}" y="${200 + swA.h + 16}" class="lbl" text-anchor="middle">jeden switch, porty w różnych VLAN-ach</text>`;
+      T = s2target(1, step, panel, swA, null);
+      const P = st.s2.prev || T, vp = swA.port(2);
+      g += `<rect id="annaPortV" x="${vp.x-4.5}" y="${vp.y-3.5}" width="9" height="7" rx="1.5" fill="${P.vCol}"/>`;
+      [0, 1, 3, 4].forEach(i => {
+        cords += `<path class="cab" stroke="${D[S2PCS[i].d].c}" stroke-width="3" d="${cordPath(panel.port(i), swA.port(i))}"/>`;
+      });
+      g += cords;
+      if (step >= 2 && step < 4){
+        g += person(370, 300, 'admin', '#7f8c8d');
+        g += `<path d="M385 290C450 300 520 260 ${vp.x} ${vp.y + 10}" class="stk appear" stroke-dasharray="5 4" stroke-width="2"/>`;
+      }
+      if (step === 3) g += `<circle cx="${vp.x}" cy="${vp.y}" r="10" class="ping" stroke="${D.ks.c}"/><text x="${560 + swA.w + 8}" y="${vp.y + 8}" class="good-txt appear">Gi0/3 → VLAN 20</text>`;
+    }
+    const P = st.s2.prev || T;
+    st.s2.target = T;
+    // Anna's cable + plug, drawn in the previous state
+    g += `<path id="annaCord" class="cab" stroke="${P.cordCol}" stroke-width="3" d="${cordPath(P.a, P.end)}" style="transition:stroke .8s"/>`;
+    g += `<rect id="annaPlug" x="${P.end.x-4}" y="${P.end.y-2}" width="8" height="11" rx="2" fill="${P.cordCol}" opacity="${P.at === 'loose' ? 1 : 0}" style="transition:fill .8s, opacity .3s"/>`;
+    S2PCS.forEach(p => { g += pc(p.x, p.y, p.anna ? P.pcCol : D[p.d].c, p.n, p.anna ? 'id="annaPC" style="transition:fill .8s"' : ''); });
+    // technician (moves smoothly between positions)
+    g += `<g id="tech" transform="translate(${P.tech.x} ${P.tech.y})" opacity="${P.tech.o}" style="transition:opacity .5s">
+      <circle cx="0" cy="-16" r="7" fill="#7f8c8d"/><path d="M-10 8q10-22 20 0z" fill="#7f8c8d"/>
+      <text x="0" y="22" class="lbl" text-anchor="middle">technik</text></g>`;
+    if (!mode && step >= 4 && step < 6) g += `<text x="350" y="92" class="bad-txt appear" text-anchor="middle">brak sieci</text>`;
+    if (done) g += `<text x="350" y="92" class="good-txt appear" text-anchor="middle">✓ w księgowości</text>`;
+    return svgWrap(820, 360, g);
+  }
+
+  function animS2(){
+    const P = st.s2.prev, T = st.s2.target;
+    st.s2.prev = T;
+    if (!P || !T) return;
+    cancelAnimationFrame(st.s2.raf);
+    const $q = sel => document.querySelector('#stage ' + sel);
+    const cord = $q('#annaCord'), plug = $q('#annaPlug'), pcG = $q('#annaPC'), tech = $q('#tech');
+    if (!cord) return;
+    const pcRect = pcG && pcG.querySelector('rect');
+    // colour changes: CSS transitions (element was drawn with the old colour)
+    requestAnimationFrame(() => {
+      cord.setAttribute('stroke', T.cordCol);
+      plug.setAttribute('fill', T.cordCol);
+      if (pcRect){ pcRect.style.transition = 'fill .8s'; pcRect.setAttribute('fill', T.pcCol); }
+      tech.setAttribute('opacity', T.tech.o);
+      const vp = $q('#annaPortV');
+      if (vp){ vp.style.transition = 'fill .6s'; vp.setAttribute('fill', T.vCol); }
+    });
+    const moves = P.end.x !== T.end.x || P.end.y !== T.end.y;
+    const techMoves = P.tech.x !== T.tech.x || P.tech.y !== T.tech.y;
+    if (!moves && !techMoves) return;
+    // plug leaves the old port: the port goes dark right away
+    const pIT = $q('#annaPortIT'), pKS = $q('#annaPortKS');
+    if (moves && P.at === 'it' && pIT) pIT.setAttribute('fill', 'var(--port)');
+    if (moves && P.at === 'ks' && pKS) pKS.setAttribute('fill', 'var(--port)');
+    if (moves) plug.setAttribute('opacity', 1);
+    const D_MS = 1100, t0 = performance.now();
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const frame = now => {
+      const t = Math.min(1, (now - t0) / D_MS), e = ease(t);
+      if (moves){
+        const lift = 38 * Math.sin(Math.PI * e);
+        const x = P.end.x + (T.end.x - P.end.x) * e, y = P.end.y + (T.end.y - P.end.y) * e - lift;
+        cord.setAttribute('d', cordPath(T.a, { x, y }));
+        plug.setAttribute('x', x - 4); plug.setAttribute('y', y - 2);
+      }
+      if (techMoves){
+        const tx = P.tech.x + (T.tech.x - P.tech.x) * e, ty = P.tech.y + (T.tech.y - P.tech.y) * e;
+        tech.setAttribute('transform', `translate(${tx} ${ty})`);
+      }
+      if (t < 1) st.s2.raf = requestAnimationFrame(frame);
+      else {
+        // plug arrives: the new port lights up, the plug "disappears" into the port
+        if (T.at === 'ks' && pKS) pKS.setAttribute('fill', D.ks.c);
+        if (T.at === 'it' && pIT) pIT.setAttribute('fill', D.it.c);
+        if (T.at !== 'loose') plug.setAttribute('opacity', 0);
+      }
+    };
+    st.s2.raf = requestAnimationFrame(frame);
+  }
+
+  /* ---------- 3: half-empty switches ---------- */
+  function s3(mode){
+    if (mode) return s3dzis();
+    const c = st.s3, order = ['it','ks','kd','gs'];
+    const rows = [];
+    if (!mode){
+      order.forEach(k => {
+        const n = c[k], cnt = Math.max(1, Math.ceil(n / 24));
+        for (let s = 0; s < cnt; s++){
+          const used = Math.min(24, n - s * 24);
+          rows.push({ k, label:`switch: ${D[k].n}${cnt > 1 ? ' #' + (s + 1) : ''}`, ports: Array.from({length:24}, (_, i) => i < used ? D[k].c : null), used });
+        }
+      });
+    } else {
+      const all = []; order.forEach(k => { for (let i = 0; i < c[k]; i++) all.push(D[k].c); });
+      const cnt = Math.max(1, Math.ceil(all.length / 24));
+      for (let s = 0; s < cnt; s++){
+        const part = all.slice(s * 24, s * 24 + 24);
+        rows.push({ label:`switch wspólny #${s + 1} (VLAN 10/20/30/40)`, ports: Array.from({length:24}, (_, i) => part[i] || null), used: part.length });
+      }
+    }
+    // drawing order: the "ghost" (switch still to be bought) sits where IT #2 will appear
+    const draw = rows.slice();
+    if (!mode && c.ghost) draw.splice(1, 0, { ghost:true });
+    const Y = i => 20 + i * 62;
+    let g = '', hitRow = -1, hitIdx = -1;
+    if (c.last){
+      if (!mode){ draw.forEach((r, i) => { if (r.k === c.last){ hitRow = i; hitIdx = r.used - 1; } }); }
+      else { let n = -1; for (const k of order){ n += c[k]; if (k === c.last) break; } hitRow = Math.floor(n / 24); hitIdx = n % 24; }
+    }
+    const hi = c.hi || [];
+    let kdPort = null, itRowY = Y(0);
+    draw.forEach((r, i) => {
+      const y = Y(i);
+      if (r.ghost){
+        const gw = 12 * 21 - 5 + 16, gh = 2 * 17 - 5 + 14;
+        g += `<rect x="30" y="${y}" width="${gw}" height="${gh}" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" class="appear"/>
+          <text x="${30 + gw / 2}" y="${y + gh / 2 + 5}" class="lbls" text-anchor="middle">?</text>
+          <text x="${30 + gw + 14}" y="${y + 18}" class="lbl" style="fill:var(--muted)">switch: IT #2</text>
+          <text x="${30 + gw + 14}" y="${y + 35}" style="fill:var(--accent);font-size:11px;font-weight:700">do kupienia</text>`;
+        return;
+      }
+      // sequential lighting of new IT ports (only when stepping forward)
+      const anim = !mode && r.k === 'it' && c.fill && st.s3dir > 0 && i === 0;
+      const ports = anim ? r.ports.map((col, pi) => pi >= c.fill[0] ? null : col) : r.ports;
+      const s = sw(30, y, ports, 12, '', { pw:16, ph:12, gap:5 });
+      g += s.svg;
+      if (anim){
+        for (let pi = c.fill[0]; pi < c.fill[1]; pi++){
+          const pt = s.port(pi), d = 0.5 + (pi - c.fill[0]) * 0.3;
+          g += `<rect x="${pt.x - 8}" y="${pt.y - 6}" width="16" height="12" rx="1.5" fill="${D.it.c}" class="lit" style="animation-delay:${d}s"/>
+                <circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingD" style="animation-delay:${d}s"/>`;
+        }
+      }
+      if (!mode && hi.includes(r.k)) g += `<rect x="25" y="${y - 5}" width="${s.w + 10}" height="${s.h + 10}" rx="7" class="hl"/>`;
+      if (mode) r.ports.forEach((col, pi) => { if (col && hi.some(k => D[k].c === col)){ const pt = s.port(pi); g += `<rect x="${pt.x - 10}" y="${pt.y - 8}" width="20" height="16" rx="3" class="hl" style="stroke-width:2"/>`; } });
+      // pulsing free ports
+      if (!mode && (c.pulse === 'all' || (c.pulse === r.k))){
+        r.ports.forEach((col, pi) => { if (!col){ const pt = s.port(pi); g += `<rect x="${pt.x - 9}" y="${pt.y - 7}" width="18" height="14" rx="2.5" class="pulseP" style="animation-delay:${(pi % 12) * 0.04}s"/>`; } });
+      }
+      if (i === hitRow && hitIdx >= 0){ const pt = s.port(hitIdx); g += `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`; }
+      if (!mode && c.power) g += `<text x="14" y="${y + 28}" class="appear" style="font-size:15px" text-anchor="middle">⚡</text>`;
+      const full = r.used >= 24;
+      g += `<text x="${30 + s.w + 14}" y="${y + 18}" class="lbl">${r.label}</text>`;
+      const cnt = `<text x="${30 + s.w + 14}" y="${y + 35}" class="${full && !mode ? 'bad-txt' : 'lbls'}" CLS>zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
+      if (anim){
+        // the counter changes only after the last port lights up
+        const T = 0.5 + (c.fill[1] - c.fill[0]) * 0.3;
+        g += `<text x="${30 + s.w + 14}" y="${y + 35}" class="lbls gone" style="animation-delay:${T}s">zajęte ${c.fill[0]}/24 · wolne ${24 - c.fill[0]}</text>`;
+        g += cnt.replace('class="', 'style="animation-delay:' + T + 's" class="lit ').replace(' CLS', '');
+      } else g += cnt.replace(' CLS', '');
+      if (!mode && r.k === 'kd'){ kdPort = s.port(r.used); if (c.badge) g += `<g class="appear"><rect x="${30 + s.w + 140}" y="${y + 4}" width="180" height="24" rx="12" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="${30 + s.w + 230}" y="${y + 21}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--ink)">📁 dane osobowe i wypłaty</text></g>`; }
+    });
+    // the new IT person waiting for a port, and the "trial" cable to the Kadry switch
+    if (!mode && c.pc && c.pc !== 'none'){
+      const px = 548, py = itRowY + 16;
+      const col = c.pc === 'kd' ? D.kd.c : D.it.c;
+      if (kdPort && (c.pc === 'trial' || c.pc === 'kd' || c.pc === 'cancel')){
+        const path = `M${px - 18} ${py + 4}C${px - 120} ${py + 20} ${kdPort.x + 60} ${kdPort.y - 90} ${kdPort.x} ${kdPort.y}`;
+        if (c.pc === 'cancel'){
+          g += `<path d="${path}" fill="none" stroke="var(--bad)" stroke-width="3" stroke-dasharray="7 5" class="fadeout"/>`;
+          const mx = (px - 18 + kdPort.x) / 2 + 20, my = (py + kdPort.y) / 2 - 20;
+          g += `<text x="${mx}" y="${my}" text-anchor="middle" class="fadeout" style="font-size:30px;font-weight:800;fill:var(--bad)">✕</text>`;
+        } else {
+          g += `<path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-dasharray="7 5" class="appear"/>`;
+          if (c.pc === 'kd') g += `<rect x="${kdPort.x - 8}" y="${kdPort.y - 6}" width="16" height="12" rx="1.5" fill="${D.kd.c}" class="appear"/><circle cx="${kdPort.x}" cy="${kdPort.y}" r="6" class="pingS" style="stroke:${D.kd.c}"/>`;
+        }
+      }
+      const blink = c.pc === 'wait' || c.pc === 'cancel';
+      g += `<g class="${blink ? 'blink' : 'appear'}">${pc(px, py, col, '')}</g>`;
+      g += `<text x="${px}" y="${py + 30}" text-anchor="middle" class="${c.pc === 'kd' ? 'lbl' : 'bad-txt'}">${c.pc === 'kd' ? 'w sieci kadr!' : 'brak portu'}</text>`;
+      g += `<text x="${px}" y="${py - 20}" text-anchor="middle" class="lbls">nowa osoba z IT</text>`;
+    }
+    return { svg: svgWrap(620, Math.max(340, 30 + draw.length * 62), g), rows };
+  }
+
+  const B = { it:7, ks:5, kd:4, gs:6 };
+  const B25 = {...B, it:25}, ALL = ['it','ks','kd','gs'];
+  // Scene "Biuro, dziś" — lines verbatim from scenariusze/klopot3-dzis.md.
+  // Ports keep their places (like in a real rack); new IT people take free ports in DZ_ADD order.
+  // Layout chosen so that both groups of seven fit on switch #1 (IT only), and only the 25th person
+  // lands on switch #2, right next to Kadry — the Kierownik asks about it in step 10, not earlier.
+  const DZ_BASE = (() => { const a = Array(48).fill(null);
+    for (let i = 0; i < 10; i++) a[i] = 'it';          // switch #1: IT, 14 free
+    for (let i = 24; i < 29; i++) a[i] = 'ks';         // switch #2, row 1: Księgowość, Goście
+    for (let i = 29; i < 35; i++) a[i] = 'gs';
+    for (let i = 36; i < 40; i++) a[i] = 'kd';         // switch #2, row 2: Kadry
+    return a; })();
+  const DZ_ADD = [...Array(14).keys()].map(i => 10 + i).concat([...Array(8).keys()].map(i => 40 + i), [35]);
+  const DZ_KD = [36, 37, 38, 39], DZ_NEW = DZ_ADD[14];  // port right next to Kadry
+  const SDZIS = [
+    { who:'ola',  t:'Dziś. Cztery działy, 2 switch\'e zamiast 5 🤩', c:{ it:10 } },
+    { who:'ola',  t:'Kolor portu to VLAN – każdy dział ma swój.', c:{ it:10, hi:ALL } },
+    { who:'ola',  t:'Zatrudniamy w IT. Siedem gniazdek – każde w VLAN 10.', c:{ it:10 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina siedem gniazdek i ustawia im VLAN 10…', c:{ it:17, fill:[10,17] } },
+    { who:'ola',  t:'Kolejne siedem nowych osób – tym razem bez nerwów 😌', c:{ it:17 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina kolejne siedem gniazdek…', c:{ it:24, fill:[17,24] } },
+    { who:'ola',  t:'I jeszcze jedna osoba – a portów wciąż mamy dziewięć 🙂', c:{ it:24, pc:'wait', pulse:true } },
+    { who:'kier', t:'Olu, tylko mi nie mów, że nowy switch 😅', c:{ it:24, pc:'wait' } },
+    { who:'ola',  t:'Nie trzeba 😎 Wolny port – i VLAN 10.', c:{ it:25, pc:'plug', ring:DZ_NEW } },
+    { who:'kier', t:'Chwila – to ten sam switch, co kadry? 🤨', c:{ it:25, hiIdx:[...DZ_KD, DZ_NEW] } },
+    { who:'kier', t:'Czyli moi ludzie zobaczą wypłaty?!', c:{ it:25, hiIdx:[...DZ_KD, DZ_NEW], badge:true } },
+    { who:'ola',  t:'Nie – oni są w VLAN 10, kadry w VLAN 30. Nie widzą się.', c:{ it:25, hiIdx:[...DZ_KD, DZ_NEW], badge:true, lock:true } },
+    { who:'kier', t:'Czyli nie płacimy za puste porty? 🙂', c:{ it:25, metricHi:true } },
+    { who:'ola',  t:'Ani za trzy switche – ani za ich prąd 😉', c:{ it:25, compare:true } },
+    { who:'quiz', t:'IT i kadry siedzą na jednym switchu. Co je rozdziela?', c:{ it:25, compare:true }, quiz:true }
+  ];
+
+  function s3dzis(){
+    const c = st.s3, slots = DZ_BASE.slice(), added = Math.max(0, c.it - 10);
+    for (let i = 0; i < added; i++) slots[DZ_ADD[i]] = 'it';
+    const animSet = c.fill && st.s3dir > 0 ? DZ_ADD.slice(c.fill[0] - 10, c.fill[1] - 10) : [];
+    const T = 0.5 + animSet.length * 0.3;   // counters change after the last port lights up
+    const Y = i => 20 + i * 62, hi = c.hi || [], hiIdx = c.hiIdx || [];
+    const pos = [], rows = [];
+    let g = '';
+    for (let sn = 0; sn < 2; sn++){
+      const part = slots.slice(sn * 24, sn * 24 + 24), y = Y(sn);
+      const used = part.filter(Boolean).length;
+      rows.push({ used, label:`switch wspólny #${sn + 1}` });
+      const sv = sw(30, y, part.map((k, pi) => k && !animSet.includes(sn * 24 + pi) ? D[k].c : null), 12, '', { pw:16, ph:12, gap:5 });
+      g += sv.svg;
+      let animHere = 0;
+      part.forEach((k, pi) => {
+        const gi = sn * 24 + pi, pt = sv.port(pi); pos[gi] = pt;
+        const ai = animSet.indexOf(gi);
+        if (ai >= 0){
+          animHere++;
+          const d = 0.5 + ai * 0.3;
+          g += `<rect x="${pt.x - 8}" y="${pt.y - 6}" width="16" height="12" rx="1.5" fill="${D.it.c}" class="lit" style="animation-delay:${d}s"/>
+                <circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingD" style="animation-delay:${d}s"/>`;
+        }
+        if ((k && hi.includes(k)) || hiIdx.includes(gi)) g += `<rect x="${pt.x - 10}" y="${pt.y - 8}" width="20" height="16" rx="3" class="hl" style="stroke-width:2"/>`;
+        if (!k && c.pulse) g += `<rect x="${pt.x - 9}" y="${pt.y - 7}" width="18" height="14" rx="2.5" class="pulseP" style="animation-delay:${(pi % 12) * 0.04}s"/>`;
+        if (c.ring === gi) g += `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`;
+      });
+      const lx = 30 + sv.w + 14;
+      g += `<text x="${lx}" y="${y + 18}" class="lbl">switch wspólny #${sn + 1}</text>`;
+      const cnt = u => `zajęte ${u}/24 · wolne ${24 - u}`;
+      if (animHere){
+        g += `<text x="${lx}" y="${y + 35}" class="lbls gone" style="animation-delay:${T}s">${cnt(used - animHere)}</text>
+              <text x="${lx}" y="${y + 35}" class="lbls lit" style="animation-delay:${T}s">${cnt(used)}</text>`;
+      } else g += `<text x="${lx}" y="${y + 35}" class="lbls">${cnt(used)}</text>`;
+    }
+    // the new IT person: waiting, then plugged into a free port with VLAN 10
+    if (c.pc){
+      const px = 470, py = 205, to = pos[c.pc === 'plug' ? DZ_NEW : DZ_ADD[added]];
+      if (c.pc === 'plug'){
+        g += `<path d="M${px - 18} ${py - 4}C${px - 90} ${py - 20} ${to.x + 40} ${to.y + 80} ${to.x} ${to.y + 6}" fill="none" stroke="${D.it.c}" stroke-width="3" class="appear"/>`;
+        g += `<text x="${px}" y="${py + 30}" text-anchor="middle" class="good-txt">VLAN 10 ✓</text>`;
+      } else g += `<text x="${px}" y="${py + 30}" text-anchor="middle" class="lbls">czeka na port</text>`;
+      g += `<g class="${c.pc === 'wait' ? 'blink' : 'appear'}">${pc(px, py, D.it.c, '')}</g>`;
+      g += `<text x="${px}" y="${py - 20}" text-anchor="middle" class="lbls">nowa osoba z IT</text>`;
+    }
+    // Kadry's data on the shared switch, and the VLAN wall between them and the new IT port
+    if (c.badge){
+      const by = Y(1) + 60;
+      g += `<g class="appear"><rect x="30" y="${by}" width="196" height="24" rx="12" fill="var(--accent-bg)" stroke="var(--accent)"/>
+        <text x="128" y="${by + 17}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--ink)">${c.lock ? '🔒' : '📁'} dane osobowe i wypłaty</text></g>`;
+      if (c.lock) g += `<text x="240" y="${by + 17}" class="good-txt appear">VLAN 30 ✕ VLAN 10 – nie widzą się</text>`;
+    }
+    if (c.compare) g += `<text x="30" y="${Y(1) + 140}" class="lbls appear">Dla porównania rok 1996: 5 switchy · 40 ze 120 portów · 33%</text>`;
+    return { svg: svgWrap(620, 340, g), rows };
+  }
+
+  // Scene "Biuro, rok 1996" — lines verbatim from scenariusze/klopot3-rok-1996.md
+  const W = { pc:'wait', ghost:true };
+  const S1996 = [
+    { who:'ola',  t:'Rok 1996. Cztery działy, cztery switche. Na razie wszystko gra.', c:{ it:10 } },
+    { who:'ola',  t:'Zatrudniamy w IT. Mam podpiąć siedem gniazdek.', c:{ it:10 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina siedem gniazdek…', c:{ it:17, fill:[10,17] } },
+    { who:'ola',  t:'Kolejne siedem nowych osób – to będzie na styk 😬', c:{ it:17 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina kolejne siedem gniazdek…', c:{ it:24, fill:[17,24] } },
+    { who:'ola',  t:'I jeszcze jedna osoba – a portów już nie ma 😩', c:{ it:24, pc:'wait' } },
+    { who:'kier', t:'Olu, jak to, nowy switch 🤨 – przecież to będzie piąty 🤯', c:{ it:24, ...W } },
+    { who:'ola',  t:'No tak 🤷‍♀️ Taką mamy sieć – to będzie piąty.', c:{ it:24, ...W, hi:['it','ks','kd','gs'] } },
+    { who:'kier', t:'Ale przecież mamy wolne gniazdka. Sam widziałem.', c:{ it:24, ...W, pulse:'all' } },
+    { who:'ola',  t:'W kadrach. Mają dwadzieścia wolnych.', c:{ it:24, ...W, pulse:'kd', hi:['kd'] } },
+    { who:'kier', t:'To podepnij tam moich ludzi.', c:{ it:24, ghost:true, pc:'trial', hi:['kd'] } },
+    { who:'ola',  t:'I trafią do sieci kadr?! Przecież tam są dane osobowe i wypłaty!', c:{ it:24, ghost:true, pc:'kd', badge:true } },
+    { who:'kier', t:'Aha, no to słabo 😕', c:{ it:24, ghost:true, pc:'cancel' } },
+    { who:'kier', t:'Czyli płacimy za puste porty? 😳', c:{ it:24, ...W, pulse:'all', metricHi:true } },
+    { who:'ola',  t:'I jeszcze za prąd 🙃', c:{ it:25, power:true, last:'it' } },
+    { who:'quiz', t:'Co by tu pomogło?', c:{ it:25, power:true }, quiz:true }
+  ];
+  const SPK = {
+    ola:  { n:'Ola', r:'administratorka sieci', av:'O', bg:'#d9ecf9' },
+    kier: { n:'Kierownik IT', r:'szef Oli', av:'K', bg:'#f6e3c8' },
+    szef: { n:'Szefowa Sprzedaży', r:'kieruje Sprzedażą', av:'S', bg:'#f9d9e6' },
+    quiz: { n:'Zagadka', r:'dla Ciebie', av:'?', bg:'var(--accent-bg)' }
+  };
+  const QUIZ = [[
+    { id:'a', t:'A) Jeden wielki switch.', fb:'Nie do końca. Większe pudło to nadal jeden dział na jednym pudle.' },
+    { id:'b', t:'B) Żeby o sieci decydował port, a nie pudło.', fb:'Właśnie tak. Zobacz, jak to wygląda dziś.' } ], [
+    { id:'a', t:'A) Osobne pudło.', fb:'Nie tym razem – pudło jest wspólne. Rozdziela je VLAN.' },
+    { id:'b', t:'B) Numer VLAN-u na porcie.', fb:'Właśnie tak. O sieci decyduje port, a nie pudło.' } ]];
+  const SCENE = [
+    { steps: S1996, title:'Biuro, rok 1996', end:'Zobacz to samo dziś ▶', base:{ ks:5, kd:4, gs:6 } },
+    { steps: SDZIS, title:'Biuro, dziś', end:'↺ Wróć do roku 1996', base:{ ks:5, kd:4, gs:6 } } ];
+
+  function dlgHTML(o){
+    const steps = o.sc.steps, k = o.k, cur = steps[k], n = steps.length, last = k === n - 1, sp = SPK[cur.who], q = o.q;
+    const quiz = cur.quiz ? `<div class="quiz">${o.quizOpts.map(x => `<button ${o.qattr}="${x.id}" class="${q === x.id ? (x.id === 'b' ? 'right' : 'wrong') : ''} ${!q ? 'next' : ''}">${x.t}</button>`).join('')}</div>
+      ${q ? `<div class="fb ${q === 'b' ? 'ok' : ''}">${o.quizOpts.find(x => x.id === q).fb}</div>` : ''}` : '';
+    return `<div class="story"><div>${o.svg}</div>
+      <aside class="dlg">
+        <div class="scene">${o.sc.title}</div>
+        ${sp ? `<div class="who"><span class="av" style="background:${sp.bg}">${sp.av}</span><span><b>${sp.n}</b>${sp.r}</span></div>` : ''}
+        ${cur.act ? `<div class="say act">${cur.act}</div>` : `<div class="say" ${cur.quiz ? 'style="font-size:18px"' : ''}>${cur.t}</div>`}
+        ${quiz}
+        <div class="dots">${steps.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${n}</span></div>
+        <div class="actions">
+          <button id="${o.ids[0]}" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Wstecz</button>
+          <button id="${o.ids[1]}" title="Strzałka w prawo" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? o.sc.end : (cur.next || 'Dalej ▶')}</button>
+        </div>
+      </aside></div>`;
+  }
+  function s3story(mode){
+    const sc = SCENE[mode], k = st.s3step[mode], cur = sc.steps[k];
+    st.s3 = { ...sc.base, ...cur.c };
+    return dlgHTML({ svg: s3(mode).svg, sc, k, q: st.s3quiz, quizOpts: QUIZ[mode], ids:['d3prev', 'd3next'], qattr:'data-q' });
+  }
+  function step3(d){
+    const m = st.mode[2], n = SCENE[m].steps.length, k = st.s3step[m] + d;
+    st.s3dir = d;
+    if (k < 0) return;
+    if (k >= n){ st.mode[2] = 1 - m; st.s3step[1 - m] = 0; st.s3quiz = null; }
+    else st.s3step[m] = k;
+    if (k < n - 1) st.s3quiz = null;
+    render();
+    st.s3dir = 0;
+  }
+
+  function s3guide(mode){
+    const c = st.s3, nB = s3(0).rows.length, nA = s3(1).rows.length;
+    const total = c.it + c.ks + c.kd + c.gs, free = 72 - c.ks - c.kd - c.gs;
+    let n, txt, hot = null;
+    if (!c.touched){ n = 1; hot = 'it1'; txt = 'Kliknij <b>+ osoba w IT</b> i zobacz, który port się zapali.'; }
+    else if (c.it <= 24){ n = 2; hot = 'it5'; txt = `IT się rozrasta. Klikaj <b>+ 5 osób w IT</b>, aż zabraknie portów (teraz ${c.it}/24).`; }
+    else if (!mode){ n = 3; hot = 'seg1'; txt = `IT musiało dostać drugi switch, choć u innych działów stoi ${free} wolnych portów. Przełącz na <b>Z VLAN-ami</b> (u góry po prawej).`; }
+    else { n = 0; const d = total % 10, dd = total % 100, os = (d >= 2 && d <= 4 && !(dd >= 12 && dd <= 14)) ? 'osoby mieszczą' : 'osób mieści'; txt = `Te same ${total} ${os} się na ${nA} ${nA === 1 ? 'switchu' : 'switchach'} zamiast ${nB}. Przełączaj „Przed / Z VLAN-ami” i dodawaj osoby dowolnie.`; }
+    return { hot, html: `<span class="gs">${n ? '👉 Zadanie ' + n + ' / 3' : '✓ Zrobione'}</span><span>${txt}</span>${hot ? '<span class="gl">pulsuje = kliknij teraz</span>' : ''}` };
+  }
+
+  /* ---------- 4: flat network: broadcasts & no separation ---------- */
+  const S4 = [];
+  ['it','ks','kd','gs'].forEach((k, gi) => { for (let j = 0; j < 4; j++) S4.push({ d:k, i:gi * 4 + j }); });
+  S4[0].n = 'Bartek'; S4[8].srv = true; S4[8].n = 'Serwer kadr';
+  const CX = 410, CY = 225, R = 150;
+  const pos = i => { const a = (-90 + 11.25 + i * 22.5) * Math.PI / 180; return { x: CX + R * Math.cos(a), y: CY + R * Math.sin(a), a }; };
+
+  function s4(mode){
+    let g = '';
+    if (!mode){
+      g += `<circle cx="${CX}" cy="${CY}" r="205" fill="var(--muted)" fill-opacity=".08" stroke="var(--muted)" stroke-dasharray="5 4"/>`;
+      g += `<text x="${CX}" y="14" class="ttl" text-anchor="middle">Jedna płaska sieć 192.168.0.0/24, wszyscy słyszą wszystkich</text>`;
+    } else {
+      ['it','ks','kd','gs'].forEach((k, gi) => {
+        const a0 = (-90 + gi * 90 + 1.5) * Math.PI / 180, a1 = (-90 + (gi + 1) * 90 - 1.5) * Math.PI / 180, r = 205;
+        g += `<path d="M${CX} ${CY}L${CX + r * Math.cos(a0)} ${CY + r * Math.sin(a0)}A${r} ${r} 0 0 1 ${CX + r * Math.cos(a1)} ${CY + r * Math.sin(a1)}Z" fill="${D[k].c}" fill-opacity=".12" stroke="${D[k].c}" stroke-opacity=".5"/>`;
+        const am = (-90 + gi * 90 + 45) * Math.PI / 180;
+        const lx = CX + 232 * Math.cos(am), ly = CY + 232 * Math.sin(am);
+        g += `<text x="${lx}" y="${ly}" text-anchor="middle" style="fill:${D[k].c};font-weight:700;font-size:12px">VLAN ${D[k].vlan}</text>
+              <text x="${lx}" y="${ly + 14}" text-anchor="middle" class="lbls">${D[k].net}</text>`;
+      });
+    }
+    const b = st.s4.bcast, src = S4[0];
+    const hears = n => n !== src && (!mode || n.d === src.d);
+    // links
+    S4.forEach(n => {
+      const p = pos(n.i);
+      const lit = b && (n === src || hears(n));
+      g += `<line x1="${CX}" y1="${CY}" x2="${p.x}" y2="${p.y}" stroke="${lit ? '#e74c3c' : (mode ? D[n.d].c : 'var(--cable)')}" stroke-width="${lit ? 3 : 1.5}" ${lit ? `class="wave" data-k="${b}"` : ''} stroke-opacity="${mode && !lit ? .5 : 1}"/>`;
+    });
+    // intruder
+    if (st.s4.intruder){
+      const lx = 760, ly = 405;
+      g += `<path d="M${CX + 12} ${CY + 12}L${lx - 20} ${ly - 8}" stroke="var(--ink)" stroke-width="2"/>`;
+      S4.forEach(n => {
+        if (mode && n.d !== 'gs') return;
+        const p = pos(n.i);
+        g += `<line x1="${lx}" y1="${ly - 12}" x2="${p.x}" y2="${p.y}" stroke="${mode ? D.gs.c : '#e74c3c'}" stroke-width="1.5" stroke-dasharray="4 4" class="appear"/>`;
+      });
+      g += `<g class="appear"><rect x="${lx - 20}" y="${ly - 22}" width="40" height="24" rx="3" fill="#e74c3c"/><rect x="${lx - 26}" y="${ly + 2}" width="52" height="5" rx="2" fill="#e74c3c"/>
+        <text x="${lx}" y="${ly + 24}" class="lbl" text-anchor="middle" style="font-weight:600">obcy laptop</text>
+        <text x="${lx + 40}" y="${ly + 39}" class="lbls" text-anchor="end">gniazdko na korytarzu${mode ? ' → VLAN 40' : ''}</text></g>`;
+    }
+    // switch
+    g += `<rect x="${CX - 30}" y="${CY - 16}" width="60" height="32" rx="5" class="swb"/><text x="${CX}" y="${CY + 4}" text-anchor="middle" style="fill:var(--bg);font-size:11px;font-weight:700">switch</text>`;
+    // nodes
+    S4.forEach(n => {
+      const p = pos(n.i);
+      const lx = CX + (R + 44) * Math.cos(p.a), ly = CY + (R + 44) * Math.sin(p.a) + 4;
+      g += n.srv ? server(p.x, p.y, D[n.d].c, '') : pc(p.x, p.y, D[n.d].c, '');
+      if (n.n) g += `<text x="${lx}" y="${ly}" class="lbl" text-anchor="middle" style="font-weight:600">${n.n}</text>`;
+      if (b && hears(n)) g += `<circle cx="${p.x}" cy="${p.y}" r="18" class="ping" stroke="#e74c3c"/>`;
+      if (b && n === src) g += `<text x="${lx}" y="${ly + 14}" class="bad-txt" text-anchor="middle">„Kto ma .30?”</text>`;
+      if (st.s4.intruder && n.srv) g += mode
+        ? `<text x="${lx}" y="${ly + 14}" class="good-txt" text-anchor="middle">🔒 niewidoczny</text>`
+        : `<text x="${lx}" y="${ly + 14}" class="bad-txt" text-anchor="middle">👁 widoczny!</text>`;
+    });
+    return svgWrap(820, 455, g);
+  }
+
+  /* ---------- scenario definitions ---------- */
+  const SC = [
+    { tab:'1. Działy na piętrach',
+      title:'Kłopot 1: działy na piętrach',
+      problem:'',
+      render: s1story, legend:['sp','mk','ks','kd','it'], noExplain:true,
+      metrics: () => [],
+      explain: () => '' },
+    { tab:'2. Zmiana działu',
+      title:'Kłopot 2: pracownik zmienia dział',
+      problem:'Anna przechodzi z IT do księgowości, ale zostaje przy tym samym biurku. Jej komputer musi trafić do innej sieci.',
+      render: s2, legend:['it','ks'],
+      actions: m => {
+        const n = S2STEPS[m].length, k = st.s2.step, end = k >= n;
+        const runTxt = st.s2.playing ? '⏸ Pauza' : (k === 0 ? '▶ Przenieś Annę do księgowości' : '▶ Odtwarzaj dalej');
+        return `<button class="primary" id="a2run" ${end ? 'disabled' : ''}>${runTxt}</button>
+          <button id="a2prev" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Krok wstecz</button>
+          <button id="a2next" ${end ? 'disabled' : ''} title="Strzałka w prawo">Krok dalej ▶</button>
+          <span class="stepinfo">Krok <b>${k}</b> / ${n}</span>
+          <button id="a2reset">↺ Od nowa</button>`;
+      },
+      metrics: m => {
+        const done = st.s2.step >= S2STEPS[m].length;
+        return m
+          ? [metric('czas', done ? '≈ 3 min' : '…', 'good'), metric('kto musi iść do szafy', 'nikt', 'good'), metric('przepiętych kabli', '0', 'good')]
+          : [metric('czas', done ? '≈ 1 godz.' : '…', 'bad'), metric('kto musi iść do szafy', 'technik', 'bad'), metric('przepiętych kabli', '1', 'bad')];
+      },
+      explain: m => m
+        ? '<b>Z VLAN-ami</b> przynależność do sieci to <b>ustawienie portu</b> w konfiguracji switcha, a nie kabel. Zmiana działu to jedna komenda, wpisana zdalnie. Kable w szafie zostają w spokoju.'
+        : '<b>Przed VLAN-ami</b> zmiana sieci oznacza <b>fizyczne przepięcie kabla</b>. Trzeba iść do szafy, znaleźć właściwy przewód i liczyć, że w docelowym switchu jest wolny port. W dużej firmie takie zgłoszenia są codziennie.' },
+    { tab:'3. Pół-puste switche',
+      title:'Kłopot 3: każdy dział ma własny, pół-pusty switch',
+      problem: '',
+      render: s3story, legend:['it','ks','kd','gs'], noExplain:true,
+      metrics: m => {
+        const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
+        return [metric((r.length === 1 ? 'switch' : r.length < 5 ? 'switche' : 'switchy') + ' do kupienia, zasilania i skonfigurowania', r.length, m ? 'good' : 'bad'),
+                metric('zajęte porty', `${used} / ${all}`), metric('wykorzystanie portów', Math.round(used / all * 100) + '%', (m ? 'good' : 'bad') + (st.s3.metricHi ? ' hot' : ''))];
+      },
+      explain: m => m
+        ? '<b>Z VLAN-ami</b> jeden switch obsługuje wszystkie działy naraz, a każdy port ma przypisany VLAN. Kolejny switch kupujesz dopiero wtedy, gdy <b>naprawdę</b> zabraknie portów, a nie dlatego, że pojawił się nowy dział.'
+        : '<b>Przed VLAN-ami</b> granicę sieci wyznaczał fizyczny switch. Mały dział i tak potrzebuje całego urządzenia. Spróbuj dodać 18 osób do IT: dział dostanie drugi switch, choć u innych porty stoją wolne.' },
+    { tab:'4. Płaska sieć',
+      title:'Kłopot 4: jedna płaska sieć, czyli krzyk do wszystkich i zero separacji',
+      problem:'Alternatywa dla wielu switchy to wpięcie wszystkich do jednej wielkiej sieci. Tanio, ale każdy słyszy każdego.',
+      render: s4, legend:['it','ks','kd','gs'],
+      actions: () => `<button class="primary" id="a4b">📢 Bartek wysyła broadcast ARP</button><button id="a4i">${st.s4.intruder ? '✖ Odłącz' : '🕵 Wepnij'} obcy laptop</button><button id="a4reset">↺ Wyczyść</button>`,
+      metrics: m => [
+        metric('odebrało broadcast Bartka', st.s4.bcast ? (m ? '3 urządzenia' : '15 urządzeń') : '–', st.s4.bcast ? (m ? 'good' : 'bad') : ''),
+        metric('obcy laptop widzi', st.s4.intruder ? (m ? '4 urządzenia gości' : 'wszystkie 16, z serwerem kadr') : '–', st.s4.intruder ? (m ? 'good' : 'bad') : '')],
+      explain: m => m
+        ? '<b>Z VLAN-ami</b> broadcast zostaje w swoim VLAN-ie: krzyk Bartka słyszą tylko 3 osoby z IT. Gniazdko na korytarzu jest przypisane do VLAN-u gości, więc obcy laptop nie widzi serwera kadr. Ruch między VLAN-ami musi przejść przez router lub firewall, a tam stawiamy reguły dostępu.'
+        : '<b>Przed VLAN-ami, w płaskiej sieci</b>, każdy broadcast (ARP, DHCP i inne) trafia do <b>wszystkich</b>. Przy setkach urządzeń to ciągły szum. Do tego każdy, kto wepnie laptopa do dowolnego gniazdka, jest „w środku” i widzi wszystko, także serwer kadr.' }
+  ];
+
+  /* ---------- UI ---------- */
+  const $ = id => document.getElementById(id);
+  $('tabs').innerHTML = SC.map((s, i) => `<button class="tab" data-t="${i}">${s.tab}</button>`).join('');
+  $('tabs').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; go(+b.dataset.t); };
+  $('seg').onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; setMode(+b.dataset.m); };
+
+  function resetAnims(){ clearTimeout(st.s2.timer); st.s2.playing = false; cancelAnimationFrame(st.s2.raf); st.s2.step = 0; st.s2.prev = null; }
+  function setMode(m){ st.mode[st.tab] = m; st.s3quiz = null; st.s1quiz = null; resetAnims(); render(); }
+  function go(t){ st.tab = t; resetAnims(); try { history.replaceState(null, '', '#problem-' + (t + 1)); } catch(e){ location.hash = 'problem-' + (t + 1); } render(); }
+
+  function stopS2(){ clearTimeout(st.s2.timer); st.s2.playing = false; }
+  function runS2(){
+    if (st.s2.playing){ stopS2(); render(); return; }          // pause
+    const m = st.mode[1], steps = S2STEPS[m];
+    if (st.s2.step >= steps.length) return;
+    st.s2.playing = true;
+    const tick = () => {
+      st.s2.step++;
+      if (st.s2.step >= steps.length) st.s2.playing = false;
+      render();
+      if (st.s2.playing) st.s2.timer = setTimeout(tick, m ? 1400 : 1900);
+    };
+    tick();
+  }
+  function stepS2(d){
+    stopS2();
+    const n = S2STEPS[st.mode[1]].length, k = Math.max(0, Math.min(n, st.s2.step + d));
+    if (k === st.s2.step){ render(); return; }
+    st.s2.step = k; render();
+  }
+
+  function render(){
+    const s = SC[st.tab], m = st.mode[st.tab];
+    document.querySelectorAll('.tab').forEach((b, i) => b.classList.toggle('on', i === st.tab));
+    document.querySelectorAll('#seg button').forEach(b => b.classList.toggle('on', +b.dataset.m === m));
+    $('title').textContent = s.title;
+    $('problem').textContent = typeof s.problem === 'function' ? s.problem(m) : s.problem;
+    $('problem').style.display = $('problem').textContent ? '' : 'none';
+    $('stage').innerHTML = s.render(m);
+    $('legend').innerHTML = legendDepts(s.legend) + (st.tab === 0 && m ? `<span><i style="background:repeating-linear-gradient(90deg,${D.sp.c} 0 6px,${D.mk.c} 6px 12px)"></i>trunk: wiele VLAN-ów w jednym kablu</span>` : '');
+    const gd = s.guide ? s.guide(m) : null;
+    $('guide').innerHTML = gd ? gd.html : ''; $('guide').style.display = gd ? 'flex' : 'none';
+    document.querySelectorAll('#seg button').forEach(b => b.classList.toggle('next', !!gd && gd.hot === 'seg' + b.dataset.m));
+    $('actions').innerHTML = s.actions ? s.actions(m) : '';
+    $('actions').style.display = s.actions ? 'flex' : 'none';
+    $('metrics').innerHTML = s.metrics(m).join('');
+    $('explain').innerHTML = s.explain(m);
+    $('explain').className = 'explain' + (m ? ' after' : '');
+    $('explain').style.display = s.noExplain ? 'none' : '';
+    // log for scenario 2
+    if (st.tab === 1){
+      const steps = S2STEPS[m];
+      $('log').innerHTML = steps.slice(0, st.s2.step).map(x => `<li><span class="t">${x.t}</span>${x.h}</li>`).join('');
+    } else $('log').innerHTML = '';
+    bind();
+    if (st.tab === 1) animS2();
+  }
+
+  function bind(){
+    const on = (id, f) => { const el = $(id); if (el) el.onclick = f; };
+    on('a2run', runS2);
+    on('a2reset', () => { resetAnims(); render(); });
+    on('d1prev', () => step1(-1));
+    on('d1next', () => step1(1));
+    document.querySelectorAll('[data-q1]').forEach(b => b.onclick = () => { st.s1quiz = b.dataset.q1; render(); });
+    on('d3prev', () => step3(-1));
+    document.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { st.s3quiz = b.dataset.q; render(); });
+    on('d3next', () => step3(1));
+    on('a2prev', () => stepS2(-1));
+    on('a2next', () => stepS2(1));
+    document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const k = b.dataset.add; st.s3[k] += +(b.dataset.n || 1); st.s3.last = k; st.s3.touched = true; render(); });
+    on('a3reset', () => { st.s3 = { it:7, ks:5, kd:4, gs:6 }; render(); });
+    on('a4b', () => { st.s4.bcast = 0; render(); requestAnimationFrame(() => { st.s4.bcast = Date.now(); render(); }); });
+    on('a4i', () => { st.s4.intruder = !st.s4.intruder; render(); });
+    on('a4reset', () => { st.s4 = { bcast:0, intruder:false }; render(); });
+  }
+
+  addEventListener('keydown', e => {
+    if (st.tab === 3 || e.altKey || e.ctrlKey || e.metaKey) return;
+    const stepFn = [step1, stepS2, step3][st.tab];
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || ''))) return;
+    if (e.key === 'ArrowRight'){ e.preventDefault(); stepFn(1); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); stepFn(-1); }
+  });
+
+  const h = (location.hash.match(/^#problem-([1-4])$/) || [])[1];
+  st.tab = h ? +h - 1 : 0;
+  addEventListener('hashchange', () => { const x = (location.hash.match(/^#problem-([1-4])$/) || [])[1]; if (x && +x - 1 !== st.tab){ st.tab = +x - 1; resetAnims(); render(); } });
+  render();
+})();
+</script>
+</body>
+</html>

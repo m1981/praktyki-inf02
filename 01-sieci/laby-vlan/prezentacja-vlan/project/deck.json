@@ -1,0 +1,61 @@
+{
+ "v": 5,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-16T19:40:00Z"
+ },
+ "lists": "css",
+ "format": {
+  "v": 1,
+  "shared": [
+   "project/deck.css"
+  ]
+ },
+ "title": "Po co nam VLAN-y? Kłopot 2: pracownik zmienia dział",
+ "order": [
+  "cover",
+  "sytuacja",
+  "przed-schemat",
+  "przed-kroki",
+  "przed-wynik",
+  "po-schemat",
+  "po-kroki",
+  "po-wynik",
+  "porownanie",
+  "wniosek"
+ ],
+ "sections": {
+  "s1": {
+   "description": "Wprowadzenie: kto, co i dlaczego musi się zmienić.",
+   "start": "cover"
+  },
+  "s2": {
+   "description": "Przed VLAN-ami: zmiana sieci oznacza przepięcie kabla.",
+   "start": "przed-schemat"
+  },
+  "s3": {
+   "description": "Z VLAN-ami: zmiana sieci to jedna komenda na switchu.",
+   "start": "po-schemat"
+  },
+  "s4": {
+   "description": "Porównanie i wniosek.",
+   "start": "porownanie"
+  }
+ },
+ "cover": "cover",
+ "faces": {
+  "space-grotesk": {
+   "family": "Space Grotesk",
+   "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&display=swap"
+  },
+  "inter": {
+   "family": "Inter",
+   "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap"
+  },
+  "jetbrains-mono": {
+   "family": "JetBrains Mono",
+   "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400..700&display=swap"
+  }
+ },
+ "designSystems": []
+}
