@@ -88,3 +88,4 @@ Reakcje na zagadkę:
 - Licznik „kable w pionie” jest na dole pionu kablowego (panel wyników jest ukryty). W 1996 zmienia się po narysowaniu kabli, dziś przez całą scenę stoi na 2.
 - W 1996 w szafie głównej każdy kabel z pionu wpina się do osobnego portu (kolory sieci), bez pokazywania routera.
 - Kolory: Sprzedaż – malinowy, Marketing – morski; IT, Księgowość i Kadry jak w Kłopocie 3.
+- Etykiety switchy (jednolita konwencja w obu labach: „switch” + czyj albo jaki, bez dwukropka i skrótów): 1996 – „switch Sprzedaży”, „switch Marketingu”, „switch Księgowości”, „switch Kadr”, „switch Sprzedaży #2”, „szafa główna”; dziś – „switch piętra”, „switch główny”. Etykieta stoi nad switchem.

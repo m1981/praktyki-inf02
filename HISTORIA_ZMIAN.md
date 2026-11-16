@@ -21,6 +21,9 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
   z `lab2-vlany.html` i `symulator-maska.html` – wpięcie w filar to osobna decyzja.
 - **Formatowanie:** Prettier na nowych plikach osobnym commitem (PYT-032a); zrzuty ekranu przed
   i po formatowaniu identyczne co do piksela.
+- **Etykiety switchy:** jedna konwencja w `vlan.html` – „switch” + czyj albo jaki, bez dwukropka
+  i skrótów (np. „switch Księgowości”, „switch IT #2”, „switch piętra”); pisownia „switche” zamiast
+  „switch'e”. W Kłopocie 1 (rok 1996) etykiety nad każdym switchem.
 
 ## 2026-11-16 — Seria mikro-ćwiczeń M1–M4 (maska)
 
