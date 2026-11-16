@@ -1,6 +1,7 @@
-import { genitiveOf } from '../model/glossary';
-import { broadcastOf, formatIp, lastOctet } from '../net/ipMath';
-import { GATEWAY, HOSTS, type Decision } from './network';
+import { broadcastOf, formatIp, lastOctet } from '../../lib/ipv4';
+import { genitiveOf, nameOf } from '../../model/glossary';
+import { deviceIp } from '../../model/siec';
+import { GATEWAY, type Decision } from '../../net/mask';
 
 interface DecisionPanelProps {
  decision: Decision;
@@ -10,8 +11,8 @@ interface DecisionPanelProps {
 
 /** Decyzja nadawcy krok po kroku – to samo, co „myśli” karta sieciowa przed wysłaniem ramki. */
 export function DecisionPanel({ decision: d, noReply }: DecisionPanelProps) {
- const src = HOSTS[d.src];
- const dst = HOSTS[d.dst];
+ const src = { label: nameOf(d.src), ip: deviceIp(d.src) };
+ const dst = { label: nameOf(d.dst), ip: deviceIp(d.dst) };
  const local = d.outcome === 'direct';
 
  const verdict = {

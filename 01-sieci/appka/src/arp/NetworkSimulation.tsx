@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useReducer } from 'react';
 import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 
-import { Diagram } from '../sim/Diagram';
-import { buildEdges, buildNodes, PACKET_COLORS } from '../sim/graph';
+import { Diagram } from '../ui/diagram/Diagram';
+import { buildEdges, buildNodes, PACKET_COLORS } from '../ui/diagram/graph';
+import { COLOR_VARS } from '../ui/tokens';
 import { tablesAt } from '../net/arp';
 import { CABLES, DEVICES, SIMULATION_STEPS } from './scenario';
 import { initSimulation, simulationReducer } from './reducer';
@@ -31,7 +32,7 @@ export default function NetworkSimulation() {
  }, []);
 
  return (
-  <div className="sim">
+  <div className="sim" style={COLOR_VARS}>
    <div className="sim-legend" aria-label="Legenda">
     <span>
      <i style={{ background: PACKET_COLORS.broadcast }} /> Broadcast – ramka do wszystkich

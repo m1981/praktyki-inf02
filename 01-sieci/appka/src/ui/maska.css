@@ -1,4 +1,5 @@
-/* Style wizualizacji maski. Prefiks `mk-`; wspólne klasy `sim-` są w ../sim/sim.css. */
+/* Style widoków maski (prefiks `mk-`) i serii ćwiczeń (prefiks `sr-`). Wspólne klasy `sim-` są
+   w sim.css, wymiary układu w tokens.css. */
 
 .mk-small {
  font-size: 0.85rem;
@@ -142,13 +143,10 @@
  gap: 8px;
  align-content: start;
 }
-/* Trzy rzędy urządzeń – wyższe pole diagramu niż w symulatorze ARP */
-.mk-diagram .sim-canvas {
- height: 340px;
-}
+/* Trzy rzędy urządzeń – na telefonie wyższe pole diagramu niż w pozostałych ekranach */
 @media (max-width: 600px) {
  .mk-diagram .sim-canvas {
-  height: 380px;
+  height: var(--stage-h-phone-tall);
  }
 }
 .mk-physical {
@@ -369,7 +367,7 @@
 .sr-board {
  display: grid;
  align-content: center;
- height: 340px;
+ height: var(--stage-h);
  padding: 16px 24px;
  background: #fff;
  border: 1px solid var(--sim-border);

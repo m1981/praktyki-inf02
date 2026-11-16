@@ -1,5 +1,6 @@
-/* Style symulatora. Wszystkie klasy mają prefiks `sim-`, żeby nie kolidować z common.css.
-   Kolory bierzemy ze zmiennych common.css (z wartościami zapasowymi dla `pnpm dev`). */
+/* Style szablonu ekranu i diagramu. Wszystkie klasy mają prefiks `sim-`, żeby nie kolidować
+   z common.css. Kolory bierzemy ze zmiennych common.css (z wartościami zapasowymi dla `pnpm dev`).
+   Wymiary układu: tokens.css. Kolory ramek: tokens.ts (zmienne --c-broadcast, --c-unicast). */
 
 .sim-page {
  max-width: 1200px;
@@ -13,7 +14,7 @@
  --sim-green: var(--success-color, #00b894);
  --sim-purple: var(--bridge-color, #6c5ce7);
  --sim-red: var(--isp-color, #d63031);
- --sim-orange: #e67e22;
+ --sim-orange: var(--c-broadcast);
  display: grid;
  gap: 16px;
  margin-top: 20px;
@@ -55,7 +56,7 @@
 /* --- Diagram + panel boczny --- */
 .sim-stage {
  display: grid;
- grid-template-columns: minmax(0, 1fr) 340px;
+ grid-template-columns: minmax(0, 1fr) var(--side-w-free);
  gap: 16px;
 }
 @media (max-width: 900px) {
@@ -65,7 +66,7 @@
 }
 
 .sim-canvas {
- height: 440px;
+ height: var(--stage-h);
  background: #fff;
  border: 1px solid var(--sim-border);
  border-radius: 12px;
@@ -73,7 +74,7 @@
 }
 @media (max-width: 600px) {
  .sim-canvas {
-  height: 300px;
+  height: var(--stage-h-phone);
  }
 }
 
@@ -390,10 +391,7 @@ header.sim-header + #breadcrumbs {
 
 /* --- Kroki: tekst i przyciski obok diagramu, szczegóły pod spodem --- */
 .sim-stage--steps {
- grid-template-columns: minmax(0, 1fr) 360px;
-}
-.sim-stage--steps .sim-canvas {
- height: 340px;
+ grid-template-columns: minmax(0, 1fr) var(--side-w);
 }
 .sim-stage--steps .sim-step {
  display: flex;
@@ -424,11 +422,6 @@ header.sim-header + #breadcrumbs {
 @media (max-width: 900px) {
  .sim-stage--steps {
   grid-template-columns: 1fr;
- }
-}
-@media (max-width: 600px) {
- .sim-stage--steps .sim-canvas {
-  height: 300px;
  }
 }
 /* Trzy przyciski w jednym rzędzie kolumny 360 px */

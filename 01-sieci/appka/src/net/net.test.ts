@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { arpReply, arpRequest, tablesAt } from './arp';
 import { decideRoute } from './decide';
 import { BROADCAST_MAC, isBroadcast } from './frame';
-import { firstThreeOctets, parseIp } from './ipMath';
+import { parseIp } from '../lib/ipv4';
 import { floodPath, framePath, shortestPath } from './path';
 
 const ip = parseIp;
@@ -96,11 +96,5 @@ describe('ARP', () => {
   const last = tablesAt(steps, 2);
   expect(last.mac[0].isNew).toBe(false);
   expect(last.arp[0].isNew).toBe(true);
- });
-});
-
-describe('ipMath – uzupełnienie', () => {
- it('podaje pierwsze trzy oktety', () => {
-  expect(firstThreeOctets(ip('10.10.10.105'))).toBe('10.10.10');
  });
 });

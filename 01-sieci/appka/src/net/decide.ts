@@ -1,7 +1,7 @@
 // Decyzja nadawcy: „bezpośrednio czy przez bramę”. To sedno lekcji o masce, więc liczy ją
 // JEDNA czysta funkcja – korzystają z niej diagram, tabela decyzji i testy.
 
-import { networkOf, sameNetwork, type Ip } from './ipMath';
+import { networkOf, sameNetwork, type Ip } from '../lib/ipv4';
 
 /** Ustawienia karty sieciowej nadawcy. */
 export interface HostConfig {

@@ -1,0 +1,74 @@
+// Kontrakt lekcji: Kurs → Ćwiczenie → Krok. Treść (`content/`) to dane w tym kształcie, a szablon
+// ekranu (`ui/LessonShell`) umie pokazać każdy kurs. Nowe ćwiczenie = nowe dane, bez zmian w kodzie.
+
+import type { ComponentType } from 'react';
+import type { PacketKind } from '../ui/tokens';
+import type { ControlSpec, ViewSpec } from './registry';
+import type { CourseShape } from './nav';
+
+export type { ControlSpec, ViewSpec };
+
+export interface Step {
+ /** Krok wstępny: ma etykietę „Start” i nie liczy się do numeracji kroków. */
+ intro?: boolean;
+ /** Warstwa modelu, której dotyczy krok, np. „L2 (Łącze danych) – Broadcast”. */
+ layer?: string;
+ title?: string;
+ /** Tekst kroku: najwyżej 40 słów (test). */
+ text: string;
+ /** Pasek „Zmiana”: tylko to, co zmieniło się w tym kroku. */
+ change?: string;
+ /** Scena: co widać obok tekstu. */
+ view: ViewSpec;
+ /** Jeden element sterujący kroku. */
+ control: ControlSpec;
+}
+
+export interface LegendItem {
+ /** Kolor znaczenia z `ui/tokens.ts`. */
+ color: PacketKind;
+ text: string;
+}
+
+export interface Exercise {
+ code: string;
+ title: string;
+ /** Jedno pytanie, na które ćwiczenie odpowiada. */
+ question?: string;
+ legend?: LegendItem[];
+ steps: Step[];
+ /** Pytanie, które ćwiczenie zostawia dla następnego (zasada z plan.md). */
+ nextQuestion?: string;
+}
+
+export interface FreeMode {
+ /** Adres zakładki bez `#`, np. „swobodny”. */
+ hash: string;
+ /** Napis na zakładce. */
+ tab: string;
+ /** Nazwa w przycisku „Dalej: …”. */
+ name: string;
+ component: ComponentType;
+}
+
+export interface Course {
+ id: string;
+ /** Opis listy zakładek dla czytników ekranu. */
+ title: string;
+ exercises: Exercise[];
+ /** Ostatnia zakładka: ekran, na którym uczeń sam zmienia ustawienia (PYT-002a). */
+ freeMode?: FreeMode;
+}
+
+export function shapeOf(course: Course): CourseShape {
+ return {
+  codes: course.exercises.map((e) => e.code),
+  stepCounts: course.exercises.map((e) => e.steps.length),
+  freeHash: course.freeMode?.hash
+ };
+}
+
+/** Kurs z jedną zakładką nie pokazuje zakładek i nie zmienia adresu strony. */
+export function hasTabs(course: Course): boolean {
+ return course.exercises.length > 1 || course.freeMode !== undefined;
+}

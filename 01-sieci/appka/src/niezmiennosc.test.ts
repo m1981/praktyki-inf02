@@ -4,19 +4,11 @@
 
 import { describe, expect, it } from 'vitest';
 import { CABLES as ARP_CABLES, DEVICES as ARP_DEVICES, SIMULATION_STEPS } from './arp/scenario';
-import {
- CABLES as MASK_CABLES,
- decide,
- devicesFor,
- endpoints,
- MAX_PREFIX,
- MIN_PREFIX,
- PRESETS,
- TARGETS,
- toDiagram,
- type MaskSettings
-} from './maska/network';
-import { COMPARE_ROWS, EXERCISES } from './maska/series';
+import { COMPARE_ROWS, MASKA } from './content/maska';
+import { PRESETS } from './content/maska-swobodny';
+import { CABLES as MASK_CABLES, devicesFor, maskDiagram } from './content/maska-uklad';
+import type { Step } from './engine/types';
+import { decide, endpoints, MAX_PREFIX, MIN_PREFIX, TARGETS, type MaskSettings } from './net/mask';
 
 function allSettings(): MaskSettings[] {
  const all: MaskSettings[] = [];
@@ -25,6 +17,31 @@ function allSettings(): MaskSettings[] {
    for (const trap of [false, true])
     for (const phase of ['there', 'back'] as const) all.push({ prefix, target, trap, phase });
  return all;
+}
+
+// Wzorzec powstał przed etapem B, w starym kształcie danych. Te funkcje przepisują nowy kształt
+// (kontrakt `Step`) na stary – tylko po to, żeby porównać go ze wzorcem co do znaku.
+
+function legacyVisual(view: Step['view']) {
+ if (view.type === 'compare') return { kind: 'compare', revealed: view.revealed };
+ if (view.type === 'fence') return { kind: 'fence', prefix: view.prefix };
+ return { kind: 'diagram', devices: view.devices, cables: view.cables, state: view.state };
+}
+
+function legacyExercises() {
+ return MASKA.exercises.map((ex) => ({
+  code: ex.code,
+  title: ex.title,
+  question: ex.question,
+  controlKind: ex.steps[0].control.type,
+  steps: ex.steps.map((step, i) => ({
+   text: step.text,
+   change: step.change,
+   visual: legacyVisual(step.view),
+   control: step.control.type === 'toggle' ? step.control.options[i] : step.control.label
+  })),
+  nextQuestion: ex.nextQuestion
+ }));
 }
 
 describe('refaktor nie zmienia danych ani tekstów', () => {
@@ -39,12 +56,12 @@ describe('refaktor nie zmienia danych ani tekstów', () => {
  it('maska: karty urządzeń, decyzja i diagram dla każdej kombinacji ustawień', () => {
   const rows = allSettings().map((s) => {
    const { src, dst } = endpoints(s);
-   return { s, devices: devicesFor(s), decision: decide(src, dst, s), diagram: toDiagram(s) };
+   return { s, devices: devicesFor(s), decision: decide(src, dst, s), diagram: maskDiagram(s) };
   });
   expect(rows).toMatchSnapshot();
  });
 
  it('seria M1–M4: ćwiczenia z widokami i tabela porównania', () => {
-  expect({ exercises: EXERCISES, compareRows: COMPARE_ROWS }).toMatchSnapshot();
+  expect({ exercises: legacyExercises(), compareRows: COMPARE_ROWS }).toMatchSnapshot();
  });
 });

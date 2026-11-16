@@ -1,4 +1,4 @@
-// Kryterium końca etapu A (zlecenie-refaktor.md): adresy IP i MAC są wpisane tylko w `model/`.
+// Kryterium z etapu A (zlecenie-refaktor.md): adresy IP i MAC są wpisane tylko w `model/`.
 // Test czyta źródła (bez komentarzy) i szuka literałów. Wyjątki: `model/` (źródło prawdy), pliki testów
 // (przykłady do obliczeń) i adres Broadcast w `net/frame.ts` (stała protokołu, nie dana sieci).
 

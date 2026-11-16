@@ -3,16 +3,14 @@
 // z opisem kroku ani z decyzją nadawcy.
 
 import { MarkerType, type Edge, type Node } from '@xyflow/react';
-import { hasLink, type DeviceId } from '../model/siec';
-import { isBroadcast } from '../net/frame';
+import { hasLink, type DeviceId } from '../../model/siec';
+import { isBroadcast } from '../../net/frame';
+import { PACKET_COLORS, type PacketKind } from '../tokens';
 import type { Cable, Device, DeviceRole, DeviceTone, DiagramState, Flow, Side } from './types';
 
-export type PacketKind = 'broadcast' | 'unicast';
+export type { PacketKind };
 
-export const PACKET_COLORS: Record<PacketKind, string> = {
- broadcast: '#e67e22',
- unicast: '#00b894'
-};
+export { PACKET_COLORS };
 
 export interface DeviceNodeData extends Record<string, unknown> {
  device: Device;

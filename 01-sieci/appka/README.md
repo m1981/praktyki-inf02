@@ -1,9 +1,9 @@
 # Symulatory sieciowe Filaru 1 (źródła)
 
-| Strona (plik generowany – **nie edytuj ręcznie**)          | Źródła       | Wejście HTML |
-| ---------------------------------------------------------- | ------------ | ------------ |
-| [`01-sieci/symulator-arp.html`](../symulator-arp.html)     | `src/arp/`   | `arp.html`   |
-| [`01-sieci/symulator-maska.html`](../symulator-maska.html) | `src/maska/` | `maska.html` |
+| Strona (plik generowany – **nie edytuj ręcznie**)          | Źródła                                         | Wejście HTML |
+| ---------------------------------------------------------- | ---------------------------------------------- | ------------ |
+| [`01-sieci/symulator-arp.html`](../symulator-arp.html)     | `src/arp/`                                     | `arp.html`   |
+| [`01-sieci/symulator-maska.html`](../symulator-maska.html) | `src/pages/maska.tsx`, `src/content/maska*.ts` | `maska.html` |
 
 Plan kolejnych symulatorów: [`plan.md`](plan.md).
 
@@ -39,30 +39,51 @@ jest w innym miejscu niż domyślne, ustaw zmienną `CHROME_PATH`.
 
 ## Gdzie co jest
 
-Warstwy według [`architektura.md`](architektura.md), rozdz. 2. Stan po kroku 2 migracji: `model/` i
-`net/` gotowe; `engine/`, `ui/`, `content/` powstaną w krokach 3–5.
+Warstwy według [`architektura.md`](architektura.md), rozdz. 2. Zależności idą tylko w dół:
+`pages → content → engine / ui → net → model → lib`. Stan po kroku 3 migracji: strona maski działa na
+silniku; Symulator ARP (`src/arp/`) przejdzie na niego w kroku 4.
 
-| Plik                     | Rola                                                                            |
-| ------------------------ | ------------------------------------------------------------------------------- |
-| `src/model/siec.ts`      | **jedyne miejsce z adresami IP, MAC, portami i kablami** + selektory            |
-| `src/model/glossary.ts`  | nazwy urządzeń ze Słownika pojęć (mianownik, dopełniacz, forma krótka)          |
-| `src/net/ipMath.ts`      | arytmetyka IPv4 (maska, adres sieci, Broadcast, bity)                           |
-| `src/net/decide.ts`      | decyzja nadawcy: bezpośrednio, przez bramę albo brama poza siecią               |
-| `src/net/path.ts`        | droga ramki po kablach (Unicast, objazd przez bramę, Broadcast)                 |
-| `src/net/arp.ts`         | ramki ARP i stan tablic ARP/MAC po kolejnych krokach                            |
-| `src/net/frame.ts`       | ramka, skok ramki, adres Broadcast                                              |
-| `src/sim/types.ts`       | typy diagramu: karta urządzenia, kabel, `DiagramState`                          |
-| `src/sim/graph.ts`       | czyste funkcje: `DiagramState` → węzły i krawędzie React Flow; `cable()`        |
-| `src/sim/Diagram.tsx`    | diagram jako animowany slajd (bez edycji)                                       |
-| `src/sim/DeviceNode.tsx` | karta urządzenia (rola, tło „w sieci / poza siecią”)                            |
-| `src/sim/PacketEdge.tsx` | kabel + animowane ramki (SVG `animateMotion`), także kilka na jednym kablu      |
-| `src/arp/scenario.ts`    | ARP: układ diagramu, ramki i kroki scenariusza (adresy z `model/`)              |
-| `src/arp/reducer.ts`     | maszyna stanów kroków: `NEXT` / `PREV` / `RESET`                                |
-| `src/maska/network.ts`   | maska: ustawienia ćwiczenia, karty urządzeń, diagram, gotowe przykłady, reducer |
-| `src/maska/series.ts`    | seria M1–M4: teksty kroków i widoki                                             |
-| `src/maska/*.tsx`        | widoki: seria, Tryb swobodny, decyzja, ulica adresów, bity                      |
-| `src/literaly.test.ts`   | test: adresy IP i MAC są wpisane tylko w `model/`                               |
-| `e2e/`                   | testy w przeglądarce, zrzuty i porównanie                                       |
+| Katalog        | Rola                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| `src/lib/`     | arytmetyka IPv4 (`ipv4.ts`) – bez wiedzy o sieci i o ekranie                              |
+| `src/model/`   | CO JEST w sieci: **jedyne miejsce z adresami IP, MAC, portami i kablami** + słownik nazw  |
+| `src/net/`     | JAK DZIAŁA sieć: decyzja nadawcy, droga ramki, ARP, ruch w sieci (czyste funkcje)         |
+| `src/engine/`  | JAK SIĘ PRZECHODZI lekcję: kontrakt Kurs → Ćwiczenie → Krok, nawigacja, rejestry          |
+| `src/ui/`      | JAK TO WYGLĄDA: jeden szablon ekranu, widoki, elementy sterujące, diagram, tokeny i style |
+| `src/content/` | CO MÓWIMY uczniowi: teksty i sceny kroków jako dane                                       |
+| `src/pages/`   | wejścia stron: składają kurs z treści i podają go szablonowi                              |
+| `e2e/`         | testy w przeglądarce, zrzuty i porównanie                                                 |
+
+| Plik                          | Rola                                                                          |
+| ----------------------------- | ----------------------------------------------------------------------------- |
+| `src/model/siec.ts`           | urządzenia, adresy, kable + selektory (jedyny sposób odczytu)                 |
+| `src/model/glossary.ts`       | nazwy urządzeń ze Słownika pojęć (mianownik, dopełniacz, forma krótka)        |
+| `src/net/decide.ts`           | decyzja nadawcy: bezpośrednio, przez bramę albo brama poza siecią             |
+| `src/net/mask.ts`             | ćwiczenia z maską: ustawienia → decyzja → droga ramki                         |
+| `src/net/path.ts`             | droga ramki po kablach (Unicast, objazd przez bramę, Broadcast)               |
+| `src/net/traffic.ts`          | ruch w sieci w jednej chwili: role urządzeń i skoki ramek                     |
+| `src/engine/types.ts`         | kontrakt `Course` / `Exercise` / `Step`                                       |
+| `src/engine/nav.ts`           | jedna maszyna stanów nawigacji + adres `#kod`                                 |
+| `src/engine/registry.tsx`     | rejestry: rodzaj widoku i elementu sterującego → komponent                    |
+| `src/ui/LessonShell.tsx`      | **jedyne miejsce układu ekranu**: zakładki, pytanie, scena, tekst, sterowanie |
+| `src/ui/tokens.css`, `.ts`    | wymiary układu (CSS) i kolory ramek (TS) – jedyne miejsce, gdzie są wpisane   |
+| `src/ui/views/`               | sceny: diagram, oś adresów z płotami, tabela porównania                       |
+| `src/ui/controls/`            | elementy sterujące: przycisk „dalej”, przełącznik                             |
+| `src/ui/diagram/`             | diagram React Flow: karta urządzenia, kabel z animowaną ramką                 |
+| `src/ui/free/`, `ui/panels/`  | Tryb swobodny maski i jego panele (decyzja, ulica adresów, bity)              |
+| `src/content/maska.ts`        | seria M1–M4: teksty i sceny kroków                                            |
+| `src/content/maska-uklad.ts`  | układ diagramu maski: pozycje kart, boki kabli, napisy na kartach             |
+| `src/content/content.test.ts` | testy treści: ≤ 40 słów, ramki po kablach, nazwy tylko ze słownika            |
+| `src/literaly.test.ts`        | test: adresy IP i MAC są wpisane tylko w `model/`                             |
+| `src/niezmiennosc.test.ts`    | strażnik refaktoru: dane i teksty zgodne ze wzorcem sprzed etapu B            |
+
+## Nowe ćwiczenie w serii
+
+Dopisujesz obiekt `Exercise` w `src/content/` (teksty, scena `view`, element sterujący `control`).
+Kodu w `engine/` i `ui/` nie zmieniasz. `pnpm test` sprawdzi limit słów, kable i nazwy urządzeń.
+
+Nowy rodzaj sceny (np. mapa firmy) = nowy komponent w `src/ui/views/` + jego opis w unii `ViewSpec`
+i jedna linia w rejestrze `src/engine/registry.tsx`.
 
 ## Nowy scenariusz ARP-owy (kroki)
 

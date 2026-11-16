@@ -1,43 +1,56 @@
 import { useMemo, useReducer } from 'react';
-import { Diagram } from '../sim/Diagram';
-import { buildEdges, buildNodes } from '../sim/graph';
-import { formatIp, lastOctet, maskOf } from '../net/ipMath';
+import { formatIp, lastOctet, maskOf } from '../../lib/ipv4';
+import { nameOf } from '../../model/glossary';
+import { deviceIp } from '../../model/siec';
 import {
- CABLES,
  decide,
- devicesFor,
  endpoints,
- HOSTS,
- INITIAL_MASK_STATE,
- matchingPreset,
- maskReducer,
  MAX_PREFIX,
  MIN_PREFIX,
- PRESETS,
  requestFailed,
  TARGETS,
- toDiagram,
- TRAP_PREFIX
-} from './network';
-import { DecisionPanel } from './DecisionPanel';
-import { AddressLine } from './AddressLine';
-import { BitRuler } from './BitRuler';
+ TRAP_PREFIX,
+ type MaskSettings
+} from '../../net/mask';
+import { Diagram } from '../diagram/Diagram';
+import { buildEdges, buildNodes } from '../diagram/graph';
+import type { Cable, Device, DiagramState } from '../diagram/types';
+import { AddressLine } from '../panels/AddressLine';
+import { BitRuler } from '../panels/BitRuler';
+import { DecisionPanel } from '../panels/DecisionPanel';
+import type { Pin } from '../views/FenceLine';
+import { initMaskState, matchingPreset, maskReducer, type Preset } from './maskState';
+
+/** Treść i układ, które Tryb swobodny dostaje z `content/` (sam ich nie zna). */
+export interface MaskExplorerContent {
+ presets: readonly Preset[];
+ /** Karty urządzeń dla ustawień. */
+ devicesFor: (s: MaskSettings) => Device[];
+ cables: Cable[];
+ /** Ruch na diagramie dla ustawień. */
+ diagram: (s: MaskSettings) => DiagramState;
+ /** Urządzenia na osi adresów. */
+ pins: readonly Pin[];
+}
 
 const PREFIXES = Array.from({ length: MAX_PREFIX - MIN_PREFIX + 1 }, (_, i) => MIN_PREFIX + i);
 
-// DLACZEGO useReducer: kilka powiązanych ustawień (maska, cel, pułapka, kierunek) zmienia się
-// razem (gotowe przykłady), a każda zmiana musi też zrestartować animację (runId).
-export default function MaskExplorer() {
- const [state, dispatch] = useReducer(maskReducer, INITIAL_MASK_STATE);
+/** Tryb swobodny maski: uczeń sam ustawia maskę, cel i kierunek, a diagram pokazuje skutek. */
+export function MaskExplorer({ content }: { content: MaskExplorerContent }) {
+ const { presets, devicesFor, cables, pins } = content;
+ const [state, dispatch] = useReducer(maskReducer, presets[0].settings, initMaskState);
  const { src, dst } = endpoints(state);
  const decision = decide(src, dst, state);
  const noReply = state.phase === 'back' && requestFailed(state);
- const preset = matchingPreset(state);
- const targetLabel = HOSTS[state.target].label;
+ const preset = matchingPreset(presets, state);
+ const targetLabel = nameOf(state.target);
 
- const diagram = useMemo(() => toDiagram(state), [state]);
- const nodes = useMemo(() => buildNodes(devicesFor(state), diagram), [state, diagram]);
- const edges = useMemo(() => buildEdges(CABLES, diagram, state.runId), [diagram, state.runId]);
+ const diagram = useMemo(() => content.diagram(state), [content, state]);
+ const nodes = useMemo(() => buildNodes(devicesFor(state), diagram), [devicesFor, state, diagram]);
+ const edges = useMemo(
+  () => buildEdges(cables, diagram, state.runId),
+  [cables, diagram, state.runId]
+ );
 
  return (
   <div className="sim">
@@ -45,7 +58,7 @@ export default function MaskExplorer() {
    <section className="sim-panel">
     <h3>📚 Gotowe przykłady – kliknij po kolei</h3>
     <div className="mk-presets">
-     {PRESETS.map((p, i) => (
+     {presets.map((p, i) => (
       <button
        key={p.id}
        type="button"
@@ -131,7 +144,7 @@ export default function MaskExplorer() {
          aria-pressed={state.target === t}
          onClick={() => dispatch({ type: 'SET_TARGET', target: t })}
         >
-         {HOSTS[t].label} .{lastOctet(HOSTS[t].ip)}
+         {nameOf(t)} .{lastOctet(deviceIp(t))}
         </button>
        ))}
       </div>
@@ -169,12 +182,12 @@ export default function MaskExplorer() {
    </details>
 
    {/* --- Widoki pomocnicze --- */}
-   <AddressLine src={src} dst={dst} prefix={decision.prefix} />
+   <AddressLine src={src} dst={dst} prefix={decision.prefix} pins={pins} />
    <BitRuler
-    srcLabel={HOSTS[src].label}
-    srcIp={HOSTS[src].ip}
-    dstLabel={HOSTS[dst].label}
-    dstIp={HOSTS[dst].ip}
+    srcLabel={nameOf(src)}
+    srcIp={deviceIp(src)}
+    dstLabel={nameOf(dst)}
+    dstIp={deviceIp(dst)}
     prefix={decision.prefix}
    />
   </div>

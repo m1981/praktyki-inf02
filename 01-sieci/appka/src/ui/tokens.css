@@ -1,0 +1,15 @@
+/* Wymiary układu – jedyne miejsce, w którym są wpisane (architektura.md, rozdz. 2.4).
+   Zmiana wysokości sceny albo szerokości kolumny tekstu = zmiana tutaj.
+   Kolory ramek (Broadcast, Unicast) są w tokens.ts, bo potrzebuje ich także JavaScript. */
+
+:root {
+ /* Scena: diagram albo tablica ćwiczenia. 340 px mieści krok w 1366×768 i 1280×720 (audyt.md). */
+ --stage-h: 340px;
+ --stage-h-phone: 300px;
+ /* Tryb swobodny na telefonie: trzy rzędy urządzeń. */
+ --stage-h-phone-tall: 380px;
+ /* Kolumna z tekstem kroku obok sceny. */
+ --side-w: 360px;
+ /* Kolumna z decyzją nadawcy w Trybie swobodnym. */
+ --side-w-free: 340px;
+}

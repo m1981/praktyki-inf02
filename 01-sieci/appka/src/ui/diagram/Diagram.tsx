@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
  Background,
  ConnectionMode,
@@ -27,9 +27,16 @@ interface DiagramProps {
 
 /** Diagram sieci jako animowany slajd (bez edycji). Wspólny dla wszystkich symulatorów. */
 export function Diagram({ nodes, edges }: DiagramProps) {
+ // Układ = które karty i gdzie stoją. Zmiana samej treści kart (adres, rola) układu nie zmienia.
+ // DLACZEGO KLUCZ: React Flow dopasowuje widok tylko na starcie. Inny układ (inne ćwiczenie) =
+ // nowy diagram, więc widok sam dopasowuje się do nowych kart – ekran nie musi o tym pamiętać.
+ const layout = useMemo(
+  () => nodes.map((n) => `${n.id}@${n.position.x},${n.position.y}`).join(' '),
+  [nodes]
+ );
  return (
   <div className="sim-canvas">
-   <ReactFlowProvider>
+   <ReactFlowProvider key={layout}>
     <ReactFlow
      nodes={nodes}
      edges={edges}

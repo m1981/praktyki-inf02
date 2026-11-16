@@ -16,8 +16,8 @@ import {
 import { GLOSSARY, nameOf } from '../model/glossary';
 import { arpReply, arpRequest, type Learns } from '../net/arp';
 import { BROADCAST_MAC, type Frame } from '../net/frame';
-import { assertFlowsOnCables, cable } from '../sim/graph';
-import type { Cable, Device, DeviceRole, DiagramState } from '../sim/types';
+import { assertFlowsOnCables, cable } from '../ui/diagram/graph';
+import type { Cable, Device, DeviceRole, DiagramState } from '../ui/diagram/types';
 
 export type DeviceId = Extract<ModelDeviceId, 'laptop' | 'switch' | 'router' | 'nas'>;
 

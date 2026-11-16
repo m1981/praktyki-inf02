@@ -1,12 +1,15 @@
 // Seria mikro-ćwiczeń M1–M4 (audyt.md, rozdz. 4–5): każde ćwiczenie = jedno pytanie, jedno nowe
 // pojęcie, jeden element sterujący, jeden ekran. Ostatnia zakładka to „Tryb swobodny” (PYT-002a).
-// DLACZEGO DANE, A NIE KOMPONENTY: teksty i stany kroków są w jednym miejscu, test pilnuje limitu
-// słów i tego, że każda ramka idzie po istniejącym kablu.
+// DLACZEGO DANE, A NIE KOMPONENTY: teksty i sceny kroków są w jednym miejscu, a test pilnuje limitu
+// słów, nazw ze Słownika pojęć i tego, że każda ramka idzie po istniejącym kablu.
 
+import type { ControlSpec, Course, Exercise } from '../engine/types';
+import { firstThreeOctets, formatIp, parseIp } from '../lib/ipv4';
 import { nameOf } from '../model/glossary';
 import {
  device,
  deviceCidr,
+ deviceIp,
  deviceIpText,
  deviceMac,
  INTERNET_IP,
@@ -15,51 +18,24 @@ import {
  type DeviceId
 } from '../model/siec';
 import { arpRequest } from '../net/arp';
-import { firstThreeOctets, formatIp, parseIp } from '../net/ipMath';
+import { ROUTER_IP, routerIpIn } from '../net/mask';
 import { floodPath } from '../net/path';
-import { cable } from '../sim/graph';
-import type { Cable, Device, DiagramState } from '../sim/types';
-import {
- CABLES,
- devicesFor,
- HOSTS,
- ROUTER_IP,
- routerIpIn,
- SWITCH_NOTE,
- toDiagram
-} from './network';
+import { floodRoles } from '../net/traffic';
+import { cable } from '../ui/diagram/graph';
+import type { Cable, Device, DiagramState } from '../ui/diagram/types';
+import type { CompareRow } from '../ui/views/CompareView';
+import type { FenceSpec } from '../ui/views/FenceView';
+import { CABLES, devicesFor, maskDiagram, PINS, SWITCH_NOTE } from './maska-uklad';
 
-export type Visual =
- /** M1: porównanie numerów sieci; `revealed` = ile adresów (poza Laptopem) już odsłonięto. */
- | { kind: 'compare'; revealed: number }
- /** M2: oś adresów z płotami; tylko Laptop i Drukarka. */
- | { kind: 'fence'; prefix: number }
- /** M3–M4: diagram sieci. */
- | { kind: 'diagram'; devices: Device[]; cables: Cable[]; state: DiagramState };
+// --- Elementy sterujące: jeden na ćwiczenie ---
 
-export interface SeriesStep {
- text: string;
- /** Pasek „Zmiana”: tylko to, co zmieniło się w tym kroku. */
- change: string;
- visual: Visual;
- /** Napis na przycisku (ćwiczenia z przyciskiem) albo w przełączniku (ćwiczenia z przełącznikiem). */
- control: string;
-}
-
-export interface Exercise {
- code: string;
- title: string;
- question: string;
- /** `next` – jeden przycisk „Dalej”; `toggle` – przełącznik, każdy krok to jedna pozycja. */
- controlKind: 'next' | 'toggle';
- steps: SeriesStep[];
- /** Pytanie, które ćwiczenie zostawia dla następnego (zasada z plan.md). */
- nextQuestion: string;
-}
+const next = (label: string): ControlSpec => ({ type: 'next', label });
+/** Przełącznik maski: pozycja nr i = krok nr i. */
+const MASK_TOGGLE: ControlSpec = { type: 'toggle', label: 'Maska', options: ['/24', '/25'] };
 
 // --- M1: porównanie numerów sieci ---
 
-export const COMPARE_ROWS: { label: string; ip: string }[] = [
+export const COMPARE_ROWS: CompareRow[] = [
  { label: nameOf('laptop'), ip: deviceIpText('laptop') },
  { label: nameOf('nas'), ip: deviceIpText('nas') },
  { label: nameOf('printer'), ip: deviceIpText('printer') },
@@ -67,12 +43,22 @@ export const COMPARE_ROWS: { label: string; ip: string }[] = [
 ];
 
 /** Numer sieci przy masce /24 jako tekst: pierwsze trzy liczby adresu. */
-export const networkNumber = (ip: string) => firstThreeOctets(parseIp(ip));
+const networkNumber = (ip: string) => firstThreeOctets(parseIp(ip));
 
 // Fragmenty adresów wstawiane do tekstów kroków (jedyne źródło: model sieci).
 const NET = ZONES.biuro.net;
 const NET_NUMBER = networkNumber(NET);
 const INTERNET_NUMBER = networkNumber(INTERNET_IP);
+
+// --- M2: oś adresów – tylko Laptop i Drukarka ---
+
+const fence = (prefix: number): FenceSpec => ({
+ type: 'fence',
+ src: 'laptop',
+ dst: 'printer',
+ prefix,
+ pins: PINS.filter((p) => p.id === 'laptop' || p.id === 'printer')
+});
 
 // --- M3: mała topologia – tylko urządzenia z ćwiczenia ---
 
@@ -102,7 +88,7 @@ function m3Devices(prefix: 24 | 25): Device[] {
    ...card('router'),
    ip: formatIp(ROUTER_IP),
    // Router potrzebuje adresu w sieci Drukarki – pokazujemy go bez komentarza (Lab 2: RoaS).
-   note: local ? undefined : `+ ${formatIp(routerIpIn(HOSTS.printer.ip, 25))} (sieć Drukarki)`
+   note: local ? undefined : `+ ${formatIp(routerIpIn(deviceIp('printer'), 25))} (sieć Drukarki)`
   },
   {
    ...card('laptop'),
@@ -116,7 +102,7 @@ function m3Devices(prefix: 24 | 25): Device[] {
 
 function m3State(prefix: 24 | 25): DiagramState {
  // Ta sama decyzja co w Trybie swobodnym – bez tła kart (audyt: trzeci kod wizualny był zbędny).
- const { roles, flows } = toDiagram({ prefix, target: 'printer', trap: false, phase: 'there' });
+ const { roles, flows } = maskDiagram({ prefix, target: 'printer', trap: false, phase: 'there' });
  return { roles, flows };
 }
 
@@ -143,12 +129,9 @@ const M4_QUESTION = `Kto ma ${deviceIpText('nas')}?`;
 function m4Broadcast(): DiagramState {
  const hops = floodPath<DeviceId>(LINKS, 'laptop');
  const frame = arpRequest(deviceMac('laptop'), M4_QUESTION);
- const forwarders = new Set(hops.filter((h) => h.from !== 'laptop').map((h) => h.from));
- const roles: DiagramState['roles'] = { laptop: 'sends' };
- for (const { to } of hops) roles[to] = forwarders.has(to) ? 'forwards' : 'receives';
  return {
   frame,
-  roles,
+  roles: floodRoles(hops, 'laptop'),
   flows: hops.map(({ from, to, hop }) => ({
    from,
    to,
@@ -165,25 +148,24 @@ export const EXERCISES: Exercise[] = [
   code: 'M1',
   title: 'Moja sieć czy inna?',
   question: `Laptop ma adres ${deviceCidr('laptop')}. Które adresy są w jego sieci?`,
-  controlKind: 'next',
   steps: [
    {
     text: `Maska /24: pierwsze 24 bity, czyli pierwsze 3 liczby adresu, to numer sieci. Laptop: ${NET_NUMBER}. Serwer NAS: ${NET_NUMBER}. Ten sam numer, więc Serwer NAS jest w sieci Laptopa.`,
     change: 'nowy wiersz: Serwer NAS – ta sama sieć',
-    visual: { kind: 'compare', revealed: 1 },
-    control: 'Pokaż następny adres →'
+    view: { type: 'compare', rows: COMPARE_ROWS, revealed: 1 },
+    control: next('Pokaż następny adres →')
    },
    {
     text: `Drukarka ${deviceIpText('printer')}: numer sieci ${NET_NUMBER} – taki sam. Drukarka jest w sieci Laptopa. Laptop wyśle do niej ramkę bezpośrednio, przez Switch.`,
     change: 'nowy wiersz: Drukarka – ta sama sieć',
-    visual: { kind: 'compare', revealed: 2 },
-    control: 'Pokaż następny adres →'
+    view: { type: 'compare', rows: COMPARE_ROWS, revealed: 2 },
+    control: next('Pokaż następny adres →')
    },
    {
     text: `Adres ${INTERNET_IP}: numer sieci ${INTERNET_NUMBER} – inny. To inna sieć. Laptop nie wyśle ramki prosto do ${INTERNET_IP}. Jak to zrobi, zobaczysz w M3.`,
     change: `nowy wiersz: ${INTERNET_IP} – inna sieć`,
-    visual: { kind: 'compare', revealed: 3 },
-    control: 'Pokaż następny adres →'
+    view: { type: 'compare', rows: COMPARE_ROWS, revealed: 3 },
+    control: next('Pokaż następny adres →')
    }
   ],
   nextQuestion: `Czy płot może stanąć wewnątrz sieci ${NET}?`
@@ -192,21 +174,20 @@ export const EXERCISES: Exercise[] = [
   code: 'M2',
   title: 'Płot na ulicy',
   question: 'Przełącz maskę na /25. Czy Drukarka .130 jest w sieci Laptopa?',
-  controlKind: 'toggle',
   steps: [
    {
     text:
      'Maska /24: jedna sieć .0–.255, bez płotów. Laptop .105 i Drukarka .130 są w tej samej sieci.',
     change: 'brak płotów: jedna działka .0–.255',
-    visual: { kind: 'fence', prefix: 24 },
-    control: '/24'
+    view: fence(24),
+    control: MASK_TOGGLE
    },
    {
     text:
      'Maska /25 dzieli adresy .0–.255 na dwie sieci po 128 adresów. Płot stoi na .128. Laptop .105 jest przed płotem, Drukarka .130 za płotem. To dwie różne sieci.',
     change: 'płot wyrasta na .128',
-    visual: { kind: 'fence', prefix: 25 },
-    control: '/25'
+    view: fence(25),
+    control: MASK_TOGGLE
    }
   ],
   nextQuestion: 'Ten sam Switch. Jak Laptop wyśle plik do Drukarki?'
@@ -215,21 +196,20 @@ export const EXERCISES: Exercise[] = [
   code: 'M3',
   title: 'Objazd przez Router',
   question: 'Maska /25. Którą drogą pójdzie ramka z Laptopa do Drukarki?',
-  controlKind: 'toggle',
   steps: [
    {
     text:
      'Maska /24: Drukarka .130 jest w sieci Laptopa. Laptop wysyła ramkę bezpośrednio, przez sam Switch. Router (Brama) nie bierze udziału.',
     change: 'droga: Laptop → Switch → Drukarka',
-    visual: { kind: 'diagram', devices: m3Devices(24), cables: M3_CABLES, state: m3State(24) },
-    control: '/24'
+    view: { type: 'diagram', devices: m3Devices(24), cables: M3_CABLES, state: m3State(24) },
+    control: MASK_TOGGLE
    },
    {
     text:
      'Laptop liczy swoją maską /25: Drukarka .130 jest w innej sieci. Laptop wysyła więc ramkę do Routera (Brama), a Router przekazuje ją Drukarce. Ten sam Switch i te same kable – inna droga.',
     change: 'droga: Laptop → Switch → Router → Switch → Drukarka',
-    visual: { kind: 'diagram', devices: m3Devices(25), cables: M3_CABLES, state: m3State(25) },
-    control: '/25'
+    view: { type: 'diagram', devices: m3Devices(25), cables: M3_CABLES, state: m3State(25) },
+    control: MASK_TOGGLE
    }
   ],
   nextQuestion: 'Czy maska /25 zatrzyma Broadcast przed Drukarką?'
@@ -238,25 +218,24 @@ export const EXERCISES: Exercise[] = [
   code: 'M4',
   title: 'Maska to nie ściana',
   question: 'Maska /25. Czy Drukarka .130 dostanie ARP Request od Laptopa?',
-  controlKind: 'next',
   steps: [
    {
     text: `Laptop wysyła ARP Request: „${M4_QUESTION}”. Przy masce /25 Drukarka .130 i Kamera .200 są za płotem. Kliknij i sprawdź, kto dostanie ramkę.`,
     change: 'nic jeszcze nie płynie',
-    visual: {
-     kind: 'diagram',
+    view: {
+     type: 'diagram',
      devices: m4Devices(),
      cables: CABLES,
      state: { roles: {}, flows: [] }
     },
-    control: 'Wyślij ARP Request →'
+    control: next('Wyślij ARP Request →')
    },
    {
     text:
      'Tak – Drukarka, Kamera i Router też. Switch nie zna masek, czyta tylko adresy MAC. Broadcast dostaje każde urządzenie podłączone do tego Switcha. Maska to reguła nadawcy, nie ściana w kablu.',
     change: 'kopie Broadcastu docierają do wszystkich 4 urządzeń',
-    visual: { kind: 'diagram', devices: m4Devices(), cables: CABLES, state: m4Broadcast() },
-    control: 'Wyślij ARP Request →'
+    view: { type: 'diagram', devices: m4Devices(), cables: CABLES, state: m4Broadcast() },
+    control: next('Wyślij ARP Request →')
    }
   ],
   nextQuestion:
@@ -264,47 +243,9 @@ export const EXERCISES: Exercise[] = [
  }
 ];
 
-/** Indeks zakładki „Tryb swobodny” (po ostatnim ćwiczeniu). */
-export const FREE_MODE = EXERCISES.length;
-
-// --- Stan serii (reducer) ---
-
-export interface SeriesState {
- ex: number;
- step: number;
-}
-
-export type SeriesAction =
- | { type: 'NEXT' }
- | { type: 'PREV' }
- | { type: 'GOTO'; ex: number }
- | { type: 'SET_STEP'; step: number };
-
-export function seriesReducer(state: SeriesState, action: SeriesAction): SeriesState {
- const last = (ex: number) => EXERCISES[ex].steps.length - 1;
- switch (action.type) {
-  case 'NEXT':
-   if (state.ex === FREE_MODE) return state;
-   if (state.step < last(state.ex)) return { ...state, step: state.step + 1 };
-   return { ex: state.ex + 1, step: 0 };
-  case 'PREV':
-   if (state.ex === FREE_MODE) return { ex: FREE_MODE - 1, step: 0 };
-   if (state.step > 0) return { ...state, step: state.step - 1 };
-   return state.ex > 0 ? { ex: state.ex - 1, step: 0 } : state;
-  case 'GOTO':
-   return { ex: Math.min(Math.max(action.ex, 0), FREE_MODE), step: 0 };
-  case 'SET_STEP':
-   return state.ex === FREE_MODE ? state : { ...state, step: action.step };
- }
-}
-
-/** Adres w pasku (#m1 … #m4, #swobodny) – nauczyciel może podać link do konkretnego ćwiczenia. */
-export function hashOf(ex: number): string {
- return ex === FREE_MODE ? '#swobodny' : `#${EXERCISES[ex].code.toLowerCase()}`;
-}
-
-export function exFromHash(hash: string): number {
- if (hash === '#swobodny') return FREE_MODE;
- const i = EXERCISES.findIndex((e) => `#${e.code.toLowerCase()}` === hash);
- return i >= 0 ? i : 0;
-}
+/** Kurs bez Trybu swobodnego – tę zakładkę dokłada strona (`pages/maska.tsx`). */
+export const MASKA = {
+ id: 'maska',
+ title: 'Ćwiczenia z maską',
+ exercises: EXERCISES
+} satisfies Course;

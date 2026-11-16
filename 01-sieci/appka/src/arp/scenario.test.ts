@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { countWords, MAX_STEP_WORDS } from '../sim/words';
+import { countWords, MAX_STEP_WORDS } from '../engine/words';
 import { assertScenario, SIMULATION_STEPS } from './scenario';
 
 describe('scenariusz ARP', () => {

@@ -4,7 +4,7 @@
 // DLACZEGO BEZ POZYCJI NA EKRANIE: gdzie stoi karta urządzenia, to sprawa widoku, nie sieci.
 // Ten sam Laptop jest rysowany w innym miejscu w ARP, w M3 i w Trybie swobodnym.
 
-import { formatIp, parseIp, type Ip } from '../net/ipMath';
+import { formatIp, parseIp, type Ip } from '../lib/ipv4';
 
 export type DeviceKind = 'laptop' | 'switch' | 'router' | 'nas' | 'printer' | 'camera';
 export type DeviceId = 'router' | 'switch' | 'laptop' | 'nas' | 'printer' | 'camera';

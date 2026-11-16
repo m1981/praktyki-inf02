@@ -6,7 +6,7 @@ import {
  networkOf,
  octetBits,
  type Ip
-} from '../net/ipMath';
+} from '../../lib/ipv4';
 
 interface BitRulerProps {
  srcLabel: string;
