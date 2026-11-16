@@ -53,6 +53,15 @@
   .devcell.sel:not(:empty){border-top-color:var(--sel)}
   .devcell.vert{writing-mode:vertical-rl;align-items:center;justify-content:flex-start;font-size:10px;text-orientation:upright;letter-spacing:-2px;line-height:1}
   .scale{position:relative;height:18px;margin-top:3px}
+  .plan{position:relative;width:100%;max-width:640px;aspect-ratio:1/1;margin:0 auto;border:4px solid var(--ink);border-radius:4px;background:var(--bg)}
+  .room{position:absolute;border:2px solid var(--ink);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;padding:4px 5px;gap:3px}
+  .room.sel{box-shadow:inset 0 0 0 3px var(--sel);z-index:2}
+  .room .rh{display:flex;justify-content:space-between;gap:6px;font-size:11px;line-height:1.25;white-space:nowrap}
+  .room .rh b{font-size:12px}
+  .room .rl{font-size:11px;line-height:1.3;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .room .pcs{display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start}
+  .room .pc{width:18px;height:18px;color:var(--ink);opacity:.85}
+  .room .more{font-size:11px;font-weight:700;height:18px;display:flex;align-items:center;padding:0 3px;border-radius:4px;background:var(--panel)}
   .scale span{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--muted)}
   .scale span:first-child{transform:none}
 
@@ -167,7 +176,14 @@
   </div>
 
   <div class="card">
-    <h2>7. Tabela podsieci</h2>
+    <h2>7. Plan budynku: podsieci jako pomieszczenia</h2>
+    <p class="hint" style="margin-top:0">Ten sam podział co w drzewie, tylko narysowany jak plan piętra. Cały kwadrat to sieć wyjściowa. Każde przecięcie dzieli pokój na pół, raz w pionie, raz w poziomie. Pokoje to liście drzewa, czyli prawdziwe podsieci. Powierzchnia pokoju odpowiada liczbie adresów. Ikonki pokazują urządzenia poglądowo: gdy się nie mieszczą, reszta jest jako „+N”.</p>
+    <div class="plan" id="plan-view"></div>
+    <div class="legend" style="margin-top:8px"><span>Ściana między pokojami = granica podsieci. Żeby komputer z jednego pokoju „pogadał” z innym pokojem, ruch musi przejść przez router.</span></div>
+  </div>
+
+  <div class="card">
+    <h2>8. Tabela podsieci</h2>
     <div style="overflow-x:auto">
     <table>
       <thead><tr><th>#</th><th>Podsieć</th><th>Maska</th><th>Pierwszy – ostatni host</th><th>Broadcast</th><th>Hostów</th><th>Przeznaczenie</th></tr></thead>
@@ -201,7 +217,7 @@
 
   let base, baseP, root, selected, uid = 0;
 
-  function mk(net, p, parent){ return { id: ++uid, net: net >>> 0, p, kids: null, parent: parent || null, label: null }; }
+  function mk(net, p, parent){ return { id: ++uid, net: net >>> 0, p, kids: null, parent: parent || null, label: null, need: 0 }; }
   function color(p){
     const hue = (p * 53 + 190) % 360;
     return isDark() ? `hsl(${hue} 50% 44%)` : `hsl(${hue} 55% 50%)`;
@@ -213,11 +229,11 @@
     if (!n || n.kids || n.p >= MAXP) return false;
     const h = size(n.p + 1);
     n.kids = [mk(n.net, n.p + 1, n), mk(n.net + h, n.p + 1, n)];
-    n.label = null;
+    n.label = null; n.need = 0;
     return true;
   }
   function canMerge(n){ return n && n.parent && !n.parent.kids[0].kids && !n.parent.kids[1].kids; }
-  function merge(n){ if (!canMerge(n)) return null; const par = n.parent; par.kids = null; par.label = null; return par; }
+  function merge(n){ if (!canMerge(n)) return null; const par = n.parent; par.kids = null; par.label = null; par.need = 0; return par; }
 
   function reset(){ root = mk(base, baseP, null); selected = root; }
 
@@ -269,7 +285,7 @@
       let leaf = leaves().find(l => !l.label && l.p <= r.p);
       if (!leaf){ msg.className = 'msg err'; msg.textContent = `Zabrakło miejsca na podsieć dla ${r.n} urządzeń. Spróbuj większej sieci wyjściowej albo mniejszych potrzeb.`; reset(); render(); return; }
       while (leaf.p < r.p){ split(leaf); leaf = leaf.kids[0]; }
-      leaf.label = `${letters[r.i % 26]}: ${r.n} urządz.`;
+      leaf.label = `${letters[r.i % 26]}: ${r.n} urządz.`; leaf.need = r.n;
       if (!first) first = leaf;
       lines.push(`${letters[r.i % 26]} (${r.n}) → /${r.p}, ${hosts(r.p)} hostów`);
     }
@@ -342,6 +358,59 @@
   let rz;
   try { new ResizeObserver(() => { clearTimeout(rz); rz = setTimeout(() => { if (root) render(); }, 60); }).observe(document.getElementById('bar')); }
   catch(e){ addEventListener("resize", () => { if (root) render(); }); }
+
+  /* ---------- floor plan (leaves as rooms) ---------- */
+  const PC_SVG = '<svg class="pc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="3.5" width="19" height="12" rx="1.5"/><path d="M12 15.5v4M8 20h8"/></svg>';
+  function tint(p){
+    const hue = (p * 53 + 190) % 360;
+    return isDark() ? `hsl(${hue} 35% 24%)` : `hsl(${hue} 60% 90%)`;
+  }
+  function renderPlan(){
+    const box = document.getElementById('plan-view');
+    box.innerHTML = '';
+    const W = box.clientWidth - 8 || 600;  // inner size in px (minus border)
+    const rooms = [];
+    (function lay(n, x, y, w, h){
+      if (!n.kids){ rooms.push({ n, x, y, w, h }); return; }
+      if (w >= h){ lay(n.kids[0], x, y, w / 2, h); lay(n.kids[1], x + w / 2, y, w / 2, h); }
+      else       { lay(n.kids[0], x, y, w, h / 2); lay(n.kids[1], x, y + h / 2, w, h / 2); }
+    })(root, 0, 0, 1, 1);
+
+    rooms.forEach(({ n, x, y, w, h }) => {
+      const r = document.createElement('div');
+      r.className = 'room' + (n === selected ? ' sel' : '');
+      Object.assign(r.style, { left: x * 100 + '%', top: y * 100 + '%', width: w * 100 + '%', height: h * 100 + '%', background: tint(n.p) });
+      const pw = w * W, ph = h * W, hcount = hosts(n.p);
+      const range = '.' + intToIp(n.net).split('.').pop() + '–.' + intToIp(n.net + size(n.p) - 1).split('.').pop();
+      r.title = `${intToIp(n.net)}/${n.p}: ${range}, ${hcount} ${plural(hcount)}${n.label ? ' — ' + n.label : ''}`;
+
+      let html = '';
+      let usedH = 8;
+      if (pw >= 70 && ph >= 26){
+        html += `<div class="rh"><b>/${n.p}</b>${pw >= 120 ? `<span class="mono">${range}</span>` : ''}</div>`; usedH += 18;
+      } else if (pw >= 24 && ph >= 16){ html += `<div class="rh"><b>/${n.p}</b></div>`; usedH += 18; }
+      if (n.label && pw >= 70 && ph >= 60){ html += `<div class="rl">${n.label}</div>`; usedH += 17; }
+      if (pw >= 70 && ph >= 44){ html += `<div class="rh"><span>${pw >= 150 ? `pojemność: ${hcount} ${plural(hcount)}` : `poj. ${hcount}`}</span></div>`; usedH += 17; }
+
+      // how many 18px icons (+3px gap) fit in the rest of the room
+      const cols = Math.floor((pw - 10 + 3) / 21), rowsN = Math.floor((ph - usedH + 3) / 21);
+      const slots = Math.max(0, cols * rowsN);
+      if (slots > 0){
+        const MAX_ICONS = 20;                       // a sample, not every device
+        const want = n.need || hcount;              // planned rooms: draw the devices actually needed
+        const room = Math.min(slots, MAX_ICONS + 1);
+        let icons = '', show = Math.min(want, room);
+        if (want > room) show = room - 1;           // leave a slot for "+N"
+        for (let i = 0; i < show; i++) icons += PC_SVG;
+        if (want > show) icons += `<span class="more">+${want - show}</span>`;
+        html += `<div class="pcs">${icons}</div>`;
+      }
+      r.innerHTML = html;
+      r.onclick = () => { selected = n; render(); };
+      r.ondblclick = () => { if (split(n)) { selected = n.kids[0]; render(); } };
+      box.appendChild(r);
+    });
+  }
 
   /* ---------- render ---------- */
   function render(){
@@ -434,6 +503,8 @@
       });
       tree.appendChild(row);
     }
+
+    renderPlan();
 
     // table
     const tb = document.getElementById('tbody'); tb.innerHTML = '';
