@@ -97,15 +97,18 @@
   .dlg .keys{font-size:11px;color:var(--muted)}
   .hl{fill:none;stroke:var(--accent);stroke-width:3;animation:fade .3s}
   .lit{opacity:0;animation:litA .2s ease-out forwards}
+  .gone{animation:goneA .01s linear forwards}
+  @keyframes goneA{to{opacity:0}}
   @keyframes litA{to{opacity:1}}
   .pingD{fill:none;stroke:var(--accent);stroke-width:3;opacity:0;animation:pingD .8s ease-out both}
-  @keyframes pingD{0%{r:6;opacity:1}100%{r:20;opacity:0}}
+  @keyframes pingD{0%{r:6;opacity:0}1%{r:6;opacity:1}100%{r:20;opacity:0}}
   .pulseP{fill:none;stroke:var(--accent);stroke-width:2;animation:pulseP 1.3s ease-in-out infinite}
   @keyframes pulseP{0%,100%{opacity:.25}50%{opacity:1}}
   .fadeout{animation:fadeout 1.6s ease-in forwards}
   @keyframes fadeout{0%,40%{opacity:1}100%{opacity:0}}
   .metric.hot{border-left-color:var(--accent);background:var(--accent-bg);animation:hotA 1s ease-in-out 3}
   @keyframes hotA{50%{transform:scale(1.04)}}
+  .dlg .say.act{font-style:italic;font-weight:500;color:var(--muted)}
   .dlg .scene{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
   .dlg .who .av{color:#1d1d1b;font-weight:800}
   .dlg .quiz{display:flex;flex-direction:column;gap:6px}
@@ -473,7 +476,7 @@
       g += s.svg;
       if (anim){
         for (let pi = c.fill[0]; pi < c.fill[1]; pi++){
-          const pt = s.port(pi), d = (pi - c.fill[0]) * 0.22;
+          const pt = s.port(pi), d = 0.5 + (pi - c.fill[0]) * 0.3;
           g += `<rect x="${pt.x - 8}" y="${pt.y - 6}" width="16" height="12" rx="1.5" fill="${D.it.c}" class="lit" style="animation-delay:${d}s"/>
                 <circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingD" style="animation-delay:${d}s"/>`;
         }
@@ -487,9 +490,15 @@
       if (i === hitRow && hitIdx >= 0){ const pt = s.port(hitIdx); g += `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`; }
       if (!mode && c.power) g += `<text x="14" y="${y + 28}" class="appear" style="font-size:15px" text-anchor="middle">⚡</text>`;
       const full = r.used >= 24;
-      g += `<text x="${30 + s.w + 14}" y="${y + 18}" class="lbl">${r.label}</text>
-        <text x="${30 + s.w + 14}" y="${y + 35}" class="${full && !mode ? 'bad-txt' : 'lbls'}">zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
-      if (!mode && r.k === 'kd'){ kdPort = s.port(r.used); if (c.badge) g += `<g class="appear"><rect x="${30 + s.w + 150}" y="${y + 4}" width="92" height="24" rx="12" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="${30 + s.w + 196}" y="${y + 21}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--ink)">📁 wypłaty</text></g>`; }
+      g += `<text x="${30 + s.w + 14}" y="${y + 18}" class="lbl">${r.label}</text>`;
+      const cnt = `<text x="${30 + s.w + 14}" y="${y + 35}" class="${full && !mode ? 'bad-txt' : 'lbls'}" CLS>zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
+      if (anim){
+        // the counter changes only after the last port lights up
+        const T = 0.5 + (c.fill[1] - c.fill[0]) * 0.3;
+        g += `<text x="${30 + s.w + 14}" y="${y + 35}" class="lbls gone" style="animation-delay:${T}s">zajęte ${c.fill[0]}/24 · wolne ${24 - c.fill[0]}</text>`;
+        g += cnt.replace('class="', 'style="animation-delay:' + T + 's" class="lit ').replace(' CLS', '');
+      } else g += cnt.replace(' CLS', '');
+      if (!mode && r.k === 'kd'){ kdPort = s.port(r.used); if (c.badge) g += `<g class="appear"><rect x="${30 + s.w + 140}" y="${y + 4}" width="180" height="24" rx="12" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="${30 + s.w + 230}" y="${y + 21}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--ink)">📁 dane osobowe i wypłaty</text></g>`; }
     });
     // the new IT person waiting for a port, and the "trial" cable to the Kadry switch
     if (!mode && c.pc && c.pc !== 'none'){
@@ -532,26 +541,27 @@
   // Scene "Biuro, rok 1996" — lines verbatim from scenariusze/klopot3-rok-1996.md
   const W = { pc:'wait', ghost:true };
   const S1996 = [
-    { who:'ola',    t:'Rok 1996. Cztery działy, cztery switche. Na razie wszystko gra.', c:{ it:10 } },
-    { who:'ola',    t:'Zatrudniamy w IT. Mam podpiąć siedem gniazdek.', c:{ it:17, fill:[10,17] } },
-    { who:'ola',    t:'Druga grupa. Kolejne siedem gniazdek. Na styk.', c:{ it:24, fill:[17,24] } },
-    { who:'ola',    t:'I jeszcze jedna osoba. A portów już nie ma.', c:{ it:24, pc:'wait' } },
-    { who:'bogdan', t:'Pani Olu, jak to, nowy switch? Przecież to będzie piąty.', c:{ it:24, ...W } },
-    { who:'ola',    t:'No tak, no. Taką mamy sieć. To będzie piąty.', c:{ it:24, ...W, hi:['it','ks','kd','gs'] } },
-    { who:'bogdan', t:'Ale przecież mamy wolne gniazdka. Sam widziałem.', c:{ it:24, ...W, pulse:'all' } },
-    { who:'ola',    t:'W kadrach. Mają dwadzieścia wolnych.', c:{ it:24, ...W, pulse:'kd', hi:['kd'] } },
-    { who:'kuba',   t:'To podepnijmy tam nowych z IT.', c:{ it:24, ghost:true, pc:'trial', hi:['kd'] } },
-    { who:'ola',    t:'I trafią do sieci kadr. A tam są wszystkie wypłaty.', c:{ it:24, ghost:true, pc:'kd', badge:true } },
-    { who:'kuba',   t:'…Aha. Słabo.', c:{ it:24, ghost:true, pc:'cancel' } },
-    { who:'bogdan', t:'Czyli płacę za puste dziurki.', c:{ it:24, ...W, pulse:'all', metricHi:true } },
-    { who:'ola',    t:'I jeszcze za prąd, który żrą.', c:{ it:25, power:true, last:'it' } },
-    { who:'quiz',   t:'Co by tu pomogło?', c:{ it:25, power:true }, quiz:true }
+    { who:'ola',  t:'Rok 1996. Cztery działy, cztery switche. Na razie wszystko gra.', c:{ it:10 } },
+    { who:'ola',  t:'Zatrudniamy w IT. Mam podpiąć siedem gniazdek.', c:{ it:10 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina siedem gniazdek…', c:{ it:17, fill:[10,17] } },
+    { who:'ola',  t:'Druga grupa. Kolejne siedem gniazdek. Na styk.', c:{ it:17 }, next:'🔌 Podepnij ▶' },
+    { who:'ola',  act:'Ola podpina kolejne siedem gniazdek…', c:{ it:24, fill:[17,24] } },
+    { who:'ola',  t:'I jeszcze jedna osoba. A portów już nie ma.', c:{ it:24, pc:'wait' } },
+    { who:'kier', t:'Olu, jak to, nowy switch? Przecież to będzie piąty.', c:{ it:24, ...W } },
+    { who:'ola',  t:'No tak, no. Taką mamy sieć. To będzie piąty.', c:{ it:24, ...W, hi:['it','ks','kd','gs'] } },
+    { who:'kier', t:'Ale przecież mamy wolne gniazdka. Sam widziałem.', c:{ it:24, ...W, pulse:'all' } },
+    { who:'ola',  t:'W kadrach. Mają dwadzieścia wolnych.', c:{ it:24, ...W, pulse:'kd', hi:['kd'] } },
+    { who:'kier', t:'To podepnij tam moich ludzi.', c:{ it:24, ghost:true, pc:'trial', hi:['kd'] } },
+    { who:'ola',  t:'I trafią do sieci kadr?! Przecież tam są dane osobowe i wypłaty!', c:{ it:24, ghost:true, pc:'kd', badge:true } },
+    { who:'kier', t:'Aha, no to słabo 😕', c:{ it:24, ghost:true, pc:'cancel' } },
+    { who:'kier', t:'Czyli płacę za puste dziurki.', c:{ it:24, ...W, pulse:'all', metricHi:true } },
+    { who:'ola',  t:'I jeszcze za prąd, który żrą.', c:{ it:25, power:true, last:'it' } },
+    { who:'quiz', t:'Co by tu pomogło?', c:{ it:25, power:true }, quiz:true }
   ];
   const SPK = {
-    ola:    { n:'Ola', r:'administratorka sieci', av:'O', bg:'#d9ecf9' },
-    bogdan: { n:'Pan Bogdan', r:'dyrektor', av:'B', bg:'#f6e3c8' },
-    kuba:   { n:'Kuba', r:'stażysta', av:'K', bg:'#dcefdc' },
-    quiz:   { n:'Zagadka', r:'dla Ciebie', av:'?', bg:'var(--accent-bg)' }
+    ola:  { n:'Ola', r:'administratorka sieci', av:'O', bg:'#d9ecf9' },
+    kier: { n:'Kierownik IT', r:'szef Oli', av:'K', bg:'#f6e3c8' },
+    quiz: { n:'Zagadka', r:'dla Ciebie', av:'?', bg:'var(--accent-bg)' }
   };
   const QUIZ = [
     { id:'a', t:'A) Jeden wielki switch.', fb:'Nie do końca. Większe pudło to nadal jeden dział na jednym pudle.' },
@@ -567,12 +577,12 @@
       <aside class="dlg">
         <div class="scene">Biuro, rok 1996</div>
         <div class="who"><span class="av" style="background:${sp.bg}">${sp.av}</span><span><b>${sp.n}</b>${sp.r}</span></div>
-        <div class="say" ${cur.quiz ? 'style="font-size:18px"' : ''}>${cur.t}</div>
+        ${cur.act ? `<div class="say act">${cur.act}</div>` : `<div class="say" ${cur.quiz ? 'style="font-size:18px"' : ''}>${cur.t}</div>`}
         ${quiz}
         <div class="dots">${S1996.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${n}</span></div>
         <div class="actions">
           <button id="d3prev" ${k === 0 ? 'disabled' : ''}>◀ Wstecz</button>
-          <button id="d3next" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? 'Zobacz to samo dziś ▶' : 'Dalej ▶'}</button>
+          <button id="d3next" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? 'Zobacz to samo dziś ▶' : (cur.next || 'Dalej ▶')}</button>
         </div>
         <div class="keys">Strzałki ← → też działają.</div>
       </aside></div>`;
