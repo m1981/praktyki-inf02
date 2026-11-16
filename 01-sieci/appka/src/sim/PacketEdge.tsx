@@ -5,6 +5,8 @@ import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 
 const HOP_MS = 1400; // czas przelotu ramki po jednym kablu
 const PAUSE_MS = 800; // przerwa przed powtórką animacji
+// 2 cykle i stop: ruch nie konkuruje z czytaniem tekstu kroku (audyt.md, rozdz. 6).
+const CYCLES = 2;
 
 export function PacketEdge({
  id,
@@ -68,7 +70,8 @@ interface MovingPacketProps {
  hopCount: number;
 }
 
-// Kropka-ramka jadąca po kablu (SVG <animateMotion>).
+// Kropka-ramka jadąca po kablu (SVG <animateMotion>). Po CYCLES przebiegach animacja staje
+// (fill="freeze"): kropka ostatniego skoku zostaje u odbiorcy, pozostałe znikają.
 // Ramki z kilkoma skokami (Laptop → Switch → Router → …) animujemy po kolei: każdy skok ma swoje
 // okno czasowe w jednym wspólnym cyklu, więc ramka „dojeżdża” do urządzenia, zanim ruszy dalej.
 function MovingPacket({ path, color, reverse, hop, hopCount }: MovingPacketProps) {
@@ -76,6 +79,7 @@ function MovingPacket({ path, color, reverse, hop, hopCount }: MovingPacketProps
  const opacityRef = useRef<SVGAnimateElement>(null);
 
  const cycle = hopCount * HOP_MS + PAUSE_MS;
+ const isLastHop = hop === hopCount - 1;
  const start = ((hop * HOP_MS) / cycle).toFixed(4);
  const end = (((hop + 1) * HOP_MS) / cycle).toFixed(4);
 
@@ -93,7 +97,8 @@ function MovingPacket({ path, color, reverse, hop, hopCount }: MovingPacketProps
     path={path}
     dur={`${cycle}ms`}
     begin="indefinite"
-    repeatCount="indefinite"
+    repeatCount={CYCLES}
+    fill="freeze"
     calcMode="linear"
     keyPoints={reverse ? '1;1;0;0' : '0;0;1;1'}
     keyTimes={`0;${start};${end};1`}
@@ -103,10 +108,11 @@ function MovingPacket({ path, color, reverse, hop, hopCount }: MovingPacketProps
     attributeName="opacity"
     dur={`${cycle}ms`}
     begin="indefinite"
-    repeatCount="indefinite"
+    repeatCount={CYCLES}
+    fill="freeze"
     calcMode="discrete"
-    values="0;1;0"
-    keyTimes={`0;${start};${end}`}
+    values={isLastHop ? '0;1' : '0;1;0'}
+    keyTimes={isLastHop ? `0;${start}` : `0;${start};${end}`}
    />
   </circle>
  );

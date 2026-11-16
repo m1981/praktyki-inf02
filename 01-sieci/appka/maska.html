@@ -7,23 +7,19 @@
   <!-- common.css i menu.js dokłada plugin `site-shell` w vite.config.ts -->
  </head>
  <body>
-  <header>
+  <header class="sim-header">
    <h1>🚧 Maska podsieci: gdzie stoją płoty?</h1>
-   <p style="color: var(--text-muted); font-size: 1.2rem">
-    Przesuwaj suwak maski i patrz, którą drogą Laptop wyśle ramkę: bezpośrednio czy przez Router.
-   </p>
-  </header>
-
-  <main class="sim-page">
-   <div class="card" style="border-top-color: #fdcb6e; background-color: #fffbea">
-    <h4 style="color: #856404; margin-top: 0">🌍 Inny świat: przykładowe biuro</h4>
+   <details class="sim-note">
+    <summary>🌍 Przykładowe biuro – to nie jest sieć z VirtualBox</summary>
     <p>
-     Sieć <code>10.10.10.0/24</code> w tej wizualizacji to osobny przykład (ten sam co w
+     Sieć <code>10.10.10.0/24</code> to osobny przykład (ten sam co w
      <a href="symulator-arp.html">Symulatorze ARP</a>). Jej urządzenia i adresy nie dotyczą maszyn w
      VirtualBox ani <a href="../topology.html">Mapy Architektury</a>.
     </p>
-   </div>
+   </details>
+  </header>
 
+  <main class="sim-page">
    <div id="root">
     <noscript>Wizualizacja wymaga włączonego JavaScriptu.</noscript>
    </div>

@@ -57,102 +57,20 @@ export default function MaskExplorer() {
       </button>
      ))}
     </div>
-    {preset ? (
-     <p className="mk-lesson" aria-live="polite">
-      💡 {preset.lesson}
-     </p>
-    ) : (
-     <p className="sim-muted mk-small" aria-live="polite">
-      Tryb swobodny: zmieniasz ustawienia ręcznie. Kliknij przykład, żeby wrócić do lekcji.
-     </p>
-    )}
-   </section>
-
-   {/* --- Sterowanie --- */}
-   <section className="sim-panel mk-controls">
-    <div className="mk-control">
-     <label htmlFor="mk-prefix">
-      <strong>Maska</strong> (na wszystkich urządzeniach{state.trap ? ' oprócz Serwera NAS' : ''})
-     </label>
-     <input
-      id="mk-prefix"
-      type="range"
-      min={MIN_PREFIX}
-      max={MAX_PREFIX}
-      step={1}
-      value={state.prefix}
-      onChange={(e) => dispatch({ type: 'SET_PREFIX', prefix: Number(e.target.value) })}
-     />
-     <div className="mk-ticks" aria-hidden>
-      {PREFIXES.map((p) => (
-       <span key={p}>/{p}</span>
-      ))}
-     </div>
-     <output htmlFor="mk-prefix" className="mk-output">
-      /{state.prefix} = {formatIp(maskOf(state.prefix))}
-     </output>
-    </div>
-
-    <div className="mk-control">
-     <span id="mk-target">
-      <strong>Laptop rozmawia z</strong>
-     </span>
-     <div className="mk-segmented" role="group" aria-labelledby="mk-target">
-      {TARGETS.map((t) => (
-       <button
-        key={t}
-        type="button"
-        aria-pressed={state.target === t}
-        onClick={() => dispatch({ type: 'SET_TARGET', target: t })}
-       >
-        {HOSTS[t].label} .{lastOctet(HOSTS[t].ip)}
-       </button>
-      ))}
-     </div>
-
-     <span id="mk-phase">
-      <strong>Kierunek</strong>
-     </span>
-     <div className="mk-segmented" role="group" aria-labelledby="mk-phase">
-      <button
-       type="button"
-       aria-pressed={state.phase === 'there'}
-       onClick={() => dispatch({ type: 'SET_PHASE', phase: 'there' })}
-      >
-       ➡️ Tam: Laptop → {targetLabel}
-      </button>
-      <button
-       type="button"
-       aria-pressed={state.phase === 'back'}
-       onClick={() => dispatch({ type: 'SET_PHASE', phase: 'back' })}
-      >
-       ⬅️ Z powrotem: {targetLabel} → Laptop
-      </button>
-     </div>
-
-     <label className="mk-check">
-      <input
-       type="checkbox"
-       checked={state.trap}
-       onChange={(e) => dispatch({ type: 'SET_TRAP', trap: e.target.checked })}
-      />
-      Pułapka: na Serwerze NAS ktoś wpisał maskę /{TRAP_PREFIX}
-     </label>
-    </div>
    </section>
 
    {/* --- Diagram + decyzja --- */}
-   <div className="sim-legend" aria-label="Legenda">
-    <span>
-     <i className="mk-dot mk-dot--inside" /> w sieci nadawcy (według jego maski)
-    </span>
-    <span>
-     <i className="mk-dot mk-dot--outside" /> poza siecią nadawcy
-    </span>
-   </div>
    <div className="sim-stage">
     <div className="mk-diagram">
      <Diagram nodes={nodes} edges={edges} />
+     <div className="sim-legend" aria-label="Legenda">
+      <span>
+       <i className="mk-dot mk-dot--inside" /> w sieci nadawcy (według jego maski)
+      </span>
+      <span>
+       <i className="mk-dot mk-dot--outside" /> poza siecią nadawcy
+      </span>
+     </div>
      <p className="mk-physical">
       🔌 <strong>Warstwa fizyczna się nie zmienia:</strong> wszystkie urządzenia wiszą na jednym
       Switchu, a ramka Broadcast (np. ARP) nadal dociera do każdego. Maska nie stawia ściany w kablu
@@ -160,9 +78,95 @@ export default function MaskExplorer() {
      </p>
     </div>
     <aside className="sim-side">
+     {/* Lekcja OBOK diagramu, nie nad nim (audyt: lekcja ↔ diagram 843–894 px). */}
+     {preset ? (
+      <p className="mk-lesson" aria-live="polite">
+       💡 {preset.lesson}
+      </p>
+     ) : (
+      <p className="sim-muted mk-small" aria-live="polite">
+       Tryb swobodny: zmieniasz ustawienia ręcznie. Kliknij przykład, żeby wrócić do lekcji.
+      </p>
+     )}
      <DecisionPanel decision={decision} noReply={noReply} />
     </aside>
    </div>
+
+   {/* --- Sterowanie: schowane w „Trybie swobodnym”, pod diagramem (audyt: 11 elementów naraz) --- */}
+   <details className="sim-panel mk-free">
+    <summary>🛠️ Tryb swobodny: sam ustaw maskę, cel i kierunek</summary>
+    <div className="mk-controls">
+     <div className="mk-control">
+      <label htmlFor="mk-prefix">
+       <strong>Maska</strong> (na wszystkich urządzeniach{state.trap ? ' oprócz Serwera NAS' : ''})
+      </label>
+      <input
+       id="mk-prefix"
+       type="range"
+       min={MIN_PREFIX}
+       max={MAX_PREFIX}
+       step={1}
+       value={state.prefix}
+       onChange={(e) => dispatch({ type: 'SET_PREFIX', prefix: Number(e.target.value) })}
+      />
+      <div className="mk-ticks" aria-hidden>
+       {PREFIXES.map((p) => (
+        <span key={p}>/{p}</span>
+       ))}
+      </div>
+      <output htmlFor="mk-prefix" className="mk-output">
+       /{state.prefix} = {formatIp(maskOf(state.prefix))}
+      </output>
+     </div>
+
+     <div className="mk-control">
+      <span id="mk-target">
+       <strong>Laptop rozmawia z</strong>
+      </span>
+      <div className="mk-segmented" role="group" aria-labelledby="mk-target">
+       {TARGETS.map((t) => (
+        <button
+         key={t}
+         type="button"
+         aria-pressed={state.target === t}
+         onClick={() => dispatch({ type: 'SET_TARGET', target: t })}
+        >
+         {HOSTS[t].label} .{lastOctet(HOSTS[t].ip)}
+        </button>
+       ))}
+      </div>
+
+      <span id="mk-phase">
+       <strong>Kierunek</strong>
+      </span>
+      <div className="mk-segmented" role="group" aria-labelledby="mk-phase">
+       <button
+        type="button"
+        aria-pressed={state.phase === 'there'}
+        onClick={() => dispatch({ type: 'SET_PHASE', phase: 'there' })}
+       >
+        ➡️ Tam: Laptop → {targetLabel}
+       </button>
+       <button
+        type="button"
+        aria-pressed={state.phase === 'back'}
+        onClick={() => dispatch({ type: 'SET_PHASE', phase: 'back' })}
+       >
+        ⬅️ Z powrotem: {targetLabel} → Laptop
+       </button>
+      </div>
+
+      <label className="mk-check">
+       <input
+        type="checkbox"
+        checked={state.trap}
+        onChange={(e) => dispatch({ type: 'SET_TRAP', trap: e.target.checked })}
+       />
+       Pułapka: na Serwerze NAS ktoś wpisał maskę /{TRAP_PREFIX}
+      </label>
+     </div>
+    </div>
+   </details>
 
    {/* --- Widoki pomocnicze --- */}
    <AddressLine src={src} dst={dst} prefix={decision.prefix} />

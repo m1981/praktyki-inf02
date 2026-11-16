@@ -144,7 +144,7 @@
 }
 /* Trzy rzędy urządzeń – wyższe pole diagramu niż w symulatorze ARP */
 .mk-diagram .sim-canvas {
- height: 480px;
+ height: 340px;
 }
 @media (max-width: 600px) {
  .mk-diagram .sim-canvas {
@@ -171,7 +171,8 @@
  background: var(--sim-green);
 }
 .mk-verdict--via-router {
- background: var(--sim-orange);
+ /* fiolet, nie pomarańczowy: pomarańczowy znaczy tylko Broadcast (w obu ćwiczeniach) */
+ background: var(--sim-purple);
 }
 .mk-verdict--gateway-outside {
  background: var(--sim-red);
@@ -198,7 +199,7 @@
 }
 .mk-block--dst,
 .mk-swatch--dst {
- background: color-mix(in srgb, var(--sim-orange) 30%, transparent);
+ background: color-mix(in srgb, #636e72 30%, transparent);
 }
 .mk-swatch {
  display: inline-block;
@@ -309,4 +310,19 @@
   width: 20px;
   height: 22px;
  }
+}
+
+/* --- Tryb swobodny: sterowanie schowane, dopóki uczeń przerabia gotowe przykłady --- */
+.mk-free > summary {
+ cursor: pointer;
+ font-weight: 600;
+}
+.mk-free[open] > summary {
+ margin-bottom: 16px;
+}
+
+/* Lekcja w prawej kolumnie, nad decyzją nadawcy */
+.sim-side > .mk-lesson,
+.sim-side > .mk-small {
+ margin-top: 0;
 }

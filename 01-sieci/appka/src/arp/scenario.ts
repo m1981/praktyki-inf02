@@ -128,30 +128,30 @@ export const SIMULATION_STEPS: SimulationStep[] = [
  {
   title: 'Start: Laptop chce zapisać plik na Serwerze NAS',
   layer: 'Brak ruchu',
-  description: `Sieć LAN 10.10.10.0/24 jest w spoczynku. Laptop (${IP.laptop}) chce wysłać plik do Serwera NAS (${IP.nas}). Laptop zna adres IP Serwera NAS, ale nie zna jego adresu MAC. Tablica ARP Laptopa i tablica MAC Switcha są puste.`,
+  description: `Laptop (${IP.laptop}) chce wysłać plik do Serwera NAS (${IP.nas}). Zna jego adres IP, ale nie zna adresu MAC. Tablica ARP Laptopa i tablica MAC Switcha są puste.`,
   roles: {},
   flows: []
  },
  {
-  title: 'Krok 1: Decyzja – ta sama sieć czy inna?',
+  title: 'Krok 1: Ta sama sieć – bez Routera',
   layer: 'L3 (Sieć) – decyzja',
-  description: `Laptop nakłada maskę /24 na oba adresy. Swój adres ${IP.laptop} → sieć 10.10.10.0. Adres Serwera NAS ${IP.nas} → sieć 10.10.10.0. Sieci są takie same, więc Laptop wyśle dane bezpośrednio do Serwera NAS, bez Routera. Do zbudowania ramki potrzebuje adresu MAC Serwera NAS. Laptop sprawdza swoją tablicę ARP: nie ma w niej adresu ${IP.nas}.`,
+  description: `Laptop i Serwer NAS mają ten sam numer sieci: 10.10.10.0/24. Laptop wyśle dane bezpośrednio, bez Routera. Do ramki potrzebuje adresu MAC Serwera NAS, a jego tablica ARP jest pusta.`,
   roles: { laptop: 'analyzes' },
   flows: []
  },
  {
   title: 'Krok 2: ARP Request – Laptop pyta wszystkich',
   layer: 'L2 (Łącze danych) – Broadcast',
-  description: `Laptop wysyła ramkę ARP Request z pytaniem: „Kto ma ${IP.nas}?”. Laptop nie zna adresu MAC odbiorcy, dlatego wpisuje adres Broadcast ${BROADCAST_MAC} (do wszystkich). Switch odbiera ramkę na porcie ${PORT.laptop} i zapisuje w tablicy MAC: adres MAC Laptopa jest za portem ${PORT.laptop}.`,
+  description: `Laptop wysyła ramkę ARP Request: „Kto ma ${IP.nas}?”. Nie zna MAC odbiorcy, więc wpisuje adres Broadcast ${BROADCAST_MAC} – ramka do wszystkich. Switch zapisuje w tablicy MAC: Laptop jest za portem ${PORT.laptop}.`,
   roles: { laptop: 'sends', switch: 'receives' },
   frame: ARP_REQUEST,
   flows: [{ from: 'laptop', to: 'switch', hop: 0 }],
   learns: { switchMac: [{ mac: MAC.laptop, port: PORT.laptop }] }
  },
  {
-  title: 'Krok 3: Switch rozsyła ramkę na wszystkie porty',
+  title: 'Krok 3: Switch rozsyła kopie na wszystkie porty',
   layer: 'L2 (Łącze danych) – Broadcast',
-  description: `Adres MAC odbiorcy to Broadcast, więc Switch wysyła kopię ramki na wszystkie porty oprócz ${PORT.laptop} (stamtąd ramka przyszła). Switch nie zmienia ramki. Router dostaje kopię na porcie ${PORT.router}: ${IP.nas} to nie jego adres, więc Router odrzuca ramkę. Serwer NAS dostaje kopię na porcie ${PORT.nas}: rozpoznaje swój adres i zapisuje adres MAC Laptopa w swojej tablicy ARP.`,
+  description: `Adres odbiorcy to Broadcast, więc Switch wysyła kopię ramki na wszystkie porty oprócz ${PORT.laptop}. Router odrzuca kopię: ${IP.nas} to nie jego adres. Serwer NAS rozpoznaje swój adres.`,
   roles: { switch: 'forwards', router: 'drops', nas: 'receives' },
   frame: ARP_REQUEST,
   flows: [
@@ -160,24 +160,27 @@ export const SIMULATION_STEPS: SimulationStep[] = [
   ]
  },
  {
-  title: 'Krok 4: ARP Reply – Serwer NAS odpowiada tylko Laptopowi',
+  title: 'Krok 4: ARP Reply – Serwer NAS odpowiada',
   layer: 'L2 (Łącze danych) – Unicast',
-  description: `Serwer NAS wysyła ramkę ARP Reply: „${IP.nas} to ja, mój MAC to ${MAC.nas}”. Serwer NAS zna już adres MAC Laptopa, więc wysyła ramkę tylko do niego (Unicast). Switch zapisuje w tablicy MAC: adres MAC Serwera NAS jest za portem ${PORT.nas}. Adres MAC Laptopa Switch ma już w tablicy (${PORT.laptop}), więc wysyła ramkę tylko na ten port. Router nie dostaje tej ramki. Laptop zapisuje odpowiedź w swojej tablicy ARP.`,
-  roles: { nas: 'sends', switch: 'forwards', laptop: 'receives' },
+  description: `Serwer NAS wysyła ARP Reply: „Mój MAC to ${MAC.nas}”. MAC Laptopa zna z pytania, więc odpowiada tylko jemu – to Unicast. Switch zapisuje w tablicy MAC: Serwer NAS jest za portem ${PORT.nas}.`,
+  roles: { nas: 'sends', switch: 'receives' },
   frame: ARP_REPLY,
-  flows: [
-   { from: 'nas', to: 'switch', hop: 0 },
-   { from: 'switch', to: 'laptop', hop: 1 }
-  ],
-  learns: {
-   switchMac: [{ mac: MAC.nas, port: PORT.nas }],
-   laptopArp: [{ ip: IP.nas, mac: MAC.nas }]
-  }
+  flows: [{ from: 'nas', to: 'switch', hop: 0 }],
+  learns: { switchMac: [{ mac: MAC.nas, port: PORT.nas }] }
  },
  {
-  title: 'Krok 5: Wysłanie danych (Unicast)',
+  title: 'Krok 5: Switch wysyła odpowiedź tylko do Laptopa',
+  layer: 'L2 (Łącze danych) – Unicast',
+  description: `Switch ma MAC Laptopa w tablicy (${PORT.laptop}), więc wysyła ramkę tylko na ten port. Router jej nie dostaje. Laptop zapisuje w tablicy ARP: ${IP.nas} → ${MAC.nas}.`,
+  roles: { switch: 'forwards', laptop: 'receives' },
+  frame: ARP_REPLY,
+  flows: [{ from: 'switch', to: 'laptop', hop: 0 }],
+  learns: { laptopArp: [{ ip: IP.nas, mac: MAC.nas }] }
+ },
+ {
+  title: 'Krok 6: Wysłanie danych (Unicast)',
   layer: 'L3 + L2 – pakiet IP w ramce Ethernet',
-  description: `Laptop zna już adres IP i adres MAC Serwera NAS. Wkłada pakiet IP z danymi do ramki Ethernet z adresem MAC odbiorcy ${MAC.nas}. Switch sprawdza tablicę MAC: adres Serwera NAS jest za portem ${PORT.nas}, więc wysyła ramkę tylko na ten port. Router nie bierze udziału w tej wymianie.`,
+  description: `Laptop wkłada pakiet IP z plikiem do ramki z MAC odbiorcy ${MAC.nas}. Switch sprawdza tablicę MAC i wysyła ramkę tylko na port ${PORT.nas}. Router nie bierze udziału.`,
   roles: { laptop: 'sends', switch: 'forwards', nas: 'receives' },
   frame: DATA,
   flows: [
@@ -188,7 +191,7 @@ export const SIMULATION_STEPS: SimulationStep[] = [
    {
     question:
      'Minutę później Laptop wysyła drugi plik do Serwera NAS. Czy znowu wyśle ARP Request?',
-    answer: `Nie. Adres MAC Serwera NAS jest już w tablicy ARP Laptopa, więc Laptop od razu wysyła ramkę z danymi (Krok 5). Wpis w tablicy ARP wygasa po kilku minutach – dopiero wtedy Laptop znowu zapyta przez ARP.`
+    answer: `Nie. Adres MAC Serwera NAS jest już w tablicy ARP Laptopa, więc Laptop od razu wysyła ramkę z danymi (Krok 6). Wpis w tablicy ARP wygasa po kilku minutach – dopiero wtedy Laptop znowu zapyta przez ARP.`
    },
    {
     question: 'Laptop wysyła dane do adresu 8.8.8.8. O czyj adres MAC zapyta przez ARP?',

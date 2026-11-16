@@ -2,6 +2,33 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-17 — Jedna metafora maski, układ maski, kontrakt 1.2
+
+- **Metafora maski (PYT-003a):** w całym Filarze 1 „płot i działka”: płot = granica podsieci,
+  działka = podsieć. Zmienione: analogia w `01-sieci/index.html` (Krok 5; było „kod pocztowy
+  dzielnicy”), dwa wnioski w Lab 1 (było „wioska”). Wniosek Fazy 1 nie mówi już, że maska decyduje,
+  „kto z kim może rozmawiać” (sugerowało ścianę) – maska decyduje, czy nadawca wysyła bezpośrednio,
+  czy przez bramę. Nowy wiersz w Słowniku pojęć (wpis 2026-11-02 „Panel ekspertów”, sekcja „Decyzje”).
+- **Układ maski (PYT-007a):** lekcja w prawej kolumnie nad decyzją nadawcy, legenda i „Tryb swobodny”
+  pod diagramem, diagram 340 px. Przykłady, diagram i lekcja mieszczą się w 1366×768 i 1280×720
+  (dół na 662 px). Naprawione: prawa kolumna wystawała poza stronę.
+- **Kontrakt pracy (PYT-006a):** `01-sieci/appka/kontrakt.md` w wersji 1.2, dopasowany do pracy nad
+  materiałami; rejestr decyzji: `01-sieci/appka/rejestr-pytan.md`.
+
+## 2026-11-17 — Audyt dydaktyczny symulatorów i szybkie wygrane
+
+- **Audyt** (ekspert od komunikacji wizualnej, sub-agent): oba ćwiczenia uczą kilku tematów naraz
+  (ARP: 19 pojęć, maska: 18) i nie mieszczą się na ekranie. Raport z makietami serii mikro-ćwiczeń:
+  `01-sieci/appka/audyt.md`. Decyzje: `01-sieci/appka/rejestr-pytan.md` (PYT-001, 002, 004, 005).
+- **Szybkie wygrane (PYT-005):** krótki nagłówek, ramka „Inny świat” jako rozwijana linia; ARP: tekst
+  kroku i przyciski obok diagramu – każdy krok mieści się w 1366×768 i 1280×720 bez przewijania;
+  opisy kroków i lekcji ≤ 40 słów (test w `pnpm build`); dawny Krok 4 ARP rozdzielony na dwa
+  (ARP Reply → Switch, Switch → Laptop), więc ARP ma teraz Kroki 1–6 – odsyłacz w Lab 1 Fazie 1
+  wskazuje Krok 6; maska: sterowanie w „Trybie swobodnym” (4 widoczne elementy zamiast 11);
+  pomarańczowy tylko dla Broadcastu; animacja ramki: 2 cykle i stop.
+- **Usunięte z ekranu:** zdanie o tablicy ARP Serwera NAS (tablicy nie było widać) i zdanie o reakcji
+  Windows/Linux na bramę spoza sieci (lekcja maski 3).
+
 ## 2026-11-17 — Wizualizacja maski podsieci (Filar 1)
 
 - **Nowa strona `01-sieci/symulator-maska.html`:** suwak maski /24–/30, wybór celu (Serwer NAS,
@@ -231,6 +258,7 @@ wg kolejności: jednoznaczność > poprawność > zwięzłość > styl.
   | maszyna                                      | VM, maszyna wirtualna (poza 1. wystąpieniem) |
   | migawka (VirtualBox: Snapshot)               | snapshot, punkt przywracania                 |
   | Dodatki gościa (VirtualBox: Guest Additions) | –                                            |
+  | płot (granica podsieci), działka (podsieć)   | wioska, dzielnica, kod pocztowy (o masce)    |
 
 ### Plan i status
 

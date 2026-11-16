@@ -50,7 +50,7 @@ _title: Lab 3: DHCP, DNS, Routing i NAT_
 
 _title: Symulator ARP i Unicast_
 
-- **H1** 🎬 Symulator: jak Laptop znajduje Serwer NAS
+- **H1** 🎬 Symulator ARP: jak Laptop znajduje Serwer NAS
 
 ## [`01-sieci/symulator-maska.html`](01-sieci/symulator-maska.html)
 

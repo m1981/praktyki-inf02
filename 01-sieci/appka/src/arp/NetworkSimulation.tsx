@@ -40,25 +40,57 @@ export default function NetworkSimulation() {
     </span>
    </div>
 
-   <div className="sim-stage">
+   {/* Tekst kroku i przyciski OBOK animacji: wzrok nie opuszcza jednego obszaru (audyt.md, rozdz. 2.4). */}
+   <div className="sim-stage sim-stage--steps">
     <Diagram nodes={nodes} edges={edges} />
 
-    <aside className="sim-side">
-     <FramePanel frame={step.frame} />
-     <TablesPanel arp={tables.arp} mac={tables.mac} />
-    </aside>
+    <section className="sim-step" aria-live="polite">
+     <div className="sim-step__meta">
+      <span className="sim-badge">
+       {isFirst ? 'Start' : `Krok ${stepIndex} z ${stepCount - 1}`}
+      </span>
+      <span className="sim-muted">{step.layer}</span>
+     </div>
+     <h2>{step.title}</h2>
+     <p>{step.description}</p>
+
+     <div className="sim-controls">
+      <button
+       type="button"
+       className="sim-btn"
+       onClick={() => dispatch({ type: 'RESET' })}
+       disabled={isFirst}
+       title="Wróć do początku"
+       aria-label="Wróć do początku"
+      >
+       <RotateCcw size={16} aria-hidden />
+      </button>
+      <button
+       type="button"
+       className="sim-btn"
+       onClick={() => dispatch({ type: 'PREV' })}
+       disabled={isFirst}
+      >
+       <ChevronLeft size={16} aria-hidden /> Wstecz
+      </button>
+      <button
+       type="button"
+       className="sim-btn sim-btn--primary"
+       onClick={() => dispatch({ type: 'NEXT' })}
+       disabled={isLast}
+      >
+       Następny krok <ChevronRight size={16} aria-hidden />
+      </button>
+     </div>
+     <span className="sim-muted sim-hint">Klawiatura: ← →</span>
+    </section>
    </div>
 
-   <section className="sim-step" aria-live="polite">
-    <div className="sim-step__meta">
-     <span className="sim-badge">{isFirst ? 'Start' : `Krok ${stepIndex} z ${stepCount - 1}`}</span>
-     <span className="sim-muted">{step.layer}</span>
-    </div>
-    <h2>{step.title}</h2>
-    <p>{step.description}</p>
-
+   <div className="sim-details">
+    <FramePanel frame={step.frame} />
+    <TablesPanel arp={tables.arp} mac={tables.mac} />
     {step.questions && (
-     <div className="sim-questions">
+     <section className="sim-panel sim-questions">
       <h3>❓ Sprawdź się</h3>
       {step.questions.map((q) => (
        <details key={q.question}>
@@ -66,39 +98,9 @@ export default function NetworkSimulation() {
         <p>{q.answer}</p>
        </details>
       ))}
-     </div>
+     </section>
     )}
-
-    <div className="sim-controls">
-     <button
-      type="button"
-      className="sim-btn"
-      onClick={() => dispatch({ type: 'RESET' })}
-      disabled={isFirst}
-      title="Wróć do początku"
-      aria-label="Wróć do początku"
-     >
-      <RotateCcw size={16} aria-hidden />
-     </button>
-     <button
-      type="button"
-      className="sim-btn"
-      onClick={() => dispatch({ type: 'PREV' })}
-      disabled={isFirst}
-     >
-      <ChevronLeft size={16} aria-hidden /> Poprzedni krok
-     </button>
-     <button
-      type="button"
-      className="sim-btn sim-btn--primary"
-      onClick={() => dispatch({ type: 'NEXT' })}
-      disabled={isLast}
-     >
-      Następny krok <ChevronRight size={16} aria-hidden />
-     </button>
-     <span className="sim-muted sim-hint">Klawiatura: ← →</span>
-    </div>
-   </section>
+   </div>
   </div>
  );
 }

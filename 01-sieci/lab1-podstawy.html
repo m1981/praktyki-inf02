@@ -28,7 +28,7 @@
       <strong>Cel:</strong> Zrozumienie, że urządzenia w tej samej podsieci nie potrzebują routera.
       <br />🎬 Zanim zaczniesz: przejdź wszystkie kroki w
       <a href="symulator-arp.html">Symulatorze ARP</a>. Krok 1 pokazuje decyzję „ta sama sieć”, Krok
-      5 – dane wysłane bez udziału routera.
+      6 – dane wysłane bez udziału routera.
      </div>
 
      <!-- SCHEMAT FAZA 1 -->
@@ -83,8 +83,9 @@
      <div class="conclusion-box">
       <div class="conclusion-icon">🧠</div>
       <div class="conclusion-text">
-       <strong>Wniosek:</strong> Switch łączy urządzenia fizycznie, ale to
-       <b>maska podsieci</b> decyduje o tym, kto z kim może rozmawiać. PC3 jest w innej "wiosce".
+       <strong>Wniosek:</strong> Switch łączy urządzenia fizycznie. <b>Maska podsieci</b> decyduje
+       tylko, czy nadawca wysyła ramkę bezpośrednio, czy przez bramę. PC3 stoi na innej działce (za
+       płotem sieci 192.168.1.0/24), a w tej fazie nie ma bramy – PC1 nie ma komu oddać ramki.
       </div>
      </div>
     </div>
@@ -239,8 +240,8 @@
       <div class="conclusion-icon">🗺️</div>
       <div class="conclusion-text">
        <strong>Wniosek:</strong>
-       Router połączył dwie różne "wioski". Kiedy PC1 wysyła pakiet do PC4, widzi, że to inna sieć,
-       więc przekazuje go do Bramy. <br />
+       Router połączył dwie działki (dwie sieci za płotem). Kiedy PC1 wysyła pakiet do PC4, widzi,
+       że to inna sieć, więc przekazuje go do Bramy. <br />
        <b>Ważne:</b> Pierwszy ping często kończy się błędem (<em>Request timed out</em>), ponieważ
        urządzenia muszą najpierw użyć protokołu <b>ARP</b>, aby poznać swoje adresy MAC na nowej
        trasie. Dopiero gdy tablice ARP się wypełnią, pakiety ping (ICMP) mogą swobodnie latać!

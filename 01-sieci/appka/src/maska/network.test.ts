@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { assertFlowsOnCables } from '../sim/graph';
+import { countWords, MAX_STEP_WORDS } from '../sim/words';
 import {
  broadcastOf,
  formatIp,
@@ -84,6 +85,13 @@ describe('decide – lekcje z gotowych przykładów', () => {
   expect(decide('nas', 'laptop', s).prefix).toBe(26);
   expect(decide('laptop', 'nas', s).prefix).toBe(24);
  });
+
+ it.each(PRESETS.map((p) => [p.title, p.lesson]))(
+  `%s – lekcja ma najwyżej ${MAX_STEP_WORDS} słów`,
+  (_title, lesson) => {
+   expect(countWords(lesson)).toBeLessThanOrEqual(MAX_STEP_WORDS);
+  }
+ );
 
  it('każdy gotowy przykład ma inne ustawienia', () => {
   const keys = PRESETS.map((p) => JSON.stringify(p.settings));

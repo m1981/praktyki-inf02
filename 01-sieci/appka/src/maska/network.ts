@@ -239,14 +239,14 @@ export const PRESETS: Preset[] = [
   title: '/26: brama za płotem',
   settings: { prefix: 26, target: 'nas', trap: false, phase: 'there' },
   lesson:
-   'Laptop jest w sieci .64–.127, a jego brama 10.10.10.1 leży w sieci .0–.63. Laptop nie może oddać ramki bramie, której nie ma w jego sieci. Windows pokazuje przy takiej konfiguracji ostrzeżenie, Linux odrzuca taką trasę. Naprawa: wpisz na Laptopie bramę z jego sieci – Router ma tam adres 10.10.10.65.'
+   'Laptop jest w sieci .64–.127, a jego brama 10.10.10.1 leży w sieci .0–.63. Laptop nie ma komu oddać ramki. Naprawa: wpisz na Laptopie bramę z jego sieci – Router ma tam adres 10.10.10.65.'
  },
  {
   id: 'trap',
   title: 'Pułapka: różne maski',
   settings: { prefix: 24, target: 'nas', trap: true, phase: 'back' },
   lesson:
-   'Tam: Laptop (/24) uważa Serwer NAS za „swojego” i wysyła bezpośrednio. Z powrotem: Serwer NAS (/26) uważa Laptop za „obcego” i odpowiada przez Router. Ruch krąży różnymi drogami. Gdyby Serwer NAS nie miał bramy, odpowiedź nie wróciłaby wcale – „ping nie odpowiada”, choć kabel jest dobry. Przełącz kierunek na „Tam” i porównaj.'
+   'Tam: Laptop (/24) uważa Serwer NAS za swojego i wysyła bezpośrednio. Z powrotem: Serwer NAS (/26) uważa Laptop za obcego i odpowiada przez Router. Bez bramy odpowiedź by nie wróciła. Kierunek zmienisz w Trybie swobodnym.'
  }
 ];
 

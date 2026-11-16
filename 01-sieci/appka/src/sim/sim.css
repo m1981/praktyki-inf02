@@ -360,3 +360,85 @@
   display: none;
  }
 }
+
+/* --- Kompaktowy nagłówek strony (audyt: nagłówek i „Inny świat” zajmowały pół ekranu) --- */
+header.sim-header {
+ margin-bottom: 8px;
+ padding: 0;
+}
+header.sim-header h1 {
+ font-size: 1.5rem;
+ margin-bottom: 2px;
+}
+.sim-note summary {
+ cursor: pointer;
+ color: var(--text-muted, #636e72);
+ font-size: 0.9rem;
+}
+.sim-note p {
+ max-width: 70ch;
+ margin: 6px auto 0;
+ font-size: 0.9rem;
+}
+header.sim-header + #breadcrumbs {
+ margin-bottom: 12px;
+ padding: 6px 12px;
+}
+.sim-page .sim {
+ margin-top: 0;
+}
+
+/* --- Kroki: tekst i przyciski obok diagramu, szczegóły pod spodem --- */
+.sim-stage--steps {
+ grid-template-columns: minmax(0, 1fr) 360px;
+}
+.sim-stage--steps .sim-canvas {
+ height: 340px;
+}
+.sim-stage--steps .sim-step {
+ display: flex;
+ flex-direction: column;
+}
+.sim-stage--steps .sim-step h2 {
+ font-size: 1.1rem;
+}
+.sim-stage--steps .sim-step p {
+ font-size: 0.95rem;
+}
+.sim-stage--steps .sim-controls {
+ margin-top: auto;
+ padding-top: 12px;
+}
+.sim-step > .sim-hint {
+ margin: 6px 0 0;
+}
+.sim-details {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+ gap: 16px;
+ align-items: start;
+}
+.sim-details .sim-questions {
+ margin-top: 0;
+}
+@media (max-width: 900px) {
+ .sim-stage--steps {
+  grid-template-columns: 1fr;
+ }
+}
+@media (max-width: 600px) {
+ .sim-stage--steps .sim-canvas {
+  height: 300px;
+ }
+}
+/* Trzy przyciski w jednym rzędzie kolumny 360 px */
+.sim-stage--steps .sim-btn {
+ padding: 8px 12px;
+}
+/* Prawa kolumna nie może rozpychać siatki (długie nagłówki wierszy łamią się) */
+.sim-side {
+ min-width: 0;
+}
+.sim-side .sim-table th[scope='row'] {
+ white-space: normal;
+}
