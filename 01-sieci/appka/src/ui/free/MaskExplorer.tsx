@@ -16,8 +16,9 @@ import { Diagram } from '../diagram/Diagram';
 import { buildEdges, buildNodes } from '../diagram/graph';
 import type { Cable, Device, DiagramState } from '../diagram/types';
 import { AddressLine } from '../panels/AddressLine';
-import { BitRuler } from '../panels/BitRuler';
-import { DecisionPanel } from '../panels/DecisionPanel';
+import { BitRuler, type BitTexts } from '../panels/BitRuler';
+import { DecisionPanel, type DecisionTexts } from '../panels/DecisionPanel';
+import { Rich } from '../text';
 import type { Pin } from '../views/FenceLine';
 import { initMaskState, matchingPreset, maskReducer, type Preset } from './maskState';
 
@@ -31,6 +32,12 @@ export interface MaskExplorerContent {
  diagram: (s: MaskSettings) => DiagramState;
  /** Urządzenia na osi adresów. */
  pins: readonly Pin[];
+ /** Podpowiedź, gdy ustawienia nie pasują do żadnego gotowego przykładu. */
+ freeHint: string;
+ /** Uwaga pod diagramem; `**…**` = pogrubienie. */
+ physicalNote: string;
+ decision: DecisionTexts;
+ bits: BitTexts;
 }
 
 const PREFIXES = Array.from({ length: MAX_PREFIX - MIN_PREFIX + 1 }, (_, i) => MIN_PREFIX + i);
@@ -85,9 +92,7 @@ export function MaskExplorer({ content }: { content: MaskExplorerContent }) {
       </span>
      </div>
      <p className="mk-physical">
-      🔌 <strong>Warstwa fizyczna się nie zmienia:</strong> wszystkie urządzenia wiszą na jednym
-      Switchu, a ramka Broadcast (np. ARP) nadal dociera do każdego. Maska nie stawia ściany w kablu
-      – zmienia tylko <strong>decyzję nadawcy</strong>: wysłać bezpośrednio czy przez bramę.
+      <Rich text={content.physicalNote} />
      </p>
     </div>
     <aside className="sim-side">
@@ -98,10 +103,10 @@ export function MaskExplorer({ content }: { content: MaskExplorerContent }) {
       </p>
      ) : (
       <p className="sim-muted mk-small" aria-live="polite">
-       Tryb swobodny: zmieniasz ustawienia ręcznie. Kliknij przykład, żeby wrócić do lekcji.
+       {content.freeHint}
       </p>
      )}
-     <DecisionPanel decision={decision} noReply={noReply} />
+     <DecisionPanel decision={decision} texts={content.decision} noReply={noReply} />
     </aside>
    </div>
 
@@ -189,6 +194,7 @@ export function MaskExplorer({ content }: { content: MaskExplorerContent }) {
     dstLabel={nameOf(dst)}
     dstIp={deviceIp(dst)}
     prefix={decision.prefix}
+    texts={content.bits}
    />
   </div>
  );

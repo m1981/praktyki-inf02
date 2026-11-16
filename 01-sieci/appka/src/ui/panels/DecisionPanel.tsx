@@ -1,25 +1,34 @@
 import { broadcastOf, formatIp, lastOctet } from '../../lib/ipv4';
 import { genitiveOf, nameOf } from '../../model/glossary';
 import { deviceIp } from '../../model/siec';
-import { GATEWAY, type Decision } from '../../net/mask';
+import { GATEWAY, type Decision, type Outcome } from '../../net/mask';
+import { fillNodes, fillText } from '../text';
+
+/** Zdania panelu decyzji – z `content/`. Pola: `{dst}`, `{gateway}`, `{src}`. */
+export interface DecisionTexts {
+ /** Werdykt dla każdego wyniku decyzji. */
+ verdict: Record<Outcome, string>;
+ /** Faza „Z powrotem”, gdy zapytanie nie wyszło z Laptopa. */
+ noReply: string;
+}
 
 interface DecisionPanelProps {
  decision: Decision;
+ texts: DecisionTexts;
  /** Faza „Z powrotem”, gdy zapytanie nie wyszło z Laptopa. */
  noReply: boolean;
 }
 
 /** Decyzja nadawcy krok po kroku – to samo, co „myśli” karta sieciowa przed wysłaniem ramki. */
-export function DecisionPanel({ decision: d, noReply }: DecisionPanelProps) {
+export function DecisionPanel({ decision: d, texts, noReply }: DecisionPanelProps) {
  const src = { label: nameOf(d.src), ip: deviceIp(d.src) };
  const dst = { label: nameOf(d.dst), ip: deviceIp(d.dst) };
  const local = d.outcome === 'direct';
 
- const verdict = {
-  direct: `${dst.label} jest w mojej sieci → wysyłam ramkę bezpośrednio, przez sam Switch.`,
-  'via-router': `${dst.label} jest poza moją siecią → oddaję ramkę bramie (Routerowi). Oba urządzenia wiszą na tym samym Switchu, a mimo to ramka robi objazd.`,
-  'gateway-outside': `${dst.label} jest poza moją siecią, a moja brama ${formatIp(d.gateway)} też jest poza nią → nie mam komu oddać ramki. Nic nie wychodzi z karty sieciowej.`
- }[d.outcome];
+ const verdict = fillText(texts.verdict[d.outcome], {
+  dst: dst.label,
+  gateway: formatIp(d.gateway)
+ });
 
  return (
   <section className="sim-panel">
@@ -80,8 +89,7 @@ export function DecisionPanel({ decision: d, noReply }: DecisionPanelProps) {
    </table>
    {noReply ? (
     <p className="mk-verdict mk-verdict--gateway-outside">
-     Brak odpowiedzi: zapytanie w ogóle nie wyszło z Laptopa (zobacz kierunek „Tam”). Pokazujemy
-     tylko, co zrobiłby {src.label}.
+     {fillNodes(texts.noReply, { src: src.label })}
     </p>
    ) : (
     <p className={`mk-verdict mk-verdict--${d.outcome}`}>{verdict}</p>

@@ -1,4 +1,5 @@
-// Treść Trybu swobodnego maski: gotowe przykłady z lekcjami oraz układ diagramu.
+// Treść Trybu swobodnego maski: gotowe przykłady z lekcjami, zdania paneli i układ diagramu.
+// Pola w klamrach (np. `{dst}`) wypełnia kod; `**tekst**` oznacza pogrubienie.
 
 import { formatIp } from '../lib/ipv4';
 import { deviceIp, ZONES } from '../model/siec';
@@ -43,5 +44,34 @@ export const FREE_MODE: MaskExplorerContent = {
  devicesFor,
  cables: CABLES,
  diagram: maskDiagram,
- pins: PINS
+ pins: PINS,
+
+ freeHint: 'Tryb swobodny: zmieniasz ustawienia ręcznie. Kliknij przykład, żeby wrócić do lekcji.',
+
+ physicalNote:
+  '🔌 **Warstwa fizyczna się nie zmienia:** wszystkie urządzenia wiszą na jednym Switchu, a ramka Broadcast (np. ARP) nadal dociera do każdego. Maska nie stawia ściany w kablu – zmienia tylko **decyzję nadawcy**: wysłać bezpośrednio czy przez bramę.',
+
+ // Panel „Decyzja nadawcy”: zdania wypowiada nadawca. {dst} = cel, {gateway} = brama, {src} = nadawca.
+ decision: {
+  verdict: {
+   direct: '{dst} jest w mojej sieci → wysyłam ramkę bezpośrednio, przez sam Switch.',
+   'via-router':
+    '{dst} jest poza moją siecią → oddaję ramkę bramie (Routerowi). Oba urządzenia wiszą na tym samym Switchu, a mimo to ramka robi objazd.',
+   'gateway-outside':
+    '{dst} jest poza moją siecią, a moja brama {gateway} też jest poza nią → nie mam komu oddać ramki. Nic nie wychodzi z karty sieciowej.'
+  },
+  noReply:
+   'Brak odpowiedzi: zapytanie w ogóle nie wyszło z Laptopa (zobacz kierunek „Tam”). Pokazujemy tylko, co zrobiłby {src}.'
+ },
+
+ // Panel „Bity”. {shared} = trzy pierwsze oktety, {mask} = maska dziesiętnie, {bit} = numer bitu.
+ bits: {
+  intro:
+   'Pierwsze 3 oktety ({shared}) są takie same u wszystkich i w całości należą do sieci. Pokazujemy tylko ostatni oktet. Maska **{mask}**: jedynki = bity sieci (kolorowe), zera = bity hosta (szare).',
+  noNetBits:
+   'Maska /24 nie zabiera żadnego bitu z ostatniego oktetu. Liczą się tylko pierwsze 3 oktety ({shared}), a te są takie same → ta sama sieć.',
+  different: 'Bit nr {bit} ostatniego oktetu jest różny (czerwony) → różne sieci.',
+  same: 'Wszystkie {count} {bits} sieci w ostatnim oktecie są takie same → ta sama sieć.',
+  bitForms: ['bit', 'bity', 'bitów']
+ }
 };

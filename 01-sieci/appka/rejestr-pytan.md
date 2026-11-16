@@ -49,6 +49,12 @@ zob. PYT-004).
 | PYT-039 | decyzja    | zamknięte (a)    | Laby w `plan.md` jako uzupełnienie, poza ramą ZS1              |
 | PYT-040 | decyzja    | zamknięte (a)    | Commit i push wejść i metafor na `main`                        |
 | PYT-041 | decyzja    | zamknięte (a)    | `.btn-primary` jako `inline-block` w `common.css`              |
+| PYT-042 | decyzja    | zamknięte (a)    | Usuwanie zastąpionych plików źródłowych w `src/` w etapie B    |
+| PYT-043 | decyzja    | zamknięte (→046) | Scalenie etapu B do `main` i push po przeglądzie               |
+| PYT-044 | z-domyslna | zamknięte (a)    | Linia `Co-Authored-By` w commitach etapu B                     |
+| PYT-045 | decyzja    | zamknięte (a)    | Uwagi 2 i 3 z przeglądu etapu A jako pierwszy krok etapu C     |
+| PYT-046 | decyzja    | zamknięte (→047) | Etap B na `main`, gdy fast-forward jest niemożliwy             |
+| PYT-047 | decyzja    | otwarte          | Push etapu B po rebase na `main`                               |
 
 ## Pytania
 
@@ -330,6 +336,7 @@ zob. PYT-004).
 - **Stan (2026-11-16):** etap A wykonany w nowej sesji na polecenie operatora („wykonaj etap A”),
   bez commita; zmiany leżą na dysku w katalogu roboczym gałęzi `main`.
 - **Odpowiedź (2026-11-16):** „wszystko a” → (a)
+- **Wykonanie:** gałąź `refaktor-silnik`: `076f1f7` (krok 1), `f504a8e` (krok 2), `286bef2` (poprawka dat).
 
 ### PYT-025 · decyzja · zamknięte
 
@@ -345,6 +352,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a) – kopia zlecenia poza komputerem.
 - **Skutek braku odpowiedzi:** commit zostaje lokalnie.
 - **Odpowiedź (2026-11-16):** „wszystko a” → (a)
+- **Wykonanie:** push `bb21569..286bef2` (zawiera `dd0c904`).
 
 ### PYT-027 · z-domyslna · zamknięte
 
@@ -368,6 +376,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a) – krótko żyjąca gałąź, mniejsze ryzyko konfliktów; uczeń nie widzi zmian.
 - **Skutek braku odpowiedzi:** etap A zostaje na gałęzi.
 - **Odpowiedź (2026-11-16):** „wszystko a” → (a)
+- **Wykonanie:** `main` przesunięty fast-forward na `286bef2`; gałąź `refaktor-silnik` zostaje (usunięcie wymaga zgody).
 
 ### PYT-029 · decyzja · zamknięte
 
@@ -505,3 +514,84 @@ zob. PYT-004).
 - **Rekomendacja:** (a), osobnym commitem.
 - **Skutek braku odpowiedzi:** bez zmian.
 - **Odpowiedź (2026-11-17):** „41a” → (a)
+
+Numeracja: pytania PYT-042–045 powstały w sesji refaktoru jako PYT-029–032. Te numery były już
+zajęte na `main` (laby VLAN), więc przy rebase dostały nowe. Operator odpowiadał na stare numery –
+odpowiedź jest zapisana dosłownie.
+
+### PYT-042 · decyzja · zamknięte
+
+- **Kontekst:** etap B przenosi kod z `src/arp`, `src/maska` i `src/sim` do warstw z
+  `architektura.md` (`lib`, `engine`, `ui`, `content`, `pages`). Stare pliki znikają ze starych
+  ścieżek; treść zostaje w nowych plikach i w historii git. Kontrakt (rozdz. 3) i uwaga 9 z przeglądu
+  etapu A wymagają zgody na usuwanie plików.
+- **Opcje:** (a) wolno przenosić i usuwać zastąpione pliki tylko w `01-sieci/appka/src`, lista w
+  meldunku; (b) tylko przenoszenie (`git mv`), pliki bez następcy zostają jako martwy kod;
+  (c) nic nie usuwać – nowy kod obok starego do końca etapu.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie zaczynam kroku 3.
+- **Odpowiedź (2026-11-16):** „Tak, w obrębie src/ (Recommended)” → (a)
+- **Wykonanie:** ze starych ścieżek zniknęły katalogi `src/arp`, `src/maska`, `src/sim` i plik
+  `src/net/ipMath.ts`. Bez następcy pod nową ścieżką: `src/arp/reducer.ts` (zastąpiony przez
+  `engine/nav.ts`) i `src/arp/scenario.test.ts` (zastąpiony przez `content/content.test.ts`).
+  Pozostałe pliki przeniesione (`git mv`) albo rozdzielone na nowe moduły.
+
+### PYT-043 · decyzja · zamknięte
+
+- **Kontekst:** etap B (kroki 3–5) jest na lokalnej gałęzi `refaktor-silnik`, 3 commity po
+  `286bef2`. Strony dla ucznia są takie same jak na `main` (42 stany: tekst co do znaku, obraz
+  0,0000% różnych pikseli).
+- **Opcje:** (a) po Twoim przeglądzie scalić do `main` (fast-forward) i wypchnąć; (b) trzymać gałąź
+  do końca etapu C.
+- **Rekomendacja:** (a) – jak w PYT-028: krótko żyjąca gałąź, uczeń nie widzi zmian.
+- **Skutek braku odpowiedzi:** etap B zostaje tylko na lokalnej gałęzi.
+- **Odpowiedź (2026-11-19):** „30 a 32a 31 a” → (a)
+- **Wykonanie:** fast-forward okazał się niemożliwy (43 nowe commity na `origin/main`) – dalszy ciąg
+  w PYT-046.
+
+### PYT-044 · z-domyslna · zamknięte
+
+- **Kontekst:** zlecenie każe kończyć commit linią `Co-Authored-By: Claude Opus 5.5`. Etap B wykonał
+  model Claude Fable 5.2, więc w 3 commitach etapu B wpisałem jego nazwę.
+- **Opcje:** (a) zostaje nazwa modelu, który wykonał pracę; poprawiam zdanie w zleceniu;
+  (b) zmieniam linię w 3 lokalnych commitach na „Claude Opus 5.5” (przed scaleniem).
+- **Rekomendacja:** (a) – linia ma mówić prawdę o autorze.
+- **Skutek braku odpowiedzi:** zostaje (a), tymczasowo (PYT-044); zlecenia nie zmieniam.
+- **Odpowiedź (2026-11-19):** „30 a 32a 31 a” → (a)
+- **Wykonanie:** zdanie o linii `Co-Authored-By` w `zlecenie-refaktor.md` poprawione.
+
+### PYT-045 · decyzja · zamknięte
+
+- **Kontekst:** uwagi 2 i 3 z przeglądu etapu A są konieczne przed etapem C: Broadcast ma
+  zatrzymywać się na Routerze (`net/path.floodPath`), a kabel ma mieć port po obu stronach
+  (`model.switchPort`). Dziś nie zmieniają ekranu, bo Router jest liściem.
+- **Opcje:** (a) zrobić je jako pierwszy, osobny commit etapu C, z testami i dowodem „zrzuty przed =
+  po”; (b) zrobić razem ze zmianą danych na plan ZS1 (krok 6).
+- **Rekomendacja:** (a) – osobny commit bez zmiany treści łatwiej przejrzeć, a krok 6 zostaje
+  „zmianą jednego pliku danych”.
+- **Skutek braku odpowiedzi:** nie zaczynam etapu C.
+- **Odpowiedź (2026-11-19):** „30 a 32a 31 a” → (a)
+
+### PYT-046 · decyzja · zamknięte
+
+- **Kontekst:** przed scaleniem etapu B okazało się, że `origin/main` ma 43 nowe commity (laby VLAN
+  i podsieci z PR #1 i #2, wejścia do labów, `common.css`, rejestr do PYT-041). Fast-forward z
+  PYT-043a jest niemożliwy; konflikty w `plan.md` i `rejestr-pytan.md`, kod bez konfliktów.
+- **Opcje:** (a) rebase 3 commitów na `origin/main`, ponowna weryfikacja, `main` i push; (b) commit
+  scalający i push; (c) rebase i weryfikacja lokalnie, bez push.
+- **Rekomendacja:** (a) – historia liniowa, opisy commitów z poprawną numeracją pytań.
+- **Skutek braku odpowiedzi:** etap B zostaje na lokalnej gałęzi.
+- **Odpowiedź (2026-11-19):** „Kurcze, musialem cos grzebac, zrob rebase i sprawdz co to jest ” →
+  rebase i sprawdzenie, co jest na `origin/main`. O push odpowiedź nie mówi – węższe pytanie: PYT-047.
+- **Wykonanie:** rebase na `4b5ce08`. Nowe commity na `origin/main` to praca operatora z innej sesji
+  agenta: 41 commitów z 2026-11-16 i 2026-11-17 oraz 2 scalenia PR (#1, #2 „laby-vlan”) wykonane
+  przez operatora na GitHubie. Stary koniec gałęzi jest zachowany lokalnie pod znacznikiem
+  `przed-rebase-etap-b`.
+
+### PYT-047 · decyzja · otwarte
+
+- **Kontekst:** po rebase etap B leży na lokalnej gałęzi `refaktor-silnik`, wprost na `origin/main`.
+  Weryfikacja powtórzona na nowej bazie (wynik w meldunku).
+- **Opcje:** (a) przesunąć `main` na koniec gałęzi (fast-forward) i wypchnąć; (b) zostawić lokalnie.
+- **Rekomendacja:** (a) – zgodnie z PYT-035b praca idzie na `main`; uczeń nie widzi zmian.
+- **Skutek braku odpowiedzi:** etap B zostaje tylko na tym komputerze.

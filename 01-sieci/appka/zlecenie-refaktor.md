@@ -1,6 +1,6 @@
 # Zlecenie: refaktor symulatorów (dla sub-agenta albo nowej sesji)
 
-Status: etap A wykonany 2026-11-16, bez commita (PYT-024 otwarte); następny: etap B w nowej sesji. Otwarte: PYT-024 (commity na gałęzi `refaktor-silnik`), PYT-026 (push `dd0c904`), PYT-027 (nagłówki stron z adresem 10.10.10.0/24).
+Status: etapy A i B wykonane 2026-11-16. Etap A jest na `main`; etap B (kroki 3–5) jest po rebase na `origin/main` i czeka na push (PYT-047). Następny: etap C, po przeglądzie. Stan uwag z przeglądu etapu A: sekcja na końcu pliku.
 
 Ten plik to kompletny brief. Wykonawca nie zna wcześniejszej rozmowy – wszystko, czego potrzebuje,
 jest tu i w plikach, które wskazuje.
@@ -37,7 +37,8 @@ nie psuła porównania; porównanie pikselowe, np. `pixelmatch`, tolerancja ≤ 
   (bez `common.css`, `menu.js`, labów, `topology.html`).
 - Commit: tylko na gałęzi roboczej `refaktor-silnik`, jeden commit na krok migracji, **bez push i bez
   scalania do `main`** (kontrakt, rozdz. 3). Wiadomość commita po angielsku, w trybie rozkazującym,
-  z linią `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+  z linią `Co-Authored-By` podającą model, który wykonał pracę (PYT-044a), np.
+  `Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>`.
 - Nie usuwasz plików bez zgody operatora (kontrakt, rozdz. 3). `przyklad.md` i `kontrakt.md` nie ruszasz.
 - Nie dodawaj zależności poza: `pixelmatch`, `pngjs` (porównanie zrzutów), `puppeteer-core` (e2e).
 - Teksty dla ucznia przenosisz do `content/` **bez zmiany ani jednego słowa** (test porównuje).
@@ -70,3 +71,17 @@ Przegląd potwierdził: tsc bez błędów, 87/87 testów, e2e 63 pomiary, 42 sta
 | 7   | Brak testu „tylko nazwy ze słownika” w zdaniach dla ucznia (agent to zgłosił) – dodać przy przenoszeniu treści do `content/`.                                                                                                                                                   | etap B                     |
 | 8   | `ipMath.firstThreeOctets` i `BitRuler` zakładają maski /24–/30. Widok „cała firma /16” (PYT-015a) wymaga uogólnienia.                                                                                                                                                           | etap C                     |
 | 9   | Zlecenie pozwalało usuwać pliki w `e2e/`, a kontrakt (rozdz. 3) wymaga zgody na usuwanie. Błąd zlecenia (autor: agent poprzedniej sesji). Usunięte `e2e/z-sesji/` jest w historii (`dd0c904`). Od teraz obowiązuje kontrakt.                                                    | od razu                    |
+
+## Stan uwag po etapie B (2026-11-16)
+
+| #   | Stan                                                                                                                                     |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Zrobione: `src/lib/ipv4.ts`; kierunku zależności pilnuje `src/warstwy.test.ts`.                                                          |
+| 2   | Otwarte – przed etapem C (PYT-045).                                                                                                      |
+| 3   | Otwarte – przed etapem C (PYT-045).                                                                                                      |
+| 4   | Zrobione: `net/arp.ts` – `Learn = { device, arp }` albo `{ device, mac }`, funkcje `arpTableAt` i `macTableAt` dla dowolnego urządzenia. |
+| 5   | Zrobione: `net/mask.ts` nie zna kabli ani kart; układ jest w `content/maska-uklad.ts`.                                                   |
+| 6   | Otwarte – etap C. Test `niezmiennosc.test.ts` przepisuje nowy kształt danych na stary, żeby porównać go z niezmienionym wzorcem.         |
+| 7   | Zrobione: `content/content.test.ts`, grupa „nazwy urządzeń tylko ze słownika”.                                                           |
+| 8   | Otwarte – etap C.                                                                                                                        |
+| 9   | Zastosowane: usuwanie plików tylko za zgodą (PYT-042, zakres: `src/`).                                                                   |

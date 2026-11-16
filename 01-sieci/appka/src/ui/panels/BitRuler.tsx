@@ -7,6 +7,21 @@ import {
  octetBits,
  type Ip
 } from '../../lib/ipv4';
+import { fillText, plural, Rich } from '../text';
+
+/** Zdania panelu bitów – z `content/`. */
+export interface BitTexts {
+ /** Wstęp nad tabelą. Pola: `{shared}`, `{mask}`; `**…**` = pogrubienie. */
+ intro: string;
+ /** Maska nie zabiera bitów z ostatniego oktetu. Pole: `{shared}`. */
+ noNetBits: string;
+ /** Pierwszy różny bit sieci. Pole: `{bit}`. */
+ different: string;
+ /** Wszystkie bity sieci takie same. Pola: `{count}`, `{bits}`. */
+ same: string;
+ /** Odmiana słowa „bit”: 1, 2–4, 5 i więcej. */
+ bitForms: readonly [string, string, string];
+}
 
 interface BitRulerProps {
  srcLabel: string;
@@ -15,16 +30,11 @@ interface BitRulerProps {
  dstIp: Ip;
  /** Maska nadawcy. */
  prefix: number;
-}
-
-function bitsWord(n: number): string {
- if (n === 1) return 'bit';
- if (n >= 2 && n <= 4) return 'bity';
- return 'bitów';
+ texts: BitTexts;
 }
 
 /** Widok A: ostatni oktet w bitach. Bity sieci są kolorowe, różne bity sieci – czerwone. */
-export function BitRuler({ srcLabel, srcIp, dstLabel, dstIp, prefix }: BitRulerProps) {
+export function BitRuler({ srcLabel, srcIp, dstLabel, dstIp, prefix, texts }: BitRulerProps) {
  const netBits = prefix - 24; // ile bitów ostatniego oktetu należy do sieci
  const src = octetBits(lastOctet(srcIp));
  const dst = octetBits(lastOctet(dstIp));
@@ -42,21 +52,18 @@ export function BitRuler({ srcLabel, srcIp, dstLabel, dstIp, prefix }: BitRulerP
 
  let verdict: string;
  if (netBits === 0) {
-  verdict = `Maska /24 nie zabiera żadnego bitu z ostatniego oktetu. Liczą się tylko pierwsze 3 oktety (${shared}), a te są takie same → ta sama sieć.`;
+  verdict = fillText(texts.noNetBits, { shared });
  } else if (firstDiff >= 0) {
-  verdict = `Bit nr ${firstDiff + 1} ostatniego oktetu jest różny (czerwony) → różne sieci.`;
+  verdict = fillText(texts.different, { bit: firstDiff + 1 });
  } else {
-  verdict = `Wszystkie ${netBits} ${bitsWord(netBits)} sieci w ostatnim oktecie są takie same → ta sama sieć.`;
+  verdict = fillText(texts.same, { count: netBits, bits: plural(netBits, texts.bitForms) });
  }
 
  return (
   <section className="sim-panel">
    <h3>🔢 Bity: jak to liczy komputer</h3>
    <p className="sim-muted mk-small">
-    {/* Jeden napis, a nie trzy kawałki: przeglądarka składa wtedy tekst tak samo jak przed zmianą. */}
-    {`Pierwsze 3 oktety (${shared}) są takie same u wszystkich i w całości należą do sieci. Pokazujemy tylko ostatni oktet. Maska `}
-    <strong>{formatIp(maskOf(prefix))}</strong>: jedynki = bity sieci (kolorowe), zera = bity hosta
-    (szare).
+    <Rich text={fillText(texts.intro, { shared, mask: formatIp(maskOf(prefix)) })} />
    </p>
    <div className="mk-scroll">
     <table className="mk-bits">

@@ -43,7 +43,18 @@ const sentences: [string, string][] = [
  ...PRESETS.flatMap((p): [string, string][] => [
   [`przykład ${p.id} tytuł`, p.title],
   [`przykład ${p.id} lekcja`, p.lesson]
- ])
+ ]),
+ ['Tryb swobodny: podpowiedź', FREE_MODE.freeHint],
+ ['Tryb swobodny: uwaga pod diagramem', FREE_MODE.physicalNote],
+ ...Object.entries(FREE_MODE.decision.verdict).map(([k, text]): [string, string] => [
+  `Tryb swobodny: werdykt ${k}`,
+  text
+ ]),
+ ['Tryb swobodny: brak odpowiedzi', FREE_MODE.decision.noReply],
+ ['Tryb swobodny: bity – wstęp', FREE_MODE.bits.intro],
+ ['Tryb swobodny: bity – maska /24', FREE_MODE.bits.noNetBits],
+ ['Tryb swobodny: bity – różne', FREE_MODE.bits.different],
+ ['Tryb swobodny: bity – takie same', FREE_MODE.bits.same]
 ];
 
 describe('treść kursów', () => {
