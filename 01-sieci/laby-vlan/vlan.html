@@ -96,6 +96,25 @@
   .dlg{gap:10px}
   .dlg .keys{font-size:11px;color:var(--muted)}
   .hl{fill:none;stroke:var(--accent);stroke-width:3;animation:fade .3s}
+  .lit{opacity:0;animation:litA .2s ease-out forwards}
+  @keyframes litA{to{opacity:1}}
+  .pingD{fill:none;stroke:var(--accent);stroke-width:3;opacity:0;animation:pingD .8s ease-out both}
+  @keyframes pingD{0%{r:6;opacity:1}100%{r:20;opacity:0}}
+  .pulseP{fill:none;stroke:var(--accent);stroke-width:2;animation:pulseP 1.3s ease-in-out infinite}
+  @keyframes pulseP{0%,100%{opacity:.25}50%{opacity:1}}
+  .fadeout{animation:fadeout 1.6s ease-in forwards}
+  @keyframes fadeout{0%,40%{opacity:1}100%{opacity:0}}
+  .metric.hot{border-left-color:var(--accent);background:var(--accent-bg);animation:hotA 1s ease-in-out 3}
+  @keyframes hotA{50%{transform:scale(1.04)}}
+  .dlg .scene{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .dlg .who .av{color:#1d1d1b;font-weight:800}
+  .dlg .quiz{display:flex;flex-direction:column;gap:6px}
+  .dlg .quiz button{font:inherit;font-size:14px;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid var(--btn);box-shadow:0 2px 0 var(--btn);background:var(--bg);color:var(--ink);cursor:pointer}
+  .dlg .quiz button.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 15%,var(--bg))}
+  .dlg .quiz button.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--bg))}
+  .dlg .fb{font-size:13px;color:var(--bad);animation:fade .3s}
+  .dlg .fb.ok{color:var(--good);font-weight:600}
+  @media (prefers-reduced-motion:reduce){.lit{animation:none;opacity:1}.pingD,.pulseP{animation:none}.fadeout{animation:none;opacity:.4}}
   @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
   /* svg */
@@ -161,7 +180,7 @@
   };
   const st = { tab:0, mode:[0,0,0,0],
     s2:{ step:0, timer:null },
-    s3:{ it:7, ks:5, kd:4, gs:6 }, s3step:[0,0],
+    s3:{ it:7, ks:5, kd:4, gs:6 }, s3step:[0,0], s3dir:0, s3quiz:null,
     s4:{ bcast:0, intruder:false } };
 
   /* ---------- drawing helpers ---------- */
@@ -426,37 +445,80 @@
         rows.push({ label:`switch wspólny #${s + 1} (VLAN 10/20/30/40)`, ports: Array.from({length:24}, (_, i) => part[i] || null), used: part.length });
       }
     }
+    // drawing order: the "ghost" (switch still to be bought) sits where IT #2 will appear
+    const draw = rows.slice();
+    if (!mode && c.ghost) draw.splice(1, 0, { ghost:true });
+    const Y = i => 20 + i * 62;
     let g = '', hitRow = -1, hitIdx = -1;
     if (c.last){
-      if (!mode){ rows.forEach((r, i) => { if (r.k === c.last){ hitRow = i; hitIdx = r.used - 1; } }); }
+      if (!mode){ draw.forEach((r, i) => { if (r.k === c.last){ hitRow = i; hitIdx = r.used - 1; } }); }
       else { let n = -1; for (const k of order){ n += c[k]; if (k === c.last) break; } hitRow = Math.floor(n / 24); hitIdx = n % 24; }
     }
-    rows.forEach((r, i) => {
-      const s = sw(30, 20 + i * 62, r.ports, 12, '', { pw:16, ph:12, gap:5 });
-      if (i === hitRow && hitIdx >= 0){ const pt = s.port(hitIdx); var ring = `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`; }
-      let hl = ''; const hi = c.hi || [];
-      if (!mode && hi.includes(r.k)) hl = `<rect x="${30 - 5}" y="${20 + i * 62 - 5}" width="${s.w + 10}" height="${s.h + 10}" rx="7" class="hl"/>`;
-      if (mode) r.ports.forEach((col, pi) => { if (col && hi.some(k => D[k].c === col)){ const pt = s.port(pi); hl += `<rect x="${pt.x - 10}" y="${pt.y - 8}" width="20" height="16" rx="3" class="hl" style="stroke-width:2"/>`; } });
-      g += s.svg + hl + (i === hitRow && hitIdx >= 0 ? ring : '') + `<text x="${30 + s.w + 14}" y="${20 + i * 62 + 18}" class="lbl">${r.label}</text>
-        <text x="${30 + s.w + 14}" y="${20 + i * 62 + 35}" class="lbls">zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
+    const hi = c.hi || [];
+    let kdPort = null, itRowY = Y(0);
+    draw.forEach((r, i) => {
+      const y = Y(i);
+      if (r.ghost){
+        const gw = 12 * 21 - 5 + 16, gh = 2 * 17 - 5 + 14;
+        g += `<rect x="30" y="${y}" width="${gw}" height="${gh}" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" class="appear"/>
+          <text x="${30 + gw / 2}" y="${y + gh / 2 + 5}" class="lbls" text-anchor="middle">?</text>
+          <text x="${30 + gw + 14}" y="${y + 18}" class="lbl" style="fill:var(--muted)">switch: IT #2</text>
+          <text x="${30 + gw + 14}" y="${y + 35}" style="fill:var(--accent);font-size:11px;font-weight:700">do kupienia</text>`;
+        return;
+      }
+      // sequential lighting of new IT ports (only when stepping forward)
+      const anim = !mode && r.k === 'it' && c.fill && st.s3dir > 0 && i === 0;
+      const ports = anim ? r.ports.map((col, pi) => pi >= c.fill[0] ? null : col) : r.ports;
+      const s = sw(30, y, ports, 12, '', { pw:16, ph:12, gap:5 });
+      g += s.svg;
+      if (anim){
+        for (let pi = c.fill[0]; pi < c.fill[1]; pi++){
+          const pt = s.port(pi), d = (pi - c.fill[0]) * 0.22;
+          g += `<rect x="${pt.x - 8}" y="${pt.y - 6}" width="16" height="12" rx="1.5" fill="${D.it.c}" class="lit" style="animation-delay:${d}s"/>
+                <circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingD" style="animation-delay:${d}s"/>`;
+        }
+      }
+      if (!mode && hi.includes(r.k)) g += `<rect x="25" y="${y - 5}" width="${s.w + 10}" height="${s.h + 10}" rx="7" class="hl"/>`;
+      if (mode) r.ports.forEach((col, pi) => { if (col && hi.some(k => D[k].c === col)){ const pt = s.port(pi); g += `<rect x="${pt.x - 10}" y="${pt.y - 8}" width="20" height="16" rx="3" class="hl" style="stroke-width:2"/>`; } });
+      // pulsing free ports
+      if (!mode && (c.pulse === 'all' || (c.pulse === r.k))){
+        r.ports.forEach((col, pi) => { if (!col){ const pt = s.port(pi); g += `<rect x="${pt.x - 9}" y="${pt.y - 7}" width="18" height="14" rx="2.5" class="pulseP" style="animation-delay:${(pi % 12) * 0.04}s"/>`; } });
+      }
+      if (i === hitRow && hitIdx >= 0){ const pt = s.port(hitIdx); g += `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`; }
+      if (!mode && c.power) g += `<text x="14" y="${y + 28}" class="appear" style="font-size:15px" text-anchor="middle">⚡</text>`;
+      const full = r.used >= 24;
+      g += `<text x="${30 + s.w + 14}" y="${y + 18}" class="lbl">${r.label}</text>
+        <text x="${30 + s.w + 14}" y="${y + 35}" class="${full && !mode ? 'bad-txt' : 'lbls'}">zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
+      if (!mode && r.k === 'kd'){ kdPort = s.port(r.used); if (c.badge) g += `<g class="appear"><rect x="${30 + s.w + 150}" y="${y + 4}" width="92" height="24" rx="12" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="${30 + s.w + 196}" y="${y + 21}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:var(--ink)">📁 wypłaty</text></g>`; }
     });
-    return { svg: svgWrap(590, Math.max(340, 30 + rows.length * 62), g), rows };
+    // the new IT person waiting for a port, and the "trial" cable to the Kadry switch
+    if (!mode && c.pc && c.pc !== 'none'){
+      const px = 548, py = itRowY + 16;
+      const col = c.pc === 'kd' ? D.kd.c : D.it.c;
+      if (kdPort && (c.pc === 'trial' || c.pc === 'kd' || c.pc === 'cancel')){
+        const path = `M${px - 18} ${py + 4}C${px - 120} ${py + 20} ${kdPort.x + 60} ${kdPort.y - 90} ${kdPort.x} ${kdPort.y}`;
+        if (c.pc === 'cancel'){
+          g += `<path d="${path}" fill="none" stroke="var(--bad)" stroke-width="3" stroke-dasharray="7 5" class="fadeout"/>`;
+          const mx = (px - 18 + kdPort.x) / 2 + 20, my = (py + kdPort.y) / 2 - 20;
+          g += `<text x="${mx}" y="${my}" text-anchor="middle" class="fadeout" style="font-size:30px;font-weight:800;fill:var(--bad)">✕</text>`;
+        } else {
+          g += `<path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-dasharray="7 5" class="appear"/>`;
+          if (c.pc === 'kd') g += `<rect x="${kdPort.x - 8}" y="${kdPort.y - 6}" width="16" height="12" rx="1.5" fill="${D.kd.c}" class="appear"/><circle cx="${kdPort.x}" cy="${kdPort.y}" r="6" class="pingS" style="stroke:${D.kd.c}"/>`;
+        }
+      }
+      const blink = c.pc === 'wait' || c.pc === 'cancel';
+      g += `<g class="${blink ? 'blink' : 'appear'}">${pc(px, py, col, '')}</g>`;
+      g += `<text x="${px}" y="${py + 30}" text-anchor="middle" class="${c.pc === 'kd' ? 'lbl' : 'bad-txt'}">${c.pc === 'kd' ? 'w sieci kadr!' : 'brak portu'}</text>`;
+      g += `<text x="${px}" y="${py - 20}" text-anchor="middle" class="lbls">nowa osoba z IT</text>`;
+    }
+    return { svg: svgWrap(620, Math.max(340, 30 + draw.length * 62), g), rows };
   }
 
   const B = { it:7, ks:5, kd:4, gs:6 };
   const B25 = {...B, it:25}, ALL = ['it','ks','kd','gs'];
   // Ola speaks; the "next" button is the student's own reply (r), so every step is a real exchange.
   const S3STORY = [
-    [ { t:'Dzień dobry, nazywam się Ola i administruję siecią w tej firmie. Opowiem, co wydarzyło się u nas w zeszłym tygodniu. 🙂', r:'Chętnie posłucham.', c:B },
-      { t:'Zacznę od tego, jak wyglądała nasza szafa sieciowa. Mieliśmy cztery działy, a każdy dział miał własną sieć i własny switch.', r:'Dlaczego każdy dział miał osobny switch?', c:B, hi:ALL },
-      { t:'Sieci musiały być rozdzielone, żeby na przykład księgowość nie widziała ruchu kadr. Bez VLAN-ów jedynym sposobem na osobną sieć był osobny switch.', r:'Czy te switche były dobrze wykorzystane?', c:B },
-      { t:'Niestety nie. W Kadrach pracowały cztery osoby, więc na ich switchu dwadzieścia portów stało pustych. 😕', r:'Co wydarzyło się w zeszłym tygodniu?', c:B, hi:['kd'] },
-      { t:'W poniedziałek dział IT zatrudnił dziesięć nowych osób. Podłączyłam je do switcha IT i wciąż zostało na nim trochę miejsca.', r:'Czy na tym się skończyło?', c:{...B, it:17}, last:'it' },
-      { t:'W środę do IT dołączyło kolejnych siedem osób. Po ich podłączeniu switch IT był pełny: zajęte były wszystkie 24 porty. 😬', r:'Co się stało, gdy przyszedł ktoś jeszcze?', c:{...B, it:24}, last:'it' },
-      { t:'W piątek IT zatrudniło dwudziestą piątą osobę i nie miałam już dla niej wolnego portu. Musiałam zamówić cały nowy switch dla jednego pracownika. 😩', r:'Dlaczego nie można było użyć wolnych portów w Kadrach?', c:B25, last:'it', hi:['it'] },
-      { t:'Komputer wpięty do switcha Kadr znalazłby się w sieci Kadr i miałby dostęp między innymi do listy płac. Dlatego 57 wolnych portów w pozostałych działach było dla mnie bezużytecznych.', r:'Jak wyglądał bilans po tym tygodniu?', c:B25, hi:['ks','kd','gs'] },
-      { t:'Tydzień skończyliśmy z pięcioma switchami, na których zajęty był tylko co trzeci port. 😞', r:'Czy dało się to rozwiązać lepiej?', c:B25 },
-      { t:'Tak, i właśnie dlatego wdrożyliśmy VLAN-y. Za chwilę pokażę, jak ten sam tydzień wyglądał już z nimi. 🙂', r:'Zobacz to samo z VLAN-ami ▶', c:B25 } ],
+    null,
     [ { t:'Dzień dobry, nazywam się Ola i administruję siecią w tej firmie. Opowiem, jak wyglądał taki sam tydzień już po wdrożeniu VLAN-ów. 🙂', r:'Chętnie posłucham.', c:B },
       { t:'Wcześniej każdy dział miał własny, w połowie pusty switch. Po wdrożeniu VLAN-ów te same cztery działy zmieściły się na jednym. 😊', r:'Jak cztery sieci mogły działać na jednym switchu?', c:B },
       { t:'Każdemu portowi przypisałam numer VLAN-u, który na rysunku oznacza kolor. Porty w różnych kolorach nie widziały się nawzajem, chociaż były w tym samym urządzeniu.', r:'A co z prawie pustym switchem Kadr?', c:B, hi:ALL },
@@ -467,7 +529,57 @@
       { t:'Tydzień skończyliśmy z dwoma switchami zamiast pięciu, a zajętych było 40 z 48 portów. 😊', r:'Czy lista płac nadal była bezpieczna?', c:B25 },
       { t:'Tak, ponieważ ruch między VLAN-ami nie przechodzi bez routera. O tym, jak działa taki router, opowiem przy innej okazji. 🙂', r:'↺ Porównaj: przed VLAN-ami', c:B25 } ]
   ];
+  // Scene "Biuro, rok 1996" — lines verbatim from scenariusze/klopot3-rok-1996.md
+  const W = { pc:'wait', ghost:true };
+  const S1996 = [
+    { who:'ola',    t:'Rok 1996. Cztery działy, cztery switche. Na razie wszystko gra.', c:{ it:10 } },
+    { who:'ola',    t:'Zatrudniamy w IT. Mam podpiąć siedem gniazdek.', c:{ it:17, fill:[10,17] } },
+    { who:'ola',    t:'Druga grupa. Kolejne siedem gniazdek. Na styk.', c:{ it:24, fill:[17,24] } },
+    { who:'ola',    t:'I jeszcze jedna osoba. A portów już nie ma.', c:{ it:24, pc:'wait' } },
+    { who:'bogdan', t:'Pani Olu, jak to, nowy switch? Przecież to będzie piąty.', c:{ it:24, ...W } },
+    { who:'ola',    t:'No tak, no. Taką mamy sieć. To będzie piąty.', c:{ it:24, ...W, hi:['it','ks','kd','gs'] } },
+    { who:'bogdan', t:'Ale przecież mamy wolne gniazdka. Sam widziałem.', c:{ it:24, ...W, pulse:'all' } },
+    { who:'ola',    t:'W kadrach. Mają dwadzieścia wolnych.', c:{ it:24, ...W, pulse:'kd', hi:['kd'] } },
+    { who:'kuba',   t:'To podepnijmy tam nowych z IT.', c:{ it:24, ghost:true, pc:'trial', hi:['kd'] } },
+    { who:'ola',    t:'I trafią do sieci kadr. A tam są wszystkie wypłaty.', c:{ it:24, ghost:true, pc:'kd', badge:true } },
+    { who:'kuba',   t:'…Aha. Słabo.', c:{ it:24, ghost:true, pc:'cancel' } },
+    { who:'bogdan', t:'Czyli płacę za puste dziurki.', c:{ it:24, ...W, pulse:'all', metricHi:true } },
+    { who:'ola',    t:'I jeszcze za prąd, który żrą.', c:{ it:25, power:true, last:'it' } },
+    { who:'quiz',   t:'Co by tu pomogło?', c:{ it:25, power:true }, quiz:true }
+  ];
+  const SPK = {
+    ola:    { n:'Ola', r:'administratorka sieci', av:'O', bg:'#d9ecf9' },
+    bogdan: { n:'Pan Bogdan', r:'dyrektor', av:'B', bg:'#f6e3c8' },
+    kuba:   { n:'Kuba', r:'stażysta', av:'K', bg:'#dcefdc' },
+    quiz:   { n:'Zagadka', r:'dla Ciebie', av:'?', bg:'var(--accent-bg)' }
+  };
+  const QUIZ = [
+    { id:'a', t:'A) Jeden wielki switch.', fb:'Nie do końca. Większe pudło to nadal jeden dział na jednym pudle.' },
+    { id:'b', t:'B) Żeby o sieci decydował port, a nie pudło.', fb:'Właśnie tak. Zobacz, jak to wygląda dziś.' } ];
+
+  function s3story1996(){
+    const k = st.s3step[0], cur = S1996[k], n = S1996.length, last = k === n - 1, sp = SPK[cur.who];
+    st.s3 = { ks:5, kd:4, gs:6, ...cur.c };
+    const q = st.s3quiz;
+    const quiz = cur.quiz ? `<div class="quiz">${QUIZ.map(o => `<button data-q="${o.id}" class="${q === o.id ? (o.id === 'b' ? 'right' : 'wrong') : ''} ${!q ? 'next' : ''}">${o.t}</button>`).join('')}</div>
+      ${q ? `<div class="fb ${q === 'b' ? 'ok' : ''}">${QUIZ.find(o => o.id === q).fb}</div>` : ''}` : '';
+    return `<div class="story"><div>${s3(0).svg}</div>
+      <aside class="dlg">
+        <div class="scene">Biuro, rok 1996</div>
+        <div class="who"><span class="av" style="background:${sp.bg}">${sp.av}</span><span><b>${sp.n}</b>${sp.r}</span></div>
+        <div class="say" ${cur.quiz ? 'style="font-size:18px"' : ''}>${cur.t}</div>
+        ${quiz}
+        <div class="dots">${S1996.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${n}</span></div>
+        <div class="actions">
+          <button id="d3prev" ${k === 0 ? 'disabled' : ''}>◀ Wstecz</button>
+          <button id="d3next" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? 'Zobacz to samo dziś ▶' : 'Dalej ▶'}</button>
+        </div>
+        <div class="keys">Strzałki ← → też działają.</div>
+      </aside></div>`;
+  }
+
   function s3story(mode){
+    if (!mode) return s3story1996();
     const steps = S3STORY[mode], k = st.s3step[mode], cur = steps[k];
     st.s3 = { ...cur.c, last: cur.last, hi: cur.hi };
     return `<div class="story"><div>${s3(mode).svg}</div>
@@ -485,11 +597,14 @@
       </aside></div>`;
   }
   function step3(d){
-    const m = st.mode[2], n = S3STORY[m].length, k = st.s3step[m] + d;
+    const m = st.mode[2], n = m ? S3STORY[1].length : S1996.length, k = st.s3step[m] + d;
+    st.s3dir = d;
     if (k < 0) return;
     if (k >= n){ st.mode[2] = 1 - m; st.s3step[1 - m] = 0; }
     else st.s3step[m] = k;
+    if (!m && k < S1996.length - 1) st.s3quiz = null;
     render();
+    st.s3dir = 0;
   }
 
   function s3guide(mode){
@@ -600,12 +715,12 @@
         : '<b>Przed VLAN-ami</b> zmiana sieci oznacza <b>fizyczne przepięcie kabla</b>. Trzeba iść do szafy, znaleźć właściwy przewód i liczyć, że w docelowym switchu jest wolny port. W dużej firmie takie zgłoszenia są codziennie.' },
     { tab:'3. Pół-puste switche',
       title:'Kłopot 3: każdy dział ma własny, pół-pusty switch',
-      problem:'Ola, administratorka sieci, opowiada o jednym tygodniu w firmie. Ciemny przycisk to Twoje pytanie do niej.',
+      problem: m => m ? 'Ola, administratorka sieci, opowiada o jednym tygodniu w firmie. Ciemny przycisk to Twoje pytanie do niej.' : 'Scena z biura w roku 1996. Klikaj „Dalej” i patrz, co dzieje się na switchach.',
       render: s3story, legend:['it','ks','kd','gs'], noExplain:true,
       metrics: m => {
         const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
         return [metric((r.length === 1 ? 'switch' : r.length < 5 ? 'switche' : 'switchy') + ' do kupienia, zasilania i skonfigurowania', r.length, m ? 'good' : 'bad'),
-                metric('zajęte porty', `${used} / ${all}`), metric('wykorzystanie portów', Math.round(used / all * 100) + '%', m ? 'good' : 'bad')];
+                metric('zajęte porty', `${used} / ${all}`), metric('wykorzystanie portów', Math.round(used / all * 100) + '%', (m ? 'good' : 'bad') + (!m && st.s3.metricHi ? ' hot' : ''))];
       },
       explain: m => m
         ? '<b>Z VLAN-ami</b> jeden switch obsługuje wszystkie działy naraz, a każdy port ma przypisany VLAN. Kolejny switch kupujesz dopiero wtedy, gdy <b>naprawdę</b> zabraknie portów, a nie dlatego, że pojawił się nowy dział.'
@@ -665,7 +780,7 @@
     $('era').classList.toggle('on', allOn); $('era').setAttribute('aria-checked', allOn);
     $('eraTxt').textContent = allOn ? 'Era VLAN-ów: włączona' : 'Era VLAN-ów: wyłączona';
     $('title').textContent = s.title;
-    $('problem').textContent = s.problem;
+    $('problem').textContent = typeof s.problem === 'function' ? s.problem(m) : s.problem;
     $('stage').innerHTML = s.render(m);
     $('legend').innerHTML = legendDepts(s.legend) + (st.tab === 0 && m ? `<span><i style="background:repeating-linear-gradient(90deg,${D.it.c} 0 6px,${D.ks.c} 6px 12px)"></i>trunk: wiele VLAN-ów w jednym kablu</span>` : '');
     const gd = s.guide ? s.guide(m) : null;
@@ -691,6 +806,7 @@
     on('a2run', runS2);
     on('a2reset', () => { resetAnims(); render(); });
     on('d3prev', () => step3(-1));
+    document.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { st.s3quiz = b.dataset.q; render(); });
     on('d3next', () => step3(1));
     on('a2prev', () => stepS2(-1));
     on('a2next', () => stepS2(1));
