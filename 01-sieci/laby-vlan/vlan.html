@@ -7,12 +7,12 @@
 <style>
   :root{
     --bg:#f7f6f2; --panel:#fff; --ink:#1d1d1b; --muted:#6b6a65; --line:#e3e1da;
-    --floor:#fbfaf6; --sw:#3b3a37; --port:#c9c7bf; --cable:#b9b7af; --bad:#c0392b; --good:#1e8449;
+    --floor:#fbfaf6; --sw:#3b3a37; --port:#c9c7bf; --cable:#b9b7af; --bad:#c0392b; --good:#1e8449; --btn:#b3b0a5; --accent:#c98a00; --accent-bg:#fdf3d7;
   }
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#1a1a19; --panel:#242422; --ink:#ecebe6; --muted:#a3a19a; --line:#3a3936;
-      --floor:#202020; --sw:#d6d4cc; --port:#5a5955; --cable:#5f5e59; --bad:#ff7b6b; --good:#5fd38d;
+      --floor:#202020; --sw:#d6d4cc; --port:#5a5955; --cable:#5f5e59; --bad:#ff7b6b; --good:#5fd38d; --btn:#66645e; --accent:#f2b632; --accent-bg:#3a3118;
     }
   }
   *{box-sizing:border-box}
@@ -59,6 +59,24 @@
   .log code{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:13px}
   .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin-top:8px}
   .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  /* everything clickable looks raised; results look flat */
+  .tab,.actions button,.seg{border-color:var(--btn);box-shadow:0 2px 0 var(--btn)}
+  .tab,.actions button{transition:transform .05s, box-shadow .05s}
+  .tab:active,.actions button:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+  .tab:hover,.seg button:hover{filter:brightness(.96)}
+  .actions button:disabled{box-shadow:none;border-style:dashed;opacity:.45}
+  button:focus-visible,.era:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .metrics-h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 0}
+  .metric{border:0;border-left:3px solid var(--line);border-radius:0;padding:2px 12px}
+  .guide{display:flex;gap:10px;align-items:baseline;margin-top:12px;padding:9px 12px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent)}
+  .guide .gs{font-size:12px;font-weight:700;white-space:nowrap;color:var(--accent);text-transform:uppercase;letter-spacing:.04em}
+  .guide .gl{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+  @media (max-width:700px){.guide{flex-wrap:wrap}.guide .gl{margin-left:0}}
+  .next{position:relative;border-color:var(--accent)!important;animation:nextp 1.2s ease-in-out infinite}
+  @keyframes nextp{0%,100%{box-shadow:0 0 0 0 var(--accent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 35%,transparent)}}
+  .pingS{fill:none;stroke:var(--accent);stroke-width:3;animation:pingS .9s ease-out 2 forwards}
+  @keyframes pingS{0%{r:6;opacity:1}100%{r:22;opacity:0}}
+  @media (prefers-reduced-motion:reduce){.next{animation:none;outline:3px solid var(--accent);outline-offset:2px}.pingS{animation:none;r:11}}
   @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
   /* svg */
@@ -105,8 +123,10 @@
     </div>
     <div class="stage" id="stage"></div>
     <div class="legend" id="legend"></div>
+    <div class="guide" id="guide"></div>
     <div class="actions" id="actions"></div>
     <ul class="log" id="log"></ul>
+    <div class="metrics-h">Wynik (tylko do czytania)</div>
     <div class="metrics" id="metrics"></div>
     <div class="explain" id="explain"></div>
   </div>
@@ -376,7 +396,7 @@
         const n = c[k], cnt = Math.max(1, Math.ceil(n / 24));
         for (let s = 0; s < cnt; s++){
           const used = Math.min(24, n - s * 24);
-          rows.push({ label:`switch: ${D[k].n}${cnt > 1 ? ' #' + (s + 1) : ''}`, ports: Array.from({length:24}, (_, i) => i < used ? D[k].c : null), used });
+          rows.push({ k, label:`switch: ${D[k].n}${cnt > 1 ? ' #' + (s + 1) : ''}`, ports: Array.from({length:24}, (_, i) => i < used ? D[k].c : null), used });
         }
       });
     } else {
@@ -387,13 +407,29 @@
         rows.push({ label:`switch wspólny #${s + 1} (VLAN 10/20/30/40)`, ports: Array.from({length:24}, (_, i) => part[i] || null), used: part.length });
       }
     }
-    let g = '';
+    let g = '', hitRow = -1, hitIdx = -1;
+    if (c.last){
+      if (!mode){ rows.forEach((r, i) => { if (r.k === c.last){ hitRow = i; hitIdx = r.used - 1; } }); }
+      else { let n = -1; for (const k of order){ n += c[k]; if (k === c.last) break; } hitRow = Math.floor(n / 24); hitIdx = n % 24; }
+    }
     rows.forEach((r, i) => {
       const s = sw(30, 20 + i * 62, r.ports, 12, '', { pw:16, ph:12, gap:5 });
-      g += s.svg + `<text x="${30 + s.w + 14}" y="${20 + i * 62 + 18}" class="lbl">${r.label}</text>
+      if (i === hitRow && hitIdx >= 0){ const pt = s.port(hitIdx); var ring = `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`; }
+      g += s.svg + (i === hitRow && hitIdx >= 0 ? ring : '') + `<text x="${30 + s.w + 14}" y="${20 + i * 62 + 18}" class="lbl">${r.label}</text>
         <text x="${30 + s.w + 14}" y="${20 + i * 62 + 35}" class="lbls">zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
     });
     return { svg: svgWrap(820, Math.max(160, 30 + rows.length * 62), g), rows };
+  }
+
+  function s3guide(mode){
+    const c = st.s3, nB = s3(0).rows.length, nA = s3(1).rows.length;
+    const total = c.it + c.ks + c.kd + c.gs, free = 72 - c.ks - c.kd - c.gs;
+    let n, txt, hot = null;
+    if (!c.touched){ n = 1; hot = 'it1'; txt = 'Kliknij <b>+ osoba w IT</b> i zobacz, który port się zapali.'; }
+    else if (c.it <= 24){ n = 2; hot = 'it5'; txt = `IT się rozrasta. Klikaj <b>+ 5 osób w IT</b>, aż zabraknie portów (teraz ${c.it}/24).`; }
+    else if (!mode){ n = 3; hot = 'seg1'; txt = `IT musiało dostać drugi switch, choć u innych działów stoi ${free} wolnych portów. Przełącz na <b>Z VLAN-ami</b> (u góry po prawej).`; }
+    else { n = 0; const d = total % 10, dd = total % 100, os = (d >= 2 && d <= 4 && !(dd >= 12 && dd <= 14)) ? 'osoby mieszczą' : 'osób mieści'; txt = `Te same ${total} ${os} się na ${nA} ${nA === 1 ? 'switchu' : 'switchach'} zamiast ${nB}. Przełączaj „Przed / Z VLAN-ami” i dodawaj osoby dowolnie.`; }
+    return { hot, html: `<span class="gs">${n ? '👉 Zadanie ' + n + ' / 3' : '✓ Zrobione'}</span><span>${txt}</span>${hot ? '<span class="gl">pulsuje = kliknij teraz</span>' : ''}` };
   }
 
   /* ---------- 4: flat network: broadcasts & no separation ---------- */
@@ -495,7 +531,10 @@
       title:'Kłopot 3: każdy dział ma własny, pół-pusty switch',
       problem:'Cztery działy to cztery osobne sieci, a więc cztery switche, nawet jeśli w dziale są tylko 4 komputery. Dodawaj osoby i obserwuj porty.',
       render: m => s3(m).svg, legend:['it','ks','kd','gs'],
-      actions: () => `<button data-add="it">+ osoba w IT</button><button data-add="ks">+ w Księgowości</button><button data-add="kd">+ w Kadrach</button><button data-add="gs">+ Gość</button><button id="a3reset">↺ Od nowa</button>`,
+      guide: s3guide,
+      actions: m => { const hot = s3guide(m).hot;
+        const b = (k, n, t) => `<button data-add="${k}" data-n="${n}" class="${hot === k + n ? 'next' : ''}">${t}</button>`;
+        return b('it', 1, '+ osoba w IT') + b('it', 5, '+ 5 osób w IT') + b('ks', 1, '+ w Księgowości') + b('kd', 1, '+ w Kadrach') + b('gs', 1, '+ Gość') + `<button id="a3reset">↺ Od nowa</button>`; },
       metrics: m => {
         const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
         return [metric('switchy do kupienia, zasilania i skonfigurowania', r.length, m ? 'good' : 'bad'),
@@ -562,6 +601,9 @@
     $('problem').textContent = s.problem;
     $('stage').innerHTML = s.render(m);
     $('legend').innerHTML = legendDepts(s.legend) + (st.tab === 0 && m ? `<span><i style="background:repeating-linear-gradient(90deg,${D.it.c} 0 6px,${D.ks.c} 6px 12px)"></i>trunk: wiele VLAN-ów w jednym kablu</span>` : '');
+    const gd = s.guide ? s.guide(m) : null;
+    $('guide').innerHTML = gd ? gd.html : ''; $('guide').style.display = gd ? 'flex' : 'none';
+    document.querySelectorAll('#seg button').forEach(b => b.classList.toggle('next', !!gd && gd.hot === 'seg' + b.dataset.m));
     $('actions').innerHTML = s.actions ? s.actions(m) : '';
     $('actions').style.display = s.actions ? 'flex' : 'none';
     $('metrics').innerHTML = s.metrics(m).join('');
@@ -582,7 +624,7 @@
     on('a2reset', () => { resetAnims(); render(); });
     on('a2prev', () => stepS2(-1));
     on('a2next', () => stepS2(1));
-    document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { st.s3[b.dataset.add]++; render(); });
+    document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const k = b.dataset.add; st.s3[k] += +(b.dataset.n || 1); st.s3.last = k; st.s3.touched = true; render(); });
     on('a3reset', () => { st.s3 = { it:7, ks:5, kd:4, gs:6 }; render(); });
     on('a4b', () => { st.s4.bcast = 0; render(); requestAnimationFrame(() => { st.s4.bcast = Date.now(); render(); }); });
     on('a4i', () => { st.s4.intruder = !st.s4.intruder; render(); });
