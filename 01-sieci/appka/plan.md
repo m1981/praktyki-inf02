@@ -11,6 +11,8 @@ Plan dalszych materiałów po symulatorze ARP. Źródła symulatorów: `01-sieci
 | Pasek nawigacji na telefonie w jednej linii                                       | `common.css`                                | `1c317ef`            |
 | Konspekt tylko z plików w gicie                                                   | `scripts/konspekt.mjs`                      | `e3f35b0`            |
 | Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity | `01-sieci/symulator-maska.html`             | `288c31d`            |
+| Audyt dydaktyczny + szybkie wygrane (PYT-005)                                     | `01-sieci/appka/audyt.md`, oba symulatory   | `cceb206`            |
+| Układ maski na jednym ekranie (PYT-007), metafora „płot i działka” (PYT-003)      | oba symulatory, `index.html`, Lab 1         | `cceb206`            |
 
 ## Zasada dydaktyczna
 
