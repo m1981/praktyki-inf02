@@ -1,8 +1,16 @@
 # Kłopot 3: Pół-puste switche — scena „Biuro, rok 1996”
 
-Wersja 2. Postacie: tylko Ola (administratorka sieci) i Kierownik IT.
+Wersja 3. Postacie: tylko Ola (administratorka sieci) i Kierownik IT.
 
-Zmiany względem wersji 1:
+Zmiany w wersji 3 (styl kwestii: jedna myśl na oddech, części zdania łączy myślnik „–”, emoji tam, gdzie postać coś czuje):
+- 4: „Kolejne siedem nowych osób – to będzie na styk 😬”
+- 6: „I jeszcze jedna osoba – a portów już nie ma 😩”
+- 7: „Olu, jak to, nowy switch 🤨 – przecież to będzie piąty 🤯”
+- 8: „No tak 🤷‍♀️ Taką mamy sieć – to będzie piąty.”
+- 14: „Czyli płacimy za puste porty? 😳”
+- 15: „I jeszcze za prąd 🙃”
+
+Zmiany w wersji 2 względem wersji 1:
 1. Podpinanie gniazdek jest osobnym krokiem. Przy kwestii Oli przycisk ma napis „🔌 Podepnij ▶”, a porty zapalają się dopiero w następnym kroku, gdy patrzy się na schemat.
 2. Pan Bogdan i Kuba zastąpieni przez Kierownika IT. Kierownik i Ola są na „ty”.
 3. Poprawki edycyjne w kwestiach 12 i 13.
