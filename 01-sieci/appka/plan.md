@@ -10,7 +10,7 @@ Plan dalszych materiałów po symulatorze ARP. Źródła symulatorów: `01-sieci
 | Link z teorii (Filar 1, Krok 4) i z Lab 1 Faza 1                                  | `01-sieci/index.html`, `lab1-podstawy.html` | `e37ef02`, `3a38b64` |
 | Pasek nawigacji na telefonie w jednej linii                                       | `common.css`                                | `1c317ef`            |
 | Konspekt tylko z plików w gicie                                                   | `scripts/konspekt.mjs`                      | `e3f35b0`            |
-| Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity | `01-sieci/symulator-maska.html`             | (niezacommitowane)   |
+| Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity | `01-sieci/symulator-maska.html`             | `288c31d`            |
 
 ## Zasada dydaktyczna
 
