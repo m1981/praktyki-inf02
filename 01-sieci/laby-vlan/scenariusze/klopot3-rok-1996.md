@@ -17,7 +17,7 @@ Zatwierdzone wcześniej: kończymy zakupem piątego switcha. IT ma na starcie 10
 | 4 | Ola | Kolejne siedem nowych osób – to będzie na styk 😬 | Bez zmian, IT ma 17 z 24. | 🔌 Podepnij ▶ |
 | 5 | *akcja* | *Ola podpina kolejne siedem gniazdek…* | Porty IT zapalają się po kolei, 24 z 24, „wolne 0” na czerwono. | Dalej ▶ |
 | 6 | Ola | I jeszcze jedna osoba – a portów już nie ma 😩 | Migający komputer „brak portu”. | Dalej ▶ |
-| 7 | Kierownik IT | Olu, jak to, nowy switch? Przecież to będzie piąty. | Przerywany zarys piątego switcha „do kupienia”. | Dalej ▶ |
+| 7 | Kierownik IT | Olu, jak to, nowy switch 🤨 – przecież to będzie piąty 🤯 | Przerywany zarys piątego switcha „do kupienia”. | Dalej ▶ |
 | 8 | Ola | No tak, no. Taką mamy sieć. To będzie piąty. | Złote ramki wokół czterech switchy. | Dalej ▶ |
 | 9 | Kierownik IT | Ale przecież mamy wolne gniazdka. Sam widziałem. | Pulsuje wszystkie 57 wolnych portów. | Dalej ▶ |
 | 10 | Ola | W kadrach. Mają dwadzieścia wolnych. | Pulsowanie i ramka zostają tylko na switchu kadr. | Dalej ▶ |
