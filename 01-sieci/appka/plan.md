@@ -101,3 +101,40 @@ Kamera `.200`.
   to czytelne widoki A i B na telefonie.
 - **Miejsce w kolejności:** przed scenariuszem 2 albo zaraz po nim (wiąże się z Krokiem 5 teorii:
   Subnetting).
+
+## Projekt ZS1 – firma od pustej kartki (PYT-015–018)
+
+Status: zatwierdzone (PYT-011–018). Kolejność prac: najpierw porządek w kodzie (PYT-019), potem treść.
+
+### Zasada
+
+Jedna firma (ZS1) budowana krok po kroku na **jednej, trwałej mapie**. Każdy krok = jedna decyzja i
+jeden nowy element na mapie. Mapa pokazuje wszystkie wcześniejsze decyzje, więc uczeń nie musi ich
+pamiętać. Na ekranie widać tylko urządzenia potrzebne w danym kroku (reszta wyszarzona).
+
+### Kroki (jak pracuje sieciowiec)
+
+| #   | Krok                 | Jedna decyzja ucznia                                    | Ćwiczenia, które tu trafiają   |
+| --- | -------------------- | ------------------------------------------------------- | ------------------------------ |
+| 0   | Zlecenie             | Czego firma potrzebuje? (ludzie, działy, pliki, goście) | –                              |
+| 1   | Inwentarz            | Jakie urządzenia są w każdym dziale?                    | –                              |
+| 2   | Strefy               | Które urządzenia razem, a które osobno (zaufanie)?      | –                              |
+| 3   | Plan adresów         | Jaka podsieć i maska dla strefy?                        | M1–M3, L1–L3                   |
+| 4   | Okablowanie          | Router na styku, switch w strefie, porty                | –                              |
+| 5   | Adresy stałe i DHCP  | Kto ma stały adres, a kto z puli?                       | –                              |
+| 6   | Usługi               | Brama, DNS, DHCP                                        | Lab 3, Windows Lab 1 / 4.5     |
+| 7   | Reguły ruchu         | Kto z kim może rozmawiać? (np. goście tylko Internet)   | –                              |
+| 8   | Test                 | Dlaczego ping działa albo nie?                          | A1–A4, B1–B2, M4, scenariusz 2 |
+| 9   | Dokumentacja         | Mapa firmy jako jedno źródło prawdy                     | `topology.html`                |
+| 10  | Firma ZS2 (transfer) | Ten sam proces, inne adresy (np. 10.80.0.0/24 jak CKE)  | arkusze CKE                    |
+
+### Inwentarz (propozycja; reguła hostów: .1 router, .2 switch/AP, .10–.50 stałe, .100–.250 DHCP)
+
+| Strefa         | VLAN | Podsieć         | Urządzenia                                                                               |
+| -------------- | ---- | --------------- | ---------------------------------------------------------------------------------------- |
+| Serwerownia    | 10   | 192.168.10.0/24 | WIN_SERVER .10 (AD, DNS, DHCP), LINUX_SERVER .20 (WWW), WIN_11 admin .30, Serwer NAS .40 |
+| Biuro          | 20   | 192.168.20.0/24 | Drukarka .20, ok. 10 laptopów/PC z DHCP                                                  |
+| Księgowość     | 30   | 192.168.30.0/24 | 3 PC z DHCP; drukuje na Drukarce z Biura (przez Router – osobna lekcja)                  |
+| Goście (Wi-Fi) | 99   | 192.168.99.0/24 | Access Point .2, telefony gości z DHCP; tylko Internet                                   |
+| Monitoring     | 40   | 192.168.40.0/26 | Rejestrator kamer .10, Kamery .11–.14 (stałe adresy, bez DHCP)                           |
+| Łącze WAN      | –    | 200.0.0.0/30    | Router .1, operator .2                                                                   |
