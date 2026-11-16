@@ -90,6 +90,10 @@
   .dlg .dots span{margin-left:auto;font-variant-numeric:tabular-nums}
   .dlg .actions{margin-top:0}
   .dlg .actions button.primary{flex:1}
+  .dlg .you{align-self:flex-end;font-size:13px;color:var(--muted);background:var(--bg);border-radius:10px 10px 2px 10px;padding:5px 10px;animation:fade .3s}
+  .dlg .lab{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:-6px}
+  .dlg .actions button.primary{text-align:left;line-height:1.3}
+  .dlg{gap:10px}
   .dlg .keys{font-size:11px;color:var(--muted)}
   .hl{fill:none;stroke:var(--accent);stroke-width:3;animation:fade .3s}
   @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
@@ -441,39 +445,41 @@
 
   const B = { it:7, ks:5, kd:4, gs:6 };
   const B25 = {...B, it:25}, ALL = ['it','ks','kd','gs'];
+  // Ola speaks; the "next" button is the student's own reply (r), so every step is a real exchange.
   const S3STORY = [
-    [ { e:'😊', t:'Cześć, jestem Ola! Pilnuję tu sieci. Chodź, pokażę Ci, co mnie ostatnio wkurza.', c:B },
-      { e:'🙂', t:'Mamy 4 działy. Każdy chce mieć własną, osobną sieć. I słusznie!', c:B },
-      { e:'😕', t:'Tyle że bez VLAN-ów osobna sieć to osobny switch. No to kupiłam cztery…', c:B, hi:ALL },
-      { e:'😒', t:'Zerknij na Kadry. 4 osoby i 20 pustych portów. Aż żal patrzeć.', c:B, hi:['kd'] },
-      { e:'😌', t:'O, IT zatrudnia 10 osób! Spokojnie, jeszcze się zmieszczą.', c:{...B, it:17}, last:'it' },
-      { e:'😅', t:'Kolejne 7 osób… Poszedł ostatni wolny port. Zaczynam się pocić.', c:{...B, it:24}, last:'it' },
-      { e:'😱', t:'No nie! Przyszła 25. osoba, a portu brak. Cały nowy switch dla jednego człowieka?!', c:B25, last:'it', hi:['it'] },
-      { e:'😤', t:'A wiesz, co boli najbardziej? Tuż obok 57 wolnych portów. Nie tknę ich, bo to cudze sieci.', c:B25, hi:['ks','kd','gs'] },
-      { e:'😩', t:'Policzmy: 5 switchy, a pracuje co trzeci port. Szef nie będzie zachwycony.', c:B25 },
-      { e:'😏', t:'Musi być lepszy sposób. I jest! Chodź, pokażę Ci to samo z VLAN-ami.', c:B25 } ],
-    [ { e:'😄', t:'Hej, tu Ola! Kiedyś każdy dział miał u nas własny, pół-pusty switch. Co to była za męka!', c:B },
-      { e:'😍', t:'Ale teraz mamy VLAN-y i wreszcie śpię spokojnie. Patrz: 4 działy, jeden switch!', c:B },
-      { e:'🤓', t:'Cała sztuczka: kolor portu to VLAN. O sieci decyduje ustawienie portu, a nie pudełko.', c:B, hi:ALL },
-      { e:'😌', t:'Kadry? Biorą swoje 4 porty i tyle. Nic nie leży odłogiem.', c:B, hi:['kd'] },
-      { e:'🙂', t:'IT zatrudnia 10 osób. Teraz portów naprawdę brakuje, więc dokupuję switch. Uczciwie!', c:{...B, it:17}, last:'it' },
-      { e:'😎', t:'Kolejne 8 osób? Proszę bardzo! Siadają na wolnych portach i po sprawie.', c:B25, last:'it' },
-      { e:'😉', t:'A pamiętasz 57 zmarnowanych portów? Teraz wolnych jest 8 i może je wziąć każdy dział.', c:B25 },
-      { e:'🥳', t:'Bilans: 2 switche zamiast 5, zajęte 40 z 48 portów. Szef aż mi podziękował!', c:B25 },
-      { e:'👋', t:'I to cały sekret: VLAN-y kroją jeden switch na wiele sieci. Dzięki za wspólny spacer!', c:B25 } ]
+    [ { e:'🙂', t:'Cześć, Ola jestem. Ty na praktyki? To chodź, pokażę ci naszą szafę.', r:'Prowadź.', c:B },
+      { e:'😐', t:'Cztery działy, cztery sieci, cztery switche.', r:'Czemu aż cztery?', c:B, hi:ALL },
+      { e:'🙂', t:'Bo księgowość nie ma oglądać ruchu kadr. Osobna sieć to u nas osobne pudełko. Inaczej się nie da.', r:'A Kadry? Tam prawie pusto.', c:B },
+      { e:'😑', t:'Cztery osoby na dwadzieścia cztery porty. Nie pytaj.', r:'Okej, nie pytam.', c:B, hi:['kd'] },
+      { e:'🙂', t:'O, mail. IT przyjmuje dziesięć osób. Wpinam.', r:'Zmieszczą się?', c:{...B, it:17}, last:'it' },
+      { e:'😬', t:'Ci tak. Ale właśnie doszło jeszcze siedem. Teraz jest na styk: 24 z 24.', r:'A jak przyjdzie ktoś jeszcze?', c:{...B, it:24}, last:'it' },
+      { e:'😮‍💨', t:'Właśnie przyszedł. Portów brak, więc zamawiam cały switch. Dla jednej osoby.', r:'Przecież w Kadrach jest 20 wolnych!', c:B25, last:'it', hi:['it'] },
+      { e:'😏', t:'Jest. Tylko jak go tam wepnę, to siedzi w sieci kadr. Razem z listą płac.', r:'Aha. Czyli te 57 wolnych portów…', c:B25, hi:['ks','kd','gs'] },
+      { e:'😑', t:'…stoi i ładnie mruga. Pięć switchy, zajęty co trzeci port.', r:'Nie da się tego zrobić mądrzej?', c:B25 },
+      { e:'😌', t:'Da się. Nazywa się VLAN. Chodź.', r:'Zobacz to samo z VLAN-ami ▶', c:B25 } ],
+    [ { e:'🙂', t:'Cześć, Ola jestem. Kiedyś stało tu pięć pół-pustych switchy. Już nie stoi.', r:'Co się stało?', c:B },
+      { e:'😌', t:'VLAN-y. Te same cztery działy, jeden switch.', r:'Jak to, wszyscy razem?', c:B },
+      { e:'🙂', t:'Razem w pudełku, osobno w sieci. Kolor portu to VLAN. Niebieski nie zobaczy fioletowego, choć siedzą obok.', r:'A Kadry?', c:B, hi:ALL },
+      { e:'🙂', t:'Cztery porty i koniec tematu. Reszta idzie dla innych.', r:'IT znowu zatrudnia?', c:B, hi:['kd'] },
+      { e:'😐', t:'Dziesięć osób. Tu portów zabrakło naprawdę, więc dokładam switch. Tym razem bez żalu.', r:'A ta dwudziesta piąta osoba?', c:{...B, it:17}, last:'it' },
+      { e:'😌', t:'Wpinam w wolny port, ustawiam VLAN 10. Minuta roboty.', r:'Ile zostało wolnych?', c:B25, last:'it' },
+      { e:'🙂', t:'Osiem. I może je wziąć każdy dział, a nie tylko właściciel pudełka.', r:'Czyli bilans?', c:B25 },
+      { e:'😌', t:'Dwa switche zamiast pięciu. Zajęte 40 z 48 portów.', r:'A lista płac bezpieczna?', c:B25 },
+      { e:'😏', t:'Bezpieczna. Między VLAN-ami nic nie przejdzie bez routera. Ale to już inna lekcja.', r:'↺ Porównaj: przed VLAN-ami', c:B25 } ]
   ];
   function s3story(mode){
-    const steps = S3STORY[mode], k = st.s3step[mode], cur = steps[k], last = k === steps.length - 1;
+    const steps = S3STORY[mode], k = st.s3step[mode], cur = steps[k];
     st.s3 = { ...cur.c, last: cur.last, hi: cur.hi };
-    const nextTxt = last ? (mode ? '↺ Porównaj: przed VLAN-ami' : 'Zobacz to samo z VLAN-ami ▶') : 'Dalej ▶';
     return `<div class="story"><div>${s3(mode).svg}</div>
       <aside class="dlg">
-        <div class="who"><span class="av">${cur.e}</span><span><b>Ola, administratorka sieci</b>${mode ? 'z VLAN-ami' : 'przed VLAN-ami'}</span></div>
+        ${k > 0 ? `<div class="you"><b>Ty:</b> ${steps[k - 1].r}</div>` : ''}
+        <div class="who"><span class="av">${cur.e}</span><span><b>Ola, admin sieci</b>${mode ? 'z VLAN-ami' : 'przed VLAN-ami'}</span></div>
         <div class="say">${cur.t}</div>
         <div class="dots">${steps.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${steps.length}</span></div>
+        <div class="lab">Twoja odpowiedź</div>
         <div class="actions">
-          <button id="d3prev" ${k === 0 ? 'disabled' : ''}>◀ Wstecz</button>
-          <button id="d3next" class="primary ${k === 0 ? 'next' : ''}">${nextTxt}</button>
+          <button id="d3prev" ${k === 0 ? 'disabled' : ''} title="Wstecz">◀</button>
+          <button id="d3next" class="primary ${k === 0 ? 'next' : ''}">${cur.r}</button>
         </div>
         <div class="keys">Strzałki ← → też działają.</div>
       </aside></div>`;
@@ -594,7 +600,7 @@
         : '<b>Przed VLAN-ami</b> zmiana sieci oznacza <b>fizyczne przepięcie kabla</b>. Trzeba iść do szafy, znaleźć właściwy przewód i liczyć, że w docelowym switchu jest wolny port. W dużej firmie takie zgłoszenia są codziennie.' },
     { tab:'3. Pół-puste switche',
       title:'Kłopot 3: każdy dział ma własny, pół-pusty switch',
-      problem:'Cztery działy to cztery osobne sieci. Przejdź historię Oli przyciskiem „Dalej”, najpierw przed VLAN-ami, potem z VLAN-ami.',
+      problem:'Jesteś na praktykach u Oli, adminki sieci. Ciemny przycisk to Twoja odpowiedź w rozmowie. Klikaj, żeby iść dalej.',
       render: s3story, legend:['it','ks','kd','gs'], noExplain:true,
       metrics: m => {
         const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
