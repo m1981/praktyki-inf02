@@ -528,14 +528,16 @@
   const B25 = {...B, it:25}, ALL = ['it','ks','kd','gs'];
   // Scene "Biuro, dziś" — lines verbatim from scenariusze/klopot3-dzis.md.
   // Ports keep their places (like in a real rack); new IT people take free ports in DZ_ADD order.
+  // Layout chosen so that both groups of seven fit on switch #1 (IT only), and only the 25th person
+  // lands on switch #2, right next to Kadry — the Kierownik asks about it in step 10, not earlier.
   const DZ_BASE = (() => { const a = Array(48).fill(null);
-    for (let i = 0; i < 10; i++) a[i] = 'it';
-    for (let i = 10; i < 15; i++) a[i] = 'ks';
-    for (let i = 24; i < 28; i++) a[i] = 'kd';
-    for (let i = 28; i < 34; i++) a[i] = 'gs';
+    for (let i = 0; i < 10; i++) a[i] = 'it';          // switch #1: IT, 14 free
+    for (let i = 24; i < 29; i++) a[i] = 'ks';         // switch #2, row 1: Księgowość, Goście
+    for (let i = 29; i < 35; i++) a[i] = 'gs';
+    for (let i = 36; i < 40; i++) a[i] = 'kd';         // switch #2, row 2: Kadry
     return a; })();
-  const DZ_ADD = [...Array(9).keys()].map(i => 15 + i).concat([...Array(14).keys()].map(i => 34 + i));
-  const DZ_KD = [24, 25, 26, 27], DZ_NEW = DZ_ADD[14];  // port 16 on switch #2
+  const DZ_ADD = [...Array(14).keys()].map(i => 10 + i).concat([...Array(8).keys()].map(i => 40 + i), [35]);
+  const DZ_KD = [36, 37, 38, 39], DZ_NEW = DZ_ADD[14];  // port right next to Kadry
   const SDZIS = [
     { who:'ola',  t:'Dziś. Cztery działy, 2 switch\'e zamiast 5 🤩', c:{ it:10 } },
     { who:'ola',  t:'Kolor portu to VLAN – każdy dział ma swój.', c:{ it:10, hi:ALL } },

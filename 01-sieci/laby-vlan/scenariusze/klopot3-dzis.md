@@ -1,8 +1,11 @@
 # Kłopot 3: Pół-puste switche — scena „Biuro, dziś”
 
-Wersja 2. Lustro sceny „Biuro, rok 1996” (scenariusze/klopot3-rok-1996.md): ten sam tydzień, te same zatrudnienia, te same pytania Kierownika, ale z VLAN-ami.
+Wersja 3. Lustro sceny „Biuro, rok 1996” (scenariusze/klopot3-rok-1996.md): ten sam tydzień, te same zatrudnienia, te same pytania Kierownika, ale z VLAN-ami.
 
 Postacie: Ola (administratorka sieci) i Kierownik IT, na „ty”.
+
+Zmiany w wersji 3:
+- Nowy układ portów na starcie (kwestie bez zmian). W wersji 2 pięć osób z drugiej grupy trafiało już na switch z kadrami, zanim Kierownik o to zapytał w kroku 10. Teraz obie grupy po siedem osób mieszczą się na switchu #1, a na switch z kadrami trafia dopiero dwudziesta piąta osoba – na port tuż obok kadr.
 
 Zmiany w wersji 2:
 - 1: „Dziś. Cztery działy, 2 switch'e zamiast 5 🤩”
@@ -13,15 +16,15 @@ Stan wyjściowy: IT 10, Księgowość 5, Kadry 4, Goście 6 = 25 urządzeń. To 
 
 | # | Kto | Kwestia | Echo z 1996 | Na schemacie | Przycisk |
 |---|---|---|---|---|---|
-| 1 | Ola | Dziś. Cztery działy, 2 switch'e zamiast 5 🤩 | 1: „Rok 1996. Cztery działy, cztery switche…” | Ujęcie wprowadzające: dwa switche wspólne, porty w kolorach VLAN-ów, zajęte 25 z 48. | Dalej ▶ |
+| 1 | Ola | Dziś. Cztery działy, 2 switch'e zamiast 5 🤩 | 1: „Rok 1996. Cztery działy, cztery switche…” | Ujęcie wprowadzające: dwa switche, porty w kolorach VLAN-ów, zajęte 25 z 48. Na switchu #2 cztery kolory naraz. | Dalej ▶ |
 | 2 | Ola | Kolor portu to VLAN – każdy dział ma swój. | — | Złote ramki wokół portów wszystkich czterech działów. | Dalej ▶ |
 | 3 | Ola | Zatrudniamy w IT. Siedem gniazdek – każde w VLAN 10. | 2: „Zatrudniamy w IT. Mam podpiąć siedem gniazdek.” | Bez zmian, 25 z 48. | 🔌 Podepnij ▶ |
-| 4 | *akcja* | *Ola podpina siedem gniazdek i ustawia im VLAN 10…* | 3 | Wolne porty zapalają się po kolei na niebiesko, 32 z 48. | Dalej ▶ |
+| 4 | *akcja* | *Ola podpina siedem gniazdek i ustawia im VLAN 10…* | 3 | Wolne porty switcha #1 zapalają się po kolei na niebiesko, 32 z 48. | Dalej ▶ |
 | 5 | Ola | Kolejne siedem nowych osób – tym razem bez nerwów 😌 | 4: „…to będzie na styk 😬” | Bez zmian, 32 z 48. | 🔌 Podepnij ▶ |
-| 6 | *akcja* | *Ola podpina kolejne siedem gniazdek…* | 5 | Porty zapalają się po kolei, 39 z 48. | Dalej ▶ |
-| 7 | Ola | I jeszcze jedna osoba – a portów wciąż mamy dziewięć 🙂 | 6: „…a portów już nie ma 😩” | Czekający komputer, pulsuje dziewięć wolnych portów. | Dalej ▶ |
+| 6 | *akcja* | *Ola podpina kolejne siedem gniazdek…* | 5 | Kolejne porty switcha #1 zapalają się po kolei, switch #1 pełny, 39 z 48. | Dalej ▶ |
+| 7 | Ola | I jeszcze jedna osoba – a portów wciąż mamy dziewięć 🙂 | 6: „…a portów już nie ma 😩” | Czekający komputer, pulsuje dziewięć wolnych portów – wszystkie na switchu #2, przy kadrach. | Dalej ▶ |
 | 8 | Kierownik IT | Olu, tylko mi nie mów, że nowy switch 😅 | 7: „Olu, jak to, nowy switch 🤨…” | Bez zmian. | Dalej ▶ |
-| 9 | Ola | Nie trzeba 😎 Wolny port – i VLAN 10. | 8: „No tak 🤷‍♀️ Taką mamy sieć…” | Komputer wpina się z pierścieniem w wolny port na switchu #2, 40 z 48. | Dalej ▶ |
+| 9 | Ola | Nie trzeba 😎 Wolny port – i VLAN 10. | 8: „No tak 🤷‍♀️ Taką mamy sieć…” | Komputer wpina się z pierścieniem w port tuż obok kadr na switchu #2, 40 z 48. | Dalej ▶ |
 | 10 | Kierownik IT | Chwila – to ten sam switch, co kadry? 🤨 | 11: „To podepnij tam moich ludzi.” | Ramka wokół nowego portu IT i portów kadr na switchu #2. | Dalej ▶ |
 | 11 | Kierownik IT | Czyli moi ludzie zobaczą wypłaty?! | 12: „…dane osobowe i wypłaty!” | Plakietka „📁 dane osobowe i wypłaty” przy portach kadr. | Dalej ▶ |
 | 12 | Ola | Nie – oni są w VLAN 10, kadry w VLAN 30. Nie widzą się. | 13: „Aha, no to słabo 😕” | Na plakietce pojawia się 🔒, między portami napis „VLAN 10 ✕ VLAN 30”. | Dalej ▶ |
@@ -39,4 +42,5 @@ Uwagi do wykonania:
 - Ta scena zastępuje obecny monolog Oli w wersji „z VLAN-ami” (9 kroków).
 - Dziś rysujemy porty działów pogrupowane, więc nowe porty IT przesuwałyby porty innych działów. Na potrzeby sceny porty mają zostać na miejscach, a nowe zapalają się na wolnych. Tak jest też w prawdziwej szafie.
 - W układzie z kroku 9 nowa osoba z IT trafia na switch #2, na którym są też kadry. Tego potrzebujemy do kwestii 10–12.
-- Układ portów: switch #1 – IT 1–10, Księgowość 11–15, wolne 16–24; switch #2 – Kadry 1–4, Goście 5–10, wolne 11–24. Nowe osoby z IT zajmują kolejno wolne porty: najpierw switch #1, potem switch #2. Dwudziesta piąta osoba dostaje port 16 na switchu #2.
+- Układ portów: switch #1 – IT 1–10, wolne 11–24; switch #2 – Księgowość 1–5, Goście 6–11, wolny 12, Kadry 13–16, wolne 17–24. Nowe osoby z IT zajmują najpierw wolne porty switcha #1 (obie grupy po siedem), a dwudziesta piąta osoba dostaje port 17 na switchu #2, tuż obok kadr.
+- Ten układ jest jedynym, który zachowuje liczby z 1996: czternaście nowych osób musi zmieścić się poza switchem kadr, a dziewięć wolnych portów musi zostać właśnie przy kadrach. Koszt: na końcu switch #1 jest cały niebieski, ale switch #2 pokazuje cztery VLAN-y na jednym pudle.
