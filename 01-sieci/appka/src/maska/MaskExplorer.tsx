@@ -1,7 +1,7 @@
 import { useMemo, useReducer } from 'react';
 import { Diagram } from '../sim/Diagram';
 import { buildEdges, buildNodes } from '../sim/graph';
-import { formatIp, lastOctet, maskOf } from './ipMath';
+import { formatIp, lastOctet, maskOf } from '../net/ipMath';
 import {
  CABLES,
  decide,

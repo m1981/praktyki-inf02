@@ -6,33 +6,36 @@ zob. PYT-004).
 
 ## Przegląd
 
-| ID      | Rodzaj  | Status           | Temat                                                          |
-| ------- | ------- | ---------------- | -------------------------------------------------------------- |
-| PYT-001 | decyzja | zamknięte (a)    | Miejsce serii M1–M4 w kolejności i status gałęzi L oraz P      |
-| PYT-002 | decyzja | zamknięte (a)    | Los obecnych pełnych widoków (ARP, maska)                      |
-| PYT-003 | decyzja | zamknięte (a)    | Jedna metafora maski w Filarze 1 i korekta zdania w Lab 1      |
-| PYT-004 | decyzja | zamknięte (a)    | Zapis raportu audytu do repozytorium                           |
-| PYT-005 | decyzja | zamknięte (a)    | Start szybkich wygranych 1–6 z audytu                          |
-| PYT-006 | decyzja | zamknięte (a)    | Dopasowanie kontraktu do pracy nad materiałami (nie harnessem) |
-| PYT-007 | decyzja | zamknięte (a)    | Układ maski, żeby diagram i lekcja mieściły się na ekranie     |
-| PYT-008 | decyzja | zamknięte (b)    | Commit i push szybkich wygranych, audytu i rejestru            |
-| PYT-009 | decyzja | zamknięte (a)    | Od której serii mikro-ćwiczeń zacząć                           |
-| PYT-010 | decyzja | zamknięte (→014) | Ocena serii M1–M4 i commit                                     |
-| PYT-011 | decyzja | zamknięte (a)    | Jedna sieć firmy: źródło prawdy i plan adresów                 |
-| PYT-012 | decyzja | zamknięte (a)    | Gdzie mieszka plan sieci firmy                                 |
-| PYT-013 | decyzja | zamknięte (a)    | Model fizyczny: switch w każdej strefie czy VLAN-y od początku |
-| PYT-014 | decyzja | zamknięte (a)    | Commit serii M1–M4 jako stanu pośredniego                      |
-| PYT-015 | decyzja | zamknięte (a)    | Rozbudowa planu ZS1, żeby pokazać maski inne niż /24           |
-| PYT-016 | decyzja | zamknięte (a)    | Nowa treść M4: zła maska /16 na Laptopie                       |
-| PYT-017 | decyzja | zamknięte (a)    | Projekt ZS1 „od pustej kartki” jako rama wszystkich ćwiczeń    |
-| PYT-018 | decyzja | zamknięte (a)    | Inwentarz urządzeń firmy ZS1                                   |
-| PYT-019 | decyzja | zamknięte (a)    | Porządek w kodzie przed Projektem ZS1                          |
-| PYT-020 | decyzja | zamknięte (a)    | Jedna aplikacja czy osobne strony na wspólnym silniku          |
-| PYT-021 | decyzja | zamknięte (a)    | Narzędzie testów „mieści się na ekranie”                       |
-| PYT-022 | decyzja | zamknięte (a)    | Format treści lekcji                                           |
-| PYT-023 | decyzja | otwarte          | Orkiestracja refaktoru: sub-agenci czy kolejna sesja           |
-| PYT-024 | decyzja | otwarte          | Commity sub-agenta na gałęzi roboczej `refaktor-silnik`        |
-| PYT-025 | decyzja | zamknięte        | Commit dokumentów przed refaktorem                             |
+| ID      | Rodzaj     | Status           | Temat                                                          |
+| ------- | ---------- | ---------------- | -------------------------------------------------------------- |
+| PYT-001 | decyzja    | zamknięte (a)    | Miejsce serii M1–M4 w kolejności i status gałęzi L oraz P      |
+| PYT-002 | decyzja    | zamknięte (a)    | Los obecnych pełnych widoków (ARP, maska)                      |
+| PYT-003 | decyzja    | zamknięte (a)    | Jedna metafora maski w Filarze 1 i korekta zdania w Lab 1      |
+| PYT-004 | decyzja    | zamknięte (a)    | Zapis raportu audytu do repozytorium                           |
+| PYT-005 | decyzja    | zamknięte (a)    | Start szybkich wygranych 1–6 z audytu                          |
+| PYT-006 | decyzja    | zamknięte (a)    | Dopasowanie kontraktu do pracy nad materiałami (nie harnessem) |
+| PYT-007 | decyzja    | zamknięte (a)    | Układ maski, żeby diagram i lekcja mieściły się na ekranie     |
+| PYT-008 | decyzja    | zamknięte (b)    | Commit i push szybkich wygranych, audytu i rejestru            |
+| PYT-009 | decyzja    | zamknięte (a)    | Od której serii mikro-ćwiczeń zacząć                           |
+| PYT-010 | decyzja    | zamknięte (→014) | Ocena serii M1–M4 i commit                                     |
+| PYT-011 | decyzja    | zamknięte (a)    | Jedna sieć firmy: źródło prawdy i plan adresów                 |
+| PYT-012 | decyzja    | zamknięte (a)    | Gdzie mieszka plan sieci firmy                                 |
+| PYT-013 | decyzja    | zamknięte (a)    | Model fizyczny: switch w każdej strefie czy VLAN-y od początku |
+| PYT-014 | decyzja    | zamknięte (a)    | Commit serii M1–M4 jako stanu pośredniego                      |
+| PYT-015 | decyzja    | zamknięte (a)    | Rozbudowa planu ZS1, żeby pokazać maski inne niż /24           |
+| PYT-016 | decyzja    | zamknięte (a)    | Nowa treść M4: zła maska /16 na Laptopie                       |
+| PYT-017 | decyzja    | zamknięte (a)    | Projekt ZS1 „od pustej kartki” jako rama wszystkich ćwiczeń    |
+| PYT-018 | decyzja    | zamknięte (a)    | Inwentarz urządzeń firmy ZS1                                   |
+| PYT-019 | decyzja    | zamknięte (a)    | Porządek w kodzie przed Projektem ZS1                          |
+| PYT-020 | decyzja    | zamknięte (a)    | Jedna aplikacja czy osobne strony na wspólnym silniku          |
+| PYT-021 | decyzja    | zamknięte (a)    | Narzędzie testów „mieści się na ekranie”                       |
+| PYT-022 | decyzja    | zamknięte (a)    | Format treści lekcji                                           |
+| PYT-023 | decyzja    | zamknięte (c)    | Orkiestracja refaktoru: sub-agenci czy kolejna sesja           |
+| PYT-024 | decyzja    | zamknięte (a)    | Commity sub-agenta na gałęzi roboczej `refaktor-silnik`        |
+| PYT-025 | decyzja    | zamknięte        | Commit dokumentów przed refaktorem                             |
+| PYT-026 | decyzja    | zamknięte (a)    | Push commita `dd0c904` na GitHub                               |
+| PYT-027 | z-domyslna | zamknięte (a)    | Adres 10.10.10.0/24 w nagłówkach stron poza `model/`           |
+| PYT-028 | decyzja    | zamknięte (a)    | Scalenie etapu A do `main` po przeglądzie                      |
 
 ## Pytania
 
@@ -289,7 +292,7 @@ zob. PYT-004).
 - **Skutek braku odpowiedzi:** zakładam (a).
 - **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
 
-### PYT-023 · decyzja · otwarte
+### PYT-023 · decyzja · zamknięte
 
 - **Kontekst:** operator: „przemyśl jak zorkiestrować ten refaktor za pomocą subagenta(ów), bo
   kończy nam się sesja”. Brief: `zlecenie-refaktor.md`. Sub-agent startuje bez kontekstu (czyta
@@ -302,19 +305,53 @@ zob. PYT-004).
 - **Rekomendacja:** (a), jeśli sesja ma jeszcze zapas; (c), jeśli ma się skończyć w ciągu godziny.
   W obu przypadkach postęp jest bezpieczny dzięki commitom na gałęzi roboczej (PYT-024).
 - **Skutek braku odpowiedzi:** nie uruchamiam sub-agentów.
-- **Odpowiedź:** —
+- **Odpowiedź (2026-11-17):** „mamy 600k tokenow na liczniku. 23c” → (c): refaktor w nowej sesji od `zlecenie-refaktor.md`, bez sub-agentów.
 
-### PYT-024 · decyzja · otwarte
+### PYT-024 · decyzja · zamknięte
 
-- **Kontekst:** kontrakt wymaga zgody na commit. Bez commitów przerwana praca sub-agenta przepada.
+- **Kontekst:** kontrakt wymaga zgody na commit. Bez commitów przerwana praca przepada. Po PYT-023c dotyczy wykonawcy w nowej sesji, nie sub-agenta.
 - **Opcje:** (a) sub-agent commituje na lokalnej gałęzi `refaktor-silnik`, jeden commit na krok,
   bez push i bez scalania do `main`; (b) sub-agent nie commituje, zostawia zmiany na dysku.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** sub-agent nie commituje.
-- **Odpowiedź:** —
+- **Stan (2026-11-16):** etap A wykonany w nowej sesji na polecenie operatora („wykonaj etap A”),
+  bez commita; zmiany leżą na dysku w katalogu roboczym gałęzi `main`.
+- **Odpowiedź (2026-11-16):** „wszystko a” → (a)
 
 ### PYT-025 · decyzja · zamknięte
 
 - **Kontekst:** dokumenty refaktoru (`architektura.md`, `zlecenie-refaktor.md`, rejestr, plan) i
   skrypty pomiarowe nie były w repo – nowa sesja ani kopia repo by ich nie widziały.
 - **Odpowiedź (2026-11-17):** „zrob commit przed refaktorem” → commit (bez push).
+
+### PYT-026 · decyzja · zamknięte
+
+- **Kontekst:** commit `dd0c904` (dokumenty refaktoru, zlecenie, skrypty pomiarowe) jest tylko
+  lokalnie.
+- **Opcje:** (a) push na `main`; (b) zostawić lokalnie.
+- **Rekomendacja:** (a) – kopia zlecenia poza komputerem.
+- **Skutek braku odpowiedzi:** commit zostaje lokalnie.
+- **Odpowiedź (2026-11-16):** „wszystko a” → (a)
+
+### PYT-027 · z-domyslna · zamknięte
+
+- **Kontekst:** po etapie A adresy IP i MAC są wpisane tylko w `src/model/siec.ts` (pilnuje tego
+  test). Wyjątek: stałe nagłówki stron `arp.html` i `maska.html` z ramką „Przykładowe biuro”
+  i adresem 10.10.10.0/24. To zwykły HTML, nie może czytać modelu.
+- **Opcje:** (a) zostawić do etapu C – ramka i tak znika po przejściu na plan ZS1 (PYT-011a);
+  (b) już teraz generować ramkę z modelu wtyczką w `vite.config.ts`.
+- **Rekomendacja:** (a) – praca nad (b) przepadłaby w etapie C.
+- **Skutek braku odpowiedzi:** pracuję według (a); w kroku 6 adres w nagłówkach trzeba zmienić
+  albo usunąć ręcznie.
+- **Odpowiedź (2026-11-16):** „wszystko a” → (a)
+
+### PYT-028 · decyzja · zamknięte
+
+- **Kontekst:** przegląd etapu A (2026-11-16): weryfikacja agenta potwierdzona (tsc, 87/87 testów,
+  e2e 63 pomiary, 42 stany identyczne z `dd0c904`). Uwagi do etapu B i C w `zlecenie-refaktor.md`,
+  sekcja „Uwagi z przeglądu etapu A”; żadna nie blokuje scalenia.
+- **Opcje:** (a) po commitach na `refaktor-silnik` (PYT-024) scalić etap A do `main` (bez zmian dla
+  ucznia) i wypchnąć razem z `dd0c904` (PYT-026); (b) trzymać gałąź do końca etapu B.
+- **Rekomendacja:** (a) – krótko żyjąca gałąź, mniejsze ryzyko konfliktów; uczeń nie widzi zmian.
+- **Skutek braku odpowiedzi:** etap A zostaje na gałęzi.
+- **Odpowiedź (2026-11-16):** „wszystko a” → (a)

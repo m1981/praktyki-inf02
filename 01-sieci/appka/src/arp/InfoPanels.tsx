@@ -1,5 +1,6 @@
-import { BROADCAST_MAC, type Frame } from '../sim/types';
-import { macOwner, type ArpEntry, type MacEntry, type TableRow } from './scenario';
+import type { ArpEntry, MacEntry, TableRow } from '../net/arp';
+import { isBroadcast, type Frame } from '../net/frame';
+import { macOwner } from './scenario';
 
 function MacCell({ mac }: { mac: string }) {
  const owner = macOwner(mac);
@@ -22,10 +23,8 @@ export function FramePanel({ frame }: { frame?: Frame }) {
        <th scope="row">Typ</th>
        <td>
         <strong>{frame.name}</strong>{' '}
-        <span
-         className={`sim-pill sim-pill--${frame.dstMac === BROADCAST_MAC ? 'broadcast' : 'unicast'}`}
-        >
-         {frame.dstMac === BROADCAST_MAC ? 'Broadcast' : 'Unicast'}
+        <span className={`sim-pill sim-pill--${isBroadcast(frame) ? 'broadcast' : 'unicast'}`}>
+         {isBroadcast(frame) ? 'Broadcast' : 'Unicast'}
         </span>
        </td>
       </tr>

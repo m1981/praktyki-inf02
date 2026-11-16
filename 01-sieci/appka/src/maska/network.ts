@@ -2,10 +2,16 @@
 // DLACZEGO CZYSTE FUNKCJE: decyzja „bezpośrednio czy przez bramę” to sedno lekcji. Liczymy ją
 // jedną funkcją (`decide`), z której korzystają diagram, tabela i testy – nie ma dwóch prawd.
 
+import { genitiveOf, nameOf } from '../model/glossary';
+import { device, deviceIp, LINKS, ZONES, type DeviceId } from '../model/siec';
+import { decideRoute, type Outcome, type RouteDecision } from '../net/decide';
+import { formatIp, networkOf, sameNetwork, type Ip } from '../net/ipMath';
+import { framePath } from '../net/path';
+import { cable } from '../sim/graph';
 import type { Cable, Device, DeviceKind, DeviceTone, DiagramState, Flow } from '../sim/types';
-import { formatIp, networkOf, parseIp, sameNetwork, type Ip } from './ipMath';
 
-export type HostId = 'laptop' | 'nas' | 'printer' | 'camera';
+export type { Outcome };
+export type HostId = Exclude<DeviceId, 'router' | 'switch'>;
 export type Phase = 'there' | 'back';
 
 interface Host {
@@ -18,43 +24,42 @@ interface Host {
  position: { x: number; y: number };
 }
 
+/** Brama wszystkich urządzeń i jedyne urządzenie łączące podsieci. */
+export const GATEWAY: DeviceId = 'router';
+
+// --- Układ diagramu: Router u góry, Switch pośrodku, urządzenia w rzędzie na dole ---
+
+const POSITIONS: Record<DeviceId, { x: number; y: number }> = {
+ router: { x: 300, y: 0 },
+ switch: { x: 300, y: 230 },
+ laptop: { x: 0, y: 230 },
+ nas: { x: 0, y: 480 },
+ printer: { x: 260, y: 480 },
+ camera: { x: 520, y: 480 }
+};
+
+const toLabel = (id: DeviceId) => `do ${genitiveOf(id)}`;
+
+function host(id: HostId): Host {
+ return {
+  id,
+  kind: device(id).kind,
+  label: nameOf(id),
+  toLabel: toLabel(id),
+  ip: deviceIp(id),
+  position: POSITIONS[id]
+ };
+}
+
 export const HOSTS: Record<HostId, Host> = {
- laptop: {
-  id: 'laptop',
-  kind: 'laptop',
-  label: 'Laptop',
-  toLabel: 'do Laptopa',
-  ip: parseIp('10.10.10.105'),
-  position: { x: 0, y: 230 }
- },
- nas: {
-  id: 'nas',
-  kind: 'nas',
-  label: 'Serwer NAS',
-  toLabel: 'do Serwera NAS',
-  ip: parseIp('10.10.10.30'),
-  position: { x: 0, y: 480 }
- },
- printer: {
-  id: 'printer',
-  kind: 'printer',
-  label: 'Drukarka',
-  toLabel: 'do Drukarki',
-  ip: parseIp('10.10.10.130'),
-  position: { x: 260, y: 480 }
- },
- camera: {
-  id: 'camera',
-  kind: 'camera',
-  label: 'Kamera',
-  toLabel: 'do Kamery',
-  ip: parseIp('10.10.10.200'),
-  position: { x: 520, y: 480 }
- }
+ laptop: host('laptop'),
+ nas: host('nas'),
+ printer: host('printer'),
+ camera: host('camera')
 };
 
 export const TARGETS: HostId[] = ['nas', 'printer', 'camera'];
-export const ROUTER_IP = parseIp('10.10.10.1');
+export const ROUTER_IP = deviceIp(GATEWAY);
 export const MIN_PREFIX = 24;
 export const MAX_PREFIX = 30;
 /** Maska wpisana „przez pomyłkę” na Serwerze NAS w pułapce. */
@@ -66,7 +71,12 @@ export const TRAP_PREFIX = 26;
  * adres Routera w ich własnej podsieci (pierwszy adres hosta).
  */
 export function gatewayOf(host: HostId, prefix: number): Ip {
- return host === 'laptop' ? ROUTER_IP : networkOf(HOSTS[host].ip, prefix) + 1;
+ return host === 'laptop' ? ROUTER_IP : routerIpIn(HOSTS[host].ip, prefix);
+}
+
+/** Adres Routera w podsieci, do której należy `ip`: pierwszy adres hosta. */
+export function routerIpIn(ip: Ip, prefix: number): Ip {
+ return networkOf(ip, prefix) + 1;
 }
 
 export interface MaskSettings {
@@ -80,37 +90,16 @@ export function prefixOf(host: HostId, s: MaskSettings): number {
  return host === 'nas' && s.trap ? TRAP_PREFIX : s.prefix;
 }
 
-export type Outcome = 'direct' | 'via-router' | 'gateway-outside';
-
-export interface Decision {
+export interface Decision extends RouteDecision {
  src: HostId;
  dst: HostId;
- /** Maska NADAWCY – tylko jej używa nadawca, także do liczenia sieci celu. */
- prefix: number;
- srcNet: Ip;
- dstNet: Ip;
- gateway: Ip;
- gatewayInside: boolean;
- outcome: Outcome;
 }
 
 /** Decyzja nadawcy: wysłać bezpośrednio, przez bramę, czy nie da się wysłać wcale. */
 export function decide(src: HostId, dst: HostId, s: MaskSettings): Decision {
  const prefix = prefixOf(src, s);
- const srcIp = HOSTS[src].ip;
- const gateway = gatewayOf(src, prefix);
- const gatewayInside = sameNetwork(gateway, srcIp, prefix);
- const local = sameNetwork(HOSTS[dst].ip, srcIp, prefix);
- return {
-  src,
-  dst,
-  prefix,
-  srcNet: networkOf(srcIp, prefix),
-  dstNet: networkOf(HOSTS[dst].ip, prefix),
-  gateway,
-  gatewayInside,
-  outcome: local ? 'direct' : gatewayInside ? 'via-router' : 'gateway-outside'
- };
+ const config = { ip: HOSTS[src].ip, prefix, gateway: gatewayOf(src, prefix) };
+ return { src, dst, ...decideRoute(config, HOSTS[dst].ip) };
 }
 
 /** Kto wysyła w danej fazie: „Tam” = Laptop → cel, „Z powrotem” = cel → Laptop. */
@@ -126,12 +115,15 @@ export function requestFailed(s: MaskSettings): boolean {
 // --- Topologia: jedna gwiazda wokół Switcha (warstwa fizyczna się NIE zmienia) ---
 
 export const CABLES: Cable[] = [
- { id: 'laptop-switch', a: 'laptop', aSide: 'right', b: 'switch', bSide: 'left' },
- { id: 'switch-router', a: 'switch', aSide: 'top', b: 'router', bSide: 'bottom' },
- { id: 'switch-nas', a: 'switch', aSide: 'bottom', b: 'nas', bSide: 'top' },
- { id: 'switch-printer', a: 'switch', aSide: 'bottom', b: 'printer', bSide: 'top' },
- { id: 'switch-camera', a: 'switch', aSide: 'bottom', b: 'camera', bSide: 'top' }
+ cable('laptop', 'right', 'switch', 'left'),
+ cable('switch', 'top', 'router', 'bottom'),
+ cable('switch', 'bottom', 'nas', 'top'),
+ cable('switch', 'bottom', 'printer', 'top'),
+ cable('switch', 'bottom', 'camera', 'top')
 ];
+
+/** Stopka karty Switcha w widokach maski. */
+export const SWITCH_NOTE = 'Nie zna masek – czyta MAC';
 
 /** Karty urządzeń z adresami i bramami dla bieżących ustawień. */
 export function devicesFor(s: MaskSettings): Device[] {
@@ -148,20 +140,20 @@ export function devicesFor(s: MaskSettings): Device[] {
  });
  return [
   {
-   id: 'router',
-   kind: 'router',
-   label: 'Router (Brama)',
+   id: GATEWAY,
+   kind: device(GATEWAY).kind,
+   label: nameOf(GATEWAY),
    ip: formatIp(ROUTER_IP),
    // Uproszczenie: Router ma adres w każdej podsieci (jak Router-on-a-Stick w Lab 2).
    note: '+ adres w każdej podsieci',
-   position: { x: 300, y: 0 }
+   position: POSITIONS[GATEWAY]
   },
   {
    id: 'switch',
-   kind: 'switch',
-   label: 'Switch',
-   note: 'Nie zna masek – czyta MAC',
-   position: { x: 300, y: 230 }
+   kind: device('switch').kind,
+   label: nameOf('switch'),
+   note: SWITCH_NOTE,
+   position: POSITIONS.switch
   },
   ...hosts
  ];
@@ -180,32 +172,22 @@ export function toDiagram(s: MaskSettings): DiagramState {
 
  if (s.phase === 'back' && requestFailed(s)) return { roles: {}, flows: [], tones };
 
- const toDst = HOSTS[dst].toLabel;
- let flows: Flow[] = [];
- if (decision.outcome === 'direct') {
-  flows = [
-   { from: src, to: 'switch', hop: 0, label: toDst },
-   { from: 'switch', to: dst, hop: 1, label: toDst }
-  ];
- } else if (decision.outcome === 'via-router') {
-  // Objazd: ta sama ramka-dane, ale pierwsza połowa drogi ma MAC Routera jako odbiorcę.
-  flows = [
-   { from: src, to: 'switch', hop: 0, label: 'do Routera' },
-   { from: 'switch', to: 'router', hop: 1, label: 'do Routera' },
-   { from: 'router', to: 'switch', hop: 2, label: toDst },
-   { from: 'switch', to: dst, hop: 3, label: toDst }
-  ];
- }
+ if (decision.outcome === 'gateway-outside')
+  return { roles: { [src]: 'blocked' }, flows: [], tones };
 
- const roles: DiagramState['roles'] =
-  decision.outcome === 'gateway-outside'
-   ? { [src]: 'blocked' }
-   : {
-      [src]: 'sends',
-      switch: 'forwards',
-      [dst]: 'receives',
-      ...(decision.outcome === 'via-router' ? { router: 'forwards' as const } : {})
-     };
+ // Objazd: ta sama ramka-dane, ale pierwsza połowa drogi ma MAC Routera jako odbiorcę.
+ const via = decision.outcome === 'via-router' ? GATEWAY : undefined;
+ const hops = framePath<DeviceId>(LINKS, src, dst, via);
+ const flows: Flow[] = hops.map(({ from, to, hop, toward }) => ({
+  from,
+  to,
+  hop,
+  label: toLabel(toward)
+ }));
+
+ // Każde urządzenie po drodze (Switch, przy objeździe także Router) przekazuje ramkę dalej.
+ const roles: DiagramState['roles'] = { [src]: 'sends', [dst]: 'receives' };
+ for (const { to } of hops) if (to !== dst) roles[to] = 'forwards';
 
  return { roles, flows, tones };
 }
@@ -224,8 +206,7 @@ export const PRESETS: Preset[] = [
   id: 'p24',
   title: '/24: jedna sieć',
   settings: { prefix: 24, target: 'printer', trap: false, phase: 'there' },
-  lesson:
-   'Maska /24: wszystkie urządzenia są w sieci 10.10.10.0. Laptop wysyła do Drukarki bezpośrednio, przez sam Switch – tak jak w Symulatorze ARP.'
+  lesson: `Maska /24: wszystkie urządzenia są w sieci ${ZONES.biuro.net}. Laptop wysyła do Drukarki bezpośrednio, przez sam Switch – tak jak w Symulatorze ARP.`
  },
  {
   id: 'p25',
@@ -238,8 +219,7 @@ export const PRESETS: Preset[] = [
   id: 'p26',
   title: '/26: brama za płotem',
   settings: { prefix: 26, target: 'nas', trap: false, phase: 'there' },
-  lesson:
-   'Laptop jest w sieci .64–.127, a jego brama 10.10.10.1 leży w sieci .0–.63. Laptop nie ma komu oddać ramki. Naprawa: wpisz na Laptopie bramę z jego sieci – Router ma tam adres 10.10.10.65.'
+  lesson: `Laptop jest w sieci .64–.127, a jego brama ${formatIp(ROUTER_IP)} leży w sieci .0–.63. Laptop nie ma komu oddać ramki. Naprawa: wpisz na Laptopie bramę z jego sieci – Router ma tam adres ${formatIp(routerIpIn(HOSTS.laptop.ip, 26))}.`
  },
  {
   id: 'trap',

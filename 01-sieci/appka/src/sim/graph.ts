@@ -3,15 +3,9 @@
 // z opisem kroku ani z decyzją nadawcy.
 
 import { MarkerType, type Edge, type Node } from '@xyflow/react';
-import {
- BROADCAST_MAC,
- type Cable,
- type Device,
- type DeviceRole,
- type DeviceTone,
- type DiagramState,
- type Flow
-} from './types';
+import { hasLink, type DeviceId } from '../model/siec';
+import { isBroadcast } from '../net/frame';
+import type { Cable, Device, DeviceRole, DeviceTone, DiagramState, Flow, Side } from './types';
 
 export type PacketKind = 'broadcast' | 'unicast';
 
@@ -55,11 +49,20 @@ export function buildNodes(devices: Device[], state: DiagramState): DeviceNodeTy
  }));
 }
 
+/**
+ * Kabel na diagramie: który bok karty łączy się z którym. Rysować wolno tylko kable, które
+ * istnieją w modelu sieci – widok wybiera układ, nie topologię.
+ */
+export function cable(a: DeviceId, aSide: Side, b: DeviceId, bSide: Side): Cable {
+ if (!hasLink(a, b)) throw new Error(`W modelu sieci nie ma kabla między ${a} a ${b}.`);
+ return { id: `${a}-${b}`, a, aSide, b, bSide };
+}
+
 const isOnCable = (f: Flow, c: Cable) =>
  (f.from === c.a && f.to === c.b) || (f.from === c.b && f.to === c.a);
 
 export function buildEdges(cables: Cable[], state: DiagramState, runId: number): PacketEdgeType[] {
- const kind: PacketKind = state.frame?.dstMac === BROADCAST_MAC ? 'broadcast' : 'unicast';
+ const kind: PacketKind = isBroadcast(state.frame) ? 'broadcast' : 'unicast';
  const hopCount = Math.max(0, ...state.flows.map((f) => f.hop + 1));
 
  // Krawędzie = zawsze te same kable. Stan tylko „zapala” kabel i ustawia kierunek ruchu.

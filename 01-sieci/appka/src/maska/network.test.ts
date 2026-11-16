@@ -9,7 +9,7 @@ import {
  octetBits,
  parseIp,
  sameNetwork
-} from './ipMath';
+} from '../net/ipMath';
 import {
  CABLES,
  decide,

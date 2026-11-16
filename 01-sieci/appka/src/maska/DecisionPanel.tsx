@@ -1,8 +1,6 @@
-import { broadcastOf, formatIp, lastOctet } from './ipMath';
-import { HOSTS, type Decision } from './network';
-
-/** „do Drukarki” → „Drukarki” (dopełniacz do zdań „MAC Drukarki”). */
-const genitive = (id: keyof typeof HOSTS) => HOSTS[id].toLabel.replace(/^do /, '');
+import { genitiveOf } from '../model/glossary';
+import { broadcastOf, formatIp, lastOctet } from '../net/ipMath';
+import { GATEWAY, HOSTS, type Decision } from './network';
 
 interface DecisionPanelProps {
  decision: Decision;
@@ -71,9 +69,9 @@ export function DecisionPanel({ decision: d, noReply }: DecisionPanelProps) {
       <th scope="row">ARP pyta o</th>
       <td>
        {local
-        ? `MAC ${genitive(d.dst)}`
+        ? `MAC ${genitiveOf(d.dst)}`
         : d.gatewayInside
-          ? 'MAC Routera'
+          ? `MAC ${genitiveOf(GATEWAY)}`
           : '— (nie ma kogo zapytać)'}
       </td>
      </tr>

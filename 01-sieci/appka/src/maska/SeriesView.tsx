@@ -10,6 +10,7 @@ import {
  EXERCISES,
  FREE_MODE,
  hashOf,
+ networkNumber,
  seriesReducer,
  type SeriesStep
 } from './series';
@@ -194,7 +195,7 @@ function Visual({ step, runId }: { step: SeriesStep; runId: number }) {
 /** M1: numer sieci (3 pierwsze liczby przy /24) obok części hosta; kolejne adresy odsłaniane po jednym. */
 function CompareTable({ revealed }: { revealed: number }) {
  const [laptop, ...others] = COMPARE_ROWS;
- const netOf = (ip: string) => ip.split('.').slice(0, 3).join('.');
+ const netOf = networkNumber;
  const hostOf = (ip: string) => `.${ip.split('.')[3]}`;
  return (
   <table className="sr-compare">

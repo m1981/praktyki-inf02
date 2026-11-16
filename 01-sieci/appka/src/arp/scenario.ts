@@ -1,28 +1,25 @@
-// Model danych i scenariusz symulacji.
+// Scenariusz symulacji ARP: układ diagramu, ramki i kroki.
 // DLACZEGO OSOBNY PLIK BEZ REACTA: scenariusz to czyste dane. Nowy scenariusz (np. „Ruch do
 // Internetu przez Router”) to nowa tablica kroków – bez zmian w komponentach.
 
-import { assertFlowsOnCables } from '../sim/graph';
 import {
- BROADCAST_MAC,
- type Cable,
- type Device,
- type DeviceRole,
- type DiagramState,
- type Frame
-} from '../sim/types';
+ device,
+ deviceByMac,
+ deviceCidr,
+ deviceIpText,
+ deviceMac,
+ INTERNET_IP,
+ switchPort,
+ zoneCidr,
+ type DeviceId as ModelDeviceId
+} from '../model/siec';
+import { GLOSSARY, nameOf } from '../model/glossary';
+import { arpReply, arpRequest, type Learns } from '../net/arp';
+import { BROADCAST_MAC, type Frame } from '../net/frame';
+import { assertFlowsOnCables, cable } from '../sim/graph';
+import type { Cable, Device, DeviceRole, DiagramState } from '../sim/types';
 
-export type DeviceId = 'laptop' | 'switch' | 'router' | 'nas';
-
-export interface ArpEntry {
- ip: string;
- mac: string;
-}
-
-export interface MacEntry {
- mac: string;
- port: string;
-}
+export type DeviceId = Extract<ModelDeviceId, 'laptop' | 'switch' | 'router' | 'nas'>;
 
 export interface Question {
  question: string;
@@ -35,85 +32,68 @@ export interface SimulationStep extends DiagramState {
  description: string;
  roles: Partial<Record<DeviceId, DeviceRole>>;
  /** Wpisy, które pojawiają się w tablicach W TYM kroku. Stan tablic liczymy z kroków 0..N. */
- learns?: { laptopArp?: ArpEntry[]; switchMac?: MacEntry[] };
+ learns?: Learns;
  questions?: Question[];
 }
 
-// --- Stałe sieci (jedno miejsce prawdy dla adresów i portów) ---
+// --- Adresy i porty: skróty do modelu sieci (jedyne źródło prawdy: model/siec.ts) ---
 
-const IP = { laptop: '10.10.10.105', nas: '10.10.10.30', router: '10.10.10.1' } as const;
-const MAC = {
- laptop: 'AA:BB:CC:00:01:05',
- nas: 'AA:BB:CC:00:00:30',
- router: 'AA:BB:CC:00:00:01'
-} as const;
-const PORT = { laptop: 'Fa0/1', nas: 'Fa0/2', router: 'Fa0/3' } as const;
+const IP = {
+ laptop: deviceIpText('laptop'),
+ nas: deviceIpText('nas'),
+ router: deviceIpText('router')
+};
+const MAC = { laptop: deviceMac('laptop'), nas: deviceMac('nas'), router: deviceMac('router') };
+const PORT = { laptop: switchPort('laptop'), nas: switchPort('nas'), router: switchPort('router') };
+const NET = zoneCidr('biuro');
 
-// --- Topologia biura SOHO (gwiazda wokół Switcha) ---
+// --- Układ diagramu: biuro SOHO, gwiazda wokół Switcha ---
+
+/** Karta urządzenia z adresem IP i MAC z modelu. */
+function card(id: DeviceId, position: Device['position']): Device {
+ return {
+  id,
+  kind: device(id).kind,
+  label: nameOf(id),
+  ip: deviceCidr(id),
+  mac: deviceMac(id),
+  position
+ };
+}
 
 export const DEVICES: Device[] = [
- {
-  id: 'router',
-  kind: 'router',
-  label: 'Router (Brama)',
-  ip: `${IP.router}/24`,
-  mac: MAC.router,
-  position: { x: 380, y: 0 }
- },
- {
-  id: 'laptop',
-  kind: 'laptop',
-  label: 'Laptop',
-  ip: `${IP.laptop}/24`,
-  mac: MAC.laptop,
-  position: { x: 0, y: 250 }
- },
+ card('router', { x: 380, y: 0 }),
+ card('laptop', { x: 0, y: 250 }),
  {
   id: 'switch',
   kind: 'switch',
-  label: 'Switch',
+  label: nameOf('switch'),
   // Switch (L2) przełącza ramki po adresach MAC – nie potrzebuje adresu IP.
   note: 'L2: czyta tylko MAC',
   ports: { left: PORT.laptop, right: PORT.nas, top: PORT.router },
   position: { x: 380, y: 250 }
  },
- {
-  id: 'nas',
-  kind: 'nas',
-  label: 'Serwer NAS',
-  ip: `${IP.nas}/24`,
-  mac: MAC.nas,
-  position: { x: 760, y: 250 }
- }
+ card('nas', { x: 760, y: 250 })
 ];
 
 export const CABLES: Cable[] = [
- { id: 'laptop-switch', a: 'laptop', aSide: 'right', b: 'switch', bSide: 'left' },
- { id: 'switch-router', a: 'switch', aSide: 'top', b: 'router', bSide: 'bottom' },
- { id: 'switch-nas', a: 'switch', aSide: 'right', b: 'nas', bSide: 'left' }
+ cable('laptop', 'right', 'switch', 'left'),
+ cable('switch', 'top', 'router', 'bottom'),
+ cable('switch', 'right', 'nas', 'left')
 ];
 
 /** Nazwa urządzenia dla adresu MAC – do podpisów w tabelach. */
 export function macOwner(mac: string): string | undefined {
  if (mac === BROADCAST_MAC) return 'Broadcast – do wszystkich';
- return DEVICES.find((d) => d.mac === mac)?.label;
+ const owner = deviceByMac(mac);
+ return owner && GLOSSARY[owner.kind].nom;
 }
 
 // --- Ramki użyte w scenariuszu ---
 
-const ARP_REQUEST: Frame = {
- name: 'ARP Request',
- srcMac: MAC.laptop,
- dstMac: BROADCAST_MAC,
- payload: `Kto ma ${IP.nas}? Odpowiedz do ${IP.laptop}`
-};
+const ARP_REQUEST = arpRequest(MAC.laptop, `Kto ma ${IP.nas}? Odpowiedz do ${IP.laptop}`);
 
-const ARP_REPLY: Frame = {
- name: 'ARP Reply',
- srcMac: MAC.nas,
- dstMac: MAC.laptop,
- payload: `${IP.nas} ma adres MAC ${MAC.nas}`
-};
+const ARP_REPLY = arpReply(MAC.nas, MAC.laptop, `${IP.nas} ma adres MAC ${MAC.nas}`);
 
 const DATA: Frame = {
  name: 'Dane (pakiet IP)',
@@ -135,7 +115,7 @@ export const SIMULATION_STEPS: SimulationStep[] = [
  {
   title: 'Krok 1: Ta sama sieć – bez Routera',
   layer: 'L3 (Sieć) – decyzja',
-  description: `Laptop i Serwer NAS mają ten sam numer sieci: 10.10.10.0/24. Laptop wyśle dane bezpośrednio, bez Routera. Do ramki potrzebuje adresu MAC Serwera NAS, a jego tablica ARP jest pusta.`,
+  description: `Laptop i Serwer NAS mają ten sam numer sieci: ${NET}. Laptop wyśle dane bezpośrednio, bez Routera. Do ramki potrzebuje adresu MAC Serwera NAS, a jego tablica ARP jest pusta.`,
   roles: { laptop: 'analyzes' },
   flows: []
  },
@@ -194,8 +174,8 @@ export const SIMULATION_STEPS: SimulationStep[] = [
     answer: `Nie. Adres MAC Serwera NAS jest już w tablicy ARP Laptopa, więc Laptop od razu wysyła ramkę z danymi (Krok 6). Wpis w tablicy ARP wygasa po kilku minutach – dopiero wtedy Laptop znowu zapyta przez ARP.`
    },
    {
-    question: 'Laptop wysyła dane do adresu 8.8.8.8. O czyj adres MAC zapyta przez ARP?',
-    answer: `O adres MAC Routera (${IP.router}). Adres 8.8.8.8 jest poza siecią 10.10.10.0/24, więc Laptop wysyła dane przez bramę domyślną. ARP działa tylko w sieci lokalnej – Laptop nigdy nie pyta o MAC urządzenia z innej sieci.`
+    question: `Laptop wysyła dane do adresu ${INTERNET_IP}. O czyj adres MAC zapyta przez ARP?`,
+    answer: `O adres MAC Routera (${IP.router}). Adres ${INTERNET_IP} jest poza siecią ${NET}, więc Laptop wysyła dane przez bramę domyślną. ARP działa tylko w sieci lokalnej – Laptop nigdy nie pyta o MAC urządzenia z innej sieci.`
    }
   ]
  }
@@ -212,21 +192,4 @@ export function assertScenario(steps: SimulationStep[]): void {
   }
   assertFlowsOnCables(CABLES, step.flows, `Krok ${i}`);
  });
-}
-
-export interface TableRow<T> {
- entry: T;
- isNew: boolean;
-}
-
-/** Stan tablic ARP (Laptop) i MAC (Switch) po wykonaniu kroków 0..stepIndex. */
-export function tablesAt(steps: SimulationStep[], stepIndex: number) {
- const arp: TableRow<ArpEntry>[] = [];
- const mac: TableRow<MacEntry>[] = [];
- steps.slice(0, stepIndex + 1).forEach((step, i) => {
-  const isNew = i === stepIndex;
-  step.learns?.laptopArp?.forEach((entry) => arp.push({ entry, isNew }));
-  step.learns?.switchMac?.forEach((entry) => mac.push({ entry, isNew }));
- });
- return { arp, mac };
 }

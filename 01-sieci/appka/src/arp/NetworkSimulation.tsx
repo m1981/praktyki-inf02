@@ -3,7 +3,8 @@ import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 
 import { Diagram } from '../sim/Diagram';
 import { buildEdges, buildNodes, PACKET_COLORS } from '../sim/graph';
-import { CABLES, DEVICES, SIMULATION_STEPS, tablesAt } from './scenario';
+import { tablesAt } from '../net/arp';
+import { CABLES, DEVICES, SIMULATION_STEPS } from './scenario';
 import { initSimulation, simulationReducer } from './reducer';
 import { FramePanel, TablesPanel } from './InfoPanels';
 

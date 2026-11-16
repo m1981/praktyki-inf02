@@ -14,6 +14,7 @@ Plan dalszych materiałów po symulatorze ARP. Źródła symulatorów: `01-sieci
 | Audyt dydaktyczny + szybkie wygrane (PYT-005)                                     | `01-sieci/appka/audyt.md`, oba symulatory               | `cceb206`                                       |
 | Układ maski na jednym ekranie (PYT-007), metafora „płot i działka” (PYT-003)      | oba symulatory, `index.html`, Lab 1                     | `cceb206`                                       |
 | Seria M1–M4 + Tryb swobodny (PYT-009)                                             | `01-sieci/symulator-maska.html` (`src/maska/series.ts`) | stan pośredni (PYT-014a), przeróbka na plan ZS1 |
+| Refaktor, etap A: testy e2e w repo, `model/` + słownik nazw + `net/` (PYT-019)    | `01-sieci/appka/e2e`, `src/model`, `src/net`            | bez commita (PYT-024 otwarte)                   |
 
 ## Zasada dydaktyczna
 

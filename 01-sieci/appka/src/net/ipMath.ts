@@ -43,3 +43,8 @@ export function lastOctet(ip: Ip): number {
 export function octetBits(octet: number): number[] {
  return Array.from({ length: 8 }, (_, i) => (octet >> (7 - i)) & 1);
 }
+
+/** Pierwsze trzy oktety jako tekst: 10.10.10.105 → „10.10.10” (numer sieci przy masce /24). */
+export function firstThreeOctets(ip: Ip): string {
+ return formatIp(ip).split('.').slice(0, 3).join('.');
+}

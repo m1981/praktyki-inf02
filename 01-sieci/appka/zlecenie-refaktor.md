@@ -1,6 +1,6 @@
 # Zlecenie: refaktor symulatorów (dla sub-agenta albo nowej sesji)
 
-Status: gotowe do uruchomienia po decyzjach PYT-023–025 · 2026-11-17
+Status: etap A wykonany 2026-11-16, bez commita (PYT-024 otwarte); następny: etap B w nowej sesji. Otwarte: PYT-024 (commity na gałęzi `refaktor-silnik`), PYT-026 (push `dd0c904`), PYT-027 (nagłówki stron z adresem 10.10.10.0/24).
 
 Ten plik to kompletny brief. Wykonawca nie zna wcześniejszej rozmowy – wszystko, czego potrzebuje,
 jest tu i w plikach, które wskazuje.
@@ -38,7 +38,7 @@ nie psuła porównania; porównanie pikselowe, np. `pixelmatch`, tolerancja ≤ 
 - Commit: tylko na gałęzi roboczej `refaktor-silnik`, jeden commit na krok migracji, **bez push i bez
   scalania do `main`** (kontrakt, rozdz. 3). Wiadomość commita po angielsku, w trybie rozkazującym,
   z linią `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
-- Nie usuwaj plików spoza `src/` i `e2e/`. `przyklad.md` i `kontrakt.md` nie ruszasz.
+- Nie usuwasz plików bez zgody operatora (kontrakt, rozdz. 3). `przyklad.md` i `kontrakt.md` nie ruszasz.
 - Nie dodawaj zależności poza: `pixelmatch`, `pngjs` (porównanie zrzutów), `puppeteer-core` (e2e).
 - Teksty dla ucznia przenosisz do `content/` **bez zmiany ani jednego słowa** (test porównuje).
 - Hook pre-commit uruchamia PurgeCSS, konspekt i Prettier – to normalne.
@@ -53,3 +53,20 @@ nie psuła porównania; porównanie pikselowe, np. `pixelmatch`, tolerancja ≤ 
 
 WNIOSEK · WYKONANO (commity, pliki) · STAN (testy, e2e, porównanie zrzutów) · PROBLEMY · PACZKA
 PYTAŃ (pytania do operatora, z rekomendacją) · OD CIEBIE.
+
+## Uwagi z przeglądu etapu A (2026-11-16) – do uwzględnienia w etapie B
+
+Przegląd potwierdził: tsc bez błędów, 87/87 testów, e2e 63 pomiary, 42 stany identyczne z `dd0c904`
+(tekst co do znaku, 0,0000% pikseli; strony zbudowane po ostatniej zmianie źródeł).
+
+| #   | Uwaga                                                                                                                                                                                                                                                                           | Kiedy                      |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| 1   | `model/` importuje `net/ipMath` – odwrotny kierunek zależności. Przenieść `ipMath` do neutralnej warstwy `src/lib/ipv4.ts`, z której korzystają `model/` i `net/`.                                                                                                              | etap B, krok 3             |
+| 2   | `net/path.floodPath` rozsyła Broadcast przez **wszystkie** urządzenia, także przez Router. Dziś Router jest liściem, więc wynik jest dobry; w ZS1 Broadcast „przeszedłby” do innych stref. Dodać zatrzymanie na urządzeniach L3 + test „Broadcast nie przechodzi przez Router”. | przed etapem C (konieczne) |
+| 3   | `model.switchPort` zakłada jeden kabel do jednego Switcha i port tylko po stronie Switcha. W ZS1 Router ma kabel do każdej strefy – port po obu stronach kabla (`portA`, `portB`).                                                                                              | przed etapem C             |
+| 4   | `net/arp.Learns` ma pola `laptopArp` / `switchMac` – skrojone pod jeden scenariusz. Uogólnić na tablice per urządzenie (`{ device, arp: [] }`, `{ device, mac: [] }`).                                                                                                          | etap B, krok 4 (ARP)       |
+| 5   | `maska/network.ts` importuje `cable()` z `sim/graph` (warstwa widoku). W etapie B specyfikacja kabli z bokami kart należy do widoku/treści, nie do logiki.                                                                                                                      | etap B, krok 3             |
+| 6   | Wzorzec `__snapshots__/niezmiennosc.test.ts.snap` (~9500 linii) to tymczasowy strażnik refaktoru. Usunąć po etapie C (ZS1 i tak zmienia wszystkie dane).                                                                                                                        | etap C                     |
+| 7   | Brak testu „tylko nazwy ze słownika” w zdaniach dla ucznia (agent to zgłosił) – dodać przy przenoszeniu treści do `content/`.                                                                                                                                                   | etap B                     |
+| 8   | `ipMath.firstThreeOctets` i `BitRuler` zakładają maski /24–/30. Widok „cała firma /16” (PYT-015a) wymaga uogólnienia.                                                                                                                                                           | etap C                     |
+| 9   | Zlecenie pozwalało usuwać pliki w `e2e/`, a kontrakt (rozdz. 3) wymaga zgody na usuwanie. Błąd zlecenia (autor: agent poprzedniej sesji). Usunięte `e2e/z-sesji/` jest w historii (`dd0c904`). Od teraz obowiązuje kontrakt.                                                    | od razu                    |

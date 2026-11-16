@@ -1,5 +1,7 @@
-import { blockSize, broadcastOf, lastOctet, networkOf, type Ip } from './ipMath';
-import { HOSTS, ROUTER_IP, type HostId } from './network';
+import { shortNameOf } from '../model/glossary';
+import { deviceIp, type DeviceId } from '../model/siec';
+import { blockSize, broadcastOf, lastOctet, networkOf, type Ip } from '../net/ipMath';
+import { HOSTS, type HostId } from './network';
 
 interface AddressLineProps {
  src: HostId;
@@ -16,12 +18,19 @@ interface Pin {
  row: 'above' | 'below';
 }
 
+const pin = (id: DeviceId, row: Pin['row']): Pin => ({
+ id,
+ label: shortNameOf(id),
+ ip: deviceIp(id),
+ row
+});
+
 const PINS: Pin[] = [
- { id: 'router', label: 'Router', ip: ROUTER_IP, row: 'above' },
- { id: 'nas', label: 'NAS', ip: HOSTS.nas.ip, row: 'below' },
- { id: 'laptop', label: 'Laptop', ip: HOSTS.laptop.ip, row: 'above' },
- { id: 'printer', label: 'Drukarka', ip: HOSTS.printer.ip, row: 'below' },
- { id: 'camera', label: 'Kamera', ip: HOSTS.camera.ip, row: 'above' }
+ pin('router', 'above'),
+ pin('nas', 'below'),
+ pin('laptop', 'above'),
+ pin('printer', 'below'),
+ pin('camera', 'above')
 ];
 
 const pct = (octet: number) => `${(octet / 256) * 100}%`;

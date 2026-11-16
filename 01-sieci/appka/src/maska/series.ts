@@ -3,9 +3,31 @@
 // DLACZEGO DANE, A NIE KOMPONENTY: teksty i stany kroków są w jednym miejscu, test pilnuje limitu
 // słów i tego, że każda ramka idzie po istniejącym kablu.
 
-import { BROADCAST_MAC, type Cable, type Device, type DiagramState } from '../sim/types';
-import { devicesFor, CABLES, HOSTS, toDiagram, type HostId } from './network';
-import { formatIp } from './ipMath';
+import { nameOf } from '../model/glossary';
+import {
+ device,
+ deviceCidr,
+ deviceIpText,
+ deviceMac,
+ INTERNET_IP,
+ LINKS,
+ ZONES,
+ type DeviceId
+} from '../model/siec';
+import { arpRequest } from '../net/arp';
+import { firstThreeOctets, formatIp, parseIp } from '../net/ipMath';
+import { floodPath } from '../net/path';
+import { cable } from '../sim/graph';
+import type { Cable, Device, DiagramState } from '../sim/types';
+import {
+ CABLES,
+ devicesFor,
+ HOSTS,
+ ROUTER_IP,
+ routerIpIn,
+ SWITCH_NOTE,
+ toDiagram
+} from './network';
 
 export type Visual =
  /** M1: porównanie numerów sieci; `revealed` = ile adresów (poza Laptopem) już odsłonięto. */
@@ -38,54 +60,57 @@ export interface Exercise {
 // --- M1: porównanie numerów sieci ---
 
 export const COMPARE_ROWS: { label: string; ip: string }[] = [
- { label: 'Laptop', ip: formatIp(HOSTS.laptop.ip) },
- { label: 'Serwer NAS', ip: formatIp(HOSTS.nas.ip) },
- { label: 'Drukarka', ip: formatIp(HOSTS.printer.ip) },
- { label: 'Adres w Internecie', ip: '8.8.8.8' }
+ { label: nameOf('laptop'), ip: deviceIpText('laptop') },
+ { label: nameOf('nas'), ip: deviceIpText('nas') },
+ { label: nameOf('printer'), ip: deviceIpText('printer') },
+ { label: 'Adres w Internecie', ip: INTERNET_IP }
 ];
+
+/** Numer sieci przy masce /24 jako tekst: pierwsze trzy liczby adresu. */
+export const networkNumber = (ip: string) => firstThreeOctets(parseIp(ip));
+
+// Fragmenty adresów wstawiane do tekstów kroków (jedyne źródło: model sieci).
+const NET = ZONES.biuro.net;
+const NET_NUMBER = networkNumber(NET);
+const INTERNET_NUMBER = networkNumber(INTERNET_IP);
 
 // --- M3: mała topologia – tylko urządzenia z ćwiczenia ---
 
 const M3_CABLES: Cable[] = [
- { id: 'laptop-switch', a: 'laptop', aSide: 'right', b: 'switch', bSide: 'left' },
- { id: 'switch-router', a: 'switch', aSide: 'top', b: 'router', bSide: 'bottom' },
- { id: 'switch-printer', a: 'switch', aSide: 'right', b: 'printer', bSide: 'left' }
+ cable('laptop', 'right', 'switch', 'left'),
+ cable('switch', 'top', 'router', 'bottom'),
+ cable('switch', 'right', 'printer', 'left')
 ];
+
+const M3_POSITIONS = {
+ router: { x: 300, y: 0 },
+ laptop: { x: 0, y: 210 },
+ switch: { x: 300, y: 210 },
+ printer: { x: 600, y: 210 }
+} satisfies Partial<Record<DeviceId, Device['position']>>;
 
 function m3Devices(prefix: 24 | 25): Device[] {
  const local = prefix === 24;
+ const card = (id: keyof typeof M3_POSITIONS): Device => ({
+  id,
+  kind: device(id).kind,
+  label: nameOf(id),
+  position: M3_POSITIONS[id]
+ });
  return [
   {
-   id: 'router',
-   kind: 'router',
-   label: 'Router (Brama)',
-   ip: '10.10.10.1',
+   ...card('router'),
+   ip: formatIp(ROUTER_IP),
    // Router potrzebuje adresu w sieci Drukarki – pokazujemy go bez komentarza (Lab 2: RoaS).
-   note: local ? undefined : '+ 10.10.10.129 (sieć Drukarki)',
-   position: { x: 300, y: 0 }
+   note: local ? undefined : `+ ${formatIp(routerIpIn(HOSTS.printer.ip, 25))} (sieć Drukarki)`
   },
   {
-   id: 'laptop',
-   kind: 'laptop',
-   label: 'Laptop',
-   ip: `10.10.10.105/${prefix}`,
-   note: local ? 'Myśl: .130 – moja sieć → bezpośrednio' : 'Myśl: .130 – inna sieć → do bramy',
-   position: { x: 0, y: 210 }
+   ...card('laptop'),
+   ip: `${deviceIpText('laptop')}/${prefix}`,
+   note: local ? 'Myśl: .130 – moja sieć → bezpośrednio' : 'Myśl: .130 – inna sieć → do bramy'
   },
-  {
-   id: 'switch',
-   kind: 'switch',
-   label: 'Switch',
-   note: 'Nie zna masek – czyta MAC',
-   position: { x: 300, y: 210 }
-  },
-  {
-   id: 'printer',
-   kind: 'printer',
-   label: 'Drukarka',
-   ip: `10.10.10.130/${prefix}`,
-   position: { x: 600, y: 210 }
-  }
+  { ...card('switch'), note: SWITCH_NOTE },
+  { ...card('printer'), ip: `${deviceIpText('printer')}/${prefix}` }
  ];
 }
 
@@ -97,46 +122,41 @@ function m3State(prefix: 24 | 25): DiagramState {
 
 // --- M4: Broadcast dociera do wszystkich, bez względu na maskę ---
 
-const M4_NOTES: Partial<Record<HostId | 'router' | 'switch', string>> = {
+const M4_NOTES: Partial<Record<DeviceId, string>> = {
  laptop: 'Działka .0–.127',
  nas: 'Na działce Laptopa',
  printer: 'Za płotem',
  camera: 'Za płotem',
- switch: 'Nie zna masek – czyta MAC'
+ switch: SWITCH_NOTE
 };
 
 function m4Devices(): Device[] {
  return devicesFor({ prefix: 25, target: 'nas', trap: false, phase: 'there' }).map((d) => ({
   ...d,
-  note: M4_NOTES[d.id as keyof typeof M4_NOTES]
+  note: M4_NOTES[d.id as DeviceId]
  }));
 }
 
-const M4_BROADCAST: DiagramState = {
- frame: {
-  name: 'ARP Request',
-  srcMac: 'AA:BB:CC:00:01:05',
-  dstMac: BROADCAST_MAC,
-  payload: 'Kto ma 10.10.10.30?'
- },
- roles: {
-  laptop: 'sends',
-  switch: 'forwards',
-  router: 'receives',
-  nas: 'receives',
-  printer: 'receives',
-  camera: 'receives'
- },
- flows: [
-  { from: 'laptop', to: 'switch', hop: 0, label: 'ARP Request' },
-  ...(['router', 'nas', 'printer', 'camera'] as const).map((to) => ({
-   from: 'switch',
+const M4_QUESTION = `Kto ma ${deviceIpText('nas')}?`;
+
+/** Broadcast z Laptopa: Switch rozsyła kopie na wszystkie pozostałe kable. */
+function m4Broadcast(): DiagramState {
+ const hops = floodPath<DeviceId>(LINKS, 'laptop');
+ const frame = arpRequest(deviceMac('laptop'), M4_QUESTION);
+ const forwarders = new Set(hops.filter((h) => h.from !== 'laptop').map((h) => h.from));
+ const roles: DiagramState['roles'] = { laptop: 'sends' };
+ for (const { to } of hops) roles[to] = forwarders.has(to) ? 'forwards' : 'receives';
+ return {
+  frame,
+  roles,
+  flows: hops.map(({ from, to, hop }) => ({
+   from,
    to,
-   hop: 1,
-   label: 'kopia'
+   hop,
+   label: hop === 0 ? frame.name : 'kopia'
   }))
- ]
-};
+ };
+}
 
 // --- Seria ---
 
@@ -144,32 +164,29 @@ export const EXERCISES: Exercise[] = [
  {
   code: 'M1',
   title: 'Moja sieć czy inna?',
-  question: 'Laptop ma adres 10.10.10.105/24. Które adresy są w jego sieci?',
+  question: `Laptop ma adres ${deviceCidr('laptop')}. Które adresy są w jego sieci?`,
   controlKind: 'next',
   steps: [
    {
-    text:
-     'Maska /24: pierwsze 24 bity, czyli pierwsze 3 liczby adresu, to numer sieci. Laptop: 10.10.10. Serwer NAS: 10.10.10. Ten sam numer, więc Serwer NAS jest w sieci Laptopa.',
+    text: `Maska /24: pierwsze 24 bity, czyli pierwsze 3 liczby adresu, to numer sieci. Laptop: ${NET_NUMBER}. Serwer NAS: ${NET_NUMBER}. Ten sam numer, więc Serwer NAS jest w sieci Laptopa.`,
     change: 'nowy wiersz: Serwer NAS – ta sama sieć',
     visual: { kind: 'compare', revealed: 1 },
     control: 'Pokaż następny adres →'
    },
    {
-    text:
-     'Drukarka 10.10.10.130: numer sieci 10.10.10 – taki sam. Drukarka jest w sieci Laptopa. Laptop wyśle do niej ramkę bezpośrednio, przez Switch.',
+    text: `Drukarka ${deviceIpText('printer')}: numer sieci ${NET_NUMBER} – taki sam. Drukarka jest w sieci Laptopa. Laptop wyśle do niej ramkę bezpośrednio, przez Switch.`,
     change: 'nowy wiersz: Drukarka – ta sama sieć',
     visual: { kind: 'compare', revealed: 2 },
     control: 'Pokaż następny adres →'
    },
    {
-    text:
-     'Adres 8.8.8.8: numer sieci 8.8.8 – inny. To inna sieć. Laptop nie wyśle ramki prosto do 8.8.8.8. Jak to zrobi, zobaczysz w M3.',
-    change: 'nowy wiersz: 8.8.8.8 – inna sieć',
+    text: `Adres ${INTERNET_IP}: numer sieci ${INTERNET_NUMBER} – inny. To inna sieć. Laptop nie wyśle ramki prosto do ${INTERNET_IP}. Jak to zrobi, zobaczysz w M3.`,
+    change: `nowy wiersz: ${INTERNET_IP} – inna sieć`,
     visual: { kind: 'compare', revealed: 3 },
     control: 'Pokaż następny adres →'
    }
   ],
-  nextQuestion: 'Czy płot może stanąć wewnątrz sieci 10.10.10.0?'
+  nextQuestion: `Czy płot może stanąć wewnątrz sieci ${NET}?`
  },
  {
   code: 'M2',
@@ -224,8 +241,7 @@ export const EXERCISES: Exercise[] = [
   controlKind: 'next',
   steps: [
    {
-    text:
-     'Laptop wysyła ARP Request: „Kto ma 10.10.10.30?”. Przy masce /25 Drukarka .130 i Kamera .200 są za płotem. Kliknij i sprawdź, kto dostanie ramkę.',
+    text: `Laptop wysyła ARP Request: „${M4_QUESTION}”. Przy masce /25 Drukarka .130 i Kamera .200 są za płotem. Kliknij i sprawdź, kto dostanie ramkę.`,
     change: 'nic jeszcze nie płynie',
     visual: {
      kind: 'diagram',
@@ -239,7 +255,7 @@ export const EXERCISES: Exercise[] = [
     text:
      'Tak – Drukarka, Kamera i Router też. Switch nie zna masek, czyta tylko adresy MAC. Broadcast dostaje każde urządzenie podłączone do tego Switcha. Maska to reguła nadawcy, nie ściana w kablu.',
     change: 'kopie Broadcastu docierają do wszystkich 4 urządzeń',
-    visual: { kind: 'diagram', devices: m4Devices(), cables: CABLES, state: M4_BROADCAST },
+    visual: { kind: 'diagram', devices: m4Devices(), cables: CABLES, state: m4Broadcast() },
     control: 'Wyślij ARP Request →'
    }
   ],

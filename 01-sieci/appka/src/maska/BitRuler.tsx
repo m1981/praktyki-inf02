@@ -1,4 +1,12 @@
-import { formatIp, lastOctet, maskOf, networkOf, octetBits, type Ip } from './ipMath';
+import {
+ firstThreeOctets,
+ formatIp,
+ lastOctet,
+ maskOf,
+ networkOf,
+ octetBits,
+ type Ip
+} from '../net/ipMath';
 
 interface BitRulerProps {
  srcLabel: string;
@@ -20,6 +28,8 @@ export function BitRuler({ srcLabel, srcIp, dstLabel, dstIp, prefix }: BitRulerP
  const netBits = prefix - 24; // ile bitów ostatniego oktetu należy do sieci
  const src = octetBits(lastOctet(srcIp));
  const dst = octetBits(lastOctet(dstIp));
+ // Urządzenia biura różnią się tylko ostatnim oktetem – trzy pierwsze są wspólne.
+ const shared = firstThreeOctets(srcIp);
  const firstDiff = src.findIndex((b, i) => i < netBits && b !== dst[i]);
 
  const rows: { name: string; value: number; compare?: boolean }[] = [
@@ -32,8 +42,7 @@ export function BitRuler({ srcLabel, srcIp, dstLabel, dstIp, prefix }: BitRulerP
 
  let verdict: string;
  if (netBits === 0) {
-  verdict =
-   'Maska /24 nie zabiera żadnego bitu z ostatniego oktetu. Liczą się tylko pierwsze 3 oktety (10.10.10), a te są takie same → ta sama sieć.';
+  verdict = `Maska /24 nie zabiera żadnego bitu z ostatniego oktetu. Liczą się tylko pierwsze 3 oktety (${shared}), a te są takie same → ta sama sieć.`;
  } else if (firstDiff >= 0) {
   verdict = `Bit nr ${firstDiff + 1} ostatniego oktetu jest różny (czerwony) → różne sieci.`;
  } else {
@@ -44,9 +53,10 @@ export function BitRuler({ srcLabel, srcIp, dstLabel, dstIp, prefix }: BitRulerP
   <section className="sim-panel">
    <h3>🔢 Bity: jak to liczy komputer</h3>
    <p className="sim-muted mk-small">
-    Pierwsze 3 oktety (10.10.10) są takie same u wszystkich i w całości należą do sieci. Pokazujemy
-    tylko ostatni oktet. Maska <strong>{formatIp(maskOf(prefix))}</strong>: jedynki = bity sieci
-    (kolorowe), zera = bity hosta (szare).
+    {/* Jeden napis, a nie trzy kawałki: przeglądarka składa wtedy tekst tak samo jak przed zmianą. */}
+    {`Pierwsze 3 oktety (${shared}) są takie same u wszystkich i w całości należą do sieci. Pokazujemy tylko ostatni oktet. Maska `}
+    <strong>{formatIp(maskOf(prefix))}</strong>: jedynki = bity sieci (kolorowe), zera = bity hosta
+    (szare).
    </p>
    <div className="mk-scroll">
     <table className="mk-bits">
