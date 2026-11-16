@@ -227,64 +227,139 @@
       {t:'+1 min', h:'🔄 Komputer Anny dostaje z DHCP adres z podsieci księgowości. Gotowe, razem około 3 minut. Żaden kabel nie został ruszony.'} ]
   ];
 
+  // Anna's cable is drawn once in its PREVIOUS state, then animated to the new one (animS2),
+  // so it never disappears: the plug is pulled out, hangs loose, and flies over to the new port.
+  const cordPath = (a, b) => `M${a.x} ${a.y+6}C${a.x} ${a.y+50} ${b.x} ${b.y-40} ${b.x} ${b.y}`;
+  const TECH_HIDDEN = { x: 790, y: 330, o: 0 };
+
+  function s2target(mode, step, panel, swA, swB){
+    const a = panel.port(2);
+    if (!mode){
+      const itP = swA.port(2), ksP = swB.port(2), loose = { x: 705, y: 228 };
+      const at = step < 4 ? 'it' : step === 4 ? 'loose' : 'ks';
+      const end = at === 'it' ? itP : at === 'loose' ? loose : ksP;
+      const tech = step < 2 || step >= 6 ? TECH_HIDDEN
+        : step === 2 ? { x: 760, y: 300, o: 1 }
+        : step === 3 ? { x: 740, y: 138, o: 1 }
+        : step === 4 ? { x: loose.x + 62, y: loose.y + 4, o: 1 }
+        : { x: ksP.x + 60, y: ksP.y + 52, o: 1 };
+      return { a, end, at, tech,
+        cordCol: at === 'it' ? D.it.c : at === 'loose' ? '#9a988f' : D.ks.c,
+        pcCol: step < 4 ? D.it.c : step < 6 ? '#b9b7af' : D.ks.c };
+    }
+    const vp = swA.port(2);
+    return { a, end: vp, at: 'v', tech: TECH_HIDDEN,
+      cordCol: step >= 3 ? D.ks.c : D.it.c, vCol: step >= 3 ? D.ks.c : D.it.c,
+      pcCol: step >= 4 ? D.ks.c : D.it.c };
+  }
+
   function s2(mode){
     const step = st.s2.step, steps = S2STEPS[mode], done = step >= steps.length;
     let g = `<rect x="20" y="40" width="410" height="300" class="floor"/><text x="34" y="62" class="ttl">Biuro, piętro 2</text>
       <rect x="470" y="40" width="330" height="300" class="floor"/><text x="484" y="62" class="ttl">Szafa sieciowa</text>`;
     const panel = sw(520, 76, Array(8).fill('var(--cable)'), 8, '', {pw:22, ph:12, gap:6});
     g += panel.svg + `<text x="${520 + panel.w + 6}" y="92" class="lbls">patch panel</text>`;
-    let annaCol = D.it.c;
-    if (!mode){
-      if (step >= 4) annaCol = 'var(--port)';
-      if (step >= 6) annaCol = D.ks.c;
-    } else {
-      if (step >= 4) annaCol = D.ks.c;
-    }
     // fixed wall cables (installation)
-    let cab = '';
     S2PCS.forEach((p, i) => {
       const pp = panel.port(i), tray = 330 - i * 4, wall = 450 + i * 3;
-      cab += `<path class="cab gray" d="M${p.x} ${p.y+13}V${tray}H${wall}V${pp.y}H${pp.x - 11}"/>`;
+      g += `<path class="cab gray" d="M${p.x} ${p.y+13}V${tray}H${wall}V${pp.y}H${pp.x - 11}"/>`;
     });
-    g += cab;
-    let cords = '';
+
+    let T, swA, swB = null, cords = '';
     if (!mode){
-      const pIT = Array(8).fill(null), pKS = Array(8).fill(null);
-      const swIT = sw(560, 170, pIT, 8, ''), swKS = sw(560, 260, pKS, 8, '');
-      let iIT = 0, iKS = 0;
-      S2PCS.forEach((p, i) => {
-        let dept = p.d;
-        if (p.anna){ if (step >= 4 && step < 5) return; if (step >= 5) dept = 'ks'; }
-        const target = dept === 'it' ? swIT : swKS, idx = dept === 'it' ? iIT++ : iKS++;
-        (dept === 'it' ? pIT : pKS)[idx] = (p.anna && step >= 5 && step < 6) ? 'var(--port)' : (p.anna ? annaCol : D[p.d].c);
-        const a = panel.port(i), b = target.port(idx);
-        const col = p.anna ? (step >= 5 ? D.ks.c : D.it.c) : D[p.d].c;
-        cords += `<path class="cab ${p.anna && step >= 5 ? 'appear' : ''}" stroke="${col}" stroke-width="3" d="M${a.x} ${a.y+6}C${a.x} ${a.y+50} ${b.x} ${b.y-40} ${b.x} ${b.y}"/>`;
+      swA = sw(560, 170, [D.it.c, D.it.c, null, null, null, null, null, null], 8, 'switch IT', {labelRight:true});
+      swB = sw(560, 260, [D.ks.c, D.ks.c, null, null, null, null, null, null], 8, 'switch księg.', {labelRight:true});
+      g += swA.svg + swB.svg;
+      T = s2target(0, step, panel, swA, swB);
+      const P = st.s2.prev || T;
+      const pa = swA.port(2), pb = swB.port(2);
+      g += `<rect id="annaPortIT" x="${pa.x-4.5}" y="${pa.y-3.5}" width="9" height="7" rx="1.5" fill="${P.at === 'it' ? D.it.c : 'var(--port)'}"/>`;
+      g += `<rect id="annaPortKS" x="${pb.x-4.5}" y="${pb.y-3.5}" width="9" height="7" rx="1.5" fill="${P.at === 'ks' ? D.ks.c : 'var(--port)'}"/>`;
+      // other people's cords (static)
+      [[0, swA, 0, 'it'], [1, swA, 1, 'it'], [3, swB, 0, 'ks'], [4, swB, 1, 'ks']].forEach(([i, s, idx, d]) => {
+        cords += `<path class="cab" stroke="${D[d].c}" stroke-width="3" d="${cordPath(panel.port(i), s.port(idx))}"/>`;
       });
-      g += sw(560, 170, pIT, 8, 'switch IT', {labelRight:true}).svg + sw(560, 260, pKS, 8, 'switch księg.', {labelRight:true}).svg + cords;
-      if (step >= 2 && step < 6) g += person(760, 230, 'technik', '#7f8c8d');
+      g += cords;
       if (step === 3) g += `<text x="640" y="158" class="bad-txt blink" text-anchor="middle">który to kabel…?</text>`;
     } else {
-      const annaPort = step >= 3 ? D.ks.c : D.it.c;
-      const ports = S2PCS.map(p => p.anna ? annaPort : D[p.d].c).concat([null, null, null]);
-      const one = sw(560, 200, ports, 8, '');
-      g += `<text x="${560 + one.w / 2}" y="${200 + one.h + 16}" class="lbl" text-anchor="middle">jeden switch, porty w różnych VLAN-ach</text>`;
-      S2PCS.forEach((p, i) => {
-        const a = panel.port(i), b = one.port(i);
-        const col = p.anna ? annaPort : D[p.d].c;
-        cords += `<path class="cab" stroke="${col}" stroke-width="3" d="M${a.x} ${a.y+6}C${a.x} ${a.y+50} ${b.x} ${b.y-40} ${b.x} ${b.y}"/>`;
+      const ports = [D.it.c, D.it.c, null, D.ks.c, D.ks.c, null, null, null];
+      swA = sw(560, 200, ports, 8, '');
+      g += swA.svg + `<text x="${560 + swA.w / 2}" y="${200 + swA.h + 16}" class="lbl" text-anchor="middle">jeden switch, porty w różnych VLAN-ach</text>`;
+      T = s2target(1, step, panel, swA, null);
+      const P = st.s2.prev || T, vp = swA.port(2);
+      g += `<rect id="annaPortV" x="${vp.x-4.5}" y="${vp.y-3.5}" width="9" height="7" rx="1.5" fill="${P.vCol}"/>`;
+      [0, 1, 3, 4].forEach(i => {
+        cords += `<path class="cab" stroke="${D[S2PCS[i].d].c}" stroke-width="3" d="${cordPath(panel.port(i), swA.port(i))}"/>`;
       });
-      g += one.svg + cords;
+      g += cords;
       if (step >= 2 && step < 4){
         g += person(370, 300, 'admin', '#7f8c8d');
-        g += `<path d="M385 290C450 300 520 260 ${one.port(2).x} ${one.port(2).y + 10}" class="stk appear" stroke-dasharray="5 4" stroke-width="2"/>`;
+        g += `<path d="M385 290C450 300 520 260 ${vp.x} ${vp.y + 10}" class="stk appear" stroke-dasharray="5 4" stroke-width="2"/>`;
       }
-      if (step === 3) g += `<text x="${one.port(2).x}" y="${245}" class="good-txt" text-anchor="middle">Gi0/3 → VLAN 20</text>`;
+      if (step === 3) g += `<circle cx="${vp.x}" cy="${vp.y}" r="10" class="ping" stroke="${D.ks.c}"/><text x="${560 + swA.w + 8}" y="${vp.y + 8}" class="good-txt appear">Gi0/3 → VLAN 20</text>`;
     }
-    S2PCS.forEach(p => { g += pc(p.x, p.y, p.anna ? annaCol : D[p.d].c, p.n); });
-    if (!mode && step >= 4 && step < 6) g += `<text x="350" y="92" class="bad-txt" text-anchor="middle">brak sieci</text>`;
-    if (done) g += `<text x="350" y="92" class="good-txt" text-anchor="middle">✓ w księgowości</text>`;
+    const P = st.s2.prev || T;
+    st.s2.target = T;
+    // Anna's cable + plug, drawn in the previous state
+    g += `<path id="annaCord" class="cab" stroke="${P.cordCol}" stroke-width="3" d="${cordPath(P.a, P.end)}" style="transition:stroke .8s"/>`;
+    g += `<rect id="annaPlug" x="${P.end.x-4}" y="${P.end.y-2}" width="8" height="11" rx="2" fill="${P.cordCol}" opacity="${P.at === 'loose' ? 1 : 0}" style="transition:fill .8s, opacity .3s"/>`;
+    S2PCS.forEach(p => { g += pc(p.x, p.y, p.anna ? P.pcCol : D[p.d].c, p.n, p.anna ? 'id="annaPC" style="transition:fill .8s"' : ''); });
+    // technician (moves smoothly between positions)
+    g += `<g id="tech" transform="translate(${P.tech.x} ${P.tech.y})" opacity="${P.tech.o}" style="transition:opacity .5s">
+      <circle cx="0" cy="-16" r="7" fill="#7f8c8d"/><path d="M-10 8q10-22 20 0z" fill="#7f8c8d"/>
+      <text x="0" y="22" class="lbl" text-anchor="middle">technik</text></g>`;
+    if (!mode && step >= 4 && step < 6) g += `<text x="350" y="92" class="bad-txt appear" text-anchor="middle">brak sieci</text>`;
+    if (done) g += `<text x="350" y="92" class="good-txt appear" text-anchor="middle">✓ w księgowości</text>`;
     return svgWrap(820, 360, g);
+  }
+
+  function animS2(){
+    const P = st.s2.prev, T = st.s2.target;
+    st.s2.prev = T;
+    if (!P || !T) return;
+    cancelAnimationFrame(st.s2.raf);
+    const $q = sel => document.querySelector('#stage ' + sel);
+    const cord = $q('#annaCord'), plug = $q('#annaPlug'), pcG = $q('#annaPC'), tech = $q('#tech');
+    if (!cord) return;
+    const pcRect = pcG && pcG.querySelector('rect');
+    // colour changes: CSS transitions (element was drawn with the old colour)
+    requestAnimationFrame(() => {
+      cord.setAttribute('stroke', T.cordCol);
+      plug.setAttribute('fill', T.cordCol);
+      if (pcRect){ pcRect.style.transition = 'fill .8s'; pcRect.setAttribute('fill', T.pcCol); }
+      tech.setAttribute('opacity', T.tech.o);
+      const vp = $q('#annaPortV');
+      if (vp){ vp.style.transition = 'fill .6s'; vp.setAttribute('fill', T.vCol); }
+    });
+    const moves = P.end.x !== T.end.x || P.end.y !== T.end.y;
+    const techMoves = P.tech.x !== T.tech.x || P.tech.y !== T.tech.y;
+    if (!moves && !techMoves) return;
+    // plug leaves the old port: the port goes dark right away
+    const pIT = $q('#annaPortIT'), pKS = $q('#annaPortKS');
+    if (moves && P.at === 'it' && pIT) pIT.setAttribute('fill', 'var(--port)');
+    if (moves) plug.setAttribute('opacity', 1);
+    const D_MS = 1100, t0 = performance.now();
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const frame = now => {
+      const t = Math.min(1, (now - t0) / D_MS), e = ease(t);
+      if (moves){
+        const lift = 38 * Math.sin(Math.PI * e);
+        const x = P.end.x + (T.end.x - P.end.x) * e, y = P.end.y + (T.end.y - P.end.y) * e - lift;
+        cord.setAttribute('d', cordPath(T.a, { x, y }));
+        plug.setAttribute('x', x - 4); plug.setAttribute('y', y - 2);
+      }
+      if (techMoves){
+        const tx = P.tech.x + (T.tech.x - P.tech.x) * e, ty = P.tech.y + (T.tech.y - P.tech.y) * e;
+        tech.setAttribute('transform', `translate(${tx} ${ty})`);
+      }
+      if (t < 1) st.s2.raf = requestAnimationFrame(frame);
+      else {
+        // plug arrives: the new port lights up, the plug "disappears" into the port
+        if (T.at === 'ks' && pKS) pKS.setAttribute('fill', D.ks.c);
+        if (T.at !== 'loose') plug.setAttribute('opacity', 0);
+      }
+    };
+    st.s2.raf = requestAnimationFrame(frame);
   }
 
   /* ---------- 3: half-empty switches ---------- */
@@ -437,13 +512,13 @@
   $('era').onclick = eraToggle;
   $('era').onkeydown = e => { if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); eraToggle(); } };
 
-  function resetAnims(){ clearTimeout(st.s2.timer); st.s2.step = 0; }
+  function resetAnims(){ clearTimeout(st.s2.timer); cancelAnimationFrame(st.s2.raf); st.s2.step = 0; st.s2.prev = null; }
   function setMode(m){ st.mode[st.tab] = m; resetAnims(); render(); }
   function go(t){ st.tab = t; resetAnims(); try { history.replaceState(null, '', '#problem-' + (t + 1)); } catch(e){ location.hash = 'problem-' + (t + 1); } render(); }
 
   function runS2(){
     const m = st.mode[1], steps = S2STEPS[m];
-    const tick = () => { st.s2.step++; render(); if (st.s2.step < steps.length) st.s2.timer = setTimeout(tick, m ? 1300 : 1500); };
+    const tick = () => { st.s2.step++; render(); if (st.s2.step < steps.length) st.s2.timer = setTimeout(tick, m ? 1400 : 1900); };
     tick();
   }
 
@@ -469,6 +544,7 @@
       $('log').innerHTML = steps.slice(0, st.s2.step).map(x => `<li><span class="t">${x.t}</span>${x.h}</li>`).join('');
     } else $('log').innerHTML = '';
     bind();
+    if (st.tab === 1) animS2();
   }
 
   function bind(){
