@@ -66,6 +66,8 @@
   .tab:hover,.seg button:hover{filter:brightness(.96)}
   .actions button:disabled{box-shadow:none;border-style:dashed;opacity:.45}
   button:focus-visible,.era:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  /* results panel hidden for now (kept in code): set display back to show it */
+  .metrics-h,.metrics{display:none!important}
   .metrics-h{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 0}
   .metric{border:0;border-left:3px solid var(--line);border-radius:0;padding:2px 12px}
   .guide{display:flex;gap:10px;align-items:baseline;margin-top:12px;padding:9px 12px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent)}
@@ -144,11 +146,9 @@
 <body>
 <div class="wrap">
   <h1>Laboratorium VLAN: po co nam VLAN-y?</h1>
-  <p class="lead">Cztery kłopoty z sieci „sprzed VLAN-ów”. Przy każdym przełącz na „Z VLAN-ami” i zobacz, jak zmienia się ten sam scenariusz.</p>
 
   <div class="top">
     <div class="tabs" id="tabs"></div>
-    <div class="era" id="era" role="switch" tabindex="0" aria-checked="false"><span class="knob"></span><span id="eraTxt">Era VLAN-ów: wyłączona</span></div>
   </div>
 
   <div class="card">
@@ -662,10 +662,9 @@
         ${quiz}
         <div class="dots">${steps.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${n}</span></div>
         <div class="actions">
-          <button id="d3prev" ${k === 0 ? 'disabled' : ''}>◀ Wstecz</button>
-          <button id="d3next" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? sc.end : (cur.next || 'Dalej ▶')}</button>
+          <button id="d3prev" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Wstecz</button>
+          <button id="d3next" title="Strzałka w prawo" class="primary ${k === 0 || (last && q === 'b') ? 'next' : ''}">${last ? sc.end : (cur.next || 'Dalej ▶')}</button>
         </div>
-        <div class="keys">Strzałki ← → też działają.</div>
       </aside></div>`;
   }
   function step3(d){
@@ -773,8 +772,7 @@
           <button id="a2prev" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Krok wstecz</button>
           <button id="a2next" ${end ? 'disabled' : ''} title="Strzałka w prawo">Krok dalej ▶</button>
           <span class="stepinfo">Krok <b>${k}</b> / ${n}</span>
-          <button id="a2reset">↺ Od nowa</button>
-          <span class="hint">Strzałki ← → na klawiaturze też działają.</span>`;
+          <button id="a2reset">↺ Od nowa</button>`;
       },
       metrics: m => {
         const done = st.s2.step >= S2STEPS[m].length;
@@ -787,7 +785,7 @@
         : '<b>Przed VLAN-ami</b> zmiana sieci oznacza <b>fizyczne przepięcie kabla</b>. Trzeba iść do szafy, znaleźć właściwy przewód i liczyć, że w docelowym switchu jest wolny port. W dużej firmie takie zgłoszenia są codziennie.' },
     { tab:'3. Pół-puste switche',
       title:'Kłopot 3: każdy dział ma własny, pół-pusty switch',
-      problem: m => m ? 'Ten sam tydzień, ale dziś, z VLAN-ami. Klikaj „Dalej” i patrz, co dzieje się na switchach.' : 'Scena z biura w roku 1996. Klikaj „Dalej” i patrz, co dzieje się na switchach.',
+      problem: '',
       render: s3story, legend:['it','ks','kd','gs'], noExplain:true,
       metrics: m => {
         const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
@@ -815,9 +813,6 @@
   $('tabs').innerHTML = SC.map((s, i) => `<button class="tab" data-t="${i}">${s.tab}</button>`).join('');
   $('tabs').onclick = e => { const b = e.target.closest('[data-t]'); if (!b) return; go(+b.dataset.t); };
   $('seg').onclick = e => { const b = e.target.closest('[data-m]'); if (!b) return; setMode(+b.dataset.m); };
-  const eraToggle = () => { const on = !st.mode.every(m => m === 1); st.mode = st.mode.map(() => on ? 1 : 0); resetAnims(); render(); };
-  $('era').onclick = eraToggle;
-  $('era').onkeydown = e => { if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); eraToggle(); } };
 
   function resetAnims(){ clearTimeout(st.s2.timer); st.s2.playing = false; cancelAnimationFrame(st.s2.raf); st.s2.step = 0; st.s2.prev = null; }
   function setMode(m){ st.mode[st.tab] = m; st.s3quiz = null; resetAnims(); render(); }
@@ -848,11 +843,9 @@
     const s = SC[st.tab], m = st.mode[st.tab];
     document.querySelectorAll('.tab').forEach((b, i) => b.classList.toggle('on', i === st.tab));
     document.querySelectorAll('#seg button').forEach(b => b.classList.toggle('on', +b.dataset.m === m));
-    const allOn = st.mode.every(x => x === 1);
-    $('era').classList.toggle('on', allOn); $('era').setAttribute('aria-checked', allOn);
-    $('eraTxt').textContent = allOn ? 'Era VLAN-ów: włączona' : 'Era VLAN-ów: wyłączona';
     $('title').textContent = s.title;
     $('problem').textContent = typeof s.problem === 'function' ? s.problem(m) : s.problem;
+    $('problem').style.display = $('problem').textContent ? '' : 'none';
     $('stage').innerHTML = s.render(m);
     $('legend').innerHTML = legendDepts(s.legend) + (st.tab === 0 && m ? `<span><i style="background:repeating-linear-gradient(90deg,${D.it.c} 0 6px,${D.ks.c} 6px 12px)"></i>trunk: wiele VLAN-ów w jednym kablu</span>` : '');
     const gd = s.guide ? s.guide(m) : null;
