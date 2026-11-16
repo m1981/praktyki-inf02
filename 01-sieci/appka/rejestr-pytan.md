@@ -40,6 +40,9 @@ zob. PYT-004).
 | PYT-030 | decyzja    | zamknięte (a)    | Zakres przenoszonych plików labów                              |
 | PYT-031 | decyzja    | zamknięte (a)    | Push gałęzi `laby-vlan` i szkic PR w publicznym repo           |
 | PYT-032 | z-domyslna | zamknięte (a)    | Prettier na plikach labów osobnym commitem                     |
+| PYT-033 | decyzja    | zamknięte (a)    | Co pokazuje szafa główna w Kłopocie 1                          |
+| PYT-034 | decyzja    | zamknięte (a)    | Dwa commity po scaleniu PR #1: nowy PR #2                      |
+| PYT-035 | z-domyslna | zamknięte (inna) | Sposób pracy: praca na `main`                                  |
 
 ## Pytania
 
@@ -378,6 +381,8 @@ zob. PYT-004).
 - **Rekomendacja:** (a) – pełna historia; talię można usunąć później.
 - **Skutek braku odpowiedzi:** nic nie trafia do repo.
 - **Odpowiedź (2026-11-17):** „wszystko tak jak zelecasz” → (a)
+- **Zmiana (2026-11-17):** „wyrzuc folder ze slajdami nie potrzebuje go” → `prezentacja-vlan/`
+  usunięty (historia zostaje w gicie).
 
 ### PYT-031 · decyzja · zamknięte
 
@@ -396,3 +401,36 @@ zob. PYT-004).
 - **Rekomendacja:** (a) – zgodność z repo; działanie sprawdzone w przeglądarce.
 - **Skutek braku odpowiedzi:** pracuję według (a).
 - **Odpowiedź (2026-11-17):** „wszystko tak jak zelecasz” → (a)
+
+### PYT-033 · decyzja · zamknięte
+
+- **Kontekst:** w Kłopocie 1 (rok 1996) cztery kable z pionu wpadały do jednego urządzenia
+  z podpisem „szafa główna”. Uczeń mógł uznać je za switch – a jeden switch połączyłby wszystkie
+  sieci w jedną, czyli to, czego w 1996 chciano uniknąć.
+- **Opcje:** (a) 1996: „router – osobny port dla każdej sieci”, dziś: router obok switcha głównego
+  na jednym trunku, sam podpis bez tłumaczenia routingu; (b) 1996: osobne switche działów bez
+  routera (działy odcięte od siebie i od serwerów); (c) zostawić czarną skrzynkę.
+- **Rekomendacja:** (a) – poprawne technicznie, usuwa sprzeczność, przygotowuje routing.
+- **Skutek braku odpowiedzi:** zostaje (c).
+- **Odpowiedź (2026-11-17):** „33 A” → (a)
+
+### PYT-034 · decyzja · zamknięte
+
+- **Kontekst:** PR #1 został scalony (`68d503e`) przed wypchnięciem dwóch kolejnych commitów
+  na `laby-vlan` (`6bf57f7` etykiety switchy, `659cea0` router w szafie głównej i usunięcie
+  slajdów). Na `main` i na GitHub Pages jest starsza wersja labów.
+- **Opcje:** (a) nowy PR #2 z `laby-vlan` do `main`, potem usunięcie gałęzi; (b) zostawić
+  commity na gałęzi.
+- **Rekomendacja:** (a) – `main` i Pages dostają poprawki, historia bez przepisywania.
+- **Skutek braku odpowiedzi:** zostaje (b).
+- **Odpowiedź (2026-11-17):** „34 a” → (a)
+
+### PYT-035 · z-domyslna · zamknięte
+
+- **Kontekst:** po scaleniu PR #1 agent dopisał commity do gałęzi, której PR był już zamknięty.
+- **Opcje:** (a) nowa gałąź i PR na każdą paczkę poprawek; (b) praca bezpośrednio na `main`.
+- **Rekomendacja:** (a) – przegląd każdej paczki w PR.
+- **Skutek braku odpowiedzi:** praca według (a).
+- **Odpowiedź (2026-11-17):** „35 pracujmy na main jestem jedynym developerem” → (b): po scaleniu
+  PR #2 commity idą prosto na `main`. Zgoda na commit i push dalej zgodnie z kontraktem
+  (rozdz. 3).

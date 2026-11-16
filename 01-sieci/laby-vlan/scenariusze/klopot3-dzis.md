@@ -1,8 +1,12 @@
 # Kłopot 3: Pół-puste switche — scena „Biuro, dziś”
 
-Wersja 3. Lustro sceny „Biuro, rok 1996” (scenariusze/klopot3-rok-1996.md): ten sam tydzień, te same zatrudnienia, te same pytania Kierownika, ale z VLAN-ami.
+Wersja 4. Lustro sceny „Biuro, rok 1996” (scenariusze/klopot3-rok-1996.md): ten sam tydzień, te same zatrudnienia, te same pytania Kierownika, ale z VLAN-ami.
 
 Postacie: Ola (administratorka sieci) i Kierownik IT, na „ty”.
+
+Zmiany w wersji 4:
+
+- 1: pisownia „switche” zamiast „switch'e”, jak w pozostałych kwestiach i etykietach.
 
 Zmiany w wersji 3:
 
@@ -18,7 +22,7 @@ Stan wyjściowy: IT 10, Księgowość 5, Kadry 4, Goście 6 = 25 urządzeń. To 
 
 | #   | Kto          | Kwestia                                                                                           | Echo z 1996                                         | Na schemacie                                                                                                    | Przycisk            |
 | --- | ------------ | ------------------------------------------------------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------- |
-| 1   | Ola          | Dziś. Cztery działy, 2 switch'e zamiast 5 🤩                                                      | 1: „Rok 1996. Cztery działy, cztery switche…”       | Ujęcie wprowadzające: dwa switche, porty w kolorach VLAN-ów, zajęte 25 z 48. Na switchu #2 cztery kolory naraz. | Dalej ▶             |
+| 1   | Ola          | Dziś. Cztery działy, 2 switche zamiast 5 🤩                                                       | 1: „Rok 1996. Cztery działy, cztery switche…”       | Ujęcie wprowadzające: dwa switche, porty w kolorach VLAN-ów, zajęte 25 z 48. Na switchu #2 cztery kolory naraz. | Dalej ▶             |
 | 2   | Ola          | Kolor portu to VLAN – każdy dział ma swój.                                                        | —                                                   | Złote ramki wokół portów wszystkich czterech działów.                                                           | Dalej ▶             |
 | 3   | Ola          | Zatrudniamy w IT. Siedem gniazdek – każde w VLAN 10.                                              | 2: „Zatrudniamy w IT. Mam podpiąć siedem gniazdek.” | Bez zmian, 25 z 48.                                                                                             | 🔌 Podepnij ▶       |
 | 4   | _akcja_      | _Ola podpina siedem gniazdek i ustawia im VLAN 10…_                                               | 3                                                   | Wolne porty switcha #1 zapalają się po kolei na niebiesko, 32 z 48.                                             | Dalej ▶             |

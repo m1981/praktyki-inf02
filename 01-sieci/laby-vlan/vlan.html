@@ -716,6 +716,15 @@
      stroke-dashoffset: -24;
     }
    }
+   .swl {
+    font-size: 10px;
+    font-weight: 600;
+    fill: var(--muted);
+    paint-order: stroke;
+    stroke: var(--floor);
+    stroke-width: 3px;
+    stroke-linejoin: round;
+   }
    .cntbox {
     fill: var(--accent-bg);
     stroke: var(--accent);
@@ -865,12 +874,12 @@
   <script>
    (function () {
     const D = {
-     it: { c: '#2f6fb3', n: 'IT', vlan: 10, net: '192.168.10.0/24' },
-     ks: { c: '#d9772b', n: 'Księgowość', vlan: 20, net: '192.168.20.0/24' },
-     kd: { c: '#8e44ad', n: 'Kadry', vlan: 30, net: '192.168.30.0/24' },
-     gs: { c: '#2e9d5b', n: 'Goście', vlan: 40, net: '192.168.40.0/24' },
-     sp: { c: '#c2185b', n: 'Sprzedaż', vlan: 50, net: '192.168.50.0/24' },
-     mk: { c: '#00838f', n: 'Marketing', vlan: 60, net: '192.168.60.0/24' }
+     it: { c: '#2f6fb3', n: 'IT', g: 'IT', vlan: 10, net: '192.168.10.0/24' },
+     ks: { c: '#d9772b', n: 'Księgowość', g: 'Księgowości', vlan: 20, net: '192.168.20.0/24' },
+     kd: { c: '#8e44ad', n: 'Kadry', g: 'Kadr', vlan: 30, net: '192.168.30.0/24' },
+     gs: { c: '#2e9d5b', n: 'Goście', g: 'Gości', vlan: 40, net: '192.168.40.0/24' },
+     sp: { c: '#c2185b', n: 'Sprzedaż', g: 'Sprzedaży', vlan: 50, net: '192.168.50.0/24' },
+     mk: { c: '#00838f', n: 'Marketing', g: 'Marketingu', vlan: 60, net: '192.168.60.0/24' }
     };
     const st = {
      tab: 0,
@@ -984,6 +993,16 @@
     // cable from a desk to a switch's right edge (yS = port height)
     const deskCable = (x, f, k, xS, yS, col, cls) =>
      `<path class="cab ${cls || ''}" stroke="${col}" d="M${x} ${pcY(f) + 13}V${FY[f] + 106 + k * 3}H${xS + 8 + k * 3}V${yS}H${xS}"/>`;
+    const stripes = (d, cols) => {
+     const n = cols.length;
+     let t = `<path d="${d}" fill="none" stroke="${cols[0]}" stroke-width="6"/>`;
+     for (let i = 1; i < n; i++)
+      t += `<path d="${d}" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="8 ${8 * (n - 1)}" stroke-dashoffset="${-8 * i}"/>`;
+     return t;
+    };
+    // main closet on floor 1 (PYT-033a): outline + caption
+    const closet = () =>
+     `<rect x="142" y="296" width="236" height="58" rx="6" fill="none" stroke="var(--muted)" stroke-dasharray="4 4"/><text x="142" y="367" class="swl">szafa główna</text>`;
     const counter = (n, good, hot, prev) => {
      const txt = (c) =>
       `<text x="95" y="406" text-anchor="middle" class="${good ? 'good-txt' : 'bad-txt'}">kable w pionie: ${c}</text>`;
@@ -1000,41 +1019,67 @@
       cab = '',
       dev = '';
      const anim = (key) => dir > 0 && c.anim === key;
-     // main closet (floor 1): each riser cable lands on its own port
+     // main closet (floor 1, PYT-033a): a router with a separate port for every network
+     // (each riser cable needs its own port), and a switch for IT's own desks
      const core = sw(
       150,
       315,
-      [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c, D.it.c, null, null].map((col, i) =>
+      [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c, null, null, null].map((col, i) =>
        (i < 2 && !c.r3) || (i >= 2 && i < 4 && !c.r2) ? null : col
       ),
       4,
       ''
      );
-     g += core.svg + `<text x="182" y="362" text-anchor="middle" class="lbls">szafa główna</text>`;
+     const swIT = sw(300, 322, [D.it.c, D.it.c, D.it.c, null], 4, '');
+     g +=
+      closet() +
+      core.svg +
+      swIT.svg +
+      `<text x="150" y="311" class="swl">router – port na każdą sieć</text><text x="300" y="318" class="swl">switch IT</text>`;
+     cab += `<path class="cab" stroke="${D.it.c}" d="M214 ${core.port(4).y}H258V${swIT.port(0).y}H300"/>`;
      B1.filter((p) => p.f === 2).forEach((p, k) => {
-      cab += deskCable(p.x, 2, k, 214, 326 + k * 6, D.it.c);
+      cab += deskCable(p.x, 2, k, 364, 329 + k * 6, D.it.c);
      });
-     // floor switches
+     // floor switches: one row of 4 ports, label above (every department has at most 3 desks)
      const S = {};
+     const swAt = (k, y, n) => {
+      S[k] = {
+       y,
+       ...sw(
+        150,
+        y,
+        [0, 1, 2, 3].map((i) => (i < n ? D[k === 'ov' ? 'sp' : k].c : null)),
+        4,
+        ''
+       )
+      };
+     };
+     const swLabel = (y, txt, extra) =>
+      `<text x="150" y="${y - 4}" class="swl">${txt}${extra || ''}</text>`;
      if (c.f3) {
-      S.sp = sw(150, FY[0] + 30, [D.sp.c, D.sp.c, D.sp.c, null, null, null, null, null], 4, '');
-      S.mk = sw(150, FY[0] + 72, [D.mk.c, D.mk.c, null, null, null, null, null, null], 4, '');
+      swAt('sp', FY[0] + 33, 3);
+      swAt('mk', FY[0] + 69, 2);
      }
      if (c.f2) {
-      S.ks = sw(150, FY[1] + 22, [D.ks.c, D.ks.c, null, null, null, null, null, null], 4, '');
-      S.kd = sw(150, FY[1] + 56, [D.kd.c, D.kd.c, null, null, null, null, null, null], 4, '');
+      swAt('ks', FY[1] + 33, 2);
+      swAt('kd', FY[1] + 69, 2);
      }
      const ovOn = c.ov === 'on';
-     if (ovOn)
-      S.ov = sw(150, FY[1] + 90, [D.sp.c, D.sp.c, D.sp.c, null, null, null, null, null], 4, '');
-     Object.values(S).forEach((x) => {
-      g += x.svg;
+     if (ovOn) swAt('ov', FY[1] + 101, 3);
+     const names = {
+      sp: 'switch Sprzedaży',
+      mk: 'switch Marketingu',
+      ks: 'switch Księgowości',
+      kd: 'switch Kadr',
+      ov: 'switch Sprzedaży #2'
+     };
+     Object.entries(S).forEach(([k, x]) => {
+      g += x.svg + swLabel(x.y, names[k]);
      });
      if (c.ov === 'ghost')
-      g += `<rect x="150" y="${FY[1] + 90}" width="64" height="32" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" class="appear"/><text x="222" y="${FY[1] + 110}" style="fill:var(--accent);font-size:11px;font-weight:700" class="appear">do kupienia</text>`;
+      g += `<g class="appear"><rect x="150" y="${FY[1] + 101}" width="64" height="21" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5"/>${swLabel(FY[1] + 101, 'switch Sprzedaży #2', ' · <tspan style="fill:var(--accent)">do kupienia</tspan>')}</g>`;
      (c.hiSw || []).forEach((k) => {
-      if (S[k])
-       g += `<rect x="145" y="${+S[k].svg.match(/y="([\d.]+)"/)[1] - 5}" width="74" height="42" rx="7" class="hl"/>`;
+      if (S[k]) g += `<rect x="144" y="${S[k].y - 14}" width="104" height="36" rx="7" class="hl"/>`;
      });
      // desk cables
      const kk = [0, 0, 0];
@@ -1042,24 +1087,20 @@
       if (p.f === 2) return;
       const k = kk[p.f]++;
       const on = p.f === 0 ? c.f3 : c.f2;
-      if (on) {
-       const sS = S[p.d],
-        yS = +sS.svg.match(/y="([\d.]+)"/)[1] + 12 + (k % 2) * 6;
-       cab += deskCable(p.x, p.f, k, 214, yS, D[p.d].c);
-      }
+      if (on) cab += deskCable(p.x, p.f, k, 214, S[p.d].y + 7 + (k % 2) * 6, D[p.d].c);
      });
      // riser cables (lane x, from switch at floor, to core)
      const riser = (x, yFrom, yTo, col, key, extra) =>
       `<path class="cab ${anim(key) ? 'draw' : ''} ${c.pulseAll ? 'pulseL' : ''} ${extra || ''}" pathLength="1" stroke="${col}" stroke-width="3" d="M150 ${yFrom}H${x}V${yTo}H150"/>`;
      if (c.r3) {
-      cab += riser(80, FY[0] + 46, 320, D.sp.c, 'r3') + riser(88, FY[0] + 88, 326, D.mk.c, 'r3');
+      cab += riser(80, FY[0] + 43, 320, D.sp.c, 'r3') + riser(88, FY[0] + 79, 326, D.mk.c, 'r3');
      }
      if (c.r2) {
-      cab += riser(96, FY[1] + 38, 332, D.ks.c, 'r2') + riser(104, FY[1] + 72, 338, D.kd.c, 'r2');
+      cab += riser(96, FY[1] + 43, 332, D.ks.c, 'r2') + riser(104, FY[1] + 79, 338, D.kd.c, 'r2');
      }
      if (ovOn) {
-      if (c.ovHi) cab += `<path class="flow" d="M150 ${FY[1] + 106}H112V${FY[0] + 40}H150"/>`;
-      cab += riser(112, FY[1] + 106, FY[0] + 40, D.sp.c, 'ov');
+      if (c.ovHi) cab += `<path class="flow" d="M150 ${FY[1] + 111}H112V${FY[0] + 37}H150"/>`;
+      cab += riser(112, FY[1] + 111, FY[0] + 37, D.sp.c, 'ov');
      }
      g += cab;
      // desks
@@ -1076,7 +1117,7 @@
          1,
          4 + k,
          214,
-         FY[1] + 102 + k * 4,
+         FY[1] + 105 + k * 5,
          D.sp.c,
          dir > 0 && c.anim === 'ov' ? 'appear' : ''
         );
@@ -1123,12 +1164,16 @@
      const core = sw(
       150,
       315,
-      ['#9a988f', '#9a988f', D.it.c, D.it.c, null, null, null, null, null, null, null, null],
+      ['#9a988f', '#9a988f', '#9a988f', D.it.c, D.it.c, null, null, null, null, null, null, null],
       6,
       ''
      );
      g += s3w.svg + s2w.svg + core.svg;
-     g += `<text x="195" y="${FY[0] + 40}" text-anchor="middle" class="lbls">switch piętra</text><text x="195" y="${FY[1] + 40}" text-anchor="middle" class="lbls">switch piętra</text><text x="195" y="362" text-anchor="middle" class="lbls">switch główny</text>`;
+     g += closet();
+     g += `<text x="150" y="${FY[0] + 41}" class="swl">switch piętra</text><text x="150" y="${FY[1] + 41}" class="swl">switch piętra</text><text x="150" y="311" class="swl">switch główny</text>`;
+     // router (PYT-033a): one trunk with every VLAN instead of a port per network
+     g += stripes('M240 321H300', [D.sp.c, D.mk.c, D.ks.c, D.kd.c, D.it.c]);
+     g += `<rect x="300" y="310" width="64" height="22" rx="4" class="swb"/><text x="332" y="325" text-anchor="middle" style="fill:var(--bg);font-size:11px;font-weight:700">router</text><text x="300" y="346" class="swl">jeden trunk</text>`;
      if (animPorts)
       [4, 5, 6].forEach((pi, j) => {
        const pt = s2w.port(pi),
@@ -1183,14 +1228,7 @@
        );
       });
      // trunks (striped: one stripe colour per VLAN carried)
-     const trunk = (lane, yFrom, yTo, cols) => {
-      const d = `M150 ${yFrom}H${lane}V${yTo}H150`,
-       n = cols.length;
-      let t = `<path d="${d}" fill="none" stroke="${cols[0]}" stroke-width="6"/>`;
-      for (let i = 1; i < n; i++)
-       t += `<path d="${d}" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="8 ${8 * (n - 1)}" stroke-dashoffset="${-8 * i}"/>`;
-      return t;
-     };
+     const trunk = (lane, yFrom, yTo, cols) => stripes(`M150 ${yFrom}H${lane}V${yTo}H150`, cols);
      if (c.path)
       cab += `<path class="flow" d="M150 ${FY[1] + 61}H100V336H150"/><path class="flow" d="M150 322H84V${FY[0] + 61}H150"/>`;
      cab += trunk(84, FY[0] + 61, 322, [D.sp.c, D.mk.c]);
@@ -1528,9 +1566,16 @@
       swA = sw(560, 170, [D.it.c, D.it.c, null, null, null, null, null, null], 8, 'switch IT', {
        labelRight: true
       });
-      swB = sw(560, 260, [D.ks.c, D.ks.c, null, null, null, null, null, null], 8, 'switch księg.', {
-       labelRight: true
-      });
+      swB = sw(
+       560,
+       260,
+       [D.ks.c, D.ks.c, null, null, null, null, null, null],
+       8,
+       'switch Księgowości',
+       {
+        labelRight: true
+       }
+      );
       g += swA.svg + swB.svg;
       T = s2target(0, step, panel, swA, swB);
       const P = st.s2.prev || T;
@@ -1677,7 +1722,7 @@
         const used = Math.min(24, n - s * 24);
         rows.push({
          k,
-         label: `switch: ${D[k].n}${cnt > 1 ? ' #' + (s + 1) : ''}`,
+         label: `switch ${D[k].g}${cnt > 1 ? ' #' + (s + 1) : ''}`,
          ports: Array.from({ length: 24 }, (_, i) => (i < used ? D[k].c : null)),
          used
         });
@@ -1692,7 +1737,7 @@
       for (let s = 0; s < cnt; s++) {
        const part = all.slice(s * 24, s * 24 + 24);
        rows.push({
-        label: `switch wspólny #${s + 1} (VLAN 10/20/30/40)`,
+        label: `switch wspólny #${s + 1}`,
         ports: Array.from({ length: 24 }, (_, i) => part[i] || null),
         used: part.length
        });
@@ -1733,7 +1778,7 @@
         gh = 2 * 17 - 5 + 14;
        g += `<rect x="30" y="${y}" width="${gw}" height="${gh}" rx="4" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" class="appear"/>
           <text x="${30 + gw / 2}" y="${y + gh / 2 + 5}" class="lbls" text-anchor="middle">?</text>
-          <text x="${30 + gw + 14}" y="${y + 18}" class="lbl" style="fill:var(--muted)">switch: IT #2</text>
+          <text x="${30 + gw + 14}" y="${y + 18}" class="lbl" style="fill:var(--muted)">switch IT #2</text>
           <text x="${30 + gw + 14}" y="${y + 35}" style="fill:var(--accent);font-size:11px;font-weight:700">do kupienia</text>`;
        return;
       }
@@ -1841,7 +1886,7 @@
     const DZ_KD = [36, 37, 38, 39],
      DZ_NEW = DZ_ADD[14]; // port right next to Kadry
     const SDZIS = [
-     { who: 'ola', t: "Dziś. Cztery działy, 2 switch'e zamiast 5 🤩", c: { it: 10 } },
+     { who: 'ola', t: 'Dziś. Cztery działy, 2 switche zamiast 5 🤩', c: { it: 10 } },
      { who: 'ola', t: 'Kolor portu to VLAN – każdy dział ma swój.', c: { it: 10, hi: ALL } },
      {
       who: 'ola',

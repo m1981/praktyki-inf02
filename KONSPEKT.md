@@ -61,46 +61,6 @@ _title: Laboratorium podsieci – dziel sieć klikając_
   - **H2** 8. Tabela podsieci
   - **H2** Jak to czytać
 
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/cover.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/cover.html)
-
-- **H1** Pracownik zmienia dział
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-kroki.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-kroki.html)
-
-- **H2** Z VLAN-ami: co trzeba zrobić
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-schemat.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-schemat.html)
-
-- **H2** Z VLAN-ami: sieć wyznacza ustawienie portu
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-wynik.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/po-wynik.html)
-
-- (brak nagłówków h1–h3)
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/porownanie.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/porownanie.html)
-
-- **H2** Porównanie
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-kroki.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-kroki.html)
-
-- **H2** Przed VLAN-ami: co trzeba zrobić
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-schemat.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-schemat.html)
-
-- **H2** Przed VLAN-ami: sieć wyznacza kabel
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-wynik.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/przed-wynik.html)
-
-- (brak nagłówków h1–h3)
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/sytuacja.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/sytuacja.html)
-
-- **H2** Anna przechodzi z IT do księgowości
-
-## [`01-sieci/laby-vlan/prezentacja-vlan/project/slides/wniosek.html`](01-sieci/laby-vlan/prezentacja-vlan/project/slides/wniosek.html)
-
-- **H1** VLAN oddziela to, do jakiej sieci należysz, od tego, gdzie biegnie kabel.
-
 ## [`01-sieci/laby-vlan/vlan.html`](01-sieci/laby-vlan/vlan.html)
 
 _title: Laboratorium VLAN – po co nam VLAN-y?_

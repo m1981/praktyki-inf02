@@ -1,6 +1,8 @@
 # Kłopot 1: Działy na piętrach — sceny „Budynek, rok 1996” i „Budynek, dziś”
 
-Wersja 2, wdrożona w vlan.html (Kłopot 1).
+Wersja 3, wdrożona w vlan.html (Kłopot 1).
+
+Zmiany w wersji 3 (PYT-033a): szafa główna pokazuje, co w niej stoi. 1996 – router z osobnym portem dla każdej sieci (każdy kabel z pionu potrzebuje własnego portu) i switch IT dla komputerów IT. Dziś – switch główny i router połączone jednym trunkiem ze wszystkimi VLAN-ami.
 
 Zmiany w wersji 2: przyczyna i problem rozdzielone na dwa kroki. Narracja (bez postaci) mówi, że na trzecim zabrakło miejsca, a Szefowa zgłasza to, z czym naprawdę przychodzi się do administratorki: brak sieci. Narracja i kwestia Szefowej są w obu scenach słowo w słowo takie same; różni się dopiero odpowiedź Oli. Pod czekającymi komputerami w obu scenach jest „brak sieci”. Wariant A+: każdy dział siedzi razem, po dwa działy na piętrze, a Sprzedaż przelewa się na drugie piętro.
 
@@ -78,7 +80,7 @@ Reakcje na zagadkę:
 - Odległości: trzy piętra mieszczą się w limicie około 100 m dla skrętki. Oba warianty są wykonalne.
 - 1996, kabel 2→3: switch dla trzech osób na 2. piętrze łączy się ze switchem Sprzedaży na 3. piętrze. To nadal jedna sieć (jedna domena rozgłoszeniowa, jedna podsieć IP). Gdyby kabel poszedł na parter do osobnego portu routera, byłaby to druga sieć Sprzedaży z innymi adresami – dlatego kabel idzie w górę.
 - 1996, kabel na próbę do księgowości (kroki 8–9): komputery trafiłyby do domeny rozgłoszeniowej księgowości i musiałyby dostać adresy z jej podsieci. Problem jest więc nie tylko bezpieczeństwa, ale też adresacji.
-- 1996, szafa główna: każdy kabel z pionu trafia tam do osobnego portu routera albo do osobnego switcha działu. Na schemacie pokazujemy samą „szafę główną”, bez wchodzenia w routing.
+- 1996, szafa główna (PYT-033a): router z osobnym portem dla każdej sieci – każdy kabel z pionu wpina się do własnego portu routera; IT ma swój switch podpięty do portu IT routera. Jeden switch zamiast routera połączyłby wszystkie sieci w jedną. Dziś: switch główny i router na jednym trunku. Routing (jak router decyduje) zostawiamy na później – na schemacie jest tylko podpis.
 - Dziś: trunki 802.1Q z tagami. VLAN 50 musi być dozwolony na trunku z 2. piętra, na switchu głównym i na trunku z 3. piętra – wtedy osoby z 2. piętra są w tej samej sieci co reszta Sprzedaży, bez routera (krok 8).
 - Dziś: Księgowość (VLAN 20) i nowe osoby Sprzedaży (VLAN 50) na tym samym switchu nie widzą się bez routera (krok 10). Routing zostawiamy na później.
 - Uproszczenie: w 1996 na piętrach mogły jeszcze stać huby zamiast switchy. Dla spójności z Kłopotem 3 zostajemy przy switchach.
@@ -86,5 +88,6 @@ Reakcje na zagadkę:
 ## Uwagi z wdrożenia
 
 - Licznik „kable w pionie” jest na dole pionu kablowego (panel wyników jest ukryty). W 1996 zmienia się po narysowaniu kabli, dziś przez całą scenę stoi na 2.
-- W 1996 w szafie głównej każdy kabel z pionu wpina się do osobnego portu (kolory sieci), bez pokazywania routera.
+- Szafa główna: przerywany obrys z podpisem „szafa główna”; w środku „router – port na każdą sieć” i „switch IT” (1996) albo „switch główny” i „router” z podpisem „jeden trunk” (dziś).
 - Kolory: Sprzedaż – malinowy, Marketing – morski; IT, Księgowość i Kadry jak w Kłopocie 3.
+- Etykiety switchy (jednolita konwencja w obu labach: „switch” + czyj albo jaki, bez dwukropka i skrótów): 1996 – „switch Sprzedaży”, „switch Marketingu”, „switch Księgowości”, „switch Kadr”, „switch Sprzedaży #2”, „router – port na każdą sieć”, „switch IT”; dziś – „switch piętra”, „switch główny”, „router”. Etykieta stoi nad switchem.
