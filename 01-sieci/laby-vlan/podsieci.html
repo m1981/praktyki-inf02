@@ -45,6 +45,13 @@
   .seg.sel{outline:3px solid var(--sel);outline-offset:-3px;z-index:2}
   .seg b{font-size:13px}
   .seg small{opacity:.9}
+  .seg small.dev{font-weight:600;opacity:1}
+  .devrow{display:flex;margin-top:3px;min-height:20px}
+  .devrow.tall{min-height:34px}
+  .devcell{display:flex;justify-content:center;align-items:flex-start;font-size:11px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:visible;border-top:2px solid transparent;cursor:default;line-height:1.3;padding-top:1px}
+  .devcell:not(:empty){border-top-color:var(--line);cursor:pointer}
+  .devcell.sel:not(:empty){border-top-color:var(--sel)}
+  .devcell.vert{writing-mode:vertical-rl;align-items:center;justify-content:flex-start;font-size:10px;text-orientation:upright;letter-spacing:-2px;line-height:1}
   .scale{position:relative;height:18px;margin-top:3px}
   .scale span{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--muted)}
   .scale span:first-child{transform:none}
@@ -125,8 +132,9 @@
   <div class="card">
     <h2>3. Przestrzeń adresowa</h2>
     <div class="bar" id="bar"></div>
+    <div class="devrow" id="devrow"></div>
     <div class="scale" id="scale"></div>
-    <p class="hint" style="margin:6px 0 0">Kliknij blok, żeby go zaznaczyć. Kliknij dwa razy, żeby go podzielić na pół.</p>
+    <p class="hint" style="margin:6px 0 0">Kliknij blok, żeby go zaznaczyć. Kliknij dwa razy, żeby go podzielić na pół. Liczba w nawiasie to ile urządzeń zmieści się w podsieci (adresy minus adres sieci i broadcast). Gdy blok jest za wąski, liczba przechodzi pod pasek.</p>
   </div>
 
   <div class="card">
@@ -270,33 +278,89 @@
     render();
   };
 
+  /* ---------- address bar with device counts ---------- */
+  const plural = n => {
+    if (n === 1) return 'urządzenie';
+    const d = n % 10, dd = n % 100;
+    return (d >= 2 && d <= 4 && !(dd >= 12 && dd <= 14)) ? 'urządzenia' : 'urządzeń';
+  };
+  const ctx = document.createElement('canvas').getContext('2d');
+  const textW = (t, font) => { ctx.font = font; return ctx.measureText(t).width; };
+  const FONT_S = '12px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+  const FONT_B = 'bold 13px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+  const FONT_D = '600 11px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+
+  function renderBar(total, L){
+    const bar = document.getElementById('bar');
+    const row = document.getElementById('devrow');
+    bar.innerHTML = ''; row.innerHTML = '';
+    const barW = bar.clientWidth || 800;
+    const PAD = 10;
+    let below = 0, vertical = false;
+
+    L.forEach(n => {
+      const frac = size(n.p) / total, px = barW * frac;
+      const h = hosts(n.p);
+      const range = '.' + intToIp(n.net).split('.').pop() + '–.' + intToIp(n.net + size(n.p) - 1).split('.').pop();
+      const line2 = n.label || range;
+      const devLong = `(${h} ${plural(h)})`, devMid = `(${h} urz.)`, devShort = `(${h})`;
+
+      const d = document.createElement('div');
+      d.className = 'seg' + (n === selected ? ' sel' : '');
+      d.style.flex = `0 0 ${frac * 100}%`; d.style.background = color(n.p);
+      d.title = `${intToIp(n.net)}/${n.p}: ${range}, ${h} ${plural(h)}${n.label ? ' — ' + n.label : ''}`;
+
+      const fits = (t, f) => textW(t, f) + PAD <= px;
+      let html = '', dev = null;
+      if (fits('/' + n.p, FONT_B)) html += `<b>/${n.p}</b>`;
+      if (fits(line2, FONT_S)) html += `<small>${line2}</small>`;
+      if (fits(devLong, FONT_S)) html += `<small class="dev">${devLong}</small>`;
+      else if (fits(devMid, FONT_S)) html += `<small class="dev">${devMid}</small>`;
+      else dev = devShort;  // not enough room inside: move it below the bar
+      d.innerHTML = html;
+      d.onclick = () => { selected = n; render(); };
+      d.ondblclick = () => { if (split(n)) { selected = n.kids[0]; render(); } };
+      bar.appendChild(d);
+
+      const c = document.createElement('div');
+      c.className = 'devcell' + (n === selected ? ' sel' : '');
+      c.style.flex = `0 0 ${frac * 100}%`;
+      if (dev){
+        below++;
+        const needH = textW(dev, FONT_D) + 4 > px;
+        if (needH) { c.classList.add('vert'); vertical = true; c.textContent = String(h); }
+        else c.textContent = dev;
+        c.title = d.title;
+        c.onclick = d.onclick;
+      }
+      row.appendChild(c);
+    });
+    row.style.display = below ? 'flex' : 'none';
+    row.classList.toggle('tall', vertical);
+  }
+
+  let rz;
+  try { new ResizeObserver(() => { clearTimeout(rz); rz = setTimeout(() => { if (root) render(); }, 60); }).observe(document.getElementById('bar')); }
+  catch(e){ addEventListener("resize", () => { if (root) render(); }); }
+
   /* ---------- render ---------- */
   function render(){
     const total = size(baseP);
     const L = leaves();
     if (!allNodes().includes(selected)) selected = L[0];
 
-    // bar
-    const bar = document.getElementById('bar'); bar.innerHTML = '';
-    L.forEach(n => {
-      const d = document.createElement('div');
-      d.className = 'seg' + (n === selected ? ' sel' : '');
-      const w = size(n.p) / total * 100;
-      d.style.flex = `0 0 ${w}%`; d.style.background = color(n.p);
-      const last = intToIp(n.net + size(n.p) - 1).split('.').pop();
-      d.title = `${intToIp(n.net)}/${n.p}  (${hosts(n.p)} hostów)${n.label ? '  — ' + n.label : ''}`;
-      if (w >= 9) d.innerHTML = `<b>/${n.p}</b><small>${n.label ? n.label : '.' + intToIp(n.net).split('.').pop() + '–.' + last}</small>`;
-      else if (w >= 3.5) d.innerHTML = `<b>/${n.p}</b>`;
-      d.onclick = () => { selected = n; render(); };
-      d.ondblclick = () => { if (split(n)) { selected = n.kids[0]; render(); } };
-      bar.appendChild(d);
-    });
+    renderBar(total, L);
     // scale
     const sc = document.getElementById('scale'); sc.innerHTML = '';
+    const scW = sc.clientWidth || 800; let lastEnd = -Infinity;
     L.forEach(n => {
-      const w = size(n.p) / total * 100; if (w < 6 && n.net !== base) return;
+      const t = '.' + intToIp(n.net).split('.').slice(baseP <= 16 ? 2 : 3).join('.');
+      const x = (n.net - base) / total * scW, tw = textW(t, '11px system-ui,sans-serif');
+      const start = n.net === base ? x : x - tw / 2;
+      if (start < lastEnd + 6) return;   // too close to the previous label: skip it
+      lastEnd = start + tw;
       const s = document.createElement('span'); s.style.left = ((n.net - base) / total * 100) + '%';
-      s.textContent = '.' + intToIp(n.net).split('.').slice(baseP <= 16 ? 2 : 3).join('.');
+      s.textContent = t;
       sc.appendChild(s);
     });
 
