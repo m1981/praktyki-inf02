@@ -1,6 +1,6 @@
 # Architektura symulatorów – przegląd i projekt docelowy
 
-Status: zatwierdzone (PYT-019–022: migracja kroki 1–6, osobne strony, puppeteer-core, treść w TypeScript) · 2026-11-17
+Status: zatwierdzone (PYT-019–022: migracja kroki 1–6, osobne strony, puppeteer-core, treść w TypeScript) · 2026-11-16
 
 ## 1. Przegląd obecnego kodu (stan na `bb21569`)
 

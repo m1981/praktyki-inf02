@@ -1,6 +1,6 @@
 # Kontrakt pracy nad materiałami INF.02
 
-Status: obowiązuje · Wersja: 1.2 · Data: 2026-11-17 · Strony: Michał (operator), agent AI
+Status: obowiązuje · Wersja: 1.2 · Data: 2026-11-16 · Strony: Michał (operator), agent AI
 
 Ustala, jak rozmawiamy i kto o czym decyduje w pracy nad materiałami INF.02 w repozytorium `praktyki-inf02` (teoria, laby, symulatory w `01-sieci/appka`). Powstał z „protokołu oficera sztabowego” (wersja 1.2) po dopasowaniu do tej pracy. Ma pierwszeństwo przed zwyczajami agenta. Ustępuje tylko wprost wydanemu poleceniu Michała.
 
@@ -98,4 +98,4 @@ Kontrakt zmienia Michał albo agent za jego zgodą. Każda zmiana podnosi wersj�
 
 | Wersja | Data       | Zmiana                                                                                                                                                           |
 | ------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.2    | 2026-11-17 | Dopasowanie do pracy nad materiałami INF.02 (PYT-006a): zakres, granice zamiaru (rozdz. 3), linia STAN (rozdz. 5), pliki pamięci (rozdz. 7), numeracja rozdz. 8. |
+| 1.2    | 2026-11-16 | Dopasowanie do pracy nad materiałami INF.02 (PYT-006a): zakres, granice zamiaru (rozdz. 3), linia STAN (rozdz. 5), pliki pamięci (rozdz. 7), numeracja rozdz. 8. |

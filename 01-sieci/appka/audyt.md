@@ -1,6 +1,6 @@
 # Audyt dydaktyczny: Symulator ARP i Wizualizacja maski
 
-> Kopia raportu z 2026-11-17 (PYT-004a). Zrzuty i skrypty pomiarowe nie zostały skopiowane – ścieżki do katalogu tymczasowego poniżej przestają działać po zamknięciu sesji. Numery kroków ARP dotyczą wersji sprzed szybkich wygranych (PYT-005).
+> Kopia raportu z 2026-11-16 (PYT-004a). Zrzuty i skrypty pomiarowe nie zostały skopiowane – ścieżki do katalogu tymczasowego poniżej przestają działać po zamknięciu sesji. Numery kroków ARP dotyczą wersji sprzed szybkich wygranych (PYT-005).
 
 **Materiał:** `01-sieci/symulator-arp.html` (źródła `01-sieci/appka/src/arp/`), `01-sieci/symulator-maska.html` (źródła `01-sieci/appka/src/maska/`), kontekst: `01-sieci/index.html`, `01-sieci/lab1-podstawy.html`, `01-sieci/appka/plan.md`.
 **Metoda:** przeczytanie źródeł (`scenario.ts`, `network.ts`, komponenty), zrzuty headless Chrome **bez przewijania** w 1366×768 i 1280×720 dla każdego kroku ARP (0–5) i każdego gotowego przykładu maski (1–4), pomiar słów i elementów sterujących w widocznym obszarze. Skrypty i zrzuty: `/private/tmp/claude-501/-Users-michal-PycharmProjects-praktyki-inf02-01-sieci-appka/bca58193-8aa4-4331-bae0-562a48072718/scratchpad/audyt/` (`audit.mjs`, `click-view.mjs`, `metrics.json`, `img/`).

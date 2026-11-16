@@ -1,7 +1,7 @@
 # Rejestr pytań
 
 Prowadzi agent zgodnie z [`kontrakt.md`](kontrakt.md) (rozdz. 4). Odpowiedź operatora zapisuję dosłownie.
-Źródło pytań 001–006: audyt dydaktyczny symulatorów z 2026-11-17 (raport w katalogu tymczasowym sesji,
+Źródło pytań 001–006: audyt dydaktyczny symulatorów z 2026-11-16 (raport w katalogu tymczasowym sesji,
 zob. PYT-004).
 
 ## Przegląd
@@ -49,7 +49,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a). M4 kończy się pytaniem, od którego startuje scenariusz 2. L1–L3 przy Kroku 5
   teorii (egzamin wymaga liczenia adresu sieci i Broadcastu). P1–P2 po Lab 1 Fazie 3.
 - **Skutek braku odpowiedzi:** nie zaczynam serii mikro-ćwiczeń.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-002 · decyzja · zamknięte
 
@@ -59,7 +59,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a). Przydają się przy rzutniku i uczniowi po serii. Szkodzą tylko jako pierwszy
   ekran.
 - **Skutek braku odpowiedzi:** nie zaczynam serii mikro-ćwiczeń.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-003 · decyzja · zamknięte
 
@@ -70,7 +70,7 @@ zob. PYT-004).
   czy nadawca wysyła bezpośrednio, czy przez bramę”; (b) zostawić trzy metafory.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** teksty teorii i Lab 1 zostają bez zmian.
-- **Odpowiedź (2026-11-17):** „zgoda wedlug sugesti” → (a)
+- **Odpowiedź (2026-11-16):** „zgoda wedlug sugesti” → (a)
 - **Wykonanie:** `cceb206`.
 
 ### PYT-004 · decyzja · zamknięte
@@ -81,7 +81,7 @@ zob. PYT-004).
   (b) skopiować razem ze zrzutami; (c) nie zapisywać.
 - **Rekomendacja:** (a). Makiety i tabele są w tekście; zrzuty to tylko dowód pomiaru.
 - **Skutek braku odpowiedzi:** raport przepada po zamknięciu sesji.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-005 · decyzja · zamknięte
 
@@ -93,7 +93,7 @@ zob. PYT-004).
   PYT-001–003 i robić od razu serię; (c) wybrać tylko część.
 - **Rekomendacja:** (a). Uczniowie dostają lepszą wersję szybko; seria i tak użyje tych samych zmian.
 - **Skutek braku odpowiedzi:** nie zmieniam kodu.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-006 · decyzja · zamknięte
 
@@ -104,7 +104,7 @@ zob. PYT-004).
   pytania); (b) stosować obecny kontrakt z dopasowaniem w locie.
 - **Rekomendacja:** (a), krótka zmiana w rozdz. 3 i 5.
 - **Skutek braku odpowiedzi:** stosuję (b) i każde dopasowanie zaznaczam w meldunku.
-- **Odpowiedź (2026-11-17):** „zgoda wedlug sugesti” → (a)
+- **Odpowiedź (2026-11-16):** „zgoda wedlug sugesti” → (a)
 - **Wykonanie:** `kontrakt.md` wersja 1.2.
 
 ### PYT-007 · decyzja · zamknięte
@@ -118,7 +118,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a) – to układ z audytu (lekcja obok animacji); szacunek: dół diagramu ~680–706
   px, mieści się w obu rozdzielczościach. Do potwierdzenia pomiarem po zmianie.
 - **Skutek braku odpowiedzi:** maska wymaga przewijania do diagramu.
-- **Odpowiedź (2026-11-17):** „zgoda wedlug sugesti” → (a)
+- **Odpowiedź (2026-11-16):** „zgoda wedlug sugesti” → (a)
 - **Wykonanie:** `cceb206` – pomiar: dół diagramu i lekcji na 662 px w 1366×768 i 1280×720.
 
 ### PYT-008 · decyzja · zamknięte
@@ -132,7 +132,7 @@ zob. PYT-004).
 - **Rekomendacja:** (b) – kontrakt mówi, że nowa sesja zaczyna od kontraktu i rejestru, więc oba
   powinny być w repo.
 - **Skutek braku odpowiedzi:** zmiany zostają tylko na dysku.
-- **Odpowiedź (2026-11-17):** „zgoda wedlug sugesti” → (b)
+- **Odpowiedź (2026-11-16):** „zgoda wedlug sugesti” → (b)
 - **Wykonanie:** `cceb206` (kod i treść), drugi commit: audyt, rejestr, kontrakt, plan.
 
 ### PYT-009 · decyzja · zamknięte
@@ -144,7 +144,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a). Maska była najbardziej przeciążona (18 pojęć, z czego 4 potrzebne do celu),
   a ARP po szybkich wygranych już mieści się na ekranie. M4 prowadzi prosto do scenariusza 2.
 - **Skutek braku odpowiedzi:** nie zaczynam serii.
-- **Odpowiedź (2026-11-17):** „a i wtedy obacze sam jak to wyglada” → (a); operator obejrzy wynik przed commitem.
+- **Odpowiedź (2026-11-16):** „a i wtedy obacze sam jak to wyglada” → (a); operator obejrzy wynik przed commitem.
 - **Wykonanie:** seria M1–M4 gotowa, bez commita (czeka na ocenę operatora).
 
 ### PYT-010 · decyzja · zamknięte (rozstrzygnięte przez PYT-011–014)
@@ -156,7 +156,7 @@ zob. PYT-004).
 - **Rekomendacja:** (b) albo (a) – zależy od oglądu; uwagi najlepiej jako lista „ćwiczenie – co
   zmienić”.
 - **Skutek braku odpowiedzi:** zmiany zostają tylko na dysku.
-- **Odpowiedź (2026-11-17):** „Lepiej ale potrzeba jeszcze pracy. zacznijmy moze od ustalenia jednej i ostatecznej sieci z podsieciami ktore beda trzonem cwiczen” → nie (a); praca trwa, najpierw jedna sieć (PYT-011–013). Węższe pytanie o commit stanu pośredniego: PYT-014.
+- **Odpowiedź (2026-11-16):** „Lepiej ale potrzeba jeszcze pracy. zacznijmy moze od ustalenia jednej i ostatecznej sieci z podsieciami ktore beda trzonem cwiczen” → nie (a); praca trwa, najpierw jedna sieć (PYT-011–013). Węższe pytanie o commit stanu pośredniego: PYT-014.
 
 ### PYT-011 · decyzja · zamknięte
 
@@ -172,7 +172,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a). Maszyny z VirtualBox zachowują adresy (.10, .20, .30, DHCP .100–.150) –
   zero zmian w labach VirtualBox i zrzutach. Lab 2–3 już pasują. Znika ramka „Inny świat”.
 - **Skutek braku odpowiedzi:** nie zmieniam adresów nigdzie.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-012 · decyzja · zamknięte
 
@@ -181,7 +181,7 @@ zob. PYT-004).
   fazy VirtualBox jako zbliżenie na Serwerownię; (b) osobna strona `siec-firmy.html`.
 - **Rekomendacja:** (a) – jedno źródło prawdy, zgodne z regułą README.
 - **Skutek braku odpowiedzi:** plan zostaje w rejestrze, bez strony.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-013 · decyzja · zamknięte
 
@@ -191,7 +191,7 @@ zob. PYT-004).
   to samo na VLAN-ach – te same adresy; (b) VLAN-y od początku.
 - **Rekomendacja:** (a) – granica strefy = ściana pokoju = port routera; najłatwiejsze do zobaczenia.
 - **Skutek braku odpowiedzi:** symulatory i rysunki zakładają (a) tymczasowo.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-014 · decyzja · zamknięte
 
@@ -200,7 +200,7 @@ zob. PYT-004).
 - **Opcje:** (a) commit i push teraz jako stan pośredni; (b) trzymać na dysku do przeróbki.
 - **Rekomendacja:** (a) – uczniowie od razu dostają lepszą wersję, praca jest zabezpieczona.
 - **Skutek braku odpowiedzi:** zmiany zostają tylko na dysku.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 - **Wykonanie:** commit serii M1–M4 jako stanu pośredniego `bb21569`.
 
 ### PYT-015 · decyzja · zamknięte
@@ -217,7 +217,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a). Monitoring daje w planie prawdziwe miejsce na maskę mniejszą niż /24
   (egzamin), a nie łamie żadnego adresu.
 - **Skutek braku odpowiedzi:** plan w `topology.html` zapisuję w wersji 4 strefy + WAN /30.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-016 · decyzja · zamknięte
 
@@ -229,7 +229,7 @@ zob. PYT-004).
   Założenie do notatki dla nauczyciela: Router ma wyłączone proxy ARP (zalecane; domyślnie bywa
   włączone, np. w Cisco).
 - **Skutek braku odpowiedzi:** M4 zostaje w obecnej wersji do czasu przeróbki serii.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-017 · decyzja · zamknięte
 
@@ -241,7 +241,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a). Rama daje sens kolejności, a jedna decyzja na krok trzyma obciążenie
   poznawcze nisko. (c) odradzam: duże obciążenie dla ucznia i duży koszt budowy.
 - **Skutek braku odpowiedzi:** pracuję dalej nad seriami bez ramy.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-018 · decyzja · zamknięte
 
@@ -251,7 +251,7 @@ zob. PYT-004).
   ich potrzebuje; (b) tylko urządzenia używane w obecnych ćwiczeniach; (c) poprawki operatora.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** plan w `topology.html` ma tylko strefy i urządzenia z labów.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-019 · decyzja · zamknięte
 
@@ -261,7 +261,7 @@ zob. PYT-004).
   tak samo”; (b) tylko kroki 1–3 (testy e2e, model, silnik), ARP później; (c) bez porządków.
 - **Rekomendacja:** (a). Krok 6 (nowe adresy ZS1) staje się zmianą jednego pliku danych.
 - **Skutek braku odpowiedzi:** nie zmieniam kodu.
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-020 · decyzja · zamknięte
 
@@ -270,7 +270,7 @@ zob. PYT-004).
   działają; (b) jedna aplikacja z rozdziałami pod `#`, stare strony przekierowują.
 - **Rekomendacja:** (a) – linki z labów zostają, każda strona ładuje tylko swoją treść.
 - **Skutek braku odpowiedzi:** zakładam (a).
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-021 · decyzja · zamknięte
 
@@ -279,7 +279,7 @@ zob. PYT-004).
   (b) Playwright (standard, ale pobiera własne przeglądarki, kilkaset MB).
 - **Rekomendacja:** (a) – wystarczy do jednego autora; ścieżkę do Chrome opisuję w README.
 - **Skutek braku odpowiedzi:** zakładam (a).
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-022 · decyzja · zamknięte
 
@@ -290,7 +290,7 @@ zob. PYT-004).
   wymaga parsera i słabiej łapie błędy.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** zakładam (a).
-- **Odpowiedź (2026-11-17):** „wszystkie a” → (a)
+- **Odpowiedź (2026-11-16):** „wszystkie a” → (a)
 
 ### PYT-023 · decyzja · zamknięte
 
@@ -305,7 +305,7 @@ zob. PYT-004).
 - **Rekomendacja:** (a), jeśli sesja ma jeszcze zapas; (c), jeśli ma się skończyć w ciągu godziny.
   W obu przypadkach postęp jest bezpieczny dzięki commitom na gałęzi roboczej (PYT-024).
 - **Skutek braku odpowiedzi:** nie uruchamiam sub-agentów.
-- **Odpowiedź (2026-11-17):** „mamy 600k tokenow na liczniku. 23c” → (c): refaktor w nowej sesji od `zlecenie-refaktor.md`, bez sub-agentów.
+- **Odpowiedź (2026-11-16):** „mamy 600k tokenow na liczniku. 23c” → (c): refaktor w nowej sesji od `zlecenie-refaktor.md`, bez sub-agentów.
 
 ### PYT-024 · decyzja · zamknięte
 
@@ -322,7 +322,7 @@ zob. PYT-004).
 
 - **Kontekst:** dokumenty refaktoru (`architektura.md`, `zlecenie-refaktor.md`, rejestr, plan) i
   skrypty pomiarowe nie były w repo – nowa sesja ani kopia repo by ich nie widziały.
-- **Odpowiedź (2026-11-17):** „zrob commit przed refaktorem” → commit (bez push).
+- **Odpowiedź (2026-11-16):** „zrob commit przed refaktorem” → commit (bez push).
 
 ### PYT-026 · decyzja · zamknięte
 

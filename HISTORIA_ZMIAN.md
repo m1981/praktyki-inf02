@@ -2,7 +2,7 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
-## 2026-11-17 — Seria mikro-ćwiczeń M1–M4 (maska)
+## 2026-11-16 — Seria mikro-ćwiczeń M1–M4 (maska)
 
 - **`01-sieci/symulator-maska.html`** zaczyna się teraz od serii (PYT-009a, makiety z `audyt.md`):
   M1 „Moja sieć czy inna?” (porównanie numerów sieci), M2 „Płot na ulicy” (przełącznik /24 ⇄ /25,
@@ -14,7 +14,7 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
   przez kroki.
 - **Pomiar:** każdy krok M1–M4 i Tryb swobodny mieszczą się w 1366×768 i 1280×720 bez przewijania.
 
-## 2026-11-17 — Jedna metafora maski, układ maski, kontrakt 1.2
+## 2026-11-16 — Jedna metafora maski, układ maski, kontrakt 1.2
 
 - **Metafora maski (PYT-003a):** w całym Filarze 1 „płot i działka”: płot = granica podsieci,
   działka = podsieć. Zmienione: analogia w `01-sieci/index.html` (Krok 5; było „kod pocztowy
@@ -27,7 +27,7 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
 - **Kontrakt pracy (PYT-006a):** `01-sieci/appka/kontrakt.md` w wersji 1.2, dopasowany do pracy nad
   materiałami; rejestr decyzji: `01-sieci/appka/rejestr-pytan.md`.
 
-## 2026-11-17 — Audyt dydaktyczny symulatorów i szybkie wygrane
+## 2026-11-16 — Audyt dydaktyczny symulatorów i szybkie wygrane
 
 - **Audyt** (ekspert od komunikacji wizualnej, sub-agent): oba ćwiczenia uczą kilku tematów naraz
   (ARP: 19 pojęć, maska: 18) i nie mieszczą się na ekranie. Raport z makietami serii mikro-ćwiczeń:
@@ -41,7 +41,7 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
 - **Usunięte z ekranu:** zdanie o tablicy ARP Serwera NAS (tablicy nie było widać) i zdanie o reakcji
   Windows/Linux na bramę spoza sieci (lekcja maski 3).
 
-## 2026-11-17 — Wizualizacja maski podsieci (Filar 1)
+## 2026-11-16 — Wizualizacja maski podsieci (Filar 1)
 
 - **Nowa strona `01-sieci/symulator-maska.html`:** suwak maski /24–/30, wybór celu (Serwer NAS,
   Drukarka, Kamera), kierunek „Tam / Z powrotem”, pułapka „różne maski”. Trzy widoki: diagram (droga
