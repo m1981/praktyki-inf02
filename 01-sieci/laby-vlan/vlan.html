@@ -43,6 +43,9 @@
   .actions button:hover:not(:disabled){border-color:var(--ink)}
   .actions button.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
   .actions button:disabled{opacity:.4;cursor:not-allowed}
+  .actions{align-items:center}
+  .stepinfo{font-size:14px;padding:0 6px;font-variant-numeric:tabular-nums}
+  .actions .hint{font-size:12px;color:var(--muted);margin-left:auto}
   .metrics{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
   .metric{flex:1 1 170px;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
   .metric .v{font-size:22px;font-weight:700}
@@ -337,6 +340,7 @@
     // plug leaves the old port: the port goes dark right away
     const pIT = $q('#annaPortIT'), pKS = $q('#annaPortKS');
     if (moves && P.at === 'it' && pIT) pIT.setAttribute('fill', 'var(--port)');
+    if (moves && P.at === 'ks' && pKS) pKS.setAttribute('fill', 'var(--port)');
     if (moves) plug.setAttribute('opacity', 1);
     const D_MS = 1100, t0 = performance.now();
     const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -356,6 +360,7 @@
       else {
         // plug arrives: the new port lights up, the plug "disappears" into the port
         if (T.at === 'ks' && pKS) pKS.setAttribute('fill', D.ks.c);
+        if (T.at === 'it' && pIT) pIT.setAttribute('fill', D.it.c);
         if (T.at !== 'loose') plug.setAttribute('opacity', 0);
       }
     };
@@ -467,7 +472,16 @@
       title:'Kłopot 2: pracownik zmienia dział',
       problem:'Anna przechodzi z IT do księgowości, ale zostaje przy tym samym biurku. Jej komputer musi trafić do innej sieci.',
       render: s2, legend:['it','ks'],
-      actions: m => `<button class="primary" id="a2run" ${st.s2.step > 0 ? 'disabled' : ''}>▶ Przenieś Annę do księgowości</button><button id="a2reset">↺ Od nowa</button>`,
+      actions: m => {
+        const n = S2STEPS[m].length, k = st.s2.step, end = k >= n;
+        const runTxt = st.s2.playing ? '⏸ Pauza' : (k === 0 ? '▶ Przenieś Annę do księgowości' : '▶ Odtwarzaj dalej');
+        return `<button class="primary" id="a2run" ${end ? 'disabled' : ''}>${runTxt}</button>
+          <button id="a2prev" ${k === 0 ? 'disabled' : ''} title="Strzałka w lewo">◀ Krok wstecz</button>
+          <button id="a2next" ${end ? 'disabled' : ''} title="Strzałka w prawo">Krok dalej ▶</button>
+          <span class="stepinfo">Krok <b>${k}</b> / ${n}</span>
+          <button id="a2reset">↺ Od nowa</button>
+          <span class="hint">Strzałki ← → na klawiaturze też działają.</span>`;
+      },
       metrics: m => {
         const done = st.s2.step >= S2STEPS[m].length;
         return m
@@ -512,14 +526,29 @@
   $('era').onclick = eraToggle;
   $('era').onkeydown = e => { if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); eraToggle(); } };
 
-  function resetAnims(){ clearTimeout(st.s2.timer); cancelAnimationFrame(st.s2.raf); st.s2.step = 0; st.s2.prev = null; }
+  function resetAnims(){ clearTimeout(st.s2.timer); st.s2.playing = false; cancelAnimationFrame(st.s2.raf); st.s2.step = 0; st.s2.prev = null; }
   function setMode(m){ st.mode[st.tab] = m; resetAnims(); render(); }
   function go(t){ st.tab = t; resetAnims(); try { history.replaceState(null, '', '#problem-' + (t + 1)); } catch(e){ location.hash = 'problem-' + (t + 1); } render(); }
 
+  function stopS2(){ clearTimeout(st.s2.timer); st.s2.playing = false; }
   function runS2(){
+    if (st.s2.playing){ stopS2(); render(); return; }          // pause
     const m = st.mode[1], steps = S2STEPS[m];
-    const tick = () => { st.s2.step++; render(); if (st.s2.step < steps.length) st.s2.timer = setTimeout(tick, m ? 1400 : 1900); };
+    if (st.s2.step >= steps.length) return;
+    st.s2.playing = true;
+    const tick = () => {
+      st.s2.step++;
+      if (st.s2.step >= steps.length) st.s2.playing = false;
+      render();
+      if (st.s2.playing) st.s2.timer = setTimeout(tick, m ? 1400 : 1900);
+    };
     tick();
+  }
+  function stepS2(d){
+    stopS2();
+    const n = S2STEPS[st.mode[1]].length, k = Math.max(0, Math.min(n, st.s2.step + d));
+    if (k === st.s2.step){ render(); return; }
+    st.s2.step = k; render();
   }
 
   function render(){
@@ -551,12 +580,21 @@
     const on = (id, f) => { const el = $(id); if (el) el.onclick = f; };
     on('a2run', runS2);
     on('a2reset', () => { resetAnims(); render(); });
+    on('a2prev', () => stepS2(-1));
+    on('a2next', () => stepS2(1));
     document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { st.s3[b.dataset.add]++; render(); });
     on('a3reset', () => { st.s3 = { it:7, ks:5, kd:4, gs:6 }; render(); });
     on('a4b', () => { st.s4.bcast = 0; render(); requestAnimationFrame(() => { st.s4.bcast = Date.now(); render(); }); });
     on('a4i', () => { st.s4.intruder = !st.s4.intruder; render(); });
     on('a4reset', () => { st.s4 = { bcast:0, intruder:false }; render(); });
   }
+
+  addEventListener('keydown', e => {
+    if (st.tab !== 1 || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || ''))) return;
+    if (e.key === 'ArrowRight'){ e.preventDefault(); stepS2(1); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); stepS2(-1); }
+  });
 
   const h = (location.hash.match(/^#problem-([1-4])$/) || [])[1];
   st.tab = h ? +h - 1 : 0;
