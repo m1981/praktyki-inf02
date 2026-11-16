@@ -139,7 +139,14 @@
   </div>
 
   <div class="card">
-    <h2>3. Przestrzeń adresowa</h2>
+    <h2>3. Plan budynku: podsieci jako pomieszczenia</h2>
+    <p class="hint" style="margin-top:0">Ten sam podział co w drzewie, tylko narysowany jak plan piętra. Cały kwadrat to sieć wyjściowa. Każde przecięcie dzieli pokój na pół, raz w pionie, raz w poziomie. Pokoje to liście drzewa, czyli prawdziwe podsieci. Powierzchnia pokoju odpowiada liczbie adresów. Ikonki pokazują urządzenia poglądowo: gdy się nie mieszczą, reszta jest jako „+N”.</p>
+    <div class="plan" id="plan-view"></div>
+    <div class="legend" style="margin-top:8px"><span>Ściana między pokojami = granica podsieci. Żeby komputer z jednego pokoju „pogadał” z innym pokojem, ruch musi przejść przez router.</span></div>
+  </div>
+
+  <div class="card">
+    <h2>4. Przestrzeń adresowa</h2>
     <div class="bar" id="bar"></div>
     <div class="devrow" id="devrow"></div>
     <div class="scale" id="scale"></div>
@@ -147,7 +154,7 @@
   </div>
 
   <div class="card">
-      <h2>4. Co mówią bity</h2>
+      <h2>5. Co mówią bity</h2>
       <div style="font-size:13px;color:var(--muted)">Adres sieci binarnie:</div>
       <div class="bits" id="bitsAddr"></div>
       <div style="font-size:13px;color:var(--muted);margin-top:8px">Maska binarnie:</div>
@@ -161,7 +168,7 @@
   </div>
 
   <div class="card">
-    <h2>5. Zaznaczona podsieć</h2>
+    <h2>6. Zaznaczona podsieć</h2>
     <div class="row" style="margin-bottom:12px">
       <button id="splitBtn" class="primary">✂ Podziel na pół</button>
       <button id="mergeBtn">⤒ Scal z sąsiadem</button>
@@ -170,16 +177,9 @@
   </div>
 
   <div class="card">
-    <h2>6. Drzewo podziału</h2>
+    <h2>7. Drzewo podziału</h2>
     <p class="hint" style="margin-top:0">Każdy poziom to jeden bit maski więcej. Szare bloki zostały podzielone, kolorowe to faktyczne podsieci (liście drzewa). Mała etykieta 0 lub 1 to wartość bitu, który zdecydował, czy blok jest lewą, czy prawą połówką.</p>
     <div class="tree-outer"><div class="tree" id="tree"></div></div>
-  </div>
-
-  <div class="card">
-    <h2>7. Plan budynku: podsieci jako pomieszczenia</h2>
-    <p class="hint" style="margin-top:0">Ten sam podział co w drzewie, tylko narysowany jak plan piętra. Cały kwadrat to sieć wyjściowa. Każde przecięcie dzieli pokój na pół, raz w pionie, raz w poziomie. Pokoje to liście drzewa, czyli prawdziwe podsieci. Powierzchnia pokoju odpowiada liczbie adresów. Ikonki pokazują urządzenia poglądowo: gdy się nie mieszczą, reszta jest jako „+N”.</p>
-    <div class="plan" id="plan-view"></div>
-    <div class="legend" style="margin-top:8px"><span>Ściana między pokojami = granica podsieci. Żeby komputer z jednego pokoju „pogadał” z innym pokojem, ruch musi przejść przez router.</span></div>
   </div>
 
   <div class="card">
