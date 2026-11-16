@@ -77,6 +77,21 @@
   .pingS{fill:none;stroke:var(--accent);stroke-width:3;animation:pingS .9s ease-out 2 forwards}
   @keyframes pingS{0%{r:6;opacity:1}100%{r:22;opacity:0}}
   @media (prefers-reduced-motion:reduce){.next{animation:none;outline:3px solid var(--accent);outline-offset:2px}.pingS{animation:none;r:11}}
+  .story{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(250px,1fr);gap:10px;align-items:stretch}
+  @media (max-width:760px){.story{grid-template-columns:1fr}}
+  .dlg{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:250px}
+  .dlg .who{display:flex;gap:9px;align-items:center;font-size:13px;color:var(--muted)}
+  .dlg .who b{color:var(--ink);display:block;font-size:14px}
+  .dlg .av{width:38px;height:38px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .dlg .say{font-size:20px;line-height:1.35;font-weight:600;flex:1;animation:fade .3s}
+  .dlg .dots{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+  .dlg .dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .dlg .dots i.on{background:var(--ink)}
+  .dlg .dots span{margin-left:auto;font-variant-numeric:tabular-nums}
+  .dlg .actions{margin-top:0}
+  .dlg .actions button.primary{flex:1}
+  .dlg .keys{font-size:11px;color:var(--muted)}
+  .hl{fill:none;stroke:var(--accent);stroke-width:3;animation:fade .3s}
   @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
   /* svg */
@@ -142,7 +157,7 @@
   };
   const st = { tab:0, mode:[0,0,0,0],
     s2:{ step:0, timer:null },
-    s3:{ it:7, ks:5, kd:4, gs:6 },
+    s3:{ it:7, ks:5, kd:4, gs:6 }, s3step:[0,0],
     s4:{ bcast:0, intruder:false } };
 
   /* ---------- drawing helpers ---------- */
@@ -415,10 +430,54 @@
     rows.forEach((r, i) => {
       const s = sw(30, 20 + i * 62, r.ports, 12, '', { pw:16, ph:12, gap:5 });
       if (i === hitRow && hitIdx >= 0){ const pt = s.port(hitIdx); var ring = `<circle cx="${pt.x}" cy="${pt.y}" r="6" class="pingS"/>`; }
-      g += s.svg + (i === hitRow && hitIdx >= 0 ? ring : '') + `<text x="${30 + s.w + 14}" y="${20 + i * 62 + 18}" class="lbl">${r.label}</text>
+      let hl = ''; const hi = c.hi || [];
+      if (!mode && hi.includes(r.k)) hl = `<rect x="${30 - 5}" y="${20 + i * 62 - 5}" width="${s.w + 10}" height="${s.h + 10}" rx="7" class="hl"/>`;
+      if (mode) r.ports.forEach((col, pi) => { if (col && hi.some(k => D[k].c === col)){ const pt = s.port(pi); hl += `<rect x="${pt.x - 10}" y="${pt.y - 8}" width="20" height="16" rx="3" class="hl" style="stroke-width:2"/>`; } });
+      g += s.svg + hl + (i === hitRow && hitIdx >= 0 ? ring : '') + `<text x="${30 + s.w + 14}" y="${20 + i * 62 + 18}" class="lbl">${r.label}</text>
         <text x="${30 + s.w + 14}" y="${20 + i * 62 + 35}" class="lbls">zajęte ${r.used}/24 · wolne ${24 - r.used}</text>`;
     });
-    return { svg: svgWrap(820, Math.max(160, 30 + rows.length * 62), g), rows };
+    return { svg: svgWrap(590, Math.max(340, 30 + rows.length * 62), g), rows };
+  }
+
+  const B = { it:7, ks:5, kd:4, gs:6 };
+  const S3STORY = [
+    [ { t:'Mamy 4 działy. Każdy ma własną sieć.', c:B },
+      { t:'Bez VLAN-ów jedna sieć to jeden switch. Kupuję cztery.', c:B, hi:['it','ks','kd','gs'] },
+      { t:'Kadry: 4 osoby. 20 portów się kurzy.', c:B, hi:['kd'] },
+      { t:'IT zatrudnia 10 osób. Jeszcze się mieszczą.', c:{...B, it:17}, last:'it' },
+      { t:'Kolejne 7 osób. Switch IT pełny: 24 z 24.', c:{...B, it:24}, last:'it' },
+      { t:'Przychodzi 25. osoba. Brak portu! Kupuję piąty switch.', c:{...B, it:25}, last:'it', hi:['it'] },
+      { t:'A obok stoi 57 wolnych portów. Nie mogę ich użyć.', c:{...B, it:25}, hi:['ks','kd','gs'] },
+      { t:'Bilans: 5 switchy. Zajęty tylko co trzeci port.', c:{...B, it:25} } ],
+    [ { t:'Te same 4 działy. Jeden wspólny switch.', c:B },
+      { t:'Kolor portu to VLAN. Sieć wyznacza ustawienie, nie pudełko.', c:B, hi:['it','ks','kd','gs'] },
+      { t:'Kadry biorą 4 porty. Reszta pracuje dla innych.', c:B, hi:['kd'] },
+      { t:'IT zatrudnia 10 osób. Teraz portów naprawdę brakuje, więc kupuję drugi switch.', c:{...B, it:17}, last:'it' },
+      { t:'Kolejne 8 osób. Po prostu zajmują wolne porty.', c:{...B, it:25}, last:'it' },
+      { t:'Bilans: 2 switche zamiast 5. Zajęte 40 z 48 portów.', c:{...B, it:25} } ]
+  ];
+  function s3story(mode){
+    const steps = S3STORY[mode], k = st.s3step[mode], cur = steps[k], last = k === steps.length - 1;
+    st.s3 = { ...cur.c, last: cur.last, hi: cur.hi };
+    const nextTxt = last ? (mode ? '↺ Porównaj: przed VLAN-ami' : 'Zobacz to samo z VLAN-ami ▶') : 'Dalej ▶';
+    return `<div class="story"><div>${s3(mode).svg}</div>
+      <aside class="dlg">
+        <div class="who"><span class="av">🧑‍💻</span><span><b>Ola, administratorka sieci</b>${mode ? 'z VLAN-ami' : 'przed VLAN-ami'}</span></div>
+        <div class="say">${cur.t}</div>
+        <div class="dots">${steps.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}<span>${k + 1} / ${steps.length}</span></div>
+        <div class="actions">
+          <button id="d3prev" ${k === 0 ? 'disabled' : ''}>◀ Wstecz</button>
+          <button id="d3next" class="primary ${k === 0 ? 'next' : ''}">${nextTxt}</button>
+        </div>
+        <div class="keys">Strzałki ← → też działają.</div>
+      </aside></div>`;
+  }
+  function step3(d){
+    const m = st.mode[2], n = S3STORY[m].length, k = st.s3step[m] + d;
+    if (k < 0) return;
+    if (k >= n){ st.mode[2] = 1 - m; st.s3step[1 - m] = 0; }
+    else st.s3step[m] = k;
+    render();
   }
 
   function s3guide(mode){
@@ -529,12 +588,8 @@
         : '<b>Przed VLAN-ami</b> zmiana sieci oznacza <b>fizyczne przepięcie kabla</b>. Trzeba iść do szafy, znaleźć właściwy przewód i liczyć, że w docelowym switchu jest wolny port. W dużej firmie takie zgłoszenia są codziennie.' },
     { tab:'3. Pół-puste switche',
       title:'Kłopot 3: każdy dział ma własny, pół-pusty switch',
-      problem:'Cztery działy to cztery osobne sieci, a więc cztery switche, nawet jeśli w dziale są tylko 4 komputery. Dodawaj osoby i obserwuj porty.',
-      render: m => s3(m).svg, legend:['it','ks','kd','gs'],
-      guide: s3guide,
-      actions: m => { const hot = s3guide(m).hot;
-        const b = (k, n, t) => `<button data-add="${k}" data-n="${n}" class="${hot === k + n ? 'next' : ''}">${t}</button>`;
-        return b('it', 1, '+ osoba w IT') + b('it', 5, '+ 5 osób w IT') + b('ks', 1, '+ w Księgowości') + b('kd', 1, '+ w Kadrach') + b('gs', 1, '+ Gość') + `<button id="a3reset">↺ Od nowa</button>`; },
+      problem:'Cztery działy to cztery osobne sieci. Przejdź historię Oli przyciskiem „Dalej”, najpierw przed VLAN-ami, potem z VLAN-ami.',
+      render: s3story, legend:['it','ks','kd','gs'], noExplain:true,
       metrics: m => {
         const r = s3(m).rows, used = r.reduce((a, x) => a + x.used, 0), all = r.length * 24;
         return [metric('switchy do kupienia, zasilania i skonfigurowania', r.length, m ? 'good' : 'bad'),
@@ -609,6 +664,7 @@
     $('metrics').innerHTML = s.metrics(m).join('');
     $('explain').innerHTML = s.explain(m);
     $('explain').className = 'explain' + (m ? ' after' : '');
+    $('explain').style.display = s.noExplain ? 'none' : '';
     // log for scenario 2
     if (st.tab === 1){
       const steps = S2STEPS[m];
@@ -622,6 +678,8 @@
     const on = (id, f) => { const el = $(id); if (el) el.onclick = f; };
     on('a2run', runS2);
     on('a2reset', () => { resetAnims(); render(); });
+    on('d3prev', () => step3(-1));
+    on('d3next', () => step3(1));
     on('a2prev', () => stepS2(-1));
     on('a2next', () => stepS2(1));
     document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const k = b.dataset.add; st.s3[k] += +(b.dataset.n || 1); st.s3.last = k; st.s3.touched = true; render(); });
@@ -632,10 +690,11 @@
   }
 
   addEventListener('keydown', e => {
-    if (st.tab !== 1 || e.altKey || e.ctrlKey || e.metaKey) return;
+    if ((st.tab !== 1 && st.tab !== 2) || e.altKey || e.ctrlKey || e.metaKey) return;
+    const stepFn = st.tab === 1 ? stepS2 : step3;
     if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || ''))) return;
-    if (e.key === 'ArrowRight'){ e.preventDefault(); stepS2(1); }
-    else if (e.key === 'ArrowLeft'){ e.preventDefault(); stepS2(-1); }
+    if (e.key === 'ArrowRight'){ e.preventDefault(); stepFn(1); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); stepFn(-1); }
   });
 
   const h = (location.hash.match(/^#problem-([1-4])$/) || [])[1];
