@@ -217,6 +217,16 @@
     height: 18px;
     margin-top: 3px;
    }
+   .back {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+   }
+   .back:hover {
+    color: var(--ink);
+   }
    .plan {
     position: relative;
     width: 100%;
@@ -229,7 +239,7 @@
    }
    .room {
     position: absolute;
-    border: 2px solid var(--ink);
+    border: 2px dashed var(--ink);
     overflow: hidden;
     cursor: pointer;
     display: flex;
@@ -475,6 +485,7 @@
  </head>
  <body>
   <div class="wrap">
+   <a class="back" href="../index.html">← Filar 1: Sieci</a>
    <h1>Laboratorium podsieci</h1>
    <p class="lead">
     Klikaj i dziel sieć na kawałki. Każde przecięcie bloku na pół to wydłużenie maski o 1 bit.
@@ -512,18 +523,19 @@
    </div>
 
    <div class="card">
-    <h2>3. Plan budynku: podsieci jako pomieszczenia</h2>
+    <h2>3. Plan osiedla: podsieci jako działki</h2>
     <p class="hint" style="margin-top: 0">
-     Ten sam podział co w drzewie, tylko narysowany jak plan piętra. Cały kwadrat to sieć wyjściowa.
-     Każde przecięcie dzieli pokój na pół, raz w pionie, raz w poziomie. Pokoje to liście drzewa,
-     czyli prawdziwe podsieci. Powierzchnia pokoju odpowiada liczbie adresów. Ikonki pokazują
-     urządzenia poglądowo: gdy się nie mieszczą, reszta jest jako „+N”.
+     Ten sam podział co w drzewie, narysowany jak plan osiedla. Cały kwadrat to sieć wyjściowa.
+     Każde przecięcie stawia płot i dzieli działkę na pół, raz w pionie, raz w poziomie. Działki to
+     liście drzewa, czyli prawdziwe podsieci. Powierzchnia działki odpowiada liczbie adresów. Ikonki
+     pokazują urządzenia poglądowo: gdy się nie mieszczą, reszta jest jako „+N”.
     </p>
     <div class="plan" id="plan-view"></div>
     <div class="legend" style="margin-top: 8px">
      <span
-      >Ściana między pokojami = granica podsieci. Żeby komputer z jednego pokoju „pogadał” z innym
-      pokojem, ruch musi przejść przez router.</span
+      >Płot między działkami = granica podsieci. Do komputera za płotem wysyłamy przez bramę
+      (router). Płot nie zatrzymuje krzyku (broadcastu): na tym samym switchu słychać go za płotem.
+      Prawdziwą ścianę stawia dopiero VLAN – zobacz <a href="vlan.html">Laboratorium VLAN</a>.</span
      >
     </div>
    </div>
@@ -1109,7 +1121,7 @@
       ex = `To cała sieć wyjściowa /${baseP}. Wszystkie bity za maską (niebieskie) służą do numerowania urządzeń: ${32 - n.p} bitów daje 2<sup>${32 - n.p}</sup> = ${size(n.p)} adresów. Podziel blok, a jeden niebieski bit zmieni się w pomarańczowy.`;
      } else {
       const subBits = ((n.net - base) / size(n.p)).toString(2).padStart(borrowed, '0');
-      ex = `Maska /${n.p} to /${baseP} + <b>${borrowed}</b> pożyczon${borrowed === 1 ? 'y bit' : borrowed < 5 ? 'e bity' : 'ych bitów'}. Pomarańczowe bity tej podsieci mają wartość <b class="mono">${subBits}</b>, i to one mówią, którą „szufladą” z ${2 ** borrowed} możliwych o tym rozmiarze jest ta podsieć. Zostaje ${32 - n.p} bitów hosta, czyli ${size(n.p)} adresów (${hosts(n.p)} na urządzenia).`;
+      ex = `Maska /${n.p} to /${baseP} + <b>${borrowed}</b> pożyczon${borrowed === 1 ? 'y bit' : borrowed < 5 ? 'e bity' : 'ych bitów'}. Pomarańczowe bity tej podsieci mają wartość <b class="mono">${subBits}</b>, i to one mówią, którą działką z ${2 ** borrowed} możliwych o tym rozmiarze jest ta podsieć. Zostaje ${32 - n.p} bitów hosta, czyli ${size(n.p)} adresów (${hosts(n.p)} na urządzenia).`;
       if (n.p >= 24 && baseP >= 24)
        ex += ` Dlatego podsieci /${n.p} zaczynają się co ${size(n.p)}: .0, .${size(n.p)}, .${2 * size(n.p)}…`;
      }

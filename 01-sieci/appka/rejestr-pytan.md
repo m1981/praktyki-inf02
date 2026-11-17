@@ -43,6 +43,12 @@ zob. PYT-004).
 | PYT-033 | decyzja    | zamknięte (a)    | Co pokazuje szafa główna w Kłopocie 1                          |
 | PYT-034 | decyzja    | zamknięte (a)    | Dwa commity po scaleniu PR #1: nowy PR #2                      |
 | PYT-035 | z-domyslna | zamknięte (inna) | Sposób pracy: praca na `main`                                  |
+| PYT-036 | decyzja    | zamknięte (a)    | Wejście do `vlan.html`: Krok 6 i Lab 2 Faza 1                  |
+| PYT-037 | decyzja    | zamknięte (inna) | Metafory w Filarze 1 zgodnie z `vlan.html`                     |
+| PYT-038 | decyzja    | zamknięte (a)    | Nawigacja w labach: link powrotny do filaru                    |
+| PYT-039 | decyzja    | zamknięte (a)    | Laby w `plan.md` jako uzupełnienie, poza ramą ZS1              |
+| PYT-040 | decyzja    | zamknięte (a)    | Commit i push wejść i metafor na `main`                        |
+| PYT-041 | decyzja    | zamknięte (a)    | `.btn-primary` jako `inline-block` w `common.css`              |
 
 ## Pytania
 
@@ -434,3 +440,68 @@ zob. PYT-004).
 - **Odpowiedź (2026-11-17):** „35 pracujmy na main jestem jedynym developerem” → (b): po scaleniu
   PR #2 commity idą prosto na `main`. Zgoda na commit i push dalej zgodnie z kontraktem
   (rozdz. 3).
+
+### PYT-036 · decyzja · zamknięte
+
+- **Kontekst:** do `01-sieci/laby-vlan/vlan.html` nie prowadził żaden link. W teorii Krok 6 „VLANy”
+  nie miał przycisku, a `plan.md` łączy scenariusz 4 (VLAN) z Lab 2 Fazą 1.
+- **Opcje:** (a) przycisk w Kroku 6 i link „Zanim zaczniesz” w Lab 2 Fazie 1; (b) tylko Krok 6.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** bez linków.
+- **Odpowiedź (2026-11-17):** „36a” → (a)
+
+### PYT-037 · decyzja · zamknięte
+
+- **Kontekst:** `podsieci.html` opisywał podsieci jako pokoje oddzielone ścianą („Ściana między
+  pokojami = granica podsieci”). To przeczy PYT-003a (maska = płot i działka) i poprawce z `plan.md`
+  („maska nie stawia fizycznej ściany”).
+- **Opcje:** (a) poprawić plan budynku na działki i płoty, potem przycisk w Kroku 5; (b) podlinkować
+  bez zmian; (c) nie linkować.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** bez linku.
+- **Odpowiedź (2026-11-17):** „37 poprawić metafory wszędzie zgodnie z vlan.html” → (a) rozszerzone na cały Filar 1.
+- **Wykonanie:** jeden słownik: maska = płot i działka (broadcast przechodzi przez płot), VLAN =
+  ściana („o sieci decyduje port, a nie pudło”), switch = pudło, router = brama. Zmienione:
+  `podsieci.html` (plan osiedla, działki, przerywane płoty, „którą działką” zamiast „szufladą”,
+  link do Laboratorium VLAN), teoria Krok 6 (było: sala gimnastyczna i kurtyna), wniosek Lab 2
+  Fazy 1 (było: kurtyna). Przycisk w Kroku 5 do `podsieci.html`.
+
+### PYT-038 · decyzja · zamknięte
+
+- **Kontekst:** `menu.js` obsługuje jeden poziom folderów, a laby leżą w `01-sieci/laby-vlan/` i nie
+  ładują `common.css`.
+- **Opcje:** (a) prosty link „← Filar 1: Sieci” w obu labach; (b) pełne `menu.js` z poprawką na dwa
+  poziomy i `common.css`.
+- **Rekomendacja:** (a) teraz, (b) później razem z ujednoliceniem wyglądu.
+- **Skutek braku odpowiedzi:** laby bez powrotu.
+- **Odpowiedź (2026-11-17):** „38a” → (a)
+
+### PYT-039 · decyzja · zamknięte
+
+- **Kontekst:** laby korzystają z własnej firmy (Ola, działy, 192.168.x), a nie z ramy „Projekt ZS1”
+  (PYT-017a).
+- **Opcje:** (a) wpisać je w `plan.md` jako uzupełnienie scenariusza 4 i Kroku 5, poza ramą ZS1;
+  (b) przerobić na ZS1.
+- **Rekomendacja:** (a); (b) zostaje otwarte.
+- **Skutek braku odpowiedzi:** `plan.md` bez zmian.
+- **Odpowiedź (2026-11-17):** „39a” → (a)
+
+### PYT-040 · decyzja · zamknięte
+
+- **Kontekst:** wejścia, link powrotny, słownik metafor i wpisy w `plan.md` (PYT-036–039) leżały
+  niezapisane na lokalnym `main`. Push na `main` publikuje od razu na GitHub Pages.
+- **Opcje:** (a) commit na `main`, push i aktualizacja kopii `vlan.html` na claude.ai; (b) commit
+  bez pusha.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** zmiany zostają niezapisane.
+- **Odpowiedź (2026-11-17):** „40a” → (a)
+
+### PYT-041 · decyzja · zamknięte
+
+- **Kontekst:** `.btn-primary` jest elementem liniowym, więc długi przycisk łamie się na dwie linie
+  „w kawałkach” (tło i ramka rozjeżdżają się). Dotyczy wszystkich przycisków w filarach.
+- **Opcje:** (a) `display: inline-block` w `common.css`, sprawdzone zrzutami stron z przyciskiem;
+  (b) zostawić.
+- **Rekomendacja:** (a), osobnym commitem.
+- **Skutek braku odpowiedzi:** bez zmian.
+- **Odpowiedź (2026-11-17):** „41a” → (a)

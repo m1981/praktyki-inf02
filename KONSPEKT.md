@@ -53,7 +53,7 @@ _title: Laboratorium podsieci – dziel sieć klikając_
 - **H1** Laboratorium podsieci
   - **H2** 1. Sieć, którą dzielimy
   - **H2** 2. Gotowe scenariusze
-  - **H2** 3. Plan budynku: podsieci jako pomieszczenia
+  - **H2** 3. Plan osiedla: podsieci jako działki
   - **H2** 4. Przestrzeń adresowa
   - **H2** 5. Co mówią bity
   - **H2** 6. Zaznaczona podsieć

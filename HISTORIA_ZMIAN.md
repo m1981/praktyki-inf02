@@ -2,6 +2,21 @@
 
 Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczne są w historii gita.
 
+## 2026-11-17 — Wejścia do labów i jeden słownik metafor w Filarze 1
+
+- **Wejścia (PYT-036a, PYT-038a):** teoria Krok 5 – przycisk „✂️ Podziel sieć na działki (VLSM)”
+  do `laby-vlan/podsieci.html`; Krok 6 – przycisk „🏢 Po co nam VLAN-y? (4 kłopoty)” do
+  `laby-vlan/vlan.html`; Lab 2 Faza 1 – link „Zanim zaczniesz: po co nam VLAN-y?”. Oba laby mają
+  link powrotny „← Filar 1: Sieci” (bez `menu.js`, które obsługuje jeden poziom folderów).
+- **Słownik metafor (PYT-037):** maska = płot i działka – broadcast przechodzi przez płot; VLAN =
+  ściana – „o sieci decyduje port, a nie pudło”; switch = pudło; router = brama.
+  - `podsieci.html`: „Plan osiedla: podsieci jako działki” (było: pomieszczenia i ściana, sprzeczne
+    z PYT-003a), płoty rysowane linią przerywaną, link do Laboratorium VLAN.
+  - Teoria Krok 6 i wniosek Lab 2 Fazy 1: analogia w języku `vlan.html` (było: sala gimnastyczna
+    i kurtyna).
+- **`plan.md` (PYT-039a):** oba laby wpisane jako uzupełnienie scenariusza 4 i Kroku 5, poza ramą
+  ZS1.
+
 ## 2026-11-17 — Laby VLAN i podsieci dołączone z historią (`01-sieci/laby-vlan/`)
 
 - **Nowy folder `01-sieci/laby-vlan/`** (PYT-029a): dwa samodzielne laby powstałe w osobnej
