@@ -16,6 +16,10 @@ Decyzje i plany zmian w materiałach. Najnowsze na górze. Szczegóły techniczn
     i kurtyna).
 - **`plan.md` (PYT-039a):** oba laby wpisane jako uzupełnienie scenariusza 4 i Kroku 5, poza ramą
   ZS1.
+- **Przyciski (PYT-041a):** `.btn-primary` w `common.css` dostał `display: inline-block`. Długi
+  przycisk łamie się teraz jako całość, zamiast rozjeżdżać się na kawałki tła; działa też
+  podniesienie przy najechaniu. Sprawdzone zrzutami: strona główna, teoria Filaru 1, Lab 2
+  (komputer i telefon).
 
 ## 2026-11-17 — Laby VLAN i podsieci dołączone z historią (`01-sieci/laby-vlan/`)
 

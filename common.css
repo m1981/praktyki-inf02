@@ -948,6 +948,7 @@ code {
  flex-wrap: wrap;
 }
 .btn-primary {
+ display: inline-block;
  background: #55efc4;
  color: #2d3436;
  padding: 12px 25px;
