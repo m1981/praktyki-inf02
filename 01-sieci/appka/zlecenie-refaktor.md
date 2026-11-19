@@ -1,6 +1,6 @@
 # Zlecenie: refaktor symulatorów (dla sub-agenta albo nowej sesji)
 
-Status: etapy A i B wykonane 2026-11-16. Etap A jest na `main`; etap B (kroki 3–5) jest po rebase na `origin/main` i czeka na push (PYT-047). Następny: etap C, po przeglądzie. Stan uwag z przeglądu etapu A: sekcja na końcu pliku.
+Status: etapy A i B wykonane 2026-11-16. Etap A jest na `main`; etap B (kroki 3–5) też, razem z uwagami 2 i 3 z przeglądu (PYT-047a). Następny: etap C, po przeglądzie. Stan uwag z przeglądu etapu A: sekcja na końcu pliku.
 
 Ten plik to kompletny brief. Wykonawca nie zna wcześniejszej rozmowy – wszystko, czego potrzebuje,
 jest tu i w plikach, które wskazuje.

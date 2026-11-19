@@ -54,7 +54,7 @@ zob. PYT-004).
 | PYT-044 | z-domyslna | zamknięte (a)    | Linia `Co-Authored-By` w commitach etapu B                     |
 | PYT-045 | decyzja    | zamknięte (a)    | Uwagi 2 i 3 z przeglądu etapu A jako pierwszy krok etapu C     |
 | PYT-046 | decyzja    | zamknięte (→047) | Etap B na `main`, gdy fast-forward jest niemożliwy             |
-| PYT-047 | decyzja    | otwarte          | Push etapu B po rebase na `main`                               |
+| PYT-047 | decyzja    | zamknięte (a)    | Push etapu B po rebase na `main`                               |
 
 ## Pytania
 
@@ -590,10 +590,13 @@ odpowiedź jest zapisana dosłownie.
   przez operatora na GitHubie. Stary koniec gałęzi jest zachowany lokalnie pod znacznikiem
   `przed-rebase-etap-b`.
 
-### PYT-047 · decyzja · otwarte
+### PYT-047 · decyzja · zamknięte
 
 - **Kontekst:** po rebase etap B leży na lokalnej gałęzi `refaktor-silnik`, wprost na `origin/main`.
   Weryfikacja powtórzona na nowej bazie (wynik w meldunku).
 - **Opcje:** (a) przesunąć `main` na koniec gałęzi (fast-forward) i wypchnąć; (b) zostawić lokalnie.
 - **Rekomendacja:** (a) – zgodnie z PYT-035b praca idzie na `main`; uczeń nie widzi zmian.
 - **Skutek braku odpowiedzi:** etap B zostaje tylko na tym komputerze.
+- **Odpowiedź (2026-11-19):** „47a” → (a)
+- **Wykonanie:** `main` przesunięty fast-forward na koniec gałęzi `refaktor-silnik` i wypchnięty:
+  kroki 3–5 (`2ddd633`, `18bdfc9`, `8607eb2`), uwagi 2 i 3 (`9b08ec3`) i ten wpis.
