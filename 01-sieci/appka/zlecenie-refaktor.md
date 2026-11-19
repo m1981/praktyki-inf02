@@ -1,6 +1,6 @@
 # Zlecenie: refaktor symulatorów (dla sub-agenta albo nowej sesji)
 
-Status: etapy A i B wykonane 2026-11-16. Etap A jest na `main`; etap B (kroki 3–5) też, razem z uwagami 2 i 3 z przeglądu (PYT-047a). Następny: etap C, po przeglądzie. Stan uwag z przeglądu etapu A: sekcja na końcu pliku.
+Status: **zamknięte na etapie B** (PYT-054a, 2026-11-19). Etapy A i B są na `main`, razem z uwagami 2 i 3 z przeglądu. Etap C (adresy ZS1) jest odłożony razem z Projektem ZS1 (PYT-053); uwagi 6 i 8 czekają na ewentualny powrót do niego. Wzorzec `niezmiennosc` zostaje do pierwszej zatwierdzonej zmiany treści.
 
 Ten plik to kompletny brief. Wykonawca nie zna wcześniejszej rozmowy – wszystko, czego potrzebuje,
 jest tu i w plikach, które wskazuje.

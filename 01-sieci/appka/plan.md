@@ -179,7 +179,9 @@ element sterujący, jeden ekran (1366×768 i 1280×720 bez przewijania). Do tego
 
 ## Projekt ZS1 – firma od pustej kartki (PYT-015–018)
 
-Status: zatwierdzone (PYT-011–018). Kolejność prac: najpierw porządek w kodzie (PYT-019), potem treść.
+Status: **odłożone** (PYT-053, 2026-11-19). Sekcja powstała 2026-11-16, przed Laboratorium VLAN i
+Laboratorium podsieci. Istniejące aplikacje zostają przy własnych adresach; ZS1 może wrócić jako
+projekt końcowy. Następna aplikacja: routing – makiety w [`makiety-routing.md`](makiety-routing.md).
 
 ### Zasada
 
