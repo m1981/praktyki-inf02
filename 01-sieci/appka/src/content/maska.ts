@@ -12,6 +12,7 @@ import {
  deviceIp,
  deviceIpText,
  deviceMac,
+ forwardsBroadcast,
  INTERNET_IP,
  LINKS,
  ZONES,
@@ -127,7 +128,7 @@ const M4_QUESTION = `Kto ma ${deviceIpText('nas')}?`;
 
 /** Broadcast z Laptopa: Switch rozsyła kopie na wszystkie pozostałe kable. */
 function m4Broadcast(): DiagramState {
- const hops = floodPath<DeviceId>(LINKS, 'laptop');
+ const hops = floodPath<DeviceId>(LINKS, 'laptop', forwardsBroadcast);
  const frame = arpRequest(deviceMac('laptop'), M4_QUESTION);
  return {
   frame,

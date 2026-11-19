@@ -571,6 +571,8 @@ odpowiedź jest zapisana dosłownie.
   „zmianą jednego pliku danych”.
 - **Skutek braku odpowiedzi:** nie zaczynam etapu C.
 - **Odpowiedź (2026-11-19):** „30 a 32a 31 a” → (a)
+- **Wykonanie:** osobny commit na gałęzi `refaktor-silnik`, przed zmianą danych na plan ZS1. 255
+  testów, e2e 63 pomiary, 42 stany bez zmian względem `4b5ce08`.
 
 ### PYT-046 · decyzja · zamknięte
 

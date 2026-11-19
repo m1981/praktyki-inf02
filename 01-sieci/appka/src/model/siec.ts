@@ -28,8 +28,10 @@ interface ModelDevice {
 interface Link {
  a: DeviceId;
  b: DeviceId;
- /** Nazwa portu po stronie Switcha. */
- port?: string;
+ /** Nazwa portu po stronie urządzenia `a`. Kabel ma dwa końce, więc port może być po obu stronach. */
+ portA?: string;
+ /** Nazwa portu po stronie urządzenia `b`. */
+ portB?: string;
 }
 
 export const ZONES: Record<ZoneId, Zone> = {
@@ -47,9 +49,9 @@ export const DEVICES: readonly ModelDevice[] = [
 
 /** Fizyczne kable: gwiazda wokół Switcha. */
 export const LINKS: readonly Link[] = [
- { a: 'laptop', b: 'switch', port: 'Fa0/1' },
- { a: 'router', b: 'switch', port: 'Fa0/3' },
- { a: 'nas', b: 'switch', port: 'Fa0/2' },
+ { a: 'laptop', b: 'switch', portB: 'Fa0/1' },
+ { a: 'router', b: 'switch', portB: 'Fa0/3' },
+ { a: 'nas', b: 'switch', portB: 'Fa0/2' },
  { a: 'printer', b: 'switch' },
  { a: 'camera', b: 'switch' }
 ];
@@ -97,11 +99,24 @@ export function deviceMac(id: DeviceId): string {
  return mac;
 }
 
-/** Port Switcha, do którego podłączone jest urządzenie, np. „Fa0/1”. */
-export function switchPort(id: DeviceId): string {
- const link = LINKS.find((l) => l.a === id || l.b === id);
- if (!link?.port) throw new Error(`Urządzenie „${id}” nie ma portu Switcha w modelu sieci.`);
- return link.port;
+/**
+ * Port urządzenia `of`, do którego wpięty jest kabel prowadzący do `peer`.
+ * Przykład: `portOf('switch', 'laptop')` → „Fa0/1” (port Switcha, za którym jest Laptop).
+ */
+export function portOf(of: DeviceId, peer: DeviceId): string {
+ const link = LINKS.find((l) => (l.a === of && l.b === peer) || (l.b === of && l.a === peer));
+ const port = link && (link.a === of ? link.portA : link.portB);
+ if (!port) throw new Error(`W modelu sieci „${of}” nie ma portu z kablem do „${peer}”.`);
+ return port;
+}
+
+/**
+ * Czy urządzenie rozsyła Broadcast dalej. Robi to tylko Switch (warstwa 2). Router i urządzenia
+ * końcowe odbierają ramkę Broadcast, ale nie przekazują jej na inne kable – dlatego Broadcast nie
+ * wychodzi poza jedną sieć.
+ */
+export function forwardsBroadcast(id: DeviceId): boolean {
+ return device(id).kind === 'switch';
 }
 
 export function deviceByMac(mac: string): ModelDevice | undefined {

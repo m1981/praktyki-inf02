@@ -72,13 +72,13 @@ Przegląd potwierdził: tsc bez błędów, 87/87 testów, e2e 63 pomiary, 42 sta
 | 8   | `ipMath.firstThreeOctets` i `BitRuler` zakładają maski /24–/30. Widok „cała firma /16” (PYT-015a) wymaga uogólnienia.                                                                                                                                                           | etap C                     |
 | 9   | Zlecenie pozwalało usuwać pliki w `e2e/`, a kontrakt (rozdz. 3) wymaga zgody na usuwanie. Błąd zlecenia (autor: agent poprzedniej sesji). Usunięte `e2e/z-sesji/` jest w historii (`dd0c904`). Od teraz obowiązuje kontrakt.                                                    | od razu                    |
 
-## Stan uwag po etapie B (2026-11-16)
+## Stan uwag po etapie B (2026-11-19)
 
 | #   | Stan                                                                                                                                     |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | Zrobione: `src/lib/ipv4.ts`; kierunku zależności pilnuje `src/warstwy.test.ts`.                                                          |
-| 2   | Otwarte – przed etapem C (PYT-045).                                                                                                      |
-| 3   | Otwarte – przed etapem C (PYT-045).                                                                                                      |
+| 2   | Zrobione (PYT-045a): `floodPath` rozsyła Broadcast dalej tylko przez Switche; test „Broadcast nie przechodzi przez Router”.              |
+| 3   | Zrobione (PYT-045a): kabel ma `portA` i `portB`; `portOf(urządzenie, sąsiad)` zamiast `switchPort`.                                      |
 | 4   | Zrobione: `net/arp.ts` – `Learn = { device, arp }` albo `{ device, mac }`, funkcje `arpTableAt` i `macTableAt` dla dowolnego urządzenia. |
 | 5   | Zrobione: `net/mask.ts` nie zna kabli ani kart; układ jest w `content/maska-uklad.ts`.                                                   |
 | 6   | Otwarte – etap C. Test `niezmiennosc.test.ts` przepisuje nowy kształt danych na stary, żeby porównać go z niezmienionym wzorcem.         |

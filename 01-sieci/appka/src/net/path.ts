@@ -66,14 +66,21 @@ export function framePath<Id extends string>(
 }
 
 /**
- * Droga ramki Broadcast: kopia trafia na każdy kabel, coraz dalej od nadawcy.
+ * Droga ramki Broadcast: kopia idzie coraz dalej od nadawcy, ale dalej rozsyłają ją tylko urządzenia,
+ * dla których `forwards` zwraca prawdę (Switche). Router i urządzenia końcowe ją odbierają i na tym
+ * koniec – Broadcast nie przechodzi przez Router do innej sieci.
  * Kable w tej samej odległości od nadawcy mają ten sam numer skoku (lecą jednocześnie).
  */
-export function floodPath<Id extends string>(wires: readonly Wire<Id>[], src: Id): Hop<Id>[] {
+export function floodPath<Id extends string>(
+ wires: readonly Wire<Id>[],
+ src: Id,
+ forwards: (device: Id) => boolean
+): Hop<Id>[] {
  const depth = new Map<Id, number>([[src, 0]]);
  const queue: Id[] = [src];
  const hops: Hop<Id>[] = [];
  for (const current of queue) {
+  if (current !== src && !forwards(current)) continue;
   for (const next of neighbours(wires, current)) {
    if (depth.has(next)) continue;
    depth.set(next, depth.get(current)! + 1);

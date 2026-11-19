@@ -9,7 +9,7 @@ import {
  deviceIpText,
  deviceMac,
  INTERNET_IP,
- switchPort,
+ portOf,
  zoneCidr,
  type DeviceId as ModelDeviceId
 } from '../model/siec';
@@ -41,7 +41,12 @@ const IP = {
  router: deviceIpText('router')
 };
 const MAC = { laptop: deviceMac('laptop'), nas: deviceMac('nas'), router: deviceMac('router') };
-const PORT = { laptop: switchPort('laptop'), nas: switchPort('nas'), router: switchPort('router') };
+// Porty Switcha, za którymi są urządzenia.
+const PORT = {
+ laptop: portOf('switch', 'laptop'),
+ nas: portOf('switch', 'nas'),
+ router: portOf('switch', 'router')
+};
 const NET = zoneCidr('biuro');
 
 // --- Układ diagramu: biuro SOHO, gwiazda wokół Switcha ---

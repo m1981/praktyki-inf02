@@ -63,15 +63,32 @@ describe('droga ramki po kablach', () => {
   expect(hops.map((h) => h.hop)).toEqual([0, 1, 2, 3]);
  });
 
- it('Broadcast: kopia na każdy kabel, jednocześnie na kablach w tej samej odległości', () => {
-  const hops = floodPath(wires, 'a');
-  expect(hops).toHaveLength(wires.length);
+ const isSwitch = (id: string) => id.startsWith('s');
+
+ it('Broadcast: Switch rozsyła kopie jednocześnie na wszystkie pozostałe kable', () => {
+  const hops = floodPath(wires, 'a', isSwitch);
+  expect(hops[0]).toEqual({ from: 'a', to: 's1', hop: 0, toward: 's1' });
   expect(
    hops
     .filter((h) => h.hop === 1)
     .map((h) => h.to)
     .sort()
   ).toEqual(['c', 'r']);
+ });
+
+ it('Broadcast nie przechodzi przez Router', () => {
+  const reached = floodPath(wires, 'a', isSwitch).map((h) => h.to);
+  expect(reached.sort()).toEqual(['c', 'r', 's1']);
+  expect(reached).not.toContain('s2');
+  expect(reached).not.toContain('b');
+ });
+
+ it('Broadcast z drugiej strony Routera zostaje po swojej stronie', () => {
+  expect(
+   floodPath(wires, 'b', isSwitch)
+    .map((h) => h.to)
+    .sort()
+  ).toEqual(['r', 's2']);
  });
 });
 

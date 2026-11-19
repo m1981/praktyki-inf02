@@ -5,9 +5,10 @@ import {
  deviceCidr,
  deviceIpText,
  deviceMac,
+ forwardsBroadcast,
  hasLink,
  LINKS,
- switchPort,
+ portOf,
  zoneCidr
 } from './siec';
 
@@ -32,15 +33,28 @@ describe('model sieci', () => {
  it('każdy kabel łączy dwa istniejące urządzenia, a porty Switcha się nie powtarzają', () => {
   const ids = new Set<string>(DEVICES.map((d) => d.id));
   for (const link of LINKS) expect(ids.has(link.a) && ids.has(link.b)).toBe(true);
-  const ports = LINKS.flatMap((l) => (l.port ? [l.port] : []));
+  // Port należy do urządzenia: „Fa0/1” może być na dwóch Switchach, ale nie dwa razy na jednym.
+  const ports = LINKS.flatMap((l) => [
+   ...(l.portA ? [`${l.a} ${l.portA}`] : []),
+   ...(l.portB ? [`${l.b} ${l.portB}`] : [])
+  ]);
   expect(new Set(ports).size).toBe(ports.length);
  });
 
  it('odczytuje MAC, port i kabel', () => {
   expect(deviceMac('laptop')).toBe('AA:BB:CC:00:01:05');
-  expect(switchPort('nas')).toBe('Fa0/2');
+  expect(portOf('switch', 'nas')).toBe('Fa0/2');
+  // Port jest po stronie Switcha; po stronie Serwera NAS model go nie podaje.
+  expect(() => portOf('nas', 'switch')).toThrow();
+  expect(() => portOf('laptop', 'nas')).toThrow();
   expect(hasLink('switch', 'laptop')).toBe(true);
   expect(hasLink('laptop', 'nas')).toBe(false);
+ });
+
+ it('Broadcast rozsyła dalej tylko Switch', () => {
+  expect(forwardsBroadcast('switch')).toBe(true);
+  expect(forwardsBroadcast('router')).toBe(false);
+  expect(forwardsBroadcast('laptop')).toBe(false);
  });
 });
 
