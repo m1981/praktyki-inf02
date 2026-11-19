@@ -55,6 +55,11 @@ zob. PYT-004).
 | PYT-045 | decyzja    | zamknięte (a)    | Uwagi 2 i 3 z przeglądu etapu A jako pierwszy krok etapu C     |
 | PYT-046 | decyzja    | zamknięte (→047) | Etap B na `main`, gdy fast-forward jest niemożliwy             |
 | PYT-047 | decyzja    | zamknięte (a)    | Push etapu B po rebase na `main`                               |
+| PYT-048 | decyzja    | zamknięte        | Kopie labów na claude.ai a GitHub Pages                        |
+| PYT-049 | decyzja    | zamknięte (a)    | Stare kopie labów na claude.ai                                 |
+| PYT-050 | decyzja    | zamknięte (a)    | Wnioski z analizy maski: wymagania w `plan.md`, kod później    |
+| PYT-051 | decyzja    | zamknięte (inna) | Scenariusze: ruch w jedną stronę, asymetria, naprawa bramy     |
+| PYT-052 | z-domyslna | zamknięte (a)    | Rejestr PYT-048–049 w tym samym commicie, push na `main`       |
 
 ## Pytania
 
@@ -600,3 +605,56 @@ odpowiedź jest zapisana dosłownie.
 - **Odpowiedź (2026-11-19):** „47a” → (a)
 - **Wykonanie:** `main` przesunięty fast-forward na koniec gałęzi `refaktor-silnik` i wypchnięty:
   kroki 3–5 (`2ddd633`, `18bdfc9`, `8607eb2`), uwagi 2 i 3 (`9b08ec3`) i ten wpis.
+
+### PYT-048 · decyzja · zamknięte
+
+- **Kontekst:** laby żyły w dwóch miejscach: w repo (GitHub Pages) i jako kopie na claude.ai.
+  Kopia Laboratorium podsieci na claude.ai (publiczna) ma jeszcze starą metaforę (pokoje i ściana).
+- **Opcje:** (a) aktualizować obie kopie; (b) tylko GitHub Pages.
+- **Rekomendacja:** (b) – jedno źródło prawdy.
+- **Skutek braku odpowiedzi:** kopie się rozjeżdżają.
+- **Odpowiedź (2026-11-17):** „tylko github pages” → (b). Kopii na claude.ai nie aktualizuję.
+
+### PYT-049 · decyzja · zamknięte
+
+- **Kontekst:** po PYT-048 na claude.ai zostały dwie kopie: Laboratorium VLAN (prywatna)
+  i Laboratorium podsieci (publiczna, ze starą metaforą pokoi i ściany).
+- **Opcje:** (a) usunąć obie; (b) zastąpić publiczną kopię stroną „Przeniesione” z linkiem do
+  GitHub Pages; (c) zostawić.
+- **Rekomendacja:** (b) dla kopii publicznej.
+- **Skutek braku odpowiedzi:** obie zostają.
+- **Odpowiedź (2026-11-17):** „43a” → (a). Obie kopie usunięte (potwierdzenie operatora przy
+  każdej). Stare linki claude.ai do labów już nie działają.
+
+### PYT-050 · decyzja · zamknięte
+
+- **Kontekst:** analiza symulatora maski (42 ustawienia): dobrze uczy decyzji nadawcy i „bramy za
+  płotem”, pokazuje trasę asymetryczną (2 ustawienia), ale nie pokaże odpowiedzi, która nie wraca
+  (0), ani zmiany maski tylko na Laptopie. Symulator jest w przeróbce na plan ZS1.
+- **Opcje:** (a) wymagania w `plan.md` do przeróbki na ZS1, bez kodu teraz; (b) dorobić teraz;
+  (c) nic.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nic się nie zmienia.
+- **Odpowiedź (2026-11-19):** „a” (z numerem 044 przed korektą numeracji), potem „50a” → (a)
+
+### PYT-051 · decyzja · zamknięte
+
+- **Kontekst:** jakie scenariusze wpisać jako wymagania.
+- **Opcje:** (a) Laptop zmienia tylko swoją maskę + Router zna tylko podsieci z planu (odpowiedź
+  nie wraca); (b) podpis „trasa asymetryczna”; (c) przycisk „Popraw bramę Laptopa”.
+- **Rekomendacja:** wszystkie trzy.
+- **Skutek braku odpowiedzi:** `plan.md` bez zmian.
+- **Odpowiedź (2026-11-19):** „51 wszystkie trzy ale zeby nie przytloczyc studentow iloscia tresci
+  to czytnia. przymesyl to from top to botom” → wszystkie trzy, z zasadą „nie przytłoczyć
+  czytaniem”: (a) jako nowe mikro-ćwiczenie M5 w serii, (b) i (c) w Trybie swobodnym obrazem
+  i przyciskiem, bez nowych akapitów (bilans słów ≤ 0). Szczegóły: `plan.md`, sekcja „Wymagania:
+  maska a ruch w jedną stronę”.
+
+### PYT-052 · z-domyslna · zamknięte
+
+- **Kontekst:** PYT-048–049 leżały niezapisane (przenumerowane z 042–043 po kolizji z rejestrem
+  etapu B).
+- **Opcje:** (a) w tym samym commicie co wymagania z PYT-050, z pushem na `main`; (b) osobno.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** (a).
+- **Odpowiedź (2026-11-19):** „52 tak” → (a)

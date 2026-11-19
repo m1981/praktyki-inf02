@@ -107,6 +107,76 @@ Kamera `.200`.
 - **Miejsce w kolejności:** przed scenariuszem 2 albo zaraz po nim (wiąże się z Krokiem 5 teorii:
   Subnetting).
 
+## Wymagania: maska a ruch w jedną stronę (PYT-050a, PYT-051)
+
+Status: zatwierdzone do przeróbki symulatora maski na plan ZS1 (bez zmian w kodzie teraz).
+Źródło: analiza z 2026-11-19 – przegląd wszystkich 42 ustawień Trybu swobodnego (maski /24–/30
+× 3 cele × pułapka) logiką `src/net/mask.ts`: zapytanie nie wychodzi w 30, trasa asymetryczna
+w 2, **odpowiedź, która nie wraca – w 0**. Powód: Router ma adres w każdej podsieci (uproszczenie
+w `maska-uklad.ts`), a bramy innych urządzeń dopasowują się same. Nie da się też zmienić maski
+tylko na Laptopie.
+
+### Zasada: nie przytłoczyć czytaniem
+
+Obowiązują reguły z `audyt.md`: ≤ 40 słów na krok, jedno pytanie, jedno nowe pojęcie, jeden
+element sterujący, jeden ekran (1366×768 i 1280×720 bez przewijania). Do tego:
+
+- **Tryb swobodny nie dostaje ani jednego nowego akapitu.** Ma już 140–218 słów na widok (audyt).
+  Nowe rzeczy pokazujemy obrazem albo przyciskiem; bilans słów w Trybie swobodnym ≤ 0.
+- **Nowe pojęcie tylko w serii,** w osobnym mikro-ćwiczeniu, nie w Trybie swobodnym.
+- **Uczeń robi, zamiast czytać:** naprawa i porównanie to kliknięcie, nie opis.
+
+### Strona od góry do dołu (po zmianie)
+
+| Miejsce                                       | Co                                                   | Nowe słowa             | Nowe sterowanie                |
+| --------------------------------------------- | ---------------------------------------------------- | ---------------------- | ------------------------------ |
+| M1–M3                                         | bez zmian                                            | 0                      | 0                              |
+| M4 „Maska to nie ściana”                      | `nextQuestion` prowadzi do M5 zamiast „scenariusz 2” | 0 (podmiana)           | 0                              |
+| **M5 (nowe)** „Zmieniam tylko swoją maskę”    | wymaganie (a)                                        | ≤ 40 na krok, 2 kroki  | 1: przełącznik maski Laptopa   |
+| Tryb swobodny: werdykt „brama za płotem”      | wymaganie (c)                                        | 4 (etykieta przycisku) | 1 przycisk, tylko w tym stanie |
+| Tryb swobodny: diagram, kierunek „Z powrotem” | wymaganie (b)                                        | ≤ 4 (dwie etykiety)    | 0                              |
+| Tryb swobodny: lekcje „/26” i „Pułapka”       | skrócić o to, co pokazują (b) i (c)                  | ujemne                 | 0                              |
+
+### (a) M5 „Zmieniam tylko swoją maskę” – odpowiedź, która nie wraca
+
+- **Pytanie:** „Laptop sam wpisał sobie maskę /24. Czy dogada się z Serwerem NAS?”
+- **Plan sieci (/26):** w użyciu tylko dwie podsieci – biuro .0–.63 (Serwer NAS, Router .1)
+  i drukarki .128–.191 (Drukarka, Router .129). **Router zna tylko podsieci z planu** – to warunek
+  tego ćwiczenia, bez osobnego przełącznika. Laptop .105 siedzi w nieużywanym zakresie.
+- **Krok 1 („Tam”):** Laptop /24 uważa Serwer NAS za sąsiada → ARP i ramka wprost przez Switch.
+  Dociera. ✅
+- **Krok 2 („Z powrotem”):** Serwer NAS /26 uważa Laptop za obcego → odpowiedź do bramy .1 →
+  Router nie zna sieci .64–.127 → odpowiedź ginie. ❌ Na diagramie: ramka zatrzymana w Routerze.
+- **Wniosek (≤ 40 słów, propozycja):** „Swoją maskę zmienisz zawsze. Ale odpowiedź wysyła druga
+  strona – według swojej maski. Zapytanie doszło, odpowiedź zginęła. Obcego zatrzyma dopiero ściana:
+  VLAN.”
+- **`nextQuestion`:** prowadzi do Laboratorium VLAN, Kłopot 4 („obcy laptop w gniazdku”), a dalej
+  do scenariusza 2 (Router).
+- Sterowanie: jeden przełącznik „Maska Laptopa: /26 (z planu) ⇄ /24 (wpisana sama)”.
+
+### (b) Trasa asymetryczna – obrazem, bez akapitu
+
+- W kierunku „Z powrotem”, gdy droga różni się od „Tam”, diagram pokazuje drogę „Tam” blado,
+  linią przerywaną, a nad diagramem plakietkę **„trasa asymetryczna”** (2 słowa – nazwa pojęcia).
+- Lekcję „Pułapka” skrócić: zdanie o dwóch drogach zastępuje obraz.
+
+### (c) „Popraw bramę Laptopa” – naprawa jednym kliknięciem
+
+- Przycisk **„🔧 Popraw bramę”** pojawia się tylko w czerwonym werdykcie „nie mam komu oddać ramki”.
+- Kliknięcie ustawia bramę Laptopa na adres Routera w jego podsieci (np. .65 przy /26); werdykt
+  i diagram od razu pokazują ramkę przez Router. Ponowny wybór maski albo przykładu przywraca
+  starą bramę (.1), więc lekcja „brama za płotem” zostaje.
+- Lekcję „/26” skrócić: zdanie „Naprawa: wpisz na Laptopie bramę…” zastępuje przycisk.
+- Skutek uboczny pożądany: suwak /27–/30 przestaje kończyć się zawsze tym samym komunikatem.
+
+### Kryteria odbioru
+
+- Każdy krok M5 i każdy widok Trybu swobodnego mieści się w 1366×768 i 1280×720 bez przewijania.
+- Liczba słów: M5 ≤ 40 na krok; Tryb swobodny – nie więcej niż przed zmianą (pomiar jak w audycie).
+- Test logiki: w przeglądzie ustawień są przypadki „odpowiedź nie wraca” (M5) i „naprawa bramy”
+  daje `via-router` dla każdej maski /26–/30.
+- Bez zmiany słownika metafor (PYT-037): maska = płot, VLAN = ściana, router = brama.
+
 ## Projekt ZS1 – firma od pustej kartki (PYT-015–018)
 
 Status: zatwierdzone (PYT-011–018). Kolejność prac: najpierw porządek w kodzie (PYT-019), potem treść.
