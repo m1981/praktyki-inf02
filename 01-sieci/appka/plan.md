@@ -109,7 +109,9 @@ Kamera `.200`.
 
 ## Wymagania: maska a ruch w jedną stronę (PYT-050a, PYT-051)
 
-Status: zatwierdzone do przeróbki symulatora maski na plan ZS1 (bez zmian w kodzie teraz).
+Status: zatwierdzone, do wykonania na obecnej sieci ćwiczebnej 10.10.10.0/24, niezależnie od ZS1
+(PYT-064a; ZS1 jest odłożony – PYT-053). Bez zmian w kodzie teraz. Pytanie na końcu M5 prowadzi do
+routingu (`scenariusz-routing.md`).
 Źródło: analiza z 2026-11-19 – przegląd wszystkich 42 ustawień Trybu swobodnego (maski /24–/30
 × 3 cele × pułapka) logiką `src/net/mask.ts`: zapytanie nie wychodzi w 30, trasa asymetryczna
 w 2, **odpowiedź, która nie wraca – w 0**. Powód: Router ma adres w każdej podsieci (uproszczenie

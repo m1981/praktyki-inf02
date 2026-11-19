@@ -6,72 +6,75 @@ zob. PYT-004).
 
 ## Przegląd
 
-| ID      | Rodzaj     | Status           | Temat                                                             |
-| ------- | ---------- | ---------------- | ----------------------------------------------------------------- |
-| PYT-001 | decyzja    | zamknięte (a)    | Miejsce serii M1–M4 w kolejności i status gałęzi L oraz P         |
-| PYT-002 | decyzja    | zamknięte (a)    | Los obecnych pełnych widoków (ARP, maska)                         |
-| PYT-003 | decyzja    | zamknięte (a)    | Jedna metafora maski w Filarze 1 i korekta zdania w Lab 1         |
-| PYT-004 | decyzja    | zamknięte (a)    | Zapis raportu audytu do repozytorium                              |
-| PYT-005 | decyzja    | zamknięte (a)    | Start szybkich wygranych 1–6 z audytu                             |
-| PYT-006 | decyzja    | zamknięte (a)    | Dopasowanie kontraktu do pracy nad materiałami (nie harnessem)    |
-| PYT-007 | decyzja    | zamknięte (a)    | Układ maski, żeby diagram i lekcja mieściły się na ekranie        |
-| PYT-008 | decyzja    | zamknięte (b)    | Commit i push szybkich wygranych, audytu i rejestru               |
-| PYT-009 | decyzja    | zamknięte (a)    | Od której serii mikro-ćwiczeń zacząć                              |
-| PYT-010 | decyzja    | zamknięte (→014) | Ocena serii M1–M4 i commit                                        |
-| PYT-011 | decyzja    | odłożone (→053)  | Jedna sieć firmy: źródło prawdy i plan adresów                    |
-| PYT-012 | decyzja    | odłożone (→053)  | Gdzie mieszka plan sieci firmy                                    |
-| PYT-013 | decyzja    | zamknięte (a)    | Model fizyczny: switch w każdej strefie czy VLAN-y od początku    |
-| PYT-014 | decyzja    | zamknięte (a)    | Commit serii M1–M4 jako stanu pośredniego                         |
-| PYT-015 | decyzja    | odłożone (→053)  | Rozbudowa planu ZS1, żeby pokazać maski inne niż /24              |
-| PYT-016 | decyzja    | odłożone (→053)  | Nowa treść M4: zła maska /16 na Laptopie                          |
-| PYT-017 | decyzja    | odłożone (→053)  | Projekt ZS1 „od pustej kartki” jako rama wszystkich ćwiczeń       |
-| PYT-018 | decyzja    | odłożone (→053)  | Inwentarz urządzeń firmy ZS1                                      |
-| PYT-019 | decyzja    | zamknięte (a)    | Porządek w kodzie przed Projektem ZS1                             |
-| PYT-020 | decyzja    | zamknięte (a)    | Jedna aplikacja czy osobne strony na wspólnym silniku             |
-| PYT-021 | decyzja    | zamknięte (a)    | Narzędzie testów „mieści się na ekranie”                          |
-| PYT-022 | decyzja    | zamknięte (a)    | Format treści lekcji                                              |
-| PYT-023 | decyzja    | zamknięte (c)    | Orkiestracja refaktoru: sub-agenci czy kolejna sesja              |
-| PYT-024 | decyzja    | zamknięte (a)    | Commity sub-agenta na gałęzi roboczej `refaktor-silnik`           |
-| PYT-025 | decyzja    | zamknięte        | Commit dokumentów przed refaktorem                                |
-| PYT-026 | decyzja    | zamknięte (a)    | Push commita `dd0c904` na GitHub                                  |
-| PYT-027 | z-domyslna | zamknięte (a)    | Adres 10.10.10.0/24 w nagłówkach stron poza `model/`              |
-| PYT-028 | decyzja    | zamknięte (a)    | Scalenie etapu A do `main` po przeglądzie                         |
-| PYT-029 | decyzja    | zamknięte (a)    | Folder i nazwy labów VLAN i podsieci                              |
-| PYT-030 | decyzja    | zamknięte (a)    | Zakres przenoszonych plików labów                                 |
-| PYT-031 | decyzja    | zamknięte (a)    | Push gałęzi `laby-vlan` i szkic PR w publicznym repo              |
-| PYT-032 | z-domyslna | zamknięte (a)    | Prettier na plikach labów osobnym commitem                        |
-| PYT-033 | decyzja    | zamknięte (a)    | Co pokazuje szafa główna w Kłopocie 1                             |
-| PYT-034 | decyzja    | zamknięte (a)    | Dwa commity po scaleniu PR #1: nowy PR #2                         |
-| PYT-035 | z-domyslna | zamknięte (inna) | Sposób pracy: praca na `main`                                     |
-| PYT-036 | decyzja    | zamknięte (a)    | Wejście do `vlan.html`: Krok 6 i Lab 2 Faza 1                     |
-| PYT-037 | decyzja    | zamknięte (inna) | Metafory w Filarze 1 zgodnie z `vlan.html`                        |
-| PYT-038 | decyzja    | zamknięte (a)    | Nawigacja w labach: link powrotny do filaru                       |
-| PYT-039 | decyzja    | zamknięte (a)    | Laby w `plan.md` jako uzupełnienie, poza ramą ZS1                 |
-| PYT-040 | decyzja    | zamknięte (a)    | Commit i push wejść i metafor na `main`                           |
-| PYT-041 | decyzja    | zamknięte (a)    | `.btn-primary` jako `inline-block` w `common.css`                 |
-| PYT-042 | decyzja    | zamknięte (a)    | Usuwanie zastąpionych plików źródłowych w `src/` w etapie B       |
-| PYT-043 | decyzja    | zamknięte (→046) | Scalenie etapu B do `main` i push po przeglądzie                  |
-| PYT-044 | z-domyslna | zamknięte (a)    | Linia `Co-Authored-By` w commitach etapu B                        |
-| PYT-045 | decyzja    | zamknięte (a)    | Uwagi 2 i 3 z przeglądu etapu A jako pierwszy krok etapu C        |
-| PYT-046 | decyzja    | zamknięte (→047) | Etap B na `main`, gdy fast-forward jest niemożliwy                |
-| PYT-047 | decyzja    | zamknięte (a)    | Push etapu B po rebase na `main`                                  |
-| PYT-048 | decyzja    | zamknięte        | Kopie labów na claude.ai a GitHub Pages                           |
-| PYT-049 | decyzja    | zamknięte (a)    | Stare kopie labów na claude.ai                                    |
-| PYT-050 | decyzja    | zamknięte (a)    | Wnioski z analizy maski: wymagania w `plan.md`, kod później       |
-| PYT-051 | decyzja    | zamknięte (inna) | Scenariusze: ruch w jedną stronę, asymetria, naprawa bramy        |
-| PYT-052 | z-domyslna | zamknięte (a)    | Rejestr PYT-048–049 w tym samym commicie, push na `main`          |
-| PYT-053 | decyzja    | zamknięte        | Kierunek po etapie B: bez zmiany adresacji, ZS1 odłożony, routing |
-| PYT-054 | decyzja    | zamknięte (a)    | Zamknięcie zlecenia refaktoru i oznaczenie decyzji o ZS1          |
-| PYT-055 | decyzja    | zamknięte (c)    | Kształt aplikacji o routingu                                      |
-| PYT-056 | decyzja    | zamknięte (a)    | Sieć, w której dzieje się aplikacja o routingu                    |
-| PYT-057 | decyzja    | zamknięte (a)    | Usunięcie gałęzi `refaktor-silnik` i znacznika sprzed rebase      |
-| PYT-058 | decyzja    | zamknięte (→061) | Wariant aplikacji o routingu po makietach                         |
-| PYT-059 | decyzja    | otwarte          | Nowe nazwy: „Serwer WWW” i dwa Switche                            |
-| PYT-060 | decyzja    | zamknięte (a)    | Commit i push dokumentów z 2026-11-19                             |
-| PYT-061 | decyzja    | zamknięte (a)    | Forma aplikacji o routingu: jak Laboratorium VLAN                 |
-| PYT-062 | decyzja    | zamknięte (c)    | Technologia aplikacji o routingu: decyzja po scenariuszu          |
-| PYT-063 | decyzja    | otwarte          | Akceptacja scenariusza „List za płot”                             |
-| PYT-064 | decyzja    | otwarte          | Wymagania „maska a ruch w jedną stronę” po odłożeniu ZS1          |
+| ID      | Rodzaj      | Status           | Temat                                                             |
+| ------- | ----------- | ---------------- | ----------------------------------------------------------------- |
+| PYT-001 | decyzja     | zamknięte (a)    | Miejsce serii M1–M4 w kolejności i status gałęzi L oraz P         |
+| PYT-002 | decyzja     | zamknięte (a)    | Los obecnych pełnych widoków (ARP, maska)                         |
+| PYT-003 | decyzja     | zamknięte (a)    | Jedna metafora maski w Filarze 1 i korekta zdania w Lab 1         |
+| PYT-004 | decyzja     | zamknięte (a)    | Zapis raportu audytu do repozytorium                              |
+| PYT-005 | decyzja     | zamknięte (a)    | Start szybkich wygranych 1–6 z audytu                             |
+| PYT-006 | decyzja     | zamknięte (a)    | Dopasowanie kontraktu do pracy nad materiałami (nie harnessem)    |
+| PYT-007 | decyzja     | zamknięte (a)    | Układ maski, żeby diagram i lekcja mieściły się na ekranie        |
+| PYT-008 | decyzja     | zamknięte (b)    | Commit i push szybkich wygranych, audytu i rejestru               |
+| PYT-009 | decyzja     | zamknięte (a)    | Od której serii mikro-ćwiczeń zacząć                              |
+| PYT-010 | decyzja     | zamknięte (→014) | Ocena serii M1–M4 i commit                                        |
+| PYT-011 | decyzja     | odłożone (→053)  | Jedna sieć firmy: źródło prawdy i plan adresów                    |
+| PYT-012 | decyzja     | odłożone (→053)  | Gdzie mieszka plan sieci firmy                                    |
+| PYT-013 | decyzja     | zamknięte (a)    | Model fizyczny: switch w każdej strefie czy VLAN-y od początku    |
+| PYT-014 | decyzja     | zamknięte (a)    | Commit serii M1–M4 jako stanu pośredniego                         |
+| PYT-015 | decyzja     | odłożone (→053)  | Rozbudowa planu ZS1, żeby pokazać maski inne niż /24              |
+| PYT-016 | decyzja     | odłożone (→053)  | Nowa treść M4: zła maska /16 na Laptopie                          |
+| PYT-017 | decyzja     | odłożone (→053)  | Projekt ZS1 „od pustej kartki” jako rama wszystkich ćwiczeń       |
+| PYT-018 | decyzja     | odłożone (→053)  | Inwentarz urządzeń firmy ZS1                                      |
+| PYT-019 | decyzja     | zamknięte (a)    | Porządek w kodzie przed Projektem ZS1                             |
+| PYT-020 | decyzja     | zamknięte (a)    | Jedna aplikacja czy osobne strony na wspólnym silniku             |
+| PYT-021 | decyzja     | zamknięte (a)    | Narzędzie testów „mieści się na ekranie”                          |
+| PYT-022 | decyzja     | zamknięte (a)    | Format treści lekcji                                              |
+| PYT-023 | decyzja     | zamknięte (c)    | Orkiestracja refaktoru: sub-agenci czy kolejna sesja              |
+| PYT-024 | decyzja     | zamknięte (a)    | Commity sub-agenta na gałęzi roboczej `refaktor-silnik`           |
+| PYT-025 | decyzja     | zamknięte        | Commit dokumentów przed refaktorem                                |
+| PYT-026 | decyzja     | zamknięte (a)    | Push commita `dd0c904` na GitHub                                  |
+| PYT-027 | z-domyslna  | zamknięte (a)    | Adres 10.10.10.0/24 w nagłówkach stron poza `model/`              |
+| PYT-028 | decyzja     | zamknięte (a)    | Scalenie etapu A do `main` po przeglądzie                         |
+| PYT-029 | decyzja     | zamknięte (a)    | Folder i nazwy labów VLAN i podsieci                              |
+| PYT-030 | decyzja     | zamknięte (a)    | Zakres przenoszonych plików labów                                 |
+| PYT-031 | decyzja     | zamknięte (a)    | Push gałęzi `laby-vlan` i szkic PR w publicznym repo              |
+| PYT-032 | z-domyslna  | zamknięte (a)    | Prettier na plikach labów osobnym commitem                        |
+| PYT-033 | decyzja     | zamknięte (a)    | Co pokazuje szafa główna w Kłopocie 1                             |
+| PYT-034 | decyzja     | zamknięte (a)    | Dwa commity po scaleniu PR #1: nowy PR #2                         |
+| PYT-035 | z-domyslna  | zamknięte (inna) | Sposób pracy: praca na `main`                                     |
+| PYT-036 | decyzja     | zamknięte (a)    | Wejście do `vlan.html`: Krok 6 i Lab 2 Faza 1                     |
+| PYT-037 | decyzja     | zamknięte (inna) | Metafory w Filarze 1 zgodnie z `vlan.html`                        |
+| PYT-038 | decyzja     | zamknięte (a)    | Nawigacja w labach: link powrotny do filaru                       |
+| PYT-039 | decyzja     | zamknięte (a)    | Laby w `plan.md` jako uzupełnienie, poza ramą ZS1                 |
+| PYT-040 | decyzja     | zamknięte (a)    | Commit i push wejść i metafor na `main`                           |
+| PYT-041 | decyzja     | zamknięte (a)    | `.btn-primary` jako `inline-block` w `common.css`                 |
+| PYT-042 | decyzja     | zamknięte (a)    | Usuwanie zastąpionych plików źródłowych w `src/` w etapie B       |
+| PYT-043 | decyzja     | zamknięte (→046) | Scalenie etapu B do `main` i push po przeglądzie                  |
+| PYT-044 | z-domyslna  | zamknięte (a)    | Linia `Co-Authored-By` w commitach etapu B                        |
+| PYT-045 | decyzja     | zamknięte (a)    | Uwagi 2 i 3 z przeglądu etapu A jako pierwszy krok etapu C        |
+| PYT-046 | decyzja     | zamknięte (→047) | Etap B na `main`, gdy fast-forward jest niemożliwy                |
+| PYT-047 | decyzja     | zamknięte (a)    | Push etapu B po rebase na `main`                                  |
+| PYT-048 | decyzja     | zamknięte        | Kopie labów na claude.ai a GitHub Pages                           |
+| PYT-049 | decyzja     | zamknięte (a)    | Stare kopie labów na claude.ai                                    |
+| PYT-050 | decyzja     | zamknięte (a)    | Wnioski z analizy maski: wymagania w `plan.md`, kod później       |
+| PYT-051 | decyzja     | zamknięte (inna) | Scenariusze: ruch w jedną stronę, asymetria, naprawa bramy        |
+| PYT-052 | z-domyslna  | zamknięte (a)    | Rejestr PYT-048–049 w tym samym commicie, push na `main`          |
+| PYT-053 | decyzja     | zamknięte        | Kierunek po etapie B: bez zmiany adresacji, ZS1 odłożony, routing |
+| PYT-054 | decyzja     | zamknięte (a)    | Zamknięcie zlecenia refaktoru i oznaczenie decyzji o ZS1          |
+| PYT-055 | decyzja     | zamknięte (c)    | Kształt aplikacji o routingu                                      |
+| PYT-056 | decyzja     | zamknięte (a)    | Sieć, w której dzieje się aplikacja o routingu                    |
+| PYT-057 | decyzja     | zamknięte (a)    | Usunięcie gałęzi `refaktor-silnik` i znacznika sprzed rebase      |
+| PYT-058 | decyzja     | zamknięte (→061) | Wariant aplikacji o routingu po makietach                         |
+| PYT-059 | decyzja     | zamknięte (a)    | Nowe nazwy: „Serwer WWW” i dwa Switche                            |
+| PYT-060 | decyzja     | zamknięte (a)    | Commit i push dokumentów z 2026-11-19                             |
+| PYT-061 | decyzja     | zamknięte (a)    | Forma aplikacji o routingu: jak Laboratorium VLAN                 |
+| PYT-062 | decyzja     | zamknięte (c)    | Technologia aplikacji o routingu: decyzja po scenariuszu          |
+| PYT-063 | decyzja     | zamknięte (a)    | Akceptacja scenariusza „List za płot”                             |
+| PYT-064 | decyzja     | zamknięte (a)    | Wymagania „maska a ruch w jedną stronę” po odłożeniu ZS1          |
+| PYT-065 | do-zbadania | odłożone         | Nawiązanie do schematów sieci z arkuszy 2025–2026                 |
+| PYT-066 | decyzja     | zamknięte (a)    | Technologia sceny „List za płot”                                  |
+| PYT-067 | decyzja     | zamknięte (a)    | Commit i push wpisów PYT-059–067                                  |
 
 ## Pytania
 
@@ -761,7 +764,7 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Odpowiedź (2026-11-19):** „Według mnie za trudne, za dużo treści tam jest, za dużo tam jest
   szumu, nie wiadomo na co patrzeć.” → żaden wariant; dalszy ciąg w PYT-061.
 
-### PYT-059 · decyzja · otwarte
+### PYT-059 · decyzja · zamknięte
 
 - **Kontekst:** aplikacja potrzebuje nowego urządzenia w drugiej sieci i rozróżnienia dwóch Switchy.
   Nazwy urządzeń pochodzą tylko ze słownika (`model/glossary.ts`, kryterium 12 audytu).
@@ -769,6 +772,9 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   przez operatora.
 - **Rekomendacja:** (a) – „Serwer WWW” jest już w materiałach (LINUX_SERVER z WWW w Filarze 3).
 - **Skutek braku odpowiedzi:** makiety i kod używają (a), tymczasowo (PYT-059).
+- **Odpowiedź (2026-11-19):** „ta sesja prowadzi 63a 64 decyzje z tej sesji 59a ale nie pisz
+  jeszcze. mam jeszcze pytanie” → (a). Po zmianie formy (PYT-061) w scenariuszu została tylko nazwa
+  „Serwer WWW”; dwa Switche nie mają tam osobnych nazw.
 
 ### PYT-060 · decyzja · zamknięte
 
@@ -811,7 +817,7 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Skutek braku odpowiedzi:** przyjmuję (c).
 - **Odpowiedź (2026-11-19):** „56a 57c 55a” → (c)
 
-### PYT-063 · decyzja · otwarte
+### PYT-063 · decyzja · zamknięte
 
 - **Kontekst:** `scenariusz-routing.md`, wersja 1: dwie sceny w formie Laboratorium VLAN. Scena 1
   „List za płot” (16 kroków, bez terminów sieciowych), scena 2 „To samo w sieci” (13 kroków: pakiet,
@@ -821,8 +827,11 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) albo (a) po Twojej lekturze – kwestie postaci to Twój styl, więc spodziewam
   się poprawek.
 - **Skutek braku odpowiedzi:** nie zaczynam kodu; PYT-062 (technologia) czeka na ten wybór.
+- **Odpowiedź (2026-11-19):** „ta sesja prowadzi 63a 64 decyzje z tej sesji 59a ale nie pisz
+  jeszcze. mam jeszcze pytanie” → (a). Scenariusz w wersji 1 zaakceptowany. Wybór technologii:
+  PYT-066.
 
-### PYT-064 · decyzja · otwarte
+### PYT-064 · decyzja · zamknięte
 
 - **Kontekst:** 2026-11-19 pracowały równolegle dwie sesje agenta. Druga sesja zapisała w `plan.md`
   sekcję „Wymagania: maska a ruch w jedną stronę” (PYT-050a, PYT-051) ze statusem „do przeróbki
@@ -835,3 +844,53 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** `plan.md` ma dwie sekcje, które sobie przeczą co do ZS1; sekcji
   drugiej sesji nie zmieniam.
+- **Odpowiedź (2026-11-19):** „ta sesja prowadzi 63a 64 decyzje z tej sesji 59a ale nie pisz
+  jeszcze. mam jeszcze pytanie” → obowiązują decyzje tej sesji (ZS1 odłożony). Interpretacja agenta,
+  przedstawiona operatorowi bez sprzeciwu: wariant (a). Operator ustalił też, że rejestr prowadzi ta
+  sesja.
+- **Wykonanie:** status sekcji „Wymagania: maska a ruch w jedną stronę” w `plan.md` zmieniony na
+  „do wykonania na obecnej sieci ćwiczebnej, niezależnie od ZS1”; treść wymagań bez zmian.
+
+### PYT-065 · do-zbadania · odłożone
+
+- **Kontekst:** operator (2026-11-19): „Chcę też nawiązać do formularzy egzaminacyjnych z ostatnich
+  2 lat (…) fajnie byłoby już w jakiś sposób nawiązywać do egzaminacyjnych konfiguracji sieci”,
+  potem: „Nie chcę teraz za dużo mieszać (…) zapisz może to do rozważenia jako kolejną kwestię. Te
+  schematy pochodzą z egzaminów w 2025-2026 w katalogu egzaminy.”
+- **Co widać na czterech schematach** (zrzuty operatora; źródło według operatora: arkusze 2025–2026
+  z katalogu `egzaminy/`; agent widział tylko rysunki, bez treści zadań i adresów):
+  - trzy schematy: Stacja robocza – Przełącznik – Serwer z dwiema kartami sieciowymi (LAN i WAN albo
+    LANW i LANZ) – Ruter. Serwer stoi w środku drogi, więc jest bramą stacji; to ten sam mechanizm co
+    w scenariuszu „List za płot”, tylko bramą jest serwer, a za nim jest jeszcze Ruter;
+  - jeden schemat: Ruter, Serwer (dwie karty) i Stacja robocza w jednym Przełączniku. Cel drugiej
+    karty nie wynika z rysunku;
+  - nazwy na schematach: „Ruter”, „Przełącznik”, „Stacja robocza” (u nas: Router, Switch, Laptop).
+- **Do rozważenia później:** (1) krótka scena 3 „Na egzaminie bramą jest serwer” po scenach 1–2;
+  (2) jednorazowe pokazanie nazw z arkuszy obok naszych; (3) zestawienie adresów i ustawień
+  z arkuszy 2025–2026 ze wskazaniem arkusza – wymaga lektury plików PDF.
+- **Skutek odłożenia:** sceny 1–2 powstają bez nawiązania do arkuszy.
+
+### PYT-066 · decyzja · zamknięte
+
+- **Kontekst:** scenariusz „List za płot” jest zaakceptowany (PYT-063a). Potrzebuje: rysunku dwóch
+  działek z płotem i bramą, listu i koperty, które jadą, otwierają się i wymieniają; okna rozmowy
+  z postacią; kroków „akcja”; zagadki A/B z reakcją. Tego samego będą potrzebować następne tematy
+  (droga powrotna, DHCP, NAT – PYT-053).
+- **Opcje:** (a) nasz silnik: nowy styl kroku „rozmowa” (postać, kwestia, akcja, zagadka) i nowa
+  scena rysowana w SVG; wygląd okna rozmowy wzorowany na `vlan.html`; testy treści (np. limit słów na
+  kwestię) i pomiar „mieści się na ekranie” działają od razu; (b) osobny plik HTML w `laby-vlan/`,
+  zbudowany jak `vlan.html` (zwykły JavaScript, bez testów); (c) najpierw makieta jednego kroku w obu
+  technologiach.
+- **Rekomendacja:** (a) – kolejne tematy użyją tego samego stylu, a testy pilnują długości kwestii.
+  Koszt: pierwsza scena powstanie wolniej niż w (b).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu.
+- **Odpowiedź (2026-11-19):** „66a 67a” → (a)
+
+### PYT-067 · decyzja · zamknięte
+
+- **Kontekst:** na dysku, bez commita: odpowiedzi PYT-059, 063, 064, wpisy PYT-065–067 i zmiana
+  statusu jednej sekcji w `plan.md`.
+- **Opcje:** (a) commit na `main` i push; (b) zostają na dysku do następnego commita z kodem.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** zostają na dysku.
+- **Odpowiedź (2026-11-19):** „66a 67a” → (a)
