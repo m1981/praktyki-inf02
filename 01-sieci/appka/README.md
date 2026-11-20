@@ -5,6 +5,7 @@
 | [`01-sieci/symulator-arp.html`](../symulator-arp.html)         | `src/pages/arp.tsx`     | `src/content/arp.ts`     | `arp.html`     |
 | [`01-sieci/symulator-maska.html`](../symulator-maska.html)     | `src/pages/maska.tsx`   | `src/content/maska*.ts`  | `maska.html`   |
 | [`01-sieci/symulator-routing.html`](../symulator-routing.html) | `src/pages/routing.tsx` | `src/content/routing.ts` | `routing.html` |
+| [`01-sieci/symulator-arkusz.html`](../symulator-arkusz.html)   | `src/pages/arkusz.tsx`  | `src/content/arkusz.ts`  | `arkusz.html`  |
 
 Plan kolejnych symulatorów: [`plan.md`](plan.md).
 
@@ -59,6 +60,7 @@ szablonie ekranu (stan po kroku 5 migracji).
 | ------------------------------- | ----------------------------------------------------------------------------- |
 | `src/model/siec.ts`             | urządzenia, adresy, kable + selektory (jedyny sposób odczytu)                 |
 | `src/model/glossary.ts`         | nazwy urządzeń ze Słownika pojęć (mianownik, dopełniacz, forma krótka)        |
+| `src/model/arkusz.ts`           | sieć z arkusza INF.02 (styczeń 2025): karty, adresy, kolory sieci, nazwy      |
 | `src/net/decide.ts`             | decyzja nadawcy: bezpośrednio, przez bramę albo brama poza siecią             |
 | `src/net/mask.ts`               | ćwiczenia z maską: ustawienia → decyzja → droga ramki                         |
 | `src/net/path.ts`               | droga ramki po kablach (Unicast, objazd przez bramę, Broadcast)               |
@@ -80,6 +82,10 @@ szablonie ekranu (stan po kroku 5 migracji).
 | `src/content/arp.ts`            | Symulator ARP: układ diagramu, ramki i kroki scenariusza                      |
 | `src/content/maska.ts`          | seria M1–M4: teksty i sceny kroków                                            |
 | `src/content/routing.ts`        | routing „List za płot”: kwestie z `scenariusz-routing.md` i stany sceny       |
+| `src/content/arkusz.ts`         | „Arkusz krok po kroku”, etapy 1–2: kwestie z `scenariusz-arkusz-1-2.md`       |
+| `src/content/arkusz.test.ts`    | test: kwestie co do słowa ze scenariusza, nazwy z arkusza, bramy w kolorze    |
+| `src/ui/views/SheetView.tsx`    | schemat z arkusza, wycinek arkusza, ćwiczenia „kliknij kartę” i „tabela”      |
+| `src/ui/taskState.ts`           | wspólny stan ćwiczenia „uczeń sam”: widok (klik) ↔ okno rozmowy (reakcja)     |
 | `src/content/maska-swobodny.ts` | Tryb swobodny: gotowe przykłady z lekcjami i zdania paneli                    |
 | `src/content/maska-uklad.ts`    | układ diagramu maski: pozycje kart, boki kabli, napisy na kartach             |
 | `src/content/content.test.ts`   | testy treści: ≤ 40 słów, ramki po kablach, nazwy tylko ze słownika            |

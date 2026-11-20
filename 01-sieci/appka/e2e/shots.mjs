@@ -38,7 +38,7 @@ function checkoutRef(gitRef) {
   writeFileSync(join(root, file), content);
  }
  // Strony dodane później – starsze commity ich nie mają i to nie jest błąd.
- for (const file of ['01-sieci/symulator-routing.html']) {
+ for (const file of ['01-sieci/symulator-routing.html', '01-sieci/symulator-arkusz.html']) {
   try {
    const content = execFileSync('git', ['show', `${gitRef}:${file}`], {
     cwd: resolve(SITE_DIR, '..'),

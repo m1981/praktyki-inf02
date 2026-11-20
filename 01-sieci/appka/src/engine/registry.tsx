@@ -6,7 +6,14 @@
 import type { ComponentType } from 'react';
 import { NextControl, type NextSpec } from '../ui/controls/NextControl';
 import { StepperControl, type StepperSpec } from '../ui/controls/StepperControl';
-import { QuizControl, TalkControl, type QuizSpec, type TalkSpec } from '../ui/controls/TalkControl';
+import {
+ QuizControl,
+ TalkControl,
+ TaskControl,
+ type QuizSpec,
+ type TalkSpec,
+ type TaskSpec
+} from '../ui/controls/TalkControl';
 import { ToggleControl, type ToggleSpec } from '../ui/controls/ToggleControl';
 import { FramePanel, type FrameSpec } from '../ui/panels/FramePanel';
 import { QuestionsPanel, type QuestionsSpec } from '../ui/panels/QuestionsPanel';
@@ -15,11 +22,12 @@ import { CompareView, type CompareSpec } from '../ui/views/CompareView';
 import { DiagramView, type DiagramSpec } from '../ui/views/DiagramView';
 import { FenceView, type FenceSpec } from '../ui/views/FenceView';
 import { PostView, type PostSpec } from '../ui/views/PostView';
+import { SheetView, type SheetSpec } from '../ui/views/SheetView';
 import type { StepNav } from './nav';
 
-export type ViewSpec = DiagramSpec | FenceSpec | CompareSpec | PostSpec;
+export type ViewSpec = DiagramSpec | FenceSpec | CompareSpec | PostSpec | SheetSpec;
 export type PanelSpec = FrameSpec | TablesSpec | QuestionsSpec;
-export type ControlSpec = NextSpec | ToggleSpec | StepperSpec | TalkSpec | QuizSpec;
+export type ControlSpec = NextSpec | ToggleSpec | StepperSpec | TalkSpec | QuizSpec | TaskSpec;
 
 /** Rejestr: dla każdego `type` z unii opisów – komponent, który przyjmuje dokładnie ten opis. */
 type Registry<Spec extends { type: string }, Extra = object> = {
@@ -30,7 +38,8 @@ const VIEWS: Registry<ViewSpec, { runId: number }> = {
  diagram: DiagramView,
  fence: FenceView,
  compare: CompareView,
- post: PostView
+ post: PostView,
+ sheet: SheetView
 };
 
 const PANELS: Registry<PanelSpec> = {
@@ -44,7 +53,8 @@ const CONTROLS: Registry<ControlSpec, { nav: StepNav }> = {
  toggle: ToggleControl,
  stepper: StepperControl,
  talk: TalkControl,
- quiz: QuizControl
+ quiz: QuizControl,
+ task: TaskControl
 };
 
 // Rzutowanie w jednym miejscu: typ `Registry` gwarantuje, że pod `spec.type` leży komponent dla

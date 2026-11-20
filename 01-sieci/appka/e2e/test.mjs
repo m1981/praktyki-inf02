@@ -50,10 +50,14 @@ function measure(kind) {
  }
  if (kind === 'rozmowa') {
   // Scena i całe okno rozmowy (kwestia, zagadka, przyciski) widoczne bez przewijania.
+  // Treść sceny nie może wystawać poza jej ramkę (np. wycinek arkusza w ćwiczeniu z tabelą).
+  const board = q('.sim-stage--steps > :first-child');
+  const inner = Math.max(0, ...[...board.querySelectorAll('*')].map(bottom));
   return {
    ...base,
    top: top(q('.sim-stage--steps')),
-   lowest: Math.max(bottom(q('.sim-stage--steps > :first-child')), bottom(q('.dl')))
+   lowest: Math.max(bottom(board), bottom(q('.dl'))),
+   outside: Math.max(0, inner - bottom(board))
   };
  }
  // Tryb swobodny: diagram i lekcja (albo podpowiedź) widoczne bez przewijania.
@@ -82,6 +86,7 @@ try {
     if (m.lowest > viewport.height) fail(where, `dół ${m.lowest} px > ${viewport.height} px`);
     if (m.top < 0 || m.scrollY !== 0) fail(where, `strona przewinięta (scrollY ${m.scrollY})`);
    }
+   if (m.outside > 0) fail(where, `treść sceny wystaje poza ramkę o ${m.outside} px`);
    if (kind === 'seria') {
     const allowed = m.isLastStep ? 2 : 1;
     if (m.controls > allowed)
@@ -113,5 +118,5 @@ if (failures.length > 0) {
  process.exit(1);
 }
 console.log(
- `✅ e2e: ${rows.length} pomiarów (ARP, seria M1–M4, Tryb swobodny, routing) – wszystko mieści się na ekranie`
+ `✅ e2e: ${rows.length} pomiarów (ARP, seria M1–M4, Tryb swobodny, routing, arkusz) – wszystko mieści się na ekranie`
 );

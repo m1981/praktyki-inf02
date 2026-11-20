@@ -8,18 +8,24 @@ import { GLOSSARY } from '../model/glossary';
 import { DEVICES } from '../model/siec';
 import { MAX_PREFIX, MIN_PREFIX, TARGETS } from '../net/mask';
 import { assertFlowsOnCables } from '../ui/diagram/graph';
+import { ARKUSZ } from './arkusz';
 import { ARP, SCENARIO } from './arp';
 import { MASKA } from './maska';
 import { FREE_MODE, PRESETS } from './maska-swobodny';
 import { ROUTING } from './routing';
 
-const COURSES: Course[] = [ARP, MASKA, ROUTING];
+const COURSES: Course[] = [ARP, MASKA, ROUTING, ARKUSZ];
+
+// Strona „Arkusz krok po kroku” ma nazwy urządzeń z arkusza (PYT-074a) – jej nazwy sprawdza
+// `arkusz.test.ts`. Pozostałe reguły (limity słów, kwestie) obowiązują ją tak samo.
+const GLOSSARY_COURSES = new Set<Course>([ARP, MASKA, ROUTING]);
 
 const steps = COURSES.flatMap((course) =>
  course.exercises.flatMap((ex) =>
-  ex.steps.map((step, i) => ({ name: `${ex.code} krok ${i + 1}`, ex, step }))
+  ex.steps.map((step, i) => ({ name: `${ex.code} krok ${i + 1}`, course, ex, step }))
  )
 );
+const glossarySteps = steps.filter(({ course }) => GLOSSARY_COURSES.has(course));
 
 /** Kwestie postaci w scenach „rozmowa” (mowa potoczna). */
 const spoken = new Set(
@@ -28,14 +34,14 @@ const spoken = new Set(
 
 /** Wszystkie zdania, które czyta uczeń: [skąd, tekst]. */
 const sentences: [string, string][] = [
- ...COURSES.flatMap((course) =>
+ ...[...GLOSSARY_COURSES].flatMap((course) =>
   course.exercises.flatMap((ex): [string, string][] => [
    [`${ex.code} tytuł`, ex.title],
    [`${ex.code} pytanie`, ex.question ?? ''],
    [`${ex.code} pytanie na następne ćwiczenie`, ex.nextQuestion ?? '']
   ])
  ),
- ...steps.flatMap(({ name, step }): [string, string][] => [
+ ...glossarySteps.flatMap(({ name, step }): [string, string][] => [
   [`${name} tytuł`, step.title ?? ''],
   [`${name} tekst`, step.text],
   [`${name} zmiana`, step.change ?? '']
@@ -46,7 +52,7 @@ const sentences: [string, string][] = [
    [`ARP krok ${i + 1} odpowiedź ${n + 1}`, q.answer]
   ])
  ),
- ...steps.flatMap(({ name, step }): [string, string][] =>
+ ...glossarySteps.flatMap(({ name, step }): [string, string][] =>
   step.control.type === 'quiz'
    ? step.control.options.flatMap((o, n): [string, string][] => [
       [`${name} odpowiedź ${n + 1}`, o.text],

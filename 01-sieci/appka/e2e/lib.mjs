@@ -105,10 +105,30 @@ export async function walk(page, visit, { siteDir = SITE_DIR, settleMs = 400 } =
  await wait(settleMs);
  await visit({ id: 'swobodny-maska30', kind: 'swobodny-sterowanie', page });
 
- // --- Routing: sceny „rozmowa”, strzałką → aż do ostatniej kropki ostatniej sceny ---
- // Strona jest nowsza niż wzorce „przed” ze starych commitów, więc tam jej po prostu nie ma.
- if (!existsSync(siteDir + 'symulator-routing.html')) return;
- await goto(page, siteDir, 'symulator-routing.html');
+ // --- Strony w stylu „rozmowa”: strzałką → aż do ostatniej kropki ostatniej sceny ---
+ // Strony są nowsze niż wzorce „przed” ze starych commitów, więc tam ich po prostu nie ma.
+ await walkDialog(page, visit, {
+  siteDir,
+  settleMs,
+  file: 'symulator-routing.html',
+  prefix: 'routing'
+ });
+ await walkDialog(page, visit, {
+  siteDir,
+  settleMs,
+  file: 'symulator-arkusz.html',
+  prefix: 'arkusz'
+ });
+}
+
+/**
+ * Przechodzi przez stronę w stylu „rozmowa”. W kroku z ćwiczeniem „uczeń sam” (klikanie kart,
+ * odpowiedź do wyboru, tabela adresów) odwiedza jeszcze dwa stany: po złej odpowiedzi (`-blad`)
+ * i po dobrej (`-dobrze`).
+ */
+async function walkDialog(page, visit, { siteDir, settleMs, file, prefix }) {
+ if (!existsSync(siteDir + file)) return;
+ await goto(page, siteDir, file);
  for (let guard = 0; guard < 200; guard++) {
   await wait(settleMs);
   const where = await page.evaluate(() => {
@@ -121,12 +141,62 @@ export async function walk(page, visit, { siteDir = SITE_DIR, settleMs = 400 } =
     // Ostatni krok ostatniej sceny: przycisk „dalej” wraca tam na początek, więc nie gaśnie.
     isEnd:
      step === dots.length &&
-     (tabs.length === 0 || tabs.at(-1).getAttribute('aria-current') === 'step')
+     (tabs.length === 0 || tabs.at(-1).getAttribute('aria-current') === 'step'),
+    task: document.querySelector('[data-tile]')
+     ? 'tabela'
+     : document.querySelector('[data-pick]')
+       ? 'klik'
+       : document.querySelector('.dl-quiz [data-ok]')
+         ? 'wybor'
+         : undefined
    };
   });
-  const id = `routing-${where.scene}-${String(where.step).padStart(2, '0')}`;
+  const id = `${prefix}-${where.scene}-${String(where.step).padStart(2, '0')}`;
   await visit({ id, kind: 'rozmowa', page });
+  if (where.task) {
+   await page.evaluate(answerTask, where.task, false);
+   await wait(settleMs);
+   await visit({ id: `${id}-blad`, kind: 'rozmowa', page });
+   await page.evaluate(answerTask, where.task, true);
+   await wait(settleMs);
+   await visit({ id: `${id}-dobrze`, kind: 'rozmowa', page });
+  }
   if (where.isEnd) break;
   await page.keyboard.press('ArrowRight');
+ }
+}
+
+/** W przeglądarce: zła albo dobra odpowiedź w ćwiczeniu „uczeń sam”. */
+async function answerTask(task, right) {
+ // Przerwa po kliknięciu: React musi narysować wybór, zanim przyjdzie następne kliknięcie.
+ const click = async (el) => {
+  el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 30));
+ };
+ if (task === 'klik' || task === 'wybor') {
+  const scope = task === 'klik' ? '[data-pick]' : '.dl-quiz [data-ok]';
+  const all = [...document.querySelectorAll(scope)];
+  if (right) for (const el of all.filter((e) => e.dataset.ok === '1')) await click(el);
+  else await click(all.find((el) => el.dataset.ok === '0'));
+  return;
+ }
+ // Tabela: linijka arkusza → pole tabeli. „automatycznie” wypełnia cały wiersz (pole adresu).
+ const tiles = [...document.querySelectorAll('[data-tile]')].filter((t) => !t.disabled);
+ const cellFor = (tile) => {
+  const [card, field] = tile.dataset.tile.split(':');
+  return `${card}:${field === 'auto' ? 'ip' : field}`;
+ };
+ if (!right) {
+  const tile = tiles[0];
+  const other = [...document.querySelectorAll('[data-cell]')].find(
+   (c) => c.dataset.cell.split(':')[0] !== tile.dataset.tile.split(':')[0]
+  );
+  await click(tile);
+  await click(other);
+  return;
+ }
+ for (const tile of tiles) {
+  await click(tile);
+  await click(document.querySelector(`[data-cell="${cellFor(tile)}"]`));
  }
 }

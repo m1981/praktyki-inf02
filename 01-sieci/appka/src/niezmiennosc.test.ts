@@ -26,6 +26,7 @@ function legacyVisual(view: Step['view']) {
  if (view.type === 'compare') return { kind: 'compare', revealed: view.revealed };
  if (view.type === 'fence') return { kind: 'fence', prefix: view.prefix };
  if (view.type === 'post') return { kind: 'post' };
+ if (view.type === 'sheet') return { kind: 'sheet' };
  return { kind: 'diagram', devices: view.devices, cables: view.cables, state: view.state };
 }
 

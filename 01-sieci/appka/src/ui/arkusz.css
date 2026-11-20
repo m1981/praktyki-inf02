@@ -1,0 +1,441 @@
+/* Strona „Arkusz krok po kroku” (prefiks `sh-`): schemat z arkusza, wycinek arkusza, tabela adresów.
+   Kolory sieci: niebieska, zielona, fioletowa. Pomarańczowy znaczy u nas tylko Broadcast – nie tu. */
+
+:root {
+ /* Scena tej strony: schemat + wycinek arkusza albo tabela. Mieści się w 1366×768 i 1280×720
+    (pomiar e2e), bo nad sceną nie ma pytania ani legendy. */
+ --stage-h-sheet: 470px;
+ --net-niebieska: #0984e3;
+ --net-niebieska-bg: #e3f2fd;
+ --net-zielona: #1e9e57;
+ --net-zielona-bg: #e4f6ea;
+ --net-fioletowa: #6c5ce7;
+ --net-fioletowa-bg: #efeafd;
+}
+
+.sh-board {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ gap: 10px;
+ height: var(--stage-h-sheet);
+ padding: 12px 16px;
+}
+@media (max-width: 900px) {
+ .sh-board {
+  height: auto;
+ }
+}
+.sh {
+ display: block;
+ width: 100%;
+ max-height: 230px;
+ flex-shrink: 0;
+}
+.sh-board--table {
+ justify-content: flex-start;
+}
+.sh-board--table .sh {
+ max-height: 135px;
+}
+
+/* --- Schemat --- */
+.sh-world ellipse,
+.sh-device rect,
+.sh-card rect {
+ fill: #fff;
+ stroke: #b2bec3;
+ stroke-width: 2;
+ transition:
+  fill 0.5s,
+  stroke 0.5s;
+}
+.sh-device rect {
+ fill: #f8f9fa;
+}
+.sh-world text,
+.sh-device text,
+.sh-card text {
+ font-size: 15px;
+ font-weight: 700;
+ fill: #2d3436;
+}
+.sh-card text {
+ font-size: 14px;
+}
+.sh-world text {
+ font-size: 13px;
+ fill: var(--sim-muted);
+}
+.sh-cable {
+ stroke: #b2bec3;
+ stroke-width: 3;
+ transition: stroke 0.5s;
+}
+.sh-net.sh-cable {
+ stroke-width: 5;
+}
+
+/* Sieć w kolorze: karta i kabel. Opóźnienie przejścia (styl elementu) daje „rozlewanie się”. */
+.sh-net--niebieska rect,
+.sh-net--niebieska ellipse {
+ fill: var(--net-niebieska-bg);
+ stroke: var(--net-niebieska);
+ stroke-width: 3;
+}
+.sh-net--zielona rect,
+.sh-net--zielona ellipse {
+ fill: var(--net-zielona-bg);
+ stroke: var(--net-zielona);
+ stroke-width: 3;
+}
+.sh-net--fioletowa rect,
+.sh-net--fioletowa ellipse {
+ fill: var(--net-fioletowa-bg);
+ stroke: var(--net-fioletowa);
+ stroke-width: 3;
+}
+.sh-cable.sh-net--niebieska {
+ stroke: var(--net-niebieska);
+}
+.sh-cable.sh-net--zielona {
+ stroke: var(--net-zielona);
+}
+.sh-cable.sh-net--fioletowa {
+ stroke: var(--net-fioletowa);
+}
+.sh-net rect,
+.sh-net ellipse {
+ transition-delay: inherit;
+}
+
+/* Pulsowanie: kwestia mówi właśnie o tym. */
+.sh-pulse rect,
+.sh-pulse ellipse,
+.sh-pulse path,
+line.sh-pulse {
+ animation: sh-blink 1s ease-in-out infinite;
+}
+.sh-pulse:not(.sh-net) > rect {
+ stroke: #f0b429;
+ stroke-width: 4;
+}
+/* Kabel, o którym mówi kwestia: złoty także przy wyłączonych animacjach. */
+line.sh-pulse:not(.sh-net) {
+ stroke: #f0b429;
+ stroke-width: 5;
+}
+.sh-addr.sh-pulse text {
+ fill: var(--sim-red);
+ animation: sh-fade 0.9s ease-in-out infinite;
+}
+
+/* Ćwiczenie „kliknij kartę” */
+.sh-pick {
+ cursor: pointer;
+}
+.sh-pick:hover > rect,
+.sh-pick:focus-visible > rect {
+ stroke: #2d3436;
+ stroke-width: 3;
+}
+.sh-pick:focus {
+ outline: none;
+}
+.sh-wrong > rect {
+ stroke: var(--sim-red) !important;
+ stroke-width: 4 !important;
+ fill: #fdecea !important;
+}
+
+/* Adresy przy kartach */
+.sh-addr text {
+ font-family: monospace;
+ font-size: 12.5px;
+ font-weight: 700;
+ fill: #2d3436;
+}
+.sh-fly {
+ animation: sh-fly 1.2s ease-out both;
+}
+
+/* Strzałki nad schematem */
+.sh-arrow path {
+ fill: none;
+ stroke-width: 2.5;
+}
+.sh-arrow text {
+ font-family: monospace;
+ font-size: 13px;
+ font-weight: 700;
+ paint-order: stroke;
+ stroke: #fff;
+ stroke-width: 5px;
+}
+.sh-arrow--niebieska path {
+ stroke: var(--net-niebieska);
+}
+.sh-arrow--niebieska text {
+ fill: var(--net-niebieska);
+}
+.sh-arrow--zielona path {
+ stroke: var(--net-zielona);
+ stroke-width: 3.5;
+}
+.sh-arrow--blocked path {
+ stroke: var(--sim-red);
+ stroke-dasharray: 7 6;
+}
+.sh-arrow--blocked .sh-cross {
+ font-family: inherit;
+ font-size: 24px;
+ fill: var(--sim-red);
+ stroke-width: 0;
+}
+.sh-head--niebieska {
+ fill: var(--net-niebieska);
+}
+.sh-head--zielona {
+ fill: var(--net-zielona);
+}
+.sh-head--czerwona {
+ fill: var(--sim-red);
+}
+.sh-note {
+ font-size: 13px;
+ font-weight: 700;
+ fill: var(--net-niebieska);
+}
+
+/* --- Wycinek arkusza --- */
+.sh-excerpt {
+ padding: 8px 12px;
+ border: 1px dashed #b2bec3;
+ border-radius: 8px;
+ background: #fcfcfc;
+ font-size: 0.85rem;
+ transition: opacity 0.5s;
+}
+.sh-excerpt h3 {
+ margin: 0 0 4px;
+ font-size: 0.7rem;
+ font-weight: 700;
+ letter-spacing: 0.06em;
+ text-transform: uppercase;
+ color: var(--sim-muted);
+}
+.sh-excerpt ul {
+ margin: 0;
+ padding: 0;
+ list-style: none;
+ display: grid;
+ gap: 2px;
+}
+.sh-excerpt b {
+ font-weight: 700;
+}
+.sh-excerpt--dim {
+ opacity: 0.35;
+}
+.sh-lit {
+ padding: 0 3px;
+ border-radius: 4px;
+ background: #fff3bf;
+ box-shadow: 0 0 0 2px #f0b429;
+}
+
+/* --- Ćwiczenie „tabela adresów” --- */
+.sh-work {
+ display: grid;
+ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+ gap: 12px;
+ align-items: start;
+ min-height: 0;
+}
+@media (max-width: 900px) {
+ .sh-work {
+  grid-template-columns: 1fr;
+ }
+ /* Telefon: tabela przewija się sama, strona nie. */
+ .sh-table {
+  display: block;
+  overflow-x: auto;
+ }
+}
+.sh-excerpt--tiles ul {
+ gap: 4px;
+}
+.sh-excerpt--tiles li {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 3px 4px;
+}
+.sh-tile {
+ padding: 1px 6px;
+ border: 1.5px solid #b2bec3;
+ border-radius: 6px;
+ background: #fff;
+ color: #2d3436;
+ font: inherit;
+ font-size: 0.78rem;
+ text-align: left;
+ cursor: pointer;
+}
+.sh-tile:hover {
+ border-color: #2d3436;
+}
+.sh-tile:focus-visible {
+ outline: 3px solid var(--sim-blue);
+ outline-offset: 1px;
+}
+.sh-tile--on {
+ border-color: #f0b429;
+ background: #fff3bf;
+ box-shadow: 0 0 0 2px #f0b429;
+}
+.sh-tile:disabled {
+ border-style: dashed;
+ color: #b2bec3;
+ cursor: default;
+ text-decoration: line-through;
+}
+.sh-table {
+ width: 100%;
+ border-collapse: collapse;
+ font-size: 0.78rem;
+}
+.sh-table th,
+.sh-table td {
+ padding: 3px 5px;
+ border: 1px solid var(--sim-border);
+ text-align: left;
+}
+.sh-table thead th {
+ background: #f1f2f6;
+ font-size: 0.72rem;
+}
+.sh-table th[scope='row'] {
+ font-weight: 700;
+}
+.sh-cell {
+ height: 30px;
+ white-space: nowrap;
+}
+.sh-cell--none {
+ background: #f1f2f6;
+ color: #b2bec3;
+ text-align: center !important;
+}
+.sh-slot {
+ display: block;
+ width: 100%;
+ height: 22px;
+ border: 1.5px dashed #b2bec3;
+ border-radius: 5px;
+ background: #fff;
+ cursor: pointer;
+}
+.sh-slot:hover,
+.sh-slot:focus-visible {
+ border-color: #f0b429;
+ background: #fff8e1;
+ outline: none;
+}
+.sh-filled {
+ font-size: 0.72rem;
+ font-family: monospace;
+ font-weight: 700;
+ color: #2d3436;
+}
+/* Nazwa karty w tabeli: tło i pasek w kolorze jej sieci (wynik etapu 1). */
+.sh-table .sh-rowname {
+ border-left: 5px solid;
+}
+.sh-rowname.sh-net--niebieska {
+ border-left-color: var(--net-niebieska);
+ background: var(--net-niebieska-bg);
+}
+.sh-rowname.sh-net--zielona {
+ border-left-color: var(--net-zielona);
+ background: var(--net-zielona-bg);
+}
+.sh-rowname.sh-net--fioletowa {
+ border-left-color: var(--net-fioletowa);
+ background: var(--net-fioletowa-bg);
+}
+/* Tekst tylko dla czytnika ekranu. */
+.sh-sr {
+ position: absolute;
+ width: 1px;
+ height: 1px;
+ overflow: hidden;
+ clip-path: inset(50%);
+ white-space: nowrap;
+}
+/* Rysunek z arkusza pod ćwiczeniami – poglądowo, poza pomiarem „mieści się na ekranie”. */
+.sh-figure {
+ margin: 16px 0 0;
+ padding: 12px 16px;
+ background: #fff;
+ border: 1px solid var(--sim-border);
+ border-radius: 12px;
+ text-align: center;
+}
+.sh-figure img {
+ display: block;
+ max-width: min(100%, 640px);
+ height: auto;
+ margin: 0 auto;
+}
+.sh-figure figcaption {
+ margin-top: 6px;
+ font-size: 0.85rem;
+ color: var(--sim-muted);
+}
+
+/* Krótkie odpowiedzi do wyboru („1”–„4”, „Tak”/„Nie”) w jednym rzędzie. */
+.dl-quiz--row {
+ grid-auto-flow: column;
+ grid-auto-columns: 1fr;
+}
+.dl-quiz--row button {
+ text-align: center;
+}
+
+@keyframes sh-blink {
+ 50% {
+  stroke-opacity: 0.25;
+ }
+}
+@keyframes sh-fade {
+ 50% {
+  opacity: 0.35;
+ }
+}
+@keyframes sh-fly {
+ from {
+  opacity: 0;
+  transform: translateY(120px);
+ }
+ 60% {
+  opacity: 1;
+ }
+}
+@media (prefers-reduced-motion: reduce) {
+ .sh-pulse rect,
+ .sh-pulse ellipse,
+ .sh-pulse path,
+ line.sh-pulse,
+ .sh-addr.sh-pulse text,
+ .sh-fly {
+  animation: none;
+ }
+ .sh-world ellipse,
+ .sh-device rect,
+ .sh-card rect,
+ .sh-cable,
+ .sh-excerpt {
+  transition: none;
+ }
+}

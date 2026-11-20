@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 
 /** Strony do zbudowania: `vite build --mode <strona>` → 01-sieci/symulator-<strona>.html */
-const PAGES = ['arp', 'maska', 'routing'] as const;
+const PAGES = ['arp', 'maska', 'routing', 'arkusz'] as const;
 type Page = (typeof PAGES)[number];
 const isPage = (mode: string): mode is Page => (PAGES as readonly string[]).includes(mode);
 
