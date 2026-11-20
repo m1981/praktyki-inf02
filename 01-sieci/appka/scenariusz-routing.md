@@ -38,24 +38,24 @@ Router 10.10.10.1 po stronie Laptopa, Serwer WWW 10.10.20.50 (PYT-056a).
 
 ## Scena 1: „List za płot”
 
-| #   | Kto          | Kwestia                                              | Na schemacie                                                                        | Przycisk                 |
-| --- | ------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------ |
-| 1   | Ola          | Dwie sieci – dwie działki. Między nimi płot.         | Ujęcie wprowadzające: dwie działki w dwóch kolorach, przerywany płot, Router szary. | Dalej ▶                  |
-| 2   | Kierownik IT | Mój laptop nie otwiera strony z serwera 😩           | Laptop miga. Przerywana linia Laptop → Serwer WWW kończy się czerwonym ✕ na płocie. | Dalej ▶                  |
-| 3   | Ola          | Bo serwer stoi za płotem. Tam Laptop nikogo nie zna. | Linia znika. Działka serwera szarzeje.                                              | Dalej ▶                  |
-| 4   | Ola          | Ale w płocie jest brama – Router.                    | Złota ramka wokół Routera.                                                          | Dalej ▶                  |
-| 5   | Ola          | Laptop pisze list do serwera.                        | Przy Laptopie pojawia się list: „Do: Serwer WWW”.                                   | Dalej ▶                  |
-| 6   | Ola          | I wkłada go do koperty – dla bramy.                  | List chowa się w kopercie z napisem „Dla: Router”.                                  | ✉️ Wyślij ▶              |
-| 7   | _akcja_      | _Koperta jedzie do Routera…_                         | Koperta jedzie Laptop → Switch → Router i zatrzymuje się przy Routerze.             | Dalej ▶                  |
-| 8   | Kierownik IT | Do Routera? Przecież list jest do serwera 🤨         | Pulsuje napis „Dla: Router” na kopercie.                                            | Dalej ▶                  |
-| 9   | Ola          | Koperta mówi tylko, kto odbierze ją teraz.           | Bez zmian.                                                                          | Dalej ▶                  |
-| 10  | Ola          | A dokąd list jedzie naprawdę – to jest w środku.     | Bez zmian.                                                                          | ✂️ Otwórz kopertę ▶      |
-| 11  | _akcja_      | _Router otwiera kopertę i czyta list…_               | Koperta znika. Widać list „Do: Serwer WWW”, pulsuje jego adres.                     | Dalej ▶                  |
-| 12  | Ola          | Serwer jest po drugiej stronie bramy.                | Działka serwera odzyskuje kolor.                                                    | ✉️ Nowa koperta ▶        |
-| 13  | _akcja_      | _Router wkłada list do nowej koperty…_               | Nowa koperta „Dla: Serwer WWW” jedzie Router → Switch → Serwer WWW.                 | Dalej ▶                  |
-| 14  | Kierownik IT | Czyli koperta inna – a list ten sam? 🙂              | Pod schematem obok siebie: stara koperta, nowa koperta i jeden list.                | Dalej ▶                  |
-| 15  | Ola          | Właśnie tak. Na każdej bramie nowa koperta.          | Bez zmian.                                                                          | Dalej ▶                  |
-| 16  | _zagadka_    | Co zmienił Router? A) Adres na liście. B) Kopertę.   | Stan końcowy.                                                                       | Zobacz to samo w sieci ▶ |
+| #   | Kto          | Kwestia                                              | Na schemacie                                                                                                                                    | Przycisk                 |
+| --- | ------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| 1   | Ola          | Dwie sieci – dwie działki. Między nimi płot.         | Ujęcie wprowadzające: dwie działki w dwóch kolorach, przerywany płot, Router szary.                                                             | Dalej ▶                  |
+| 2   | Kierownik IT | Mój laptop nie otwiera strony z serwera 😩           | Laptop miga. Czerwona przerywana linia od Laptopa kończy się ✕ na płocie; za płotem biegnie dalej szara. Serwer WWW miga na niebiesko – to cel. | Dalej ▶                  |
+| 3   | Ola          | Bo serwer stoi za płotem. Tam Laptop nikogo nie zna. | Linia znika. Działka serwera szarzeje.                                                                                                          | Dalej ▶                  |
+| 4   | Ola          | Ale w płocie jest brama – Router.                    | Złota ramka wokół Routera.                                                                                                                      | Dalej ▶                  |
+| 5   | Ola          | Laptop pisze list do serwera.                        | Przy Laptopie pojawia się list: „Do: Serwer WWW”.                                                                                               | Dalej ▶                  |
+| 6   | Ola          | I wkłada go do koperty – dla bramy.                  | List chowa się w kopercie z napisem „Dla: Router”.                                                                                              | ✉️ Wyślij ▶              |
+| 7   | _akcja_      | _Koperta jedzie do Routera…_                         | Koperta jedzie Laptop → Switch → Router i zatrzymuje się przy Routerze.                                                                         | Dalej ▶                  |
+| 8   | Kierownik IT | Do Routera? Przecież list jest do serwera 🤨         | Pulsuje napis „Dla: Router” na kopercie.                                                                                                        | Dalej ▶                  |
+| 9   | Ola          | Koperta mówi tylko, kto odbierze ją teraz.           | Bez zmian.                                                                                                                                      | Dalej ▶                  |
+| 10  | Ola          | A dokąd list jedzie naprawdę – to jest w środku.     | Bez zmian.                                                                                                                                      | ✂️ Otwórz kopertę ▶      |
+| 11  | _akcja_      | _Router otwiera kopertę i czyta list…_               | Koperta znika. Widać list „Do: Serwer WWW”, pulsuje jego adres.                                                                                 | Dalej ▶                  |
+| 12  | Ola          | Serwer jest po drugiej stronie bramy.                | Działka serwera odzyskuje kolor.                                                                                                                | ✉️ Nowa koperta ▶        |
+| 13  | _akcja_      | _Router wkłada list do nowej koperty…_               | Nowa koperta „Dla: Serwer WWW” jedzie Router → Switch → Serwer WWW.                                                                             | Dalej ▶                  |
+| 14  | Kierownik IT | Czyli koperta inna – a list ten sam? 🙂              | Pod schematem obok siebie: stara koperta, nowa koperta i jeden list.                                                                            | Dalej ▶                  |
+| 15  | Ola          | Właśnie tak. Na każdej bramie nowa koperta.          | Bez zmian.                                                                                                                                      | Dalej ▶                  |
+| 16  | _zagadka_    | Co zmienił Router? A) Adres na liście. B) Kopertę.   | Stan końcowy.                                                                                                                                   | Zobacz to samo w sieci ▶ |
 
 Reakcje na zagadkę:
 

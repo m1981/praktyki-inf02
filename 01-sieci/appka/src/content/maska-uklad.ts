@@ -4,7 +4,7 @@
 
 import { formatIp } from '../lib/ipv4';
 import { genitiveOf, nameOf } from '../model/glossary';
-import { device, deviceIp, type DeviceId } from '../model/siec';
+import { device, deviceIp } from '../model/siec';
 import {
  GATEWAY,
  gatewayOf,
@@ -12,6 +12,7 @@ import {
  maskRoute,
  prefixOf,
  ROUTER_IP,
+ type HostId,
  type MaskSettings
 } from '../net/mask';
 import { cable } from '../ui/diagram/graph';
@@ -19,7 +20,7 @@ import type { Cable, Device, DiagramState } from '../ui/diagram/types';
 import type { Pin } from '../ui/views/FenceLine';
 
 // Router u góry, Switch pośrodku, urządzenia w rzędzie na dole.
-const POSITIONS: Record<DeviceId, { x: number; y: number }> = {
+const POSITIONS: Record<HostId | 'router' | 'switch', { x: number; y: number }> = {
  router: { x: 300, y: 0 },
  switch: { x: 300, y: 230 },
  laptop: { x: 0, y: 230 },

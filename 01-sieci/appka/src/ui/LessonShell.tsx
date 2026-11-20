@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react';
 import { Control, Panel, View } from '../engine/registry';
 import type { StepNav } from '../engine/nav';
-import { hasTabs, type Course, type Exercise, type LegendItem } from '../engine/types';
+import { hasTabs, type Course, type Exercise, type LegendItem, type Step } from '../engine/types';
 import { useCourseNav } from '../engine/useCourseNav';
+import { DialogStep } from './DialogStep';
 import { COLOR_VARS, PACKET_COLORS } from './tokens';
 
 // JEDYNE miejsce układu ekranu (audyt.md, rozdz. 5.0): zakładki ćwiczeń · pytanie · scena po lewej ·
@@ -56,6 +58,7 @@ export function LessonShell({ course }: { course: Course }) {
       next: () => dispatch({ type: 'NEXT' }),
       prev: () => dispatch({ type: 'PREV' }),
       reset: () => dispatch({ type: 'RESET' }),
+      restart: () => dispatch({ type: 'GOTO', ex: 0 }),
       setStep: (step) => dispatch({ type: 'SET_STEP', step })
      }}
     />
@@ -88,25 +91,15 @@ function ExerciseScreen({ exercise: ex, runId, nav }: ExerciseScreenProps) {
    <div className="sim-stage sim-stage--steps">
     <View spec={step.view} runId={runId} />
 
-    <section className="sim-step" aria-live="polite">
-     <div className="sim-step__meta">
-      <span className="sim-badge">{badge}</span>
-      {step.layer && <span className="sim-muted">{step.layer}</span>}
-     </div>
-     {step.title && <h2>{step.title}</h2>}
-     <p>{step.text}</p>
-     {step.change && (
-      <p className="sr-change">
-       <strong>Zmiana:</strong> {step.change}
-      </p>
-     )}
-     {nav.isLastStep && ex.nextQuestion && (
-      <p className="sr-bridge">
-       <strong>Na następne ćwiczenie:</strong> {ex.nextQuestion}
-      </p>
-     )}
-     <Control spec={step.control} nav={nav} />
-    </section>
+    {ex.style === 'dialog' ? (
+     <DialogStep exercise={ex} step={step} stepIndex={nav.stepIndex}>
+      <Control spec={step.control} nav={nav} />
+     </DialogStep>
+    ) : (
+     <LessonStep exercise={ex} step={step} badge={badge} isLastStep={nav.isLastStep}>
+      <Control spec={step.control} nav={nav} />
+     </LessonStep>
+    )}
    </div>
 
    {step.panels && step.panels.length > 0 && (
@@ -117,6 +110,39 @@ function ExerciseScreen({ exercise: ex, runId, nav }: ExerciseScreenProps) {
     </div>
    )}
   </>
+ );
+}
+
+interface LessonStepProps {
+ exercise: Exercise;
+ step: Step;
+ badge: string;
+ isLastStep: boolean;
+ children: ReactNode;
+}
+
+/** Krok w stylu „lekcja”: numer kroku, tekst, pasek „Zmiana”, pytanie na następne ćwiczenie. */
+function LessonStep({ exercise: ex, step, badge, isLastStep, children }: LessonStepProps) {
+ return (
+  <section className="sim-step" aria-live="polite">
+   <div className="sim-step__meta">
+    <span className="sim-badge">{badge}</span>
+    {step.layer && <span className="sim-muted">{step.layer}</span>}
+   </div>
+   {step.title && <h2>{step.title}</h2>}
+   <p>{step.text}</p>
+   {step.change && (
+    <p className="sr-change">
+     <strong>Zmiana:</strong> {step.change}
+    </p>
+   )}
+   {isLastStep && ex.nextQuestion && (
+    <p className="sr-bridge">
+     <strong>Na następne ćwiczenie:</strong> {ex.nextQuestion}
+    </p>
+   )}
+   {children}
+  </section>
  );
 }
 

@@ -10,11 +10,12 @@ import { framePath, type Hop } from './path';
 import { unicastRoles, type DeviceRole, type DeviceTone } from './traffic';
 
 export type { Outcome };
-export type HostId = Exclude<DeviceId, 'router' | 'switch'>;
+/** Urządzenia końcowe sieci ćwiczebnej (biuro), które biorą udział w ćwiczeniach z maską. */
+export type HostId = Extract<DeviceId, 'laptop' | 'nas' | 'printer' | 'camera'>;
 export type Phase = 'there' | 'back';
 
 /** Brama wszystkich urządzeń i jedyne urządzenie łączące podsieci. */
-export const GATEWAY: DeviceId = 'router';
+export const GATEWAY = 'router' satisfies DeviceId;
 
 /** Urządzenia końcowe biorące udział w ćwiczeniach z maską. */
 export const MASK_HOSTS: HostId[] = ['laptop', 'nas', 'printer', 'camera'];

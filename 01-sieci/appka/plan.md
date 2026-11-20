@@ -4,21 +4,22 @@ Plan dalszych materiałów po symulatorze ARP. Źródła symulatorów: `01-sieci
 
 ## Stan (2026-11-16)
 
-| Co                                                                                                        | Gdzie                                                         | Commit                                          |
-| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------- |
-| Symulator ARP i Unicast (6 kroków, tablice ARP/MAC, 2 pytania „Sprawdź się”)                              | `01-sieci/symulator-arp.html`                                 | `e37ef02`                                       |
-| Link z teorii (Filar 1, Krok 4) i z Lab 1 Faza 1                                                          | `01-sieci/index.html`, `lab1-podstawy.html`                   | `e37ef02`, `3a38b64`                            |
-| Pasek nawigacji na telefonie w jednej linii                                                               | `common.css`                                                  | `1c317ef`                                       |
-| Konspekt tylko z plików w gicie                                                                           | `scripts/konspekt.mjs`                                        | `e3f35b0`                                       |
-| Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity                         | `01-sieci/symulator-maska.html`                               | `288c31d`                                       |
-| Audyt dydaktyczny + szybkie wygrane (PYT-005)                                                             | `01-sieci/appka/audyt.md`, oba symulatory                     | `cceb206`                                       |
-| Układ maski na jednym ekranie (PYT-007), metafora „płot i działka” (PYT-003)                              | oba symulatory, `index.html`, Lab 1                           | `cceb206`                                       |
-| Seria M1–M4 + Tryb swobodny (PYT-009)                                                                     | `01-sieci/symulator-maska.html` (`src/content/maska.ts`)      | stan pośredni (PYT-014a), przeróbka na plan ZS1 |
-| Refaktor, etap A: testy e2e w repo, `model/` + słownik nazw + `net/` (PYT-019)                            | `01-sieci/appka/e2e`, `src/model`, `src/net`                  | `076f1f7`, `f504a8e`                            |
-| Refaktor, etap B: jeden silnik i jeden szablon ekranu dla ARP i maski (PYT-019)                           | `src/engine`, `src/ui`, `src/content`, `src/pages`            | `2ddd633`, `18bdfc9`, `8607eb2`                 |
-| Laboratorium VLAN (4 kłopoty, sceny „1996 / dziś”) – uzupełnienie scenariusza 4, poza ramą ZS1 (PYT-039a) | `01-sieci/laby-vlan/vlan.html`; wejścia: Krok 6, Lab 2 Faza 1 | `f5926c6`                                       |
-| Laboratorium podsieci (dzielenie, VLSM, plan osiedla) – uzupełnienie Kroku 5, poza ramą ZS1 (PYT-039a)    | `01-sieci/laby-vlan/podsieci.html`; wejście: Krok 5           | `f5926c6`                                       |
-| Słownik metafor Filaru 1 (PYT-037): maska = płot i działka, VLAN = ściana, switch = pudło, router = brama | teoria Krok 5–6, Lab 2, oba laby                              | ten commit                                      |
+| Co                                                                                                        | Gdzie                                                                  | Commit                                          |
+| --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------- |
+| Symulator ARP i Unicast (6 kroków, tablice ARP/MAC, 2 pytania „Sprawdź się”)                              | `01-sieci/symulator-arp.html`                                          | `e37ef02`                                       |
+| Link z teorii (Filar 1, Krok 4) i z Lab 1 Faza 1                                                          | `01-sieci/index.html`, `lab1-podstawy.html`                            | `e37ef02`, `3a38b64`                            |
+| Pasek nawigacji na telefonie w jednej linii                                                               | `common.css`                                                           | `1c317ef`                                       |
+| Konspekt tylko z plików w gicie                                                                           | `scripts/konspekt.mjs`                                                 | `e3f35b0`                                       |
+| Wizualizacja maski: suwak /24–/30, 4 lekcje, decyzja nadawcy, ulica adresów, bity                         | `01-sieci/symulator-maska.html`                                        | `288c31d`                                       |
+| Audyt dydaktyczny + szybkie wygrane (PYT-005)                                                             | `01-sieci/appka/audyt.md`, oba symulatory                              | `cceb206`                                       |
+| Układ maski na jednym ekranie (PYT-007), metafora „płot i działka” (PYT-003)                              | oba symulatory, `index.html`, Lab 1                                    | `cceb206`                                       |
+| Seria M1–M4 + Tryb swobodny (PYT-009)                                                                     | `01-sieci/symulator-maska.html` (`src/content/maska.ts`)               | stan pośredni (PYT-014a), przeróbka na plan ZS1 |
+| Refaktor, etap A: testy e2e w repo, `model/` + słownik nazw + `net/` (PYT-019)                            | `01-sieci/appka/e2e`, `src/model`, `src/net`                           | `076f1f7`, `f504a8e`                            |
+| Refaktor, etap B: jeden silnik i jeden szablon ekranu dla ARP i maski (PYT-019)                           | `src/engine`, `src/ui`, `src/content`, `src/pages`                     | `2ddd633`, `18bdfc9`, `8607eb2`                 |
+| Routing „List za płot”: dwie sceny w stylu „rozmowa” (PYT-061, PYT-066)                                   | `01-sieci/symulator-routing.html`, scenariusz: `scenariusz-routing.md` | ten commit; bez linku z teorii (PYT-070)        |
+| Laboratorium VLAN (4 kłopoty, sceny „1996 / dziś”) – uzupełnienie scenariusza 4, poza ramą ZS1 (PYT-039a) | `01-sieci/laby-vlan/vlan.html`; wejścia: Krok 6, Lab 2 Faza 1          | `f5926c6`                                       |
+| Laboratorium podsieci (dzielenie, VLSM, plan osiedla) – uzupełnienie Kroku 5, poza ramą ZS1 (PYT-039a)    | `01-sieci/laby-vlan/podsieci.html`; wejście: Krok 5                    | `f5926c6`                                       |
+| Słownik metafor Filaru 1 (PYT-037): maska = płot i działka, VLAN = ściana, switch = pudło, router = brama | teoria Krok 5–6, Lab 2, oba laby                                       | ten commit                                      |
 
 ## Zasada dydaktyczna
 

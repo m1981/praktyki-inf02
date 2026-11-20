@@ -6,9 +6,17 @@
 
 import { formatIp, parseIp, type Ip } from '../lib/ipv4';
 
-export type DeviceKind = 'laptop' | 'switch' | 'router' | 'nas' | 'printer' | 'camera';
-export type DeviceId = 'router' | 'switch' | 'laptop' | 'nas' | 'printer' | 'camera';
-export type ZoneId = 'biuro';
+export type DeviceKind = 'laptop' | 'switch' | 'router' | 'nas' | 'printer' | 'camera' | 'server';
+export type DeviceId =
+ | 'router'
+ | 'switch'
+ | 'laptop'
+ | 'nas'
+ | 'printer'
+ | 'camera'
+ | 'switch2'
+ | 'www';
+export type ZoneId = 'biuro' | 'serwery';
 
 interface Zone {
  /** Adres sieci strefy. */
@@ -35,7 +43,9 @@ interface Link {
 }
 
 export const ZONES: Record<ZoneId, Zone> = {
- biuro: { net: '10.10.10.0', prefix: 24 }
+ biuro: { net: '10.10.10.0', prefix: 24 },
+ // Druga sieć, za Routerem – potrzebna w scenach o routingu (PYT-056a).
+ serwery: { net: '10.10.20.0', prefix: 24 }
 };
 
 export const DEVICES: readonly ModelDevice[] = [
@@ -44,7 +54,9 @@ export const DEVICES: readonly ModelDevice[] = [
  { id: 'laptop', kind: 'laptop', zone: 'biuro', host: 105, mac: 'AA:BB:CC:00:01:05' },
  { id: 'nas', kind: 'nas', zone: 'biuro', host: 30, mac: 'AA:BB:CC:00:00:30' },
  { id: 'printer', kind: 'printer', zone: 'biuro', host: 130 },
- { id: 'camera', kind: 'camera', zone: 'biuro', host: 200 }
+ { id: 'camera', kind: 'camera', zone: 'biuro', host: 200 },
+ { id: 'switch2', kind: 'switch', zone: 'serwery' },
+ { id: 'www', kind: 'server', zone: 'serwery', host: 50, mac: 'AA:BB:CC:00:20:50' }
 ];
 
 /** Fizyczne kable: gwiazda wokół Switcha. */
@@ -53,7 +65,10 @@ export const LINKS: readonly Link[] = [
  { a: 'router', b: 'switch', portB: 'Fa0/3' },
  { a: 'nas', b: 'switch', portB: 'Fa0/2' },
  { a: 'printer', b: 'switch' },
- { a: 'camera', b: 'switch' }
+ { a: 'camera', b: 'switch' },
+ // Druga sieć: Router ma w niej drugi port, za nim osobny Switch i Serwer WWW.
+ { a: 'router', b: 'switch2' },
+ { a: 'www', b: 'switch2' }
 ];
 
 /** Adres spoza firmy używany w przykładach „inna sieć” (publiczny serwer DNS). */

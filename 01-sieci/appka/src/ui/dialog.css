@@ -1,0 +1,350 @@
+/* Styl „rozmowa” (prefiks `dl-`) i scena „list za płot” (prefiks `ps-`).
+   Wygląd okna rozmowy wzorowany na Laboratorium VLAN (laby-vlan/vlan.html). */
+
+/* --- Okno rozmowy: obok sceny, w kolumnie tekstu kroku --- */
+.dl {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ padding: 14px;
+ background: #fff;
+ border: 1px solid var(--sim-border);
+ border-radius: 12px;
+}
+.dl-scene {
+ font-size: 0.7rem;
+ font-weight: 700;
+ letter-spacing: 0.08em;
+ text-transform: uppercase;
+ color: var(--sim-muted);
+}
+.dl-who {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ font-size: 0.8rem;
+ color: var(--sim-muted);
+}
+.dl-who b {
+ display: block;
+ font-size: 0.95rem;
+ color: #2d3436;
+}
+.dl-avatar {
+ display: grid;
+ place-items: center;
+ flex-shrink: 0;
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ font-size: 1.1rem;
+ font-weight: 700;
+ color: #2d3436;
+}
+.dl-say {
+ margin: 0;
+ font-size: 1.25rem;
+ line-height: 1.35;
+ font-weight: 600;
+}
+/* Krok-akcja: nikt nie mówi, uczeń patrzy na schemat. */
+.dl-say--action {
+ font-size: 1.05rem;
+ font-weight: 400;
+ font-style: italic;
+ color: var(--sim-muted);
+}
+.dl-dots {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 4px;
+ margin-top: auto;
+}
+.dl-dots i {
+ width: 8px;
+ height: 8px;
+ border-radius: 50%;
+ background: var(--sim-border);
+}
+.dl-dots i.on {
+ background: var(--sim-blue);
+}
+.dl-dots span {
+ margin-left: 6px;
+ font-size: 0.75rem;
+ color: var(--sim-muted);
+}
+.dl-actions {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8px;
+}
+.dl-actions .sim-btn--primary {
+ flex: 1;
+ justify-content: center;
+}
+.dl-quiz {
+ display: grid;
+ gap: 6px;
+}
+.dl-quiz button {
+ padding: 10px 12px;
+ border: 2px solid #b2bec3;
+ border-radius: 8px;
+ background: #fff;
+ color: #2d3436;
+ font: inherit;
+ font-weight: 600;
+ text-align: left;
+ cursor: pointer;
+}
+.dl-quiz button:focus-visible {
+ outline: 3px solid var(--sim-blue);
+ outline-offset: 2px;
+}
+.dl-quiz .dl-right {
+ border-color: var(--sim-green);
+ background: #e8f8f5;
+}
+.dl-quiz .dl-wrong {
+ border-color: var(--sim-red);
+ background: #fdecea;
+}
+.dl-feedback {
+ margin: 0;
+ padding: 8px 10px;
+ border-left: 3px solid var(--sim-red);
+ border-radius: 6px;
+ background: #fdecea;
+ font-size: 0.9rem;
+}
+.dl-feedback--ok {
+ border-color: var(--sim-green);
+ background: #e8f8f5;
+}
+
+/* --- Scena „list za płot” --- */
+.ps-board {
+ padding: 8px;
+}
+.ps {
+ width: 100%;
+ height: 100%;
+}
+/* Jedna kolumna (telefon): scena ma wysokość rysunku, bez pustego pola nad i pod nim. */
+@media (max-width: 900px) {
+ .ps-board {
+  height: auto;
+ }
+}
+.ps-plot {
+ transition: opacity 0.5s;
+}
+.ps-plot--near {
+ fill: #e3f2fd;
+}
+.ps-plot--far {
+ fill: #e8f8f5;
+}
+.ps-fence {
+ stroke: #2d3436;
+ stroke-width: 3;
+ stroke-dasharray: 3 7;
+ stroke-linecap: round;
+}
+.ps-fence-label,
+.ps-gate-label {
+ font-size: 12px;
+ font-weight: 600;
+ fill: var(--sim-muted);
+}
+.ps-cable {
+ stroke: #b2bec3;
+ stroke-width: 2;
+ transition: opacity 0.5s;
+}
+.ps-card {
+ transition: opacity 0.5s;
+}
+.ps-card rect {
+ fill: #fff;
+ stroke: #b2bec3;
+ stroke-width: 2;
+ transition:
+  stroke 0.4s,
+  fill 0.4s;
+}
+.ps-card text {
+ font-size: 14px;
+ font-weight: 700;
+ fill: #2d3436;
+}
+.ps-card .ps-gate-label {
+ font-size: 12px;
+ font-weight: 600;
+ fill: var(--sim-muted);
+}
+.ps-card--off rect {
+ fill: #f1f2f6;
+ stroke: #dfe6e9;
+}
+.ps-card--off text {
+ fill: #b2bec3;
+}
+.ps-card--lit rect {
+ stroke: #f0b429;
+ stroke-width: 4;
+ fill: #fff8e1;
+}
+.ps-card--blink rect {
+ stroke: var(--sim-red);
+ animation: ps-blink 1s ease-in-out infinite;
+}
+.ps-blocked path {
+ fill: none;
+ stroke: var(--sim-red);
+ stroke-width: 2;
+ stroke-dasharray: 6 5;
+}
+.ps-blocked .ps-blocked-far {
+ stroke: #b2bec3;
+}
+/* Cel za płotem: miga na niebiesko – „tam chcemy się dostać”. */
+.ps-card--target rect {
+ stroke: var(--sim-blue);
+ stroke-width: 3;
+ fill: #e3f2fd;
+ animation: ps-blink 1s ease-in-out infinite;
+}
+.ps-blocked text {
+ font-size: 22px;
+ font-weight: 700;
+ fill: var(--sim-red);
+}
+.ps-parcel {
+ transition-property: transform;
+ transition-timing-function: ease-in-out;
+}
+.ps-letter rect {
+ fill: #fff;
+ stroke: #2d3436;
+ stroke-width: 1.5;
+}
+.ps-envelope rect {
+ fill: #ffeaa7;
+ stroke: #b7791f;
+ stroke-width: 2;
+}
+.ps-envelope path {
+ fill: none;
+ stroke: #b7791f;
+ stroke-width: 2;
+}
+.ps-parcel-text {
+ font-size: 13px;
+ font-weight: 700;
+ fill: #2d3436;
+}
+/* Podpis nad przesyłką i adres na karcie: drobne, żeby nie konkurowały z napisem głównym. */
+.ps-caption {
+ font-size: 11px;
+ font-weight: 600;
+ letter-spacing: 0.04em;
+ text-transform: uppercase;
+ fill: var(--sim-muted);
+ /* Biała obwódka: podpis przy bramie stoi na linii płotu i musi zostać czytelny. */
+ paint-order: stroke;
+ stroke: #fff;
+ stroke-width: 5px;
+}
+.ps-card .ps-address {
+ font-family: monospace;
+ font-size: 11px;
+ font-weight: 400;
+ fill: var(--sim-blue);
+}
+.ps-compare--emphasis .ps-parcel-text {
+ fill: var(--sim-blue);
+}
+/* ARP: pytanie do wszystkich (Broadcast) i odpowiedź do jednego (Unicast) – kolory z tokens.ts. */
+.ps-arp line {
+ stroke-width: 4;
+ stroke-linecap: round;
+ stroke-dasharray: 320;
+ animation: ps-draw 0.9s ease-out both;
+}
+.ps-arp-ask {
+ stroke: var(--c-broadcast);
+}
+.ps-arp-reply {
+ stroke: var(--c-unicast);
+ animation-delay: 1.1s !important;
+}
+.ps-arp text {
+ font-size: 13px;
+ font-weight: 700;
+ animation: ps-appear 0.3s ease-out both;
+}
+.ps-arp polygon {
+ animation: ps-appear 0.2s ease-out both;
+}
+.ps-arp-ask-head {
+ fill: var(--c-broadcast);
+ animation-delay: 0.8s !important;
+}
+.ps-arp-reply-head {
+ fill: var(--c-unicast);
+ animation-delay: 1.9s !important;
+}
+.ps-arp-ask-label {
+ fill: var(--c-broadcast);
+}
+.ps-arp-reply-label {
+ fill: var(--c-unicast);
+ animation-delay: 1.1s !important;
+}
+.ps-pulse .ps-parcel-text {
+ fill: var(--sim-red);
+ animation: ps-pulse 0.9s ease-in-out infinite;
+}
+@keyframes ps-blink {
+ 50% {
+  stroke-opacity: 0.25;
+ }
+}
+@keyframes ps-draw {
+ from {
+  stroke-dashoffset: 320;
+ }
+ to {
+  stroke-dashoffset: 0;
+ }
+}
+@keyframes ps-appear {
+ from {
+  opacity: 0;
+ }
+}
+@keyframes ps-pulse {
+ 50% {
+  opacity: 0.35;
+ }
+}
+@media (prefers-reduced-motion: reduce) {
+ .ps-card--blink rect,
+ .ps-card--target rect,
+ .ps-pulse .ps-parcel-text,
+ .ps-arp line,
+ .ps-arp polygon,
+ .ps-arp text {
+  animation: none;
+ }
+ .ps-parcel,
+ .ps-plot,
+ .ps-cable,
+ .ps-card,
+ .ps-card rect {
+  transition: none;
+ }
+}

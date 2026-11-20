@@ -77,5 +77,7 @@ export interface StepNav {
  next: () => void;
  prev: () => void;
  reset: () => void;
+ /** Powrót na początek całego kursu (pierwsze ćwiczenie, pierwszy krok). */
+ restart: () => void;
  setStep: (step: number) => void;
 }

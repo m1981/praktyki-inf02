@@ -48,6 +48,14 @@ function measure(kind) {
    isLastStep: Boolean(q('.sr-bridge'))
   };
  }
+ if (kind === 'rozmowa') {
+  // Scena i całe okno rozmowy (kwestia, zagadka, przyciski) widoczne bez przewijania.
+  return {
+   ...base,
+   top: top(q('.sim-stage--steps')),
+   lowest: Math.max(bottom(q('.sim-stage--steps > :first-child')), bottom(q('.dl')))
+  };
+ }
  // Tryb swobodny: diagram i lekcja (albo podpowiedź) widoczne bez przewijania.
  return {
   ...base,
@@ -105,5 +113,5 @@ if (failures.length > 0) {
  process.exit(1);
 }
 console.log(
- `✅ e2e: ${rows.length} pomiarów (ARP, seria M1–M4, Tryb swobodny) – wszystko mieści się na ekranie`
+ `✅ e2e: ${rows.length} pomiarów (ARP, seria M1–M4, Tryb swobodny, routing) – wszystko mieści się na ekranie`
 );

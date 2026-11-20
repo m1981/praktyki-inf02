@@ -8,7 +8,22 @@ import type { CourseShape } from './nav';
 
 export type { ControlSpec, PanelSpec, ViewSpec };
 
+/** Postać w rozmowie (styl „rozmowa”). */
+export interface Speaker {
+ name: string;
+ /** Kim jest, np. „administratorka sieci”. */
+ role: string;
+ /** Znak w kółku obok imienia. */
+ avatar: string;
+ /** Kolor kółka. */
+ color: string;
+}
+
 export interface Step {
+ /** Styl „rozmowa”: kto mówi (klucz z `Exercise.speakers`). */
+ speaker?: string;
+ /** Styl „rozmowa”: krok-akcja – nikt nie mówi, tekst opisuje ruch na schemacie. */
+ action?: boolean;
  /** Krok wstępny: ma etykietę „Start” i nie liczy się do numeracji kroków. */
  intro?: boolean;
  /** Warstwa modelu, której dotyczy krok, np. „L2 (Łącze danych) – Broadcast”. */
@@ -35,6 +50,13 @@ export interface LegendItem {
 export interface Exercise {
  code: string;
  title: string;
+ /**
+  * Jak pokazać krok obok sceny: `lesson` (domyślnie) – tekst kroku z paskiem „Zmiana”;
+  * `dialog` – rozmowa postaci, jedna krótka kwestia na krok (jak Laboratorium VLAN).
+  */
+ style?: 'lesson' | 'dialog';
+ /** Postacie rozmowy. */
+ speakers?: Record<string, Speaker>;
  /** Jedno pytanie, na które ćwiczenie odpowiada. */
  question?: string;
  legend?: LegendItem[];

@@ -1,6 +1,15 @@
 import { memo } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { Cctv, HardDrive, Laptop, Network, Printer, Router, type LucideIcon } from 'lucide-react';
+import {
+ Cctv,
+ HardDrive,
+ Laptop,
+ Network,
+ Printer,
+ Router,
+ Server,
+ type LucideIcon
+} from 'lucide-react';
 import type { DeviceKind, DeviceRole, Side } from './types';
 import type { DeviceNodeType } from './graph';
 
@@ -10,7 +19,8 @@ const ICONS: Record<DeviceKind, LucideIcon> = {
  router: Router,
  nas: HardDrive,
  printer: Printer,
- camera: Cctv
+ camera: Cctv,
+ server: Server
 };
 
 const ROLE_TEXT: Record<DeviceRole, string> = {

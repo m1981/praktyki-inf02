@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { Course } from '../engine/types';
-import { countWords, MAX_STEP_WORDS } from '../engine/words';
+import { countWords, MAX_LINE_WORDS, MAX_STEP_WORDS } from '../engine/words';
 import { GLOSSARY } from '../model/glossary';
 import { DEVICES } from '../model/siec';
 import { MAX_PREFIX, MIN_PREFIX, TARGETS } from '../net/mask';
@@ -11,13 +11,19 @@ import { assertFlowsOnCables } from '../ui/diagram/graph';
 import { ARP, SCENARIO } from './arp';
 import { MASKA } from './maska';
 import { FREE_MODE, PRESETS } from './maska-swobodny';
+import { ROUTING } from './routing';
 
-const COURSES: Course[] = [ARP, MASKA];
+const COURSES: Course[] = [ARP, MASKA, ROUTING];
 
 const steps = COURSES.flatMap((course) =>
  course.exercises.flatMap((ex) =>
   ex.steps.map((step, i) => ({ name: `${ex.code} krok ${i + 1}`, ex, step }))
  )
+);
+
+/** Kwestie postaci w scenach „rozmowa” (mowa potoczna). */
+const spoken = new Set(
+ steps.filter(({ ex }) => ex.style === 'dialog').map(({ step }) => step.text)
 );
 
 /** Wszystkie zdania, które czyta uczeń: [skąd, tekst]. */
@@ -39,6 +45,14 @@ const sentences: [string, string][] = [
    [`ARP krok ${i + 1} pytanie ${n + 1}`, q.question],
    [`ARP krok ${i + 1} odpowiedź ${n + 1}`, q.answer]
   ])
+ ),
+ ...steps.flatMap(({ name, step }): [string, string][] =>
+  step.control.type === 'quiz'
+   ? step.control.options.flatMap((o, n): [string, string][] => [
+      [`${name} odpowiedź ${n + 1}`, o.text],
+      [`${name} reakcja ${n + 1}`, o.feedback]
+     ])
+   : []
  ),
  ...PRESETS.flatMap((p): [string, string][] => [
   [`przykład ${p.id} tytuł`, p.title],
@@ -111,12 +125,47 @@ describe('nazwy urządzeń tylko ze słownika', () => {
  });
 
  it.each(sentences)('%s', (_where, text) => {
-  const wrongCase = (text.match(anyCase) ?? []).filter((word) => !proper.test(word));
+  // Kwestie postaci to mowa potoczna („mój laptop”, „z serwera”) – wielkiej litery tam nie wymagamy.
+  // Zakaz innych nazw na te same urządzenia obowiązuje wszędzie.
+  const wrongCase = spoken.has(text)
+   ? []
+   : (text.match(anyCase) ?? []).filter((word) => !proper.test(word));
   expect(wrongCase).toEqual([]);
   expect(text.match(OTHER_NAMES) ?? []).toEqual([]);
   // „NAS” występuje tylko jako część nazwy „Serwer NAS”.
   const nasAlone = text.match(/(?<!Serwer\p{L}* )(?<![\p{L}])NAS(?![\p{L}])/gu) ?? [];
   expect(nasAlone).toEqual([]);
+ });
+});
+
+describe('sceny w stylu „rozmowa”', () => {
+ const lines = steps.filter(({ ex }) => ex.style === 'dialog');
+
+ it('test widzi kwestie', () => {
+  expect(lines.length).toBeGreaterThan(10);
+ });
+
+ it.each(lines.map(({ name, step }) => [name, step.text]))(
+  `%s – kwestia ma najwyżej ${MAX_LINE_WORDS} słów`,
+  (_name, text) => {
+   expect(countWords(text)).toBeLessThanOrEqual(MAX_LINE_WORDS);
+  }
+ );
+
+ it('mówi postać ze sceny albo jest to krok-akcja', () => {
+  for (const { ex, step } of lines) {
+   if (step.action) expect(step.speaker).toBeUndefined();
+   else expect(ex.speakers?.[step.speaker ?? '']).toBeDefined();
+  }
+ });
+
+ it('zagadka ma dokładnie jedną dobrą odpowiedź i reakcję na każdą', () => {
+  const quizzes = lines.flatMap(({ step }) => (step.control.type === 'quiz' ? [step.control] : []));
+  expect(quizzes.length).toBeGreaterThan(0);
+  for (const quiz of quizzes) {
+   expect(quiz.options.filter((o) => o.correct)).toHaveLength(1);
+   for (const o of quiz.options) expect(o.feedback.length).toBeGreaterThan(0);
+  }
  });
 });
 

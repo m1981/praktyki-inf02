@@ -6,6 +6,7 @@
 import type { ComponentType } from 'react';
 import { NextControl, type NextSpec } from '../ui/controls/NextControl';
 import { StepperControl, type StepperSpec } from '../ui/controls/StepperControl';
+import { QuizControl, TalkControl, type QuizSpec, type TalkSpec } from '../ui/controls/TalkControl';
 import { ToggleControl, type ToggleSpec } from '../ui/controls/ToggleControl';
 import { FramePanel, type FrameSpec } from '../ui/panels/FramePanel';
 import { QuestionsPanel, type QuestionsSpec } from '../ui/panels/QuestionsPanel';
@@ -13,11 +14,12 @@ import { TablesPanel, type TablesSpec } from '../ui/panels/TablesPanel';
 import { CompareView, type CompareSpec } from '../ui/views/CompareView';
 import { DiagramView, type DiagramSpec } from '../ui/views/DiagramView';
 import { FenceView, type FenceSpec } from '../ui/views/FenceView';
+import { PostView, type PostSpec } from '../ui/views/PostView';
 import type { StepNav } from './nav';
 
-export type ViewSpec = DiagramSpec | FenceSpec | CompareSpec;
+export type ViewSpec = DiagramSpec | FenceSpec | CompareSpec | PostSpec;
 export type PanelSpec = FrameSpec | TablesSpec | QuestionsSpec;
-export type ControlSpec = NextSpec | ToggleSpec | StepperSpec;
+export type ControlSpec = NextSpec | ToggleSpec | StepperSpec | TalkSpec | QuizSpec;
 
 /** Rejestr: dla każdego `type` z unii opisów – komponent, który przyjmuje dokładnie ten opis. */
 type Registry<Spec extends { type: string }, Extra = object> = {
@@ -27,7 +29,8 @@ type Registry<Spec extends { type: string }, Extra = object> = {
 const VIEWS: Registry<ViewSpec, { runId: number }> = {
  diagram: DiagramView,
  fence: FenceView,
- compare: CompareView
+ compare: CompareView,
+ post: PostView
 };
 
 const PANELS: Registry<PanelSpec> = {
@@ -39,7 +42,9 @@ const PANELS: Registry<PanelSpec> = {
 const CONTROLS: Registry<ControlSpec, { nav: StepNav }> = {
  next: NextControl,
  toggle: ToggleControl,
- stepper: StepperControl
+ stepper: StepperControl,
+ talk: TalkControl,
+ quiz: QuizControl
 };
 
 // Rzutowanie w jednym miejscu: typ `Registry` gwarantuje, że pod `spec.type` leży komponent dla

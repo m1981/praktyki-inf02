@@ -75,6 +75,9 @@ zob. PYT-004).
 | PYT-065 | do-zbadania | odłożone         | Nawiązanie do schematów sieci z arkuszy 2025–2026                 |
 | PYT-066 | decyzja     | zamknięte (a)    | Technologia sceny „List za płot”                                  |
 | PYT-067 | decyzja     | zamknięte (a)    | Commit i push wpisów PYT-059–067                                  |
+| PYT-068 | decyzja     | zamknięte (a)    | Ocena sceny 1 „List za płot” i start sceny 2                      |
+| PYT-069 | decyzja     | zamknięte (b)    | Commit sceny 1                                                    |
+| PYT-070 | decyzja     | otwarte          | Linki do strony o routingu z teorii i z serii maski               |
 
 ## Pytania
 
@@ -894,3 +897,44 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** zostają na dysku.
 - **Odpowiedź (2026-11-19):** „66a 67a” → (a)
+- **Wykonanie:** `02fa9d3`.
+
+### PYT-068 · decyzja · zamknięte
+
+- **Kontekst:** scena 1 „List za płot” działa lokalnie jako `01-sieci/symulator-routing.html`
+  (16 kroków, styl „rozmowa” w silniku, PYT-066a). Scena 2 „To samo w sieci” nie jest jeszcze
+  zrobiona, więc przycisk „Zobacz to samo w sieci ▶” na końcu sceny 1 jest nieaktywny. Strona nie
+  jest podlinkowana z teorii.
+- **Opcje:** (a) wygląd i rytm są dobre – robię scenę 2 w tym samym stylu; (b) poprawki do sceny 1
+  przed sceną 2 – lista „krok, co zmienić”; (c) zmiana kierunku.
+- **Rekomendacja:** (a) albo (b) po obejrzeniu – to pierwszy ekran w nowym stylu, więc warto go
+  poprawić, zanim powstanie drugi.
+- **Skutek braku odpowiedzi:** nie zaczynam sceny 2.
+- **Poprawka operatora (2026-11-20):** „czy mozesz jakos w tym kroku zazanczy ze druga czaesc jest
+  niedostepna np szara linia i zrobic miganie serwvera WWW ze do niego chcemy sie dostac?” → krok 2:
+  szara przerywana linia za płotem, Serwer WWW miga na niebiesko.
+- **Odpowiedź (2026-11-20):** „super, 68a 69b” → (a)
+- **Wykonanie:** scena 2 „To samo w sieci” (13 kroków) w tym samym stylu; ostatni przycisk wraca do
+  sceny 1.
+
+### PYT-069 · decyzja · zamknięte
+
+- **Kontekst:** scena 1 jest na dysku, bez commita: nowa strona `symulator-routing.html`, styl
+  „rozmowa” w silniku, druga sieć i Serwer WWW w modelu, testy. Strony ARP i maski wyglądają tak samo
+  jak przed zmianą (42 stany, porównanie ze wzorcem `4b5ce08`).
+- **Opcje:** (a) commit na `main` i push teraz – strona będzie dostępna pod adresem, ale bez linku
+  z teorii; (b) commit razem ze sceną 2; (c) commit bez push.
+- **Rekomendacja:** (b) – niedokończona strona z nieaktywnym przyciskiem nie trafia do uczniów.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-20):** „super, 68a 69b” → (b): jeden commit z obiema scenami, na `main`,
+  z pushem.
+
+### PYT-070 · decyzja · otwarte
+
+- **Kontekst:** `symulator-routing.html` jest w repozytorium, ale nic do niej nie prowadzi. Seria
+  maski kończy się zapowiedzią „scenariusz 2 – w przygotowaniu”, a teoria (Filar 1, krok „Routing”)
+  nie ma przycisku do aplikacji. Zmiana treści dla ucznia i plików poza `appka` wymaga zgody.
+- **Opcje:** (a) przycisk w kroku „Routing” teorii (`01-sieci/index.html`) i zmiana zapowiedzi na
+  końcu M4 na odsyłacz do nowej strony; (b) tylko przycisk w teorii; (c) jeszcze nie linkować.
+- **Rekomendacja:** (a) po Twoim obejrzeniu obu scen.
+- **Skutek braku odpowiedzi:** strona jest dostępna tylko dla kogoś, kto zna adres.

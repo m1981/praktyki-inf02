@@ -104,4 +104,29 @@ export async function walk(page, visit, { siteDir = SITE_DIR, settleMs = 400 } =
  });
  await wait(settleMs);
  await visit({ id: 'swobodny-maska30', kind: 'swobodny-sterowanie', page });
+
+ // --- Routing: sceny „rozmowa”, strzałką → aż do ostatniej kropki ostatniej sceny ---
+ // Strona jest nowsza niż wzorce „przed” ze starych commitów, więc tam jej po prostu nie ma.
+ if (!existsSync(siteDir + 'symulator-routing.html')) return;
+ await goto(page, siteDir, 'symulator-routing.html');
+ for (let guard = 0; guard < 200; guard++) {
+  await wait(settleMs);
+  const where = await page.evaluate(() => {
+   const dots = [...document.querySelectorAll('.dl-dots i')];
+   const tabs = [...document.querySelectorAll('.sr-tab')];
+   const step = dots.filter((d) => d.classList.contains('on')).length;
+   return {
+    scene: tabs.findIndex((t) => t.getAttribute('aria-current') === 'step') + 1 || 1,
+    step,
+    // Ostatni krok ostatniej sceny: przycisk „dalej” wraca tam na początek, więc nie gaśnie.
+    isEnd:
+     step === dots.length &&
+     (tabs.length === 0 || tabs.at(-1).getAttribute('aria-current') === 'step')
+   };
+  });
+  const id = `routing-${where.scene}-${String(where.step).padStart(2, '0')}`;
+  await visit({ id, kind: 'rozmowa', page });
+  if (where.isEnd) break;
+  await page.keyboard.press('ArrowRight');
+ }
 }

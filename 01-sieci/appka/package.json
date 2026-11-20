@@ -8,7 +8,7 @@
   "dev": "vite",
   "test": "vitest run",
   "typecheck": "tsc --noEmit",
-  "build": "tsc --noEmit && vitest run && vite build --mode arp && vite build --mode maska && node e2e/test.mjs",
+  "build": "tsc --noEmit && vitest run && vite build --mode arp && vite build --mode maska && vite build --mode routing && node e2e/test.mjs",
   "test:e2e": "node e2e/test.mjs",
   "e2e:shots": "node e2e/shots.mjs",
   "e2e:compare": "node e2e/compare.mjs",

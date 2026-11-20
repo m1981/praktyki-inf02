@@ -19,7 +19,8 @@ export const GLOSSARY: Record<DeviceKind, Name> = {
  router: { nom: 'Router (Brama)', gen: 'Routera', short: 'Router' },
  nas: { nom: 'Serwer NAS', gen: 'Serwera NAS', short: 'NAS' },
  printer: { nom: 'Drukarka', gen: 'Drukarki' },
- camera: { nom: 'Kamera', gen: 'Kamery' }
+ camera: { nom: 'Kamera', gen: 'Kamery' },
+ server: { nom: 'Serwer WWW', gen: 'Serwera WWW' }
 };
 
 export const nameOf = (id: DeviceId): string => GLOSSARY[device(id).kind].nom;

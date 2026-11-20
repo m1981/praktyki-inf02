@@ -37,6 +37,19 @@ function checkoutRef(gitRef) {
   });
   writeFileSync(join(root, file), content);
  }
+ // Strony dodane później – starsze commity ich nie mają i to nie jest błąd.
+ for (const file of ['01-sieci/symulator-routing.html']) {
+  try {
+   const content = execFileSync('git', ['show', `${gitRef}:${file}`], {
+    cwd: resolve(SITE_DIR, '..'),
+    maxBuffer: 64 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'ignore']
+   });
+   writeFileSync(join(root, file), content);
+  } catch {
+   // brak strony w tym commicie
+  }
+ }
  return join(root, '01-sieci') + '/';
 }
 

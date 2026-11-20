@@ -1,9 +1,10 @@
 # Symulatory sieciowe Filaru 1 (źródła)
 
-| Strona (plik generowany – **nie edytuj ręcznie**)          | Wejście strony        | Treść                   | Wejście HTML |
-| ---------------------------------------------------------- | --------------------- | ----------------------- | ------------ |
-| [`01-sieci/symulator-arp.html`](../symulator-arp.html)     | `src/pages/arp.tsx`   | `src/content/arp.ts`    | `arp.html`   |
-| [`01-sieci/symulator-maska.html`](../symulator-maska.html) | `src/pages/maska.tsx` | `src/content/maska*.ts` | `maska.html` |
+| Strona (plik generowany – **nie edytuj ręcznie**)              | Wejście strony          | Treść                    | Wejście HTML   |
+| -------------------------------------------------------------- | ----------------------- | ------------------------ | -------------- |
+| [`01-sieci/symulator-arp.html`](../symulator-arp.html)         | `src/pages/arp.tsx`     | `src/content/arp.ts`     | `arp.html`     |
+| [`01-sieci/symulator-maska.html`](../symulator-maska.html)     | `src/pages/maska.tsx`   | `src/content/maska*.ts`  | `maska.html`   |
+| [`01-sieci/symulator-routing.html`](../symulator-routing.html) | `src/pages/routing.tsx` | `src/content/routing.ts` | `routing.html` |
 
 Plan kolejnych symulatorów: [`plan.md`](plan.md).
 
@@ -69,20 +70,29 @@ szablonie ekranu (stan po kroku 5 migracji).
 | `src/engine/check.ts`           | kontrola spójności kursu w `pnpm dev` (ramki tylko po kablach)                |
 | `src/ui/LessonShell.tsx`        | **jedyne miejsce układu ekranu**: zakładki, pytanie, scena, tekst, sterowanie |
 | `src/ui/tokens.css`, `.ts`      | wymiary układu (CSS) i kolory ramek (TS) – jedyne miejsce, gdzie są wpisane   |
-| `src/ui/views/`                 | sceny: diagram, oś adresów z płotami, tabela porównania                       |
+| `src/ui/views/`                 | sceny: diagram, oś adresów z płotami, tabela porównania, „list za płot”       |
+| `src/ui/DialogStep.tsx`         | krok w stylu „rozmowa”: postać, jedna kwestia, kropki postępu                 |
 | `src/ui/panels/`                | panele: ramka, tablice ARP/MAC, pytania; decyzja, ulica adresów, bity         |
-| `src/ui/controls/`              | elementy sterujące: przycisk „dalej”, przełącznik, kroki scenariusza          |
+| `src/ui/controls/`              | elementy sterujące: „dalej”, przełącznik, kroki scenariusza, rozmowa, zagadka |
 | `src/ui/diagram/`               | diagram React Flow: karta urządzenia, kabel z animowaną ramką                 |
 | `src/ui/free/`                  | Tryb swobodny maski: ekran i stan ustawień (treść dostaje z `content/`)       |
 | `src/ui/text.tsx`               | wypełnianie pól `{nazwa}` i pogrubienia `**…**` w tekstach z `content/`       |
 | `src/content/arp.ts`            | Symulator ARP: układ diagramu, ramki i kroki scenariusza                      |
 | `src/content/maska.ts`          | seria M1–M4: teksty i sceny kroków                                            |
+| `src/content/routing.ts`        | routing „List za płot”: kwestie z `scenariusz-routing.md` i stany sceny       |
 | `src/content/maska-swobodny.ts` | Tryb swobodny: gotowe przykłady z lekcjami i zdania paneli                    |
 | `src/content/maska-uklad.ts`    | układ diagramu maski: pozycje kart, boki kabli, napisy na kartach             |
 | `src/content/content.test.ts`   | testy treści: ≤ 40 słów, ramki po kablach, nazwy tylko ze słownika            |
 | `src/warstwy.test.ts`           | test: zależności między warstwami idą tylko w dół                             |
 | `src/literaly.test.ts`          | test: adresy IP i MAC są wpisane tylko w `model/`                             |
 | `src/niezmiennosc.test.ts`      | strażnik refaktoru: dane i teksty zgodne ze wzorcem sprzed etapu B            |
+
+## Sceny w stylu „rozmowa”
+
+Ćwiczenie z `style: 'dialog'` pokazuje obok sceny rozmowę postaci zamiast tekstu kroku (wzór:
+Laboratorium VLAN). Każdy krok to jedna kwestia (najwyżej 12 słów – test) albo krok-akcja, w którym
+nikt nie mówi, a na schemacie coś się dzieje. Kwestie najpierw trafiają do scenariusza
+(`scenariusz-routing.md`) i dopiero po akceptacji do `src/content/`.
 
 ## Redakcja tekstów
 

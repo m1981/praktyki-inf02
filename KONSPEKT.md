@@ -66,7 +66,7 @@ _title: Laboratorium podsieci – dziel sieć klikając_
 _title: Laboratorium VLAN – po co nam VLAN-y?_
 
 - **H1** Laboratorium VLAN: po co nam VLAN-y?
-  - **H2** 
+  - **H2**
 
 ## [`01-sieci/symulator-arp.html`](01-sieci/symulator-arp.html)
 
@@ -79,6 +79,12 @@ _title: Symulator ARP i Unicast_
 _title: Wizualizacja maski podsieci_
 
 - **H1** 🚧 Maska podsieci: gdzie stoją płoty?
+
+## [`01-sieci/symulator-routing.html`](01-sieci/symulator-routing.html)
+
+_title: Routing: list za płot_
+
+- **H1** ✉️ Routing: list za płot
 
 ## [`02-windows/index.html`](02-windows/index.html)
 
