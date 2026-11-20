@@ -9226,7 +9226,7 @@ exports[`refaktor nie zmienia danych ani tekstów > seria M1–M4: ćwiczenia z 
     {
       "code": "M4",
       "controlKind": "next",
-      "nextQuestion": "Sieci naprawdę rozdziela Router. Co Router zmienia w ramce, gdy przekazuje ją dalej? (scenariusz 2 – w przygotowaniu)",
+      "nextQuestion": "Sieci naprawdę rozdziela Router. Co Router zmienia w ramce, gdy przekazuje ją dalej?",
       "question": "Maska /25. Czy Drukarka .130 dostanie ARP Request od Laptopa?",
       "steps": [
         {

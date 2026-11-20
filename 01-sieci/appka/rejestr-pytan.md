@@ -77,7 +77,8 @@ zob. PYT-004).
 | PYT-067 | decyzja     | zamknięte (a)    | Commit i push wpisów PYT-059–067                                  |
 | PYT-068 | decyzja     | zamknięte (a)    | Ocena sceny 1 „List za płot” i start sceny 2                      |
 | PYT-069 | decyzja     | zamknięte (b)    | Commit sceny 1                                                    |
-| PYT-070 | decyzja     | otwarte          | Linki do strony o routingu z teorii i z serii maski               |
+| PYT-070 | decyzja     | zamknięte (a)    | Linki do strony o routingu z teorii i z serii maski               |
+| PYT-071 | decyzja     | zamknięte (a)    | Commit i push linków do strony o routingu                         |
 
 ## Pytania
 
@@ -929,7 +930,7 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Odpowiedź (2026-11-20):** „super, 68a 69b” → (b): jeden commit z obiema scenami, na `main`,
   z pushem.
 
-### PYT-070 · decyzja · otwarte
+### PYT-070 · decyzja · zamknięte
 
 - **Kontekst:** `symulator-routing.html` jest w repozytorium, ale nic do niej nie prowadzi. Seria
   maski kończy się zapowiedzią „scenariusz 2 – w przygotowaniu”, a teoria (Filar 1, krok „Routing”)
@@ -938,3 +939,18 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   końcu M4 na odsyłacz do nowej strony; (b) tylko przycisk w teorii; (c) jeszcze nie linkować.
 - **Rekomendacja:** (a) po Twoim obejrzeniu obu scen.
 - **Skutek braku odpowiedzi:** strona jest dostępna tylko dla kogoś, kto zna adres.
+- **Odpowiedź (2026-11-20):** „68 dziala cudnie 70a” → (a)
+- **Wykonanie:** przycisk „✉️ List za płot: co robi Router?” w kroku 7 teorii
+  (`01-sieci/index.html`); na końcu M4 zniknął dopisek „(scenariusz 2 – w przygotowaniu)”, a przy
+  pytaniu jest odsyłacz „Zobacz: List za płot ▶”. To pierwsza zatwierdzona zmiana treści po
+  refaktorze, więc wzorzec `niezmiennosc` został odświeżony (zmieniła się w nim ta jedna linia).
+
+### PYT-071 · decyzja · zamknięte
+
+- **Kontekst:** linki z PYT-070a są na dysku, bez commita: `01-sieci/index.html`, treść M4,
+  odświeżony wzorzec, zbudowana strona maski.
+- **Opcje:** (a) commit na `main` i push – od tej chwili uczniowie trafiają na stronę o routingu
+  z teorii; (b) commit bez push; (c) zostawić na dysku.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** linki działają tylko na tym komputerze.
+- **Odpowiedź (2026-11-20):** „71a” → (a)

@@ -63,6 +63,8 @@ export interface Exercise {
  steps: Step[];
  /** Pytanie, które ćwiczenie zostawia dla następnego (zasada z plan.md). */
  nextQuestion?: string;
+ /** Odsyłacz przy tym pytaniu – gdy odpowiedź jest na innej stronie. */
+ nextLink?: { href: string; label: string };
 }
 
 export interface FreeMode {

@@ -139,6 +139,12 @@ function LessonStep({ exercise: ex, step, badge, isLastStep, children }: LessonS
    {isLastStep && ex.nextQuestion && (
     <p className="sr-bridge">
      <strong>Na następne ćwiczenie:</strong> {ex.nextQuestion}
+     {ex.nextLink && (
+      <>
+       {' '}
+       <a href={ex.nextLink.href}>{ex.nextLink.label}</a>
+      </>
+     )}
     </p>
    )}
    {children}

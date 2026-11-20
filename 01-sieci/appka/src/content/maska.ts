@@ -240,7 +240,9 @@ export const EXERCISES: Exercise[] = [
    }
   ],
   nextQuestion:
-   'Sieci naprawdę rozdziela Router. Co Router zmienia w ramce, gdy przekazuje ją dalej? (scenariusz 2 – w przygotowaniu)'
+   'Sieci naprawdę rozdziela Router. Co Router zmienia w ramce, gdy przekazuje ją dalej?',
+  // Odpowiedź jest na osobnej stronie o routingu (PYT-070a).
+  nextLink: { href: 'symulator-routing.html', label: 'Zobacz: List za płot ▶' }
  }
 ];
 
