@@ -8,10 +8,13 @@ Pełna, zawsze aktualna mapa stron (wszystkie pliki HTML z nagłówkami h1–h3)
 
 Konspekt generuje skrypt `scripts/konspekt.mjs`. Uruchamia się automatycznie w hooku pre-commit, a ręcznie: `pnpm konspekt`.
 
+Strażnik linków `scripts/linki.mjs` (hook pre-commit, ręcznie: `pnpm linki`) zatrzymuje commit, gdy link prowadzi do nieistniejącego pliku, gdy do strony nie prowadzi żaden link (strona-sierota) albo gdy pozycja w `cwiczenia.js` wskazuje brakujący plik.
+
 - `index.html`, `syllabus.html`, `setup.html`: strona główna, sylabus egzaminu, Dzień 0
 - `01-sieci/` … `06-integracja/`: filary; w każdym `index.html` (teoria) + `labN-*.html` (laboratoria)
 - `egzaminy/`: omówienia arkuszy CKE
 - `common.css`, `menu.js`: wspólne style i nawigacja
+- `cwiczenia.js`: **jedna lista ćwiczeń interaktywnych** – z niej powstaje strona `cwiczenia.html` i stopka „◀ poprzednie · 🎮 wszystkie ćwiczenia · następne ▶” na każdym ćwiczeniu. Nowe ćwiczenie = jedna pozycja na liście.
 
 ## 🎨 Funkcje
 
@@ -33,6 +36,7 @@ Plik `menu.js` automatycznie:
 2. Generuje sticky navbar z linkami do wszystkich filarów
 3. Tworzy breadcrumbs pokazujące aktualną lokalizację
 4. Dostosowuje ścieżki względne (`./` vs `../`)
+5. Na stronach z listy `cwiczenia.js` dokłada stopkę ćwiczeń. Strona z własnym wyglądem (bez `common.css`) wczytuje go jako `<script src="../../menu.js" data-tylko-stopka>` – wtedy dostaje tylko stopkę, bez paska.
 
 ## 🛠️ Jak używać
 

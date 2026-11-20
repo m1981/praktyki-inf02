@@ -88,6 +88,12 @@ zob. PYT-004).
 | PYT-078 | decyzja     | zamknięte (b)    | Commit strony „Arkusz krok po kroku” (etapy 1–2)                  |
 | PYT-079 | decyzja     | zamknięte (→081) | Link do strony „Arkusz krok po kroku” z teorii                    |
 | PYT-080 | decyzja     | zamknięte        | Rysunek z arkusza pod ćwiczeniami etapów 1–2                      |
+| PYT-081 | decyzja     | zamknięte (a)    | Strona „Ćwiczenia interaktywne”: miejsce i wejścia                |
+| PYT-082 | decyzja     | zamknięte (a)    | Układ strony „Ćwiczenia interaktywne”                             |
+| PYT-083 | decyzja     | zamknięte (a)    | Wejście do „Arkusz krok po kroku” i Dekodera                      |
+| PYT-084 | decyzja     | zamknięte (a)    | Porządek w linkach: jedna lista ćwiczeń, stopka, strażnik linków  |
+| PYT-085 | decyzja     | zamknięte (a)    | Strona-sierota „Lab: Windows – Ostatnie Szlify” w `04-sprzet/`    |
+| PYT-086 | decyzja     | zamknięte (b)    | Commit i push strony zbiorczej, stopek i strażnika linków         |
 
 ## Pytania
 
@@ -1064,6 +1070,8 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Skutek braku odpowiedzi:** pracuję na (a); wynik „tymczasowo (PYT-076)”.
 - **Wykonanie (tymczasowo):** `src/content/arkusz.test.ts` – osobny test nazw dla tej strony; stary test
   nazw obejmuje tylko strony ARP, maski i routingu (bez zmian w jego regułach).
+- **Odpowiedź (2026-11-20):** „76 co tam bedzie testowane? 84a 85a”
+- **Rozstrzygnięcie:** pytanie operatora „co tam będzie testowane?” – agent wyjaśnił zakres testu (zakaz „Router/Switch/Laptop/notebook/hub” na tej stronie, „komputer” tylko w kwestiach postaci, nazwy z arkusza dowolną literą w zdaniach). Odpowiedź domyślna (a) zostaje; do potwierdzenia, jeśli operator ma uwagi.
 
 ### PYT-077 · z-domyslna · zamknięte
 
@@ -1121,3 +1129,92 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   (`src/content/arkusz-2025-01-schemat.jpg`, 832×499, 28 KB). Pod sceną w obu zakładkach, z podpisem
   „Tak ten schemat wygląda w arkuszu INF.02 (styczeń 2025, strona 3) – poglądowo.” Rysunek leży pod
   ekranem ćwiczenia (trzeba przewinąć) i nie wchodzi do pomiaru „mieści się na ekranie”.
+
+### PYT-081 · decyzja · zamknięte
+
+- **Kontekst:** po PYT-079 operator chce drugiego punktu wejścia: jednej strony ze wszystkimi
+  ćwiczeniami interaktywnymi. Mapa linków (2026-11-20, strona HTML w katalogu tymczasowym sesji):
+  ćwiczeń z JavaScriptem jest 6, wszystkie w Filarze 1; do każdego prowadzi jeden przycisk
+  w teorii, do „Arkusz krok po kroku” nic. Sieroty: `symulator-arkusz.html`,
+  `egzaminy/egzamin-25-06.html` (Dekoder: czerwiec 2025), `04-sprzet/lab2-diagnostyka.html`
+  (z dwoma zepsutymi linkami).
+- **Opcje:** (a) `cwiczenia.html` w katalogu głównym; wejścia: kafel na stronie głównej, przycisk
+  w teorii Sieci, „Wszystkie ćwiczenia” i „Dalej” na dole każdego ćwiczenia; (b) to samo jako
+  `01-sieci/cwiczenia.html`; (c) jak (a) albo (b) i pozycja w pasku menu (`menu.js`).
+- **Rekomendacja:** (a) – jedna strona na wszystkie ćwiczenia, z miejscem na inne filary.
+- **Skutek braku odpowiedzi:** nie tworzę strony.
+- **Odpowiedź (2026-11-20):** „81a 82a 83a Super robota. Czy masz spojny i naturalny sposob jak rozwiazac te pozostale problemy kompleksowo? "3. Co widać z góry"” → (a)
+- **Wykonanie:** razem z PYT-084a (zob. tam).
+
+### PYT-082 · decyzja · zamknięte
+
+- **Kontekst:** makieta strony zbiorczej: 4 kroki nauki (jak urządzenia się znajdują; maska
+  i podsieci; VLAN i routing; arkusz egzaminacyjny), karty z jednym zdaniem i odsyłaczem do teorii.
+- **Opcje:** (a) jak w makiecie; (b) prosta lista w kolejności teorii; (c) poprawki do makiety.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie tworzę strony.
+- **Odpowiedź (2026-11-20):** „81a 82a 83a Super robota. Czy masz spojny i naturalny sposob jak rozwiazac te pozostale problemy kompleksowo? "3. Co widać z góry"” → (a)
+- **Wykonanie:** razem z PYT-084a (zob. tam).
+
+### PYT-083 · decyzja · zamknięte
+
+- **Kontekst:** PYT-079: link z teorii „może być”. Dekoder (czerwiec 2025) pasuje do ścieżki
+  „arkusz”, ale nic do niego nie prowadzi.
+- **Opcje:** (a) przycisk „📝 Arkusz krok po kroku” w kroku „Routing” teorii (pod „List za płot”)
+  i karta Dekodera na stronie zbiorczej; (b) tylko strona zbiorcza.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** strona i Dekoder dostępne tylko pod adresem.
+- **Odpowiedź (2026-11-20):** „81a 82a 83a Super robota. Czy masz spojny i naturalny sposob jak rozwiazac te pozostale problemy kompleksowo? "3. Co widać z góry"” → (a)
+- **Wykonanie:** razem z PYT-084a (zob. tam).
+
+### PYT-084 · decyzja · zamknięte
+
+- **Kontekst:** operator pyta o spójny sposób na problemy z mapy linków (sekcja „Co widać z góry”):
+  ćwiczenia rozrzucone po teorii, brak „co dalej”, strony-sieroty, zepsute linki.
+- **Propozycja:** (1) jedna lista ćwiczeń `cwiczenia.js` w katalogu głównym – z niej powstaje
+  strona `cwiczenia.html` (PYT-081a, 082a); (2) `menu.js`, który już rysuje pasek i okruszki, na
+  każdej stronie z listy dokłada stopkę „◀ poprzednie · 🎮 wszystkie ćwiczenia · następne ▶”;
+  laby `laby-vlan/` dostają `menu.js` (dziś go nie mają), a `menu.js` liczy poprawnie głębokość
+  katalogów; (3) strażnik `scripts/linki.mjs` w hooku przed commitem: zatrzymuje commit przy
+  zepsutym linku, stronie bez linku do niej (poza listą wyjątków) i pozycji listy bez pliku.
+- **Opcje:** (a) wszystkie trzy części; (b) części 1–2, bez strażnika; (c) tylko strona zbiorcza
+  zrobiona ręcznie, jak w makiecie.
+- **Rekomendacja:** (a) – dopisanie ćwiczenia to jedna linia w liście, a strażnik nie pozwoli
+  wrócić sierotom. Skutek: stare strony ćwiczeń zmienią wygląd (stopka na dole; laby VLAN także
+  pasek menu u góry) – świadoma zmiana, nowy wzorzec zrzutów.
+- **Skutek braku odpowiedzi:** nie zaczynam strony zbiorczej.
+- **Odpowiedź (2026-11-20):** „76 co tam bedzie testowane? 84a 85a” → (a)
+- **Wykonanie (bez commita):** `cwiczenia.js` (lista: 7 pozycji, 4 kroki, 1 zapowiedź),
+  `cwiczenia.html` (karty z listy), `menu.js` (stopka; katalog główny z adresu samego `menu.js`),
+  `scripts/linki.mjs` + krok 3/4 w `.husky/pre-commit` + `pnpm linki`. Wejścia: przycisk na stronie
+  głównej, przyciski na górze teorii Sieci i w „Czas na praktykę!”, „📝 Arkusz krok po kroku”
+  w kroku Routing (PYT-083a). Odstępstwo od propozycji: laby `laby-vlan/` dostały tylko stopkę
+  (`data-tylko-stopka`), bez paska menu – pasek wymaga `common.css`, który rozjechałby ich własny
+  wygląd; poprawka liczenia głębokości w pasku okazała się niepotrzebna.
+
+### PYT-085 · decyzja · zamknięte
+
+- **Kontekst:** `04-sprzet/lab2-diagnostyka.html` ma tytuł „Lab: Windows – Ostatnie Szlify”,
+  nagłówek „Laboratoria: Windows Server” i trzy części: udziały i własność, S.M.A.R.T. i GPU, 7-Zip.
+  Link „Poprzedni: Lab 5 (Zaawansowane)” wskazuje na plik z `02-windows/`, a „Następny: Linux –
+  Diagnostyka” na nieistniejący plik. Nic do strony nie prowadzi. To wygląda na Lab 6 Windows,
+  który trafił do złego katalogu (wniosek z treści, nie z historii – historia sięga 2026-04-23).
+- **Opcje:** (a) przenieść do `02-windows/lab6-szlify.html`, wpiąć po Lab 5, poprawić oba linki;
+  (b) zostawić w Filarze 4 jako jego lab i podlinkować z `04-sprzet/index.html`; (c) zostawić.
+- **Rekomendacja:** (a) – treść i linki mówią „Windows”. To poza Siecią, więc tylko na Twoje słowo.
+- **Skutek braku odpowiedzi:** strona zostaje sierotą; strażnik (PYT-084) ma ją na liście wyjątków.
+- **Odpowiedź (2026-11-20):** „76 co tam bedzie testowane? 84a 85a” → (a)
+- **Wykonanie (bez commita):** `git mv` do `02-windows/lab6-szlify.html`; tytuł „Lab 6: Ostatnie
+  Szlify - Windows Server”; „Następny” → „Zakończ Filar 2”; Lab 5 → „Następny: Lab 6”; kafel
+  w `02-windows/index.html`. Treść labu bez zmian.
+
+### PYT-086 · decyzja · zamknięte
+
+- **Kontekst:** PYT-081–085 wykonane na dysku, bez commita. Na `main` czekają bez push trzy commity:
+  `e414f6f` (mapa), `9eeaa95` (dokumenty), `af91540` (strona „Arkusz krok po kroku”). Push = strony
+  widoczne dla uczniów na GitHub Pages, razem z nowymi linkami z teorii i ze strony głównej.
+- **Opcje:** (a) commit teraz, push po Twoim obejrzeniu `cwiczenia.html`; (b) commit i push
+  wszystkiego teraz; (c) commit bez push na dłużej.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-20):** „86b wyglda cudnie :)” → (b): commit i push wszystkiego.

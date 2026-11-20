@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pl">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ćwiczenia interaktywne</title>
+  <link rel="stylesheet" href="common.css" />
+  <style>
+   /* Strona zbiorcza ćwiczeń (PYT-081a, 082a). Karty powstają z listy w cwiczenia.js. */
+   .cw-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+   }
+   .cw-head {
+    text-align: center;
+    margin-bottom: 20px;
+   }
+   .cw-head h1 {
+    margin: 0 0 6px;
+   }
+   .cw-head p {
+    margin: 0;
+    color: var(--text-muted, #636e72);
+   }
+   .cw-path {
+    display: grid;
+    gap: 16px;
+   }
+   .cw-stage {
+    background: #fff;
+    border: 1px solid #dfe6e9;
+    border-radius: 12px;
+    padding: 14px 16px;
+   }
+   .cw-stage h2 {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted, #636e72);
+   }
+   .cw-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+   }
+   .cw-card {
+    display: block;
+    padding: 12px 14px;
+    border: 2px solid #dfe6e9;
+    border-radius: 10px;
+    background: #fff;
+    color: #2d3436;
+    text-decoration: none;
+    transition: border-color 0.2s;
+   }
+   a.cw-card:hover,
+   a.cw-card:focus-visible {
+    border-color: #0984e3;
+   }
+   .cw-card b {
+    display: block;
+    font-size: 1.05rem;
+   }
+   .cw-card span {
+    display: block;
+    margin-top: 2px;
+    color: #636e72;
+    font-size: 0.9rem;
+   }
+   .cw-card small {
+    display: block;
+    margin-top: 6px;
+    color: #0984e3;
+    font-size: 0.8rem;
+   }
+   .cw-card.cw-soon {
+    border-style: dashed;
+   }
+   .cw-card.cw-soon b,
+   .cw-card.cw-soon span,
+   .cw-card.cw-soon small {
+    color: #b2bec3;
+   }
+  </style>
+ </head>
+ <body>
+  <header class="cw-head">
+   <h1>🎮 Ćwiczenia interaktywne</h1>
+   <p>Klikasz, patrzysz, sprawdzasz się. Kolejność kroków = kolejność nauki.</p>
+  </header>
+
+  <main class="cw-page">
+   <div class="cw-path" id="cw-path">
+    <noscript>Ta strona wymaga włączonego JavaScriptu.</noscript>
+   </div>
+  </main>
+
+  <script src="cwiczenia.js"></script>
+  <script>
+   // Karty z jednej listy (cwiczenia.js): ta sama lista daje stopkę „poprzednie / następne”.
+   (function () {
+    const data = window.CWICZENIA;
+    const esc = (t) =>
+     String(t).replace(
+      /[&<>"]/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]
+     );
+    const card = (e) =>
+     `<a class="cw-card" href="${esc(e.plik)}"><b>${esc(e.ikona)} ${esc(e.nazwa)}</b>` +
+     `<span>${esc(e.opis)}</span><small>${esc(e.gdzie)}</small></a>`;
+    const soon = (e) =>
+     `<div class="cw-card cw-soon"><b>${esc(e.nazwa)}</b>` +
+     `<span>${esc(e.opis)}</span><small>${esc(e.gdzie)}</small></div>`;
+    document.getElementById('cw-path').innerHTML = data.kroki
+     .map((k) => {
+      const cards = data.lista.filter((e) => e.krok === k.id).map(card);
+      const later = data.wkrotce.filter((e) => e.krok === k.id).map(soon);
+      return (
+       `<section class="cw-stage"><h2>${esc(k.tytul)}</h2>` +
+       `<div class="cw-cards">${cards.concat(later).join('')}</div></section>`
+      );
+     })
+     .join('');
+   })();
+  </script>
+  <script src="menu.js"></script>
+ </body>
+</html>

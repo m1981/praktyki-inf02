@@ -150,6 +150,15 @@ _title: Lab 5: Routing i Niezawodność - Windows Server_
   - **H3** Lab 5b: Niezawodność (NIC Teaming)
   - **H3** Lab 5c: Szkolna Drukarka (Print Server)
 
+## [`02-windows/lab6-szlify.html`](02-windows/lab6-szlify.html)
+
+_title: Lab 6: Ostatnie Szlify - Windows Server_
+
+- **H1** 💻 Laboratoria: Windows Server
+  - **H3** Lab A: Zaawansowane Udziały i Własność
+  - **H3** Lab B: Diagnostyka Sprzętu (S.M.A.R.T. i GPU)
+  - **H3** Lab C: Oprogramowanie i Archiwa (7-Zip)
+
 ## [`03-linux/index.html`](03-linux/index.html)
 
 _title: Teoria: Linux SysOps_
@@ -296,15 +305,6 @@ _title: Teoria: Warstwa Fizyczna_
 - **H1** 🔌 Filar 4: Warstwa Fizyczna
   - **H3** W przygotowaniu...
 
-## [`04-sprzet/lab2-diagnostyka.html`](04-sprzet/lab2-diagnostyka.html)
-
-_title: Lab: Windows - Ostatnie Szlify_
-
-- **H1** 💻 Laboratoria: Windows Server
-  - **H3** Lab A: Zaawansowane Udziały i Własność
-  - **H3** Lab B: Diagnostyka Sprzętu (S.M.A.R.T. i GPU)
-  - **H3** Lab C: Oprogramowanie i Archiwa (7-Zip)
-
 ## [`05-excel/index.html`](05-excel/index.html)
 
 _title: Teoria: Excel & Logika_
@@ -371,6 +371,12 @@ _title: LAB 6: Zaawansowany Troubleshooting_
   - **H3** Krok 1: Pukanie z WIN_SERVER (PowerShell)
   - **H3** Krok 2: Szwajcarski scyzoryk Linuxa (Netcat)
   - **H3** Krok 3: Podglądanie Matrixa (Czytanie Logów)
+
+## [`cwiczenia.html`](cwiczenia.html)
+
+_title: Ćwiczenia interaktywne_
+
+- **H1** 🎮 Ćwiczenia interaktywne
 
 ## [`egzaminy/egzamin-25-06.html`](egzaminy/egzamin-25-06.html)
 

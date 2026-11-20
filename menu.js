@@ -1,4 +1,14 @@
+// Katalog główny serwisu = katalog, w którym leży ten plik (działa z dysku i na GitHub Pages,
+// na każdej głębokości katalogów). `currentScript` jest dostępny tylko przy pierwszym uruchomieniu.
+const MENU_SCRIPT = document.currentScript;
+const SITE_ROOT = new URL('.', MENU_SCRIPT ? MENU_SCRIPT.src : window.location.href);
+// Strony z własnym wyglądem (laby w `01-sieci/laby-vlan/`) biorą tylko stopkę ćwiczeń, bez paska.
+const ONLY_FOOTER = Boolean(MENU_SCRIPT && MENU_SCRIPT.hasAttribute('data-tylko-stopka'));
+
 document.addEventListener('DOMContentLoaded', function () {
+ exerciseFooter();
+ if (ONLY_FOOTER) return;
+
  // 1. Wykrywanie głębokości
  const path = window.location.pathname;
  const isSubfolder =
@@ -75,3 +85,66 @@ document.addEventListener('DOMContentLoaded', function () {
   }
  }
 });
+
+// 4. Stopka ćwiczeń interaktywnych (PYT-084a): „◀ poprzednie · 🎮 wszystkie · następne ▶”.
+// Lista i kolejność są w cwiczenia.js – jedynym miejscu, w którym się je dopisuje.
+function exerciseFooter() {
+ withExercises(function (data) {
+  const here = decodeURI(window.location.pathname);
+  const list = data.lista;
+  const i = list.findIndex(function (e) {
+   return here.endsWith('/' + e.plik);
+  });
+  if (i < 0) return;
+  const url = function (path) {
+   return new URL(path, SITE_ROOT).href;
+  };
+  const prev = list[i - 1];
+  const next = list[i + 1];
+  const link = function (e, cls, text) {
+   return e ? `<a class="${cls}" href="${url(e.plik)}">${text}</a>` : '<span></span>';
+  };
+  const footer = `
+        <nav class="cw-stopka" aria-label="Ćwiczenia interaktywne">
+            ${link(prev, 'cw-poprzednie', prev ? `◀ ${prev.ikona} ${prev.nazwa}` : '')}
+            <a class="cw-wszystkie" href="${url('cwiczenia.html')}">🎮 Wszystkie ćwiczenia</a>
+            ${link(next, 'cw-nastepne', next ? `${next.ikona} ${next.nazwa} ▶` : '')}
+        </nav>
+    `;
+  addFooterStyle();
+  document.body.insertAdjacentHTML('beforeend', footer);
+ });
+}
+
+/** Wczytuje cwiczenia.js (raz) i przekazuje listę. Strona zbiorcza ładuje ją sama. */
+function withExercises(callback) {
+ if (window.CWICZENIA) return callback(window.CWICZENIA);
+ const script = document.createElement('script');
+ script.src = new URL('cwiczenia.js', SITE_ROOT).href;
+ script.onload = function () {
+  if (window.CWICZENIA) callback(window.CWICZENIA);
+ };
+ document.head.appendChild(script);
+}
+
+/** Styl stopki jest tutaj, nie w common.css: laby VLAN nie wczytują common.css. */
+function addFooterStyle() {
+ if (document.getElementById('cw-stopka-styl')) return;
+ const style = document.createElement('style');
+ style.id = 'cw-stopka-styl';
+ style.textContent = `
+        .cw-stopka { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center;
+            max-width: 1200px; margin: 28px auto 24px; padding: 14px 16px 0; box-sizing: border-box;
+            border-top: 1px solid rgba(127, 127, 127, 0.3); font: 600 0.95rem/1.3 system-ui, sans-serif; }
+        .cw-stopka a { color: inherit; text-decoration: none; padding: 8px 12px; border-radius: 8px;
+            border: 1px solid rgba(127, 127, 127, 0.45); }
+        .cw-stopka a:hover, .cw-stopka a:focus-visible { border-color: currentColor; }
+        .cw-stopka .cw-wszystkie { text-align: center; }
+        .cw-stopka .cw-poprzednie { justify-self: start; }
+        .cw-stopka .cw-nastepne { justify-self: end; text-align: right; }
+        @media (max-width: 700px) { .cw-stopka { grid-template-columns: 1fr; }
+            .cw-stopka > * { justify-self: stretch !important; text-align: center !important; }
+            .cw-stopka span { display: none; } }
+    `;
+ document.head.appendChild(style);
+}
