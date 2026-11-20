@@ -79,6 +79,7 @@ zob. PYT-004).
 | PYT-069 | decyzja     | zamknięte (b)    | Commit sceny 1                                                    |
 | PYT-070 | decyzja     | zamknięte (a)    | Linki do strony o routingu z teorii i z serii maski               |
 | PYT-071 | decyzja     | zamknięte (a)    | Commit i push linków do strony o routingu                         |
+| PYT-072 | decyzja     | otwarte          | Plan całości nauki sieci pod egzamin (mapa)                       |
 
 ## Pytania
 
@@ -954,3 +955,20 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** linki działają tylko na tym komputerze.
 - **Odpowiedź (2026-11-20):** „71a” → (a)
+- **Wykonanie:** `99f8df9`.
+
+### PYT-072 · decyzja · otwarte
+
+- **Kontekst:** operator (2026-11-20): „przenalizuj (…) index.html i wygenruj/napisz jak wyglada
+  konspekt nauki w calosci zebysmy zobaczyli jakie obszary i przypadki sa obecnie zaprezentowane
+  a ktorych brakuje z obszarow sieci tych ktore sa na egzaminie. Chlopaki radza sobie z zadaniami
+  Win i Lin ale najwiekszy problem maja z sieciami. Potrzebujemy (…) miec najpierw plan calosci”.
+  Wynik: `mapa-nauki-sieci.md` – zestawienie 11 arkuszy części praktycznej (2021–2026) z teorią,
+  aplikacjami i labami Filaru 1 oraz proponowany plan w 6 etapach. Rozwija odłożone PYT-065.
+- **Opcje:** (a) przyjąć plan i kolejność z mapy (1. serwer z dwiema kartami, 2. ze schematu do
+  tabeli adresów, 3. DHCP, 4. VLAN z tagowaniem i bez, 5. „ping nie działa”, 6. zadania z masek);
+  (b) przyjąć plan z inną kolejnością – podaj numery etapów; (c) poprawki do samej mapy;
+  (d) najpierw uzupełnić dane (np. o część pisemną egzaminu albo obserwacje z lekcji).
+- **Rekomendacja:** (a), chyba że z lekcji wiesz, na którym kroku zadania uczniowie się zatrzymują –
+  wtedy (b).
+- **Skutek braku odpowiedzi:** nie zaczynam żadnego etapu; mapa zostaje na dysku bez commita.
