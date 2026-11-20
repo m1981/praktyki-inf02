@@ -79,7 +79,15 @@ zob. PYT-004).
 | PYT-069 | decyzja     | zamknięte (b)    | Commit sceny 1                                                    |
 | PYT-070 | decyzja     | zamknięte (a)    | Linki do strony o routingu z teorii i z serii maski               |
 | PYT-071 | decyzja     | zamknięte (a)    | Commit i push linków do strony o routingu                         |
-| PYT-072 | decyzja     | otwarte          | Plan całości nauki sieci pod egzamin (mapa)                       |
+| PYT-072 | decyzja     | zamknięte (→073) | Plan całości nauki sieci pod egzamin (mapa)                       |
+| PYT-073 | decyzja     | zamknięte        | Ścieżka pod arkusz egzaminacyjny: 6 etapów, start od etapów 1–2   |
+| PYT-074 | decyzja     | zamknięte (a)    | Akceptacja scenariusza etapów 1–2 („Arkusz krok po kroku”)        |
+| PYT-075 | blokujace   | zamknięte (b)    | Słowo „Komputer” w kwestii etapu 2, krok 11                       |
+| PYT-076 | z-domyslna  | otwarte          | Test nazw na stronie „Arkusz krok po kroku”                       |
+| PYT-077 | z-domyslna  | zamknięte (a)    | Mechanika i podpowiedzi ćwiczenia „tabela adresów”                |
+| PYT-078 | decyzja     | zamknięte (b)    | Commit strony „Arkusz krok po kroku” (etapy 1–2)                  |
+| PYT-079 | decyzja     | zamknięte (→081) | Link do strony „Arkusz krok po kroku” z teorii                    |
+| PYT-080 | decyzja     | zamknięte        | Rysunek z arkusza pod ćwiczeniami etapów 1–2                      |
 
 ## Pytania
 
@@ -957,7 +965,7 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Odpowiedź (2026-11-20):** „71a” → (a)
 - **Wykonanie:** `99f8df9`.
 
-### PYT-072 · decyzja · otwarte
+### PYT-072 · decyzja · zamknięte
 
 - **Kontekst:** operator (2026-11-20): „przenalizuj (…) index.html i wygenruj/napisz jak wyglada
   konspekt nauki w calosci zebysmy zobaczyli jakie obszary i przypadki sa obecnie zaprezentowane
@@ -972,3 +980,144 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a), chyba że z lekcji wiesz, na którym kroku zadania uczniowie się zatrzymują –
   wtedy (b).
 - **Skutek braku odpowiedzi:** nie zaczynam żadnego etapu; mapa zostaje na dysku bez commita.
+- **Odpowiedź (2026-11-20):** „zrob commit roboczy a potem przenalizuj jak w koljenosci konetekstu
+  powinien wygladac dla nich plan. Napisali ze maja klopoty z ogarniecie tego sucheg tekstu bo tego
+  nie wiedza jeszcze w glowach i robia na czuja. Mowia ze tych obszarow nie rozumieja i chca to
+  pocwiczyc” + osiem wierszy tabeli „Zestawienie” (od czytania schematu do „ping nie działa”) →
+  wariant (b)/(d): plan zostaje, ale w innej kolejności, wynikającej z głosu uczniów.
+- **Wykonanie:** commit roboczy `e414f6f` (bez push); w `mapa-nauki-sieci.md` nowa sekcja „Plan
+  w kolejności zrozumienia”. Akceptacja ścieżki: PYT-073.
+
+### PYT-073 · decyzja · zamknięte
+
+- **Kontekst:** uczniowie nie widzą sieci „w głowie” i wykonują arkusz „na czuja”. Nowa ścieżka
+  w `mapa-nauki-sieci.md` układa etapy tak, żeby każdy dokładał jedną rzecz do tego samego schematu
+  (układ B z arkuszy), a ćwiczenia zamieniały linijkę arkusza w miejsce na rysunku: 1. koloruję
+  sieci na schemacie, 2. cztery pola karty, 3. serwer z dwiema kartami, 4. ze schematu do tabeli
+  adresów, 5. DHCP, 6. DNS, 7. wchodzę na ruter i przełącznik, 8. VLAN z tagowaniem i bez, 9. ping
+  nie działa; zadania z masek równolegle.
+- **Opcje:** (a) przyjąć ścieżkę i zacząć od etapów 1–3 – najpierw scenariusze (tabele kwestii
+  i ćwiczeń) do akceptacji, potem kod; (b) przyjąć ścieżkę, ale zacząć od innego etapu; (c) zmienić
+  kolejność albo zasady; (d) najpierw pokazać uczniom makietę jednego ćwiczenia „od tekstu do
+  obrazka” i zebrać ich reakcję.
+- **Rekomendacja:** (a). Etapy 1–3 razem dają pierwszą pełną umiejętność: „widzę sieci na schemacie
+  i wiem, co jest czyją bramą”.
+- **Skutek braku odpowiedzi:** nie piszę scenariuszy ani kodu kolejnych etapów.
+- **Przebieg (2026-11-20):** operator poprosił o podważenie podejścia „jako trener cisco
+  i nauczyciel” i zaproponował podział na trzy pytania: „jak cos dziala, w jakiej kolejnosci sie to
+  konfiguruje, jak odczytac karte egzaminacyjna i przelozyc to na kroki konfiguracyjne”. Po lekturze
+  zasad oceniania (styczeń 2026) agent skrócił ścieżkę z 9 do 6 etapów: 1. koloruję sieci, 2. z arkusza do tabeli adresów, 3. kto rozdaje adresy, 4. w jakiej kolejności konfiguruję, 5. ping nie działa, 6. to samo z VLAN-ami; maski obok. Cztery zasady ścieżki bez zmian.
+- **Odpowiedź (2026-11-20):** „wyglada super. 73 przyjmuje.” → przyjęta ścieżka 6 etapów i start
+  od etapów 1–2.
+- **Wykonanie:** ścieżka w `mapa-nauki-sieci.md` („Ścieżka przyjęta”); scenariusz etapów 1–2
+  w `scenariusz-arkusz-1-2.md` (PYT-074).
+
+### PYT-074 · decyzja · zamknięte
+
+- **Kontekst:** `scenariusz-arkusz-1-2.md`, wersja 1. Etap 1 „Koloruję sieci” (scena 11 kroków
+  i 4 polecenia do samodzielnego wykonania) oraz etap 2 „Z arkusza do tabeli adresów” (scena
+  14 kroków, tabela do wypełnienia, 3 pytania kontrolne). Arkusz przewodni: styczeń 2025.
+- **Opcje:** (a) akceptuję scenariusz razem z propozycjami: postać Kuby (praktykant), nazwy urządzeń
+  z arkusza („Ruter”, „Przełącznik”, „Stacja robocza”), arkusz ze stycznia 2025, nowa strona „Arkusz
+  krok po kroku”; (b) poprawki – „etap, krok, co zmienić” albo inna decyzja w którejś z propozycji;
+  (c) najpierw makieta jednego ekranu ćwiczenia do pokazania uczniom.
+- **Rekomendacja:** (a) albo (b) po lekturze.
+- **Skutek braku odpowiedzi:** nie zaczynam kodu etapów 1–2.
+- **Odpowiedź (2026-11-20):** „74 tak. Poniewaz sesja ma 700k tokenow. Czy mozesz rozgrzac sesje
+  97cc0892-499d-4abf-b3d6-6181f2fcec43 tak zeby rozumiala kontekst prac i zakres i przjela
+  wykonanie?” → (a): scenariusz przyjęty razem z propozycjami (Kuba, nazwy z arkusza, arkusz ze
+  stycznia 2025, nowa strona). Wykonanie przejmuje nowa sesja.
+- **Wykonanie:** zlecenie dla nowej sesji: `zlecenie-arkusz.md`. Od przekazania rejestr prowadzi
+  sesja wykonująca; pierwszy wolny numer: PYT-075.
+
+### PYT-075 · blokujace · zamknięte
+
+- **Kontekst:** scenariusz etapu 2, krok 11 (Ola): „Komputer ma jedno wyjście w świat. Nie dwa.”
+  Słowo „komputer” jest zakazane we wszystkich tekstach (`content.test.ts`, kryterium 12 z audytu),
+  także w kwestiach postaci. Zmiana kwestii wymaga zgody (zlecenie, „Kwestie i stany schematu”).
+- **Opcje:** (a) w scenariuszu i na stronie: „Każde urządzenie ma jedno wyjście w świat. Nie dwa.”
+  (9 słów); (b) zostawić „Komputer” i zwolnić z zakazu kwestie tej strony; (c) inne brzmienie.
+- **Rekomendacja (pierwsza):** (a) – zdanie dalej mówi o każdej maszynie, a zakaz zostaje bez wyjątków.
+- **Wyjaśnienie autora testu (sesja praktyki-inf02-f1, 2026-11-20, na prośbę operatora):** lista
+  zakazanych słów to heurystyka z etapu B, nie reguła operatora; kryterium 12 zakazuje innych nazw
+  na urządzenia ze schematu. Tu „komputer” nie nazywa żadnego urządzenia ze schematu, tylko mówi
+  ogólnie. Zdanie (a) jest gorsze: ruter jest urządzeniem i ma dwa wyjścia.
+- **Rekomendacja (po wyjaśnieniu):** (b) – zdanie zostaje co do słowa; na nowej stronie kwestie
+  postaci są zwolnione z zakazu innych nazw (jak już są zwolnione z wielkiej litery); podpisy
+  schematu, tabela i polecenia ćwiczeń dalej są sprawdzane. Stare strony bez zmian.
+- **Skutek braku odpowiedzi:** robię resztę strony; krok 11 etapu 2 wpisuję według (b), oznaczony
+  „tymczasowo (PYT-075)”.
+- **Odpowiedź (2026-11-20):** „75 tak 77a 78b 79 hmm moze byc ale dlabym tez wszystkie interaktywne cwiczenia na jednej stronie dodatkowo taki drugi punkt wejscia. Poszukaj wszystkich interaktywnych labow a potem zrob sobie obraz mapy wszystkich laczy od index.html zebys zobaczyl caly widok z lotu ptaka i zaproponuj jakbys to widzial?”
+- **Rozstrzygnięcie:** „75 tak” = zgoda na rekomendację (b): kwestia zostaje co do słowa; „komputer” wolno na tej stronie tylko w kwestiach postaci.
+
+### PYT-076 · z-domyslna · otwarte
+
+- **Kontekst:** test nazw zna tylko słownik („Router”, „Switch”, „Laptop”…) i zakazuje słów „ruter”,
+  „przełącznik” wszędzie. PYT-074a przyjął na tej stronie nazwy z arkusza. Do tego polecenia ćwiczeń
+  w scenariuszu piszą nazwy małą literą, jak arkusz („ze stacją roboczą”, „z ruterem”), a test wymaga
+  wielkiej litery poza kwestiami postaci.
+- **Opcje:** (a) na tej stronie test pilnuje nazw z arkusza: „Ruter”, „Przełącznik”, „Stacja
+  robocza”, „Serwer” – w zdaniach mała litera jak w arkuszu, na schemacie i w tabeli wielka; nazwy
+  „Router”, „Switch”, „Laptop” są tu zakazane; na starych stronach bez zmian; (b) jak (a), ale
+  w poleceniach ćwiczeń wielka litera („ze Stacją roboczą”) – drobna zmiana tekstu scenariusza.
+- **Rekomendacja:** (a) – teksty zostają co do słowa jak w scenariuszu i jak w arkuszu.
+- **Skutek braku odpowiedzi:** pracuję na (a); wynik „tymczasowo (PYT-076)”.
+- **Wykonanie (tymczasowo):** `src/content/arkusz.test.ts` – osobny test nazw dla tej strony; stary test
+  nazw obejmuje tylko strony ARP, maski i routingu (bez zmian w jego regułach).
+
+### PYT-077 · z-domyslna · zamknięte
+
+- **Kontekst:** scenariusz etapu 2 mówi: „uczeń klika linijkę arkusza, a potem pole tabeli. Dobre
+  wpisy zostają, złe wracają z podpowiedzią”, ale nie podaje treści podpowiedzi ani tego, czy kolor
+  sieci uczeń też wpisuje.
+- **Opcje:** (a) każda linijka arkusza to jeden kafelek („adres IP: 192.168.1.3/25”); kafelek
+  „uzyskiwane automatycznie” wypełnia cały wiersz serwera „WAN”; kolumny „Karta” i „Sieć (kolor)”
+  są wypełnione z góry (to wynik etapu 1); pola „–” są szare i nieklikalne; linijki rutera WAN
+  i maszyny wirtualnej („LAN 3”) nie ma w wycinku. Podpowiedzi: zły wiersz – „Ta linijka mówi
+  o karcie {karta}.”; zła kolumna – „To jest {brama|DNS|adres}, nie {…}.”; (b) inny podział albo
+  inne podpowiedzi – podaj.
+- **Rekomendacja:** (a). Jedna czynność na klik; podpowiedź mówi dokładnie, co się nie zgadza.
+- **Skutek braku odpowiedzi:** pracuję na (a); wynik „tymczasowo (PYT-077)”.
+- **Wykonanie (tymczasowo):** jak (a), z dwiema zmianami wymuszonymi przez ekran 1280×720: kolumnę
+  „Sieć (kolor)” zastąpiło tło nazwy karty w kolorze sieci (nagłówek „Karta (kolor sieci)”), a wiersz
+  Serwera „WAN” ma jedno szerokie pole. Podpowiedź o złym wierszu brzmi „Ta linijka mówi o
+  {karcie „LAN 2” stacji | przełączniku | …}.”. Polecenie ćwiczenia (scenariusz go nie podaje):
+  „Kliknij linijkę arkusza, a potem pole tabeli, do którego należy.”
+- **Odpowiedź (2026-11-20):** „75 tak 77a 78b 79 hmm moze byc ale dlabym tez wszystkie interaktywne cwiczenia na jednej stronie dodatkowo taki drugi punkt wejscia. Poszukaj wszystkich interaktywnych labow a potem zrob sobie obraz mapy wszystkich laczy od index.html zebys zobaczyl caly widok z lotu ptaka i zaproponuj jakbys to widzial?”
+- **Rozstrzygnięcie:** (a) z wykonaniem opisanym wyżej.
+
+### PYT-078 · decyzja · zamknięte
+
+- **Kontekst:** strona `symulator-arkusz.html` (etapy 1–2) jest gotowa na dysku, bez commita.
+  `pnpm build` zielony: 1002 testy, 297 pomiarów e2e. Stare strony: 100 stanów identycznych ze
+  wzorcem `origin/main` (tekst i obraz); ich pliki HTML zmieniły się tylko we wspólnym kodzie. Do
+  tego czekają pliki dokumentów tej pracy (mapa, rejestr, scenariusz, zlecenie) i niewypchnięty
+  commit roboczy `e414f6f`.
+- **Opcje:** (a) dwa commity na `main` (dokumenty; strona z kodem) i push razem z `e414f6f`;
+  (b) to samo bez push; (c) czekam z commitem do rozstrzygnięcia PYT-075–077.
+- **Rekomendacja:** (b) po Twoim obejrzeniu strony – bez linku z teorii uczniowie i tak jej nie
+  znajdą, ale push lepiej zrobić po decyzji o kwestii z PYT-075.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-20):** „75 tak 77a 78b 79 hmm moze byc ale dlabym tez wszystkie interaktywne cwiczenia na jednej stronie dodatkowo taki drugi punkt wejscia. Poszukaj wszystkich interaktywnych labow a potem zrob sobie obraz mapy wszystkich laczy od index.html zebys zobaczyl caly widok z lotu ptaka i zaproponuj jakbys to widzial?”
+- **Rozstrzygnięcie:** (b) – dwa commity na `main` (dokumenty; strona z kodem), bez push.
+
+### PYT-079 · decyzja · zamknięte
+
+- **Kontekst:** scenariusz proponował stronę „podpiętą z teorii po kroku Routing”; zlecenie każe
+  nie linkować, dopóki operator nie zdecyduje.
+- **Opcje:** (a) przycisk w kroku „Routing” teorii (`01-sieci/index.html`), pod przyciskiem „List za
+  płot”; (b) jeszcze nie linkować – najpierw pokazać stronę uczniom; (c) inne miejsce.
+- **Rekomendacja:** (b) do czasu Twojego przeglądu, potem (a).
+- **Skutek braku odpowiedzi:** strona dostępna tylko dla kogoś, kto zna adres.
+- **Odpowiedź (2026-11-20):** „75 tak 77a 78b 79 hmm moze byc ale dlabym tez wszystkie interaktywne cwiczenia na jednej stronie dodatkowo taki drugi punkt wejscia. Poszukaj wszystkich interaktywnych labow a potem zrob sobie obraz mapy wszystkich laczy od index.html zebys zobaczyl caly widok z lotu ptaka i zaproponuj jakbys to widzial?”
+- **Rozstrzygnięcie (częściowe):** link z teorii „może być”, a do tego drugi punkt wejścia: jedna strona ze wszystkimi interaktywnymi ćwiczeniami. Kształt obu wejść: nowe pytanie po mapie linków (PYT-081).
+
+### PYT-080 · decyzja · zamknięte
+
+- **Kontekst:** polecenie operatora (2026-11-20), nie pytanie agenta.
+- **Odpowiedź (2026-11-20):** „to jest chyba ta siec z arkusza czy mozesz ten obraz dodac pod
+  cwiczeniami 1 i 2 pogladowo?” + zrzut schematu.
+- **Wykonanie:** to rysunek z arkusza ze stycznia 2025, strona 3; wyjęty z PDF bez zmian
+  (`src/content/arkusz-2025-01-schemat.jpg`, 832×499, 28 KB). Pod sceną w obu zakładkach, z podpisem
+  „Tak ten schemat wygląda w arkuszu INF.02 (styczeń 2025, strona 3) – poglądowo.” Rysunek leży pod
+  ekranem ćwiczenia (trzeba przewinąć) i nie wchodzi do pomiaru „mieści się na ekranie”.

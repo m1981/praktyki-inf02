@@ -84,7 +84,7 @@ Każdy arkusz to jeden z tych układów albo ich połączenie.
 | Mechanizmy: ARP, ramka a pakiet, co robi Router                | Symulator ARP, Routing „List za płot”                    | jest                                | Droga powrotna odpowiedzi i tablica routingu (następne sceny).                                           |
 | NAT, przekierowanie portu, Wi-Fi, NIC Teaming                  | Lab 3; Filar 2 (Lab 5a, 5b)                              | rzadkie na egzaminie                | Po jednym arkuszu; na później.                                                                           |
 
-## Proponowany plan całości
+## Pierwsza propozycja planu (zastąpiona przez „Ścieżkę przyjętą”)
 
 Kolejność według częstości w arkuszach i tego, co już mamy. Do Twojej decyzji.
 
@@ -104,3 +104,50 @@ Kolejność według częstości w arkuszach i tego, co już mamy. Do Twojej decy
 - Nie znam modeli rutera i przełącznika w Waszej pracowni; procedura „jak wejść na urządzenie” od nich zależy.
 - Zliczenia robiłem z tekstu wyciągniętego z PDF; schematy są obrazkami, więc układ A, B albo C przypisałem na podstawie opisów kart sieciowych w zadaniach.
 - Sprawa schematów z arkuszy była odłożona jako PYT-065 – ta mapa jest jej rozwinięciem.
+
+## Ścieżka przyjęta (PYT-073, 2026-11-20)
+
+Głos uczniów, przekazany przez operatora: mają kłopot z „suchym tekstem” arkusza, „nie widzą tego
+jeszcze w głowach i robią na czuja”. Operator zaproponował podział na trzy pytania: jak to działa,
+w jakiej kolejności się konfiguruje, jak odczytać arkusz i przełożyć go na kroki. Zasady oceniania
+(styczeń 2026) potwierdzają ten kierunek: kryteria są zero-jedynkowe („adres IP … na interfejsie …”),
+a każdy oceniany ping zostaje w jednej sieci.
+
+### Zasady
+
+1. **Jeden schemat przez całą drogę.** Układ z arkuszy (ruter – serwer z dwiema kartami –
+   przełącznik – stacja) rośnie etap po etapie.
+2. **Od tekstu do obrazka.** Ćwiczenie pokazuje prawdziwą linijkę z arkusza i każe znaleźć ją na
+   schemacie albo wpisać we właściwe miejsce.
+3. **Najpierw scena, potem ćwiczenie.** Scena w stylu „rozmowa” daje obraz; ćwiczenie sprawdza, czy
+   uczeń umie go użyć sam.
+4. **Jedna rzecz na etap.**
+
+### Etapy
+
+| #   | Etap                            | Po etapie uczeń umie                                                                               | Pytanie operatora      | Obszary z listy uczniów                         |
+| --- | ------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------- |
+| 1   | Koloruję sieci na schemacie     | policzyć sieci i pokazać, która karta jest w której                                                | jak to działa          | czytanie schematu                               |
+| 2   | Z arkusza do tabeli adresów     | z linijek arkusza wypełnić tabelę: karta, adres, brama, DNS – w tym „brama: brak” na serwerze      | jak odczytać arkusz    | czytanie schematu, serwer z dwiema kartami, DNS |
+| 3   | Kto rozdaje adresy              | wskazać, kto daje adres której karcie; wyjaśnić zakres i rezerwację                                | jak odczytać arkusz    | DHCP                                            |
+| 4   | W jakiej kolejności konfiguruję | ułożyć kroki: ruter, przełącznik, kable, serwer, stacja – i wejść na urządzenie przez przeglądarkę | kolejność konfiguracji | ruter i przełącznik                             |
+| 5   | Ping nie działa                 | przejść listę kontrolną od kabla do zapory                                                         | wszystkie trzy         | ping nie działa                                 |
+| 6   | To samo z VLAN-ami              | pokolorować porty według VLAN-ów i powtórzyć etapy 2–5 na takim arkuszu                            | wszystkie trzy         | VLAN                                            |
+
+Zadania z masek (adres sieci, Broadcast, pierwszy i ostatni host) idą obok jako krótka „siłownia”.
+
+Model minimalny, który ma zostać w głowie: (1) sieć to wszystko, co łączy kabel i przełącznik,
+i kończy się na karcie rutera albo serwera; (2) bez bramy ping działa tylko w jednej sieci;
+(3) brama to jedyne wyjście poza swoją sieć.
+
+### Stan
+
+| Etap | Stan                                                                                         |
+| ---- | -------------------------------------------------------------------------------------------- |
+| 1–2  | scenariusz przyjęty (PYT-074a); strona `symulator-arkusz.html` gotowa, bez commita (PYT-078) |
+| 3–6  | nie zaczęte                                                                                  |
+
+### Do ustalenia
+
+- Etap 4 zależy od modeli rutera i przełącznika w pracowni (panele w przeglądarce).
+- Zasady oceniania przeczytałem tylko dla sesji styczeń 2026.
