@@ -102,6 +102,20 @@ function ExerciseScreen({ exercise: ex, runId, nav }: ExerciseScreenProps) {
     )}
    </div>
 
+   {ex.notes && ex.notes.length > 0 && (
+    <details className="sr-notes">
+     <summary>📘 Dla dociekliwych: dlaczego tak?</summary>
+     <dl>
+      {ex.notes.map((note) => (
+       <div key={note.q}>
+        <dt>{note.q}</dt>
+        <dd>{note.a}</dd>
+       </div>
+      ))}
+     </dl>
+    </details>
+   )}
+
    {step.panels && step.panels.length > 0 && (
     <div className="sim-details">
      {step.panels.map((panel) => (

@@ -3,10 +3,16 @@
 // najpierw zmiana w scenariuszu. Test `arkusz.test.ts` porównuje kwestie ze scenariuszem.
 // Nazwy urządzeń jak w arkuszu (PYT-074a); adresy tylko z `model/arkusz.ts`.
 
-import type { ControlSpec, Course, Exercise, Speaker, Step } from '../engine/types';
+import type { ControlSpec, Course, Exercise, Note, Speaker, Step } from '../engine/types';
 // Rysunek z arkusza (styczeń 2025, strona 3), wyjęty z PDF bez zmian.
 import sheetDrawing from './arkusz-2025-01-schemat.jpg';
-import { sheetGateway, sheetIp, type SheetCard, type SheetNet } from '../model/arkusz';
+import {
+ sheetGateway,
+ sheetIp,
+ SHEET_VM_LAN3,
+ type SheetCard,
+ type SheetNet
+} from '../model/arkusz';
 import type { TaskOption } from '../ui/controls/TalkControl';
 import type { Figure } from '../ui/ExamFigure';
 import type { ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
@@ -119,11 +125,32 @@ const SERVER_CARDS: readonly SheetCard[] = ['serwer-wan', 'serwer-lan1'];
 
 const DIM = excerpt({ dim: true });
 
+// „Dla dociekliwych” (PYT-095): treść ze scenariusza, sekcja o tej samej nazwie (test co do słowa).
+const NOTES_1: Note[] = [
+ {
+  q: 'Dlaczego sieć kończy się na karcie rutera albo serwera?',
+  a: 'Przełącznik przekazuje ramki dalej. Ramka do wszystkich (Broadcast) zatrzymuje się na karcie rutera albo serwera – tam kończy się sieć.'
+ },
+ {
+  q: 'Po co serwerowi dwie karty?',
+  a: 'Każda karta stoi w innej sieci. Serwer stoi między siecią stacji a siecią rutera, jak brama.'
+ },
+ {
+  q: 'Dlaczego akurat te kolory?',
+  a: 'Kolory to tylko etykiety sieci. Pomarańczowego nie używamy, bo w naszych materiałach znaczy Broadcast.'
+ },
+ {
+  q: 'Skąd ten schemat?',
+  a: 'Z arkusza INF.02 ze stycznia 2025 – rysunek jest pod spodem. Układ „serwer w środku” wraca w kilku arkuszach 2025–2026.'
+ }
+];
+
 const ETAP_1: Exercise = {
  code: '1',
  title: 'Koloruję sieci',
  style: 'dialog',
  speakers: SPEAKERS,
+ notes: NOTES_1,
  steps: [
   kuba('Dostałem arkusz. Sam tekst i adresy – nic nie widzę 😩', { excerpt: excerpt() }),
   ola('Odłóż adresy. Najpierw policzymy sieci.', { excerpt: DIM }),
@@ -230,11 +257,39 @@ const TABLE_ROWS: readonly TableRow[] = [
 
 const WRONG_GATE_IP = sheetIp('ruter-lan');
 
+const NOTES_2: Note[] = [
+ {
+  q: 'Dlaczego maska /25 nie przeszkadza?',
+  a: 'Wszystkie niebieskie adresy (.1, .2, .3) leżą w tej samej połowie sieci: od .0 do .127. Liczenie masek ćwiczysz w „Płotach maski”.'
+ },
+ {
+  q: 'Dlaczego na karcie LAN 1 serwera „brama: brak”?',
+  a: 'Urządzenie ma jedną bramę domyślną, nawet gdy ma kilka kart. Serwer wychodzi w świat kartą WAN, więc tam jest jego brama.'
+ },
+ {
+  q: 'Skąd karta WAN serwera ma adres?',
+  a: 'Arkusz mówi „uzyskiwane automatycznie”: adres daje DHCP rutera. Wyjaśnia to warstwa 3 „Skąd adres?”.'
+ },
+ {
+  q: 'Czy stacja wyjdzie przez serwer do Internetu?',
+  a: 'To zależy od usługi routingu na serwerze. W tym arkuszu nie jest to oceniane, więc scena tego nie rusza.'
+ },
+ {
+  q: 'Gdzie jest maszyna wirtualna?',
+  a: `W arkuszu jest jeszcze maszyna wirtualna z kartą „LAN 3”: ${SHEET_VM_LAN3}, w tej samej niebieskiej sieci. Pomijamy ją, żeby schemat był prostszy.`
+ },
+ {
+  q: `Kto zna nazwy (DNS ${sheetIp('serwer-lan1')})?`,
+  a: 'Serwer ma usługę DNS ze strefą egzamin.local. Więcej w warstwie „Kto zna nazwy?”.'
+ }
+];
+
 const ETAP_2: Exercise = {
  code: '2',
  title: 'Z arkusza do tabeli adresów',
  style: 'dialog',
  speakers: SPEAKERS,
+ notes: NOTES_2,
  steps: [
   kuba('Sieci widzę. Ale gdzie wpisać te wszystkie adresy?', colored({})),
   ola(

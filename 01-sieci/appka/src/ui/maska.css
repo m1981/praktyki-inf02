@@ -465,3 +465,31 @@
   animation: none;
  }
 }
+
+/* „Dla dociekliwych” (PYT-095): zwinięte pytania „dlaczego?” pod sceną ćwiczenia. */
+.sr-notes {
+ margin-top: 14px;
+ background: #fff;
+ border: 1px solid var(--sim-border);
+ border-radius: 12px;
+ padding: 0 16px;
+}
+.sr-notes summary {
+ padding: 12px 0;
+ font-weight: 700;
+ cursor: pointer;
+ color: var(--sim-blue);
+}
+.sr-notes dl {
+ margin: 0 0 14px;
+ display: grid;
+ gap: 10px;
+}
+.sr-notes dt {
+ font-weight: 700;
+}
+.sr-notes dd {
+ margin: 2px 0 0;
+ max-width: 90ch;
+ color: #2d3436;
+}

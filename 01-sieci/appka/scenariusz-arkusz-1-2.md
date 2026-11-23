@@ -121,6 +121,38 @@ Po wypełnieniu tabeli trzy pytania kontrolne:
 | 2   | Serwer ma dwie karty. Na której wpiszesz bramę? | na karcie „WAN” (zielonej) | „Na „LAN 1” arkusz mówi: brak. Wyjście w świat jest po stronie rutera.”   |
 | 3   | Stacja dostała bramę 10.10.0.1. Zadziała?       | nie                        | „10.10.0.1 jest zielone, stacja niebieska. Brama musi być w jej kolorze.” |
 
+## Dla dociekliwych (rozwijane pod sceną, PYT-095)
+
+Na stronie: sekcja pod sceną, domyślnie zwinięta. Dla nauczyciela i ucznia, który chce wiedzieć
+„dlaczego”. Treść na stronie musi być taka jak tutaj (test).
+
+### Etap 1
+
+- **Dlaczego sieć kończy się na karcie rutera albo serwera?** Przełącznik przekazuje ramki dalej.
+  Ramka do wszystkich (Broadcast) zatrzymuje się na karcie rutera albo serwera – tam kończy się
+  sieć.
+- **Po co serwerowi dwie karty?** Każda karta stoi w innej sieci. Serwer stoi między siecią stacji
+  a siecią rutera, jak brama.
+- **Dlaczego akurat te kolory?** Kolory to tylko etykiety sieci. Pomarańczowego nie używamy, bo
+  w naszych materiałach znaczy Broadcast.
+- **Skąd ten schemat?** Z arkusza INF.02 ze stycznia 2025 – rysunek jest pod spodem. Układ „serwer
+  w środku” wraca w kilku arkuszach 2025–2026.
+
+### Etap 2
+
+- **Dlaczego maska /25 nie przeszkadza?** Wszystkie niebieskie adresy (.1, .2, .3) leżą w tej samej
+  połowie sieci: od .0 do .127. Liczenie masek ćwiczysz w „Płotach maski”.
+- **Dlaczego na karcie LAN 1 serwera „brama: brak”?** Urządzenie ma jedną bramę domyślną, nawet gdy
+  ma kilka kart. Serwer wychodzi w świat kartą WAN, więc tam jest jego brama.
+- **Skąd karta WAN serwera ma adres?** Arkusz mówi „uzyskiwane automatycznie”: adres daje DHCP
+  rutera. Wyjaśnia to warstwa 3 „Skąd adres?”.
+- **Czy stacja wyjdzie przez serwer do Internetu?** To zależy od usługi routingu na serwerze.
+  W tym arkuszu nie jest to oceniane, więc scena tego nie rusza.
+- **Gdzie jest maszyna wirtualna?** W arkuszu jest jeszcze maszyna wirtualna z kartą „LAN 3”:
+  192.168.1.4/25, w tej samej niebieskiej sieci. Pomijamy ją, żeby schemat był prostszy.
+- **Kto zna nazwy (DNS 192.168.1.1)?** Serwer ma usługę DNS ze strefą egzamin.local. Więcej
+  w warstwie „Kto zna nazwy?”.
+
 ## Uproszczenia (notatka dla nauczyciela, nie na ekran)
 
 - „Uzyskiwane automatycznie” na karcie „WAN” serwera tu tylko odnotowujemy; skąd przychodzi adres

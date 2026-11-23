@@ -91,11 +91,40 @@ describe('kwestie co do słowa ze scenariusza', () => {
  });
 });
 
+/** Notatki „Dla dociekliwych” etapu ze scenariusza: „- **pytanie** odpowiedź” (z zawinięciami). */
+function scenarioNotes(stage: string): { q: string; a: string }[] {
+ const from = SCENARIO.indexOf('## Dla dociekliwych');
+ const start = SCENARIO.indexOf(`### Etap ${stage}`, from);
+ const end = SCENARIO.indexOf('\n#', start + 4);
+ const items = SCENARIO.slice(start, end)
+  .split(/\n- /)
+  .slice(1)
+  .map((item) => item.replace(/\s*\n\s*/g, ' ').trim());
+ return items.map((item) => {
+  const m = item.match(/^\*\*(.+?)\*\* (.+)$/);
+  if (!m) throw new Error(`Notatka bez pytania w pogrubieniu: ${item}`);
+  return { q: m[1], a: m[2] };
+ });
+}
+
+describe('notatki „Dla dociekliwych” co do słowa ze scenariusza', () => {
+ it.each([
+  ['1', ETAP_1],
+  ['2', ETAP_2]
+ ] as const)('etap %s', (stage, exercise) => {
+  expect(exercise.notes).toEqual(scenarioNotes(stage));
+ });
+});
+
 describe('nazwy urządzeń jak w arkuszu', () => {
  const steps = ARKUSZ.exercises.flatMap((ex) => ex.steps);
  /** Kwestie Oli i Kuby – mowa potoczna (PYT-075b: „komputer” wolno tylko tu). */
  const spoken = steps.filter((s) => s.speaker === 'ola' || s.speaker === 'kuba').map((s) => s.text);
- const written: string[] = [ARKUSZ_FIGURE.alt, ARKUSZ_FIGURE.caption].concat(
+ const written: string[] = [
+  ARKUSZ_FIGURE.alt,
+  ARKUSZ_FIGURE.caption,
+  ...ARKUSZ.exercises.flatMap((ex) => (ex.notes ?? []).flatMap((n) => [n.q, n.a]))
+ ].concat(
   steps.flatMap((s) => {
    const out = s.speaker === 'ola' || s.speaker === 'kuba' ? [] : [s.text];
    if (s.control.type === 'quiz')

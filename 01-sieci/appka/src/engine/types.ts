@@ -65,6 +65,14 @@ export interface Exercise {
  nextQuestion?: string;
  /** Odsyłacz przy tym pytaniu – gdy odpowiedź jest na innej stronie. */
  nextLink?: { href: string; label: string };
+ /** „Dla dociekliwych”: pytania „dlaczego?” z odpowiedziami, zwinięte pod sceną (PYT-095). */
+ notes?: readonly Note[];
+}
+
+/** Jedna notatka „Dla dociekliwych”: pytanie i krótka odpowiedź. */
+export interface Note {
+ q: string;
+ a: string;
 }
 
 export interface FreeMode {

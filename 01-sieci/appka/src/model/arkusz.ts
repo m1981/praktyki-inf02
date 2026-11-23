@@ -81,6 +81,9 @@ export const SHEET_CARDS: Record<SheetCard, CardData> = {
  }
 };
 
+/** Maszyna wirtualna z kartą „LAN 3” – jest w arkuszu, ale nie na schemacie (tylko w notatce). */
+export const SHEET_VM_LAN3 = '192.168.1.4/25';
+
 export const SHEET_CARD_IDS = Object.keys(SHEET_CARDS) as SheetCard[];
 
 /** Adres IP karty bez maski, np. „192.168.1.3”. */
