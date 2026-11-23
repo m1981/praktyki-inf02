@@ -11,6 +11,8 @@ Data: 2026-11-23
 
 ## Źródła
 
+- Pełny spis 100 stron widoku Basic przełącznika (pola, flagi, przyciski; bez okien Add/Edit): [`mapa-menu-cbs350-basic.md`](mapa-menu-cbs350-basic.md) – zrzut operatora, 2026-11-23 (PYT-093a).
+- Zrzut ekranu kreatora **Getting Started Wizard → 2. IP Settings** – operator, 2026-11-23 (PYT-094a); opis niżej, w sekcji „Kreator: najprostsza droga do adresu i bramy”.
 - Lista emulatorów TP-Link: https://www.tp-link.com/pl/support/emulator/ (link do emulatora C6 v4 jest na https://www.tp-link.com/pl/support/download/archer-c6/v4/)
 - Pomoc wbudowana w emulator Cisco, © 2023 Cisco (to dokumentacja producenta). Wspólny początek adresu: `https://www.cisco.com/web/fw/tools/cisco-business/emulators/switch/cbs/cbs350/cbs350-24mgp-4x-3-3/html/cbs/english/help/250_350/`, dalej strony: `t_ipv4_interface.html`, `t_ipv4_static_routes.html`, `t_user_accounts.html`, `t_login_settings.html`, `t_file_operation.html`, `t_getting_started_wizard.html`, `c_getting_started.html`, `t_vlan_settings.html`, `t_interface_settings_1.html`, `t_port_to_vlan.html`, `t_port_vlan_membership.html`, `t_dns_settings.html`, `t_idle_session_timeout.html`
 - Cisco, domyślny adres IP i domyślne dane logowania CBS350: https://www.cisco.com/c/en/us/support/docs/smb/switches/Cisco-Business-Switching/kmgmt-2516-configure-ip-address-settings-cli-cbs.html
@@ -53,7 +55,7 @@ Przykład hasła, które spełnia te zasady: `Pracownia#47Kz` [W]. Nie ma w nim 
 
 - W pasku górnym są: **Save** (pokazuje się tylko wtedy, gdy jest coś niezapisanego), nazwa użytkownika, **Help**, **About**, **Logout** [E-kod: `home.htm`, słownik].
 - Kliknięcie **Save** od razu kopiuje Running Configuration do Startup Configuration [E-kod: funkcja `saveCDB`].
-- Tryb wyświetlania: **Basic** (podstawowy) albo **Advanced** (pełny) [D] c_getting_started. Część gałęzi menu widać tylko w trybie **Advanced** (oznaczone niżej jako _Adv_) [E-kod]. Zmiana trybu kasuje niezatwierdzone (bez **Apply**) zmiany na otwartej stronie [D].
+- Tryb wyświetlania: **Basic** (podstawowy) albo **Advanced** (pełny) [D] c*getting_started. Część gałęzi menu widać tylko w trybie **Advanced** (oznaczone niżej jako \_Adv*) [E-kod]. Zmiana trybu kasuje niezatwierdzone (bez **Apply**) zmiany na otwartej stronie [D].
 - Strona **Getting Started** ma szybkie linki: **Change Device IP Address** (→ IPv4 Interface), **Change Device Password** (→ User Accounts), **Backup Device Configuration** (→ File Operations), **Create VLAN** (→ VLAN Settings), **Configure Port Settings** (→ Port Settings) [D] c_getting_started.
 
 ## 1.3. Drzewo menu [E-kod]
@@ -241,3 +243,26 @@ Sprawdzone na emulatorze TL-WR842N v3 (firmware 3.16.9 Build 150921). Stary pane
 - **Cisco:** ekranów po zalogowaniu (logowanie zablokowane w moim środowisku). Układ pól, przyciski i komunikaty znam tylko z plików emulatora i z pomocy. Nie sprawdziłem też domyślnego trybu VLAN portów w firmware 3.3 ani tego, czy wpis typu _Default_ (fabryczny adres) da się edytować przez **Edit...**.
 - **TP-Link:** ekranu tworzenia hasła przy pierwszym logowaniu (emulator go pomija). Nie wpisywałem wartości w pola, więc nie sprawdziłem: komunikatów walidacji na ekranie, faktycznego działania **SAVE**, czy pula DHCP przesuwa się po zmianie LAN, czy rezerwacja wymaga restartu w nowym interfejsie, domyślnego typu WAN na prawdziwym ruterze.
 - Modelu TP-Link w pracowni – do potwierdzenia przez operatora.
+
+## Kreator: najprostsza droga do adresu i bramy przełącznika (PYT-094a)
+
+Widziane na ekranie emulatora przez operatora [E, zrzut operatora 2026-11-23]. Ścieżka:
+Configuration Wizards → **Getting Started Wizard** → kroki: 1. General Information · **2. IP Settings** · 3. User Account · 4. Time Settings · 5. Summary · 6. Finish.
+
+| Pole w „2. IP Settings”            | Co widać                                                                | Co wpisać (arkusz, styczeń 2025)        |
+| ---------------------------------- | ----------------------------------------------------------------------- | --------------------------------------- |
+| **Interface**                      | wybór: _Unit 1 · Port GE1_ (zaznaczone domyślnie) / LAG / VLAN 1 / None | **VLAN 1**                              |
+| **IP Interface Source**            | _DHCP_ / _Static_ (zaznaczone Static)                                   | Static                                  |
+| **IP Address** (wymagane)          | puste                                                                   | 192.168.1.2                             |
+| **Network Mask** (wymagane)        | puste                                                                   | 255.255.255.128 (/25)                   |
+| **Administrative Default Gateway** | puste                                                                   | 192.168.1.1                             |
+| **DNS Server**                     | wypełnione przez emulator (10.28.116.24)                                | arkusz nie wymaga – zostaw albo wyczyść |
+
+Pułapki:
+
+1. **Interfejs domyślnie to Port GE1, a nie VLAN 1.** Adres zarządzania przełącznika ustawia się
+   na VLAN 1 (wszystkie porty są w nim z fabryki). Adres na jednym porcie zadziała tylko przez ten
+   port. [W]
+2. Maska jako **Network Mask** (255.255.255.128), nie jako /25. [E]
+3. Kreator kończy się w kroku 6 – po nim trzeba jeszcze **zapisać** konfigurację (Save w górnym
+   pasku), jak przy każdej zmianie. [W – do potwierdzenia, czy kreator zapisuje sam]
