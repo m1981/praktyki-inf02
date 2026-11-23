@@ -142,13 +142,15 @@ async function walkDialog(page, visit, { siteDir, settleMs, file, prefix }) {
     isEnd:
      step === dots.length &&
      (tabs.length === 0 || tabs.at(-1).getAttribute('aria-current') === 'step'),
-    task: document.querySelector('[data-tile]')
-     ? 'tabela'
-     : document.querySelector('[data-pick]')
-       ? 'klik'
-       : document.querySelector('.dl-quiz [data-ok]')
-         ? 'wybor'
-         : undefined
+    task: document.querySelector('[data-line]')
+     ? 'linie'
+     : document.querySelector('[data-tile]')
+       ? 'tabela'
+       : document.querySelector('[data-pick]')
+         ? 'klik'
+         : document.querySelector('.dl-quiz [data-ok]')
+           ? 'wybor'
+           : undefined
    };
   });
   const id = `${prefix}-${where.scene}-${String(where.step).padStart(2, '0')}`;
@@ -178,6 +180,15 @@ async function answerTask(task, right) {
   const all = [...document.querySelectorAll(scope)];
   if (right) for (const el of all.filter((e) => e.dataset.ok === '1')) await click(el);
   else await click(all.find((el) => el.dataset.ok === '0'));
+  return;
+ }
+ // Linijki: zaznacz i „Sprawdź”. Zła odpowiedź = jedna linijka spoza odpowiedzi.
+ if (task === 'linie') {
+  const all = [...document.querySelectorAll('[data-line]')];
+  for (const el of all.filter((e) => e.getAttribute('aria-pressed') === 'true')) await click(el);
+  if (right) for (const el of all.filter((e) => e.dataset.ok === '1')) await click(el);
+  else await click(all.find((e) => e.dataset.ok === '0'));
+  await click(document.querySelector('[data-check]'));
   return;
  }
  // Tabela: linijka arkusza → pole tabeli. „automatycznie” wypełnia cały wiersz (pole adresu).

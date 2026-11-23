@@ -84,6 +84,24 @@ export const SHEET_CARDS: Record<SheetCard, CardData> = {
 /** Maszyna wirtualna z kartą „LAN 3” – jest w arkuszu, ale nie na schemacie (tylko w notatce). */
 export const SHEET_VM_LAN3 = '192.168.1.4/25';
 
+/** Serwer DHCP na ruterze (zakres, DNS dla klientów, rezerwacja dla karty „WAN” serwera). */
+export const SHEET_DHCP = {
+ from: '10.10.0.2',
+ to: '10.10.0.20',
+ dns: '10.10.0.20',
+ reserved: '10.10.0.20'
+} as const;
+
+/**
+ * PRZYKŁAD, nie dane z arkusza (warstwa 3): adres, który serwer dostaje z zakresu przed rezerwacją,
+ * i adresy MAC kart serwera. Na ekranie oznaczone jako przykład.
+ */
+export const SHEET_EXAMPLE = {
+ leased: '10.10.0.7',
+ macWan: '00-1A-2B-3C-4D-01',
+ macLan1: '00-1A-2B-3C-4D-02'
+} as const;
+
 export const SHEET_CARD_IDS = Object.keys(SHEET_CARDS) as SheetCard[];
 
 /** Adres IP karty bez maski, np. „192.168.1.3”. */

@@ -439,3 +439,199 @@ line.sh-pulse:not(.sh-net) {
   transition: none;
  }
 }
+
+/* --- Warstwy 3+ (PYT-089a) --- */
+.sh-board--compact .sh {
+ max-height: 135px;
+}
+.sh-addr--dim text {
+ opacity: 0.35;
+}
+.sh-label--warn {
+ fill: var(--sim-red) !important;
+}
+.sh-label--ok {
+ font-size: 14px !important;
+}
+.sh-label--example {
+ font-style: italic;
+ fill: var(--sim-muted) !important;
+}
+.sh-label--strike {
+ text-decoration: line-through;
+ fill: #b2bec3 !important;
+}
+.sh-label--frame {
+ fill: #8a6d00 !important;
+ paint-order: stroke;
+ stroke: #fff3bf;
+ stroke-width: 6px;
+}
+.sh-on {
+ align-self: flex-start;
+ padding: 3px 12px;
+ border-radius: 14px;
+ background: #2d3436;
+ color: #fff;
+ font-size: 0.85rem;
+ font-weight: 700;
+}
+.sh-cmd {
+ font-family: monospace;
+ font-size: 13px;
+ font-weight: 700;
+ fill: var(--sim-red);
+}
+.sh-dhcp path {
+ stroke: var(--net-zielona);
+ stroke-width: 2.5;
+}
+.sh-dhcp text {
+ fill: var(--net-zielona);
+}
+.sh-dhcp--run .sh-dhcp-ask,
+.sh-dhcp--run .sh-dhcp-reply {
+ stroke-dasharray: 260;
+ animation: sh-draw 0.9s ease-out both;
+}
+.sh-dhcp--run .sh-dhcp-reply {
+ animation-delay: 1s;
+}
+@keyframes sh-draw {
+ from {
+  stroke-dashoffset: 260;
+ }
+ to {
+  stroke-dashoffset: 0;
+ }
+}
+
+/* Wycinek arkusza jako linijki */
+.sh-lines li {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 6px;
+}
+.sh-line-pick {
+ padding: 2px 8px;
+ border: 1.5px solid #b2bec3;
+ border-radius: 6px;
+ background: #fff;
+ color: #2d3436;
+ font: inherit;
+ font-size: 0.85rem;
+ text-align: left;
+ cursor: pointer;
+}
+.sh-line-pick[aria-pressed='true'] {
+ border-color: #f0b429;
+ background: #fff3bf;
+ box-shadow: 0 0 0 2px #f0b429;
+}
+.sh-check {
+ margin-top: 8px;
+}
+.sh-pool {
+ display: inline-flex;
+ gap: 2px;
+}
+.sh-pool i {
+ min-width: 14px;
+ height: 16px;
+ border-radius: 3px;
+ background: var(--net-zielona-bg);
+ border: 1px solid var(--net-zielona);
+ font-size: 0.6rem;
+ font-style: normal;
+ text-align: center;
+ line-height: 16px;
+ padding: 0 1px;
+}
+.sh-pool i.on {
+ background: var(--sim-red);
+ border-color: var(--sim-red);
+ color: #fff;
+ font-weight: 700;
+}
+
+/* Okno rezerwacji – uproszczony panel rutera */
+.sh-panel {
+ padding: 8px 12px;
+ border: 2px solid #4acbd6;
+ border-radius: 8px;
+ background: #f7fdfe;
+ font-size: 0.85rem;
+}
+.sh-panel h3 {
+ margin: 0 0 6px;
+ font-size: 0.85rem;
+}
+.sh-panel-row {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 4px 8px;
+ margin-bottom: 4px;
+}
+.sh-panel-row > span:first-child {
+ min-width: 90px;
+}
+.sh-field {
+ min-width: 150px;
+ padding: 2px 8px;
+ border: 1px solid #b2bec3;
+ border-radius: 4px;
+ background: #fff;
+ min-height: 22px;
+}
+.sh-field--warn {
+ border-color: var(--sim-red);
+ color: var(--sim-red);
+ font-weight: 700;
+}
+.sh-field--ok {
+ border-color: #2d3436;
+ font-weight: 700;
+}
+.sh-panel-btn {
+ justify-self: start;
+ padding: 2px 10px;
+ border-radius: 14px;
+ border: 1px solid #4acbd6;
+ color: #138a94;
+ font-size: 0.75rem;
+ font-weight: 700;
+}
+.sh-panel-btn--save {
+ background: #4acbd6;
+ color: #fff;
+}
+.sh-panel-list {
+ display: flex;
+ min-width: 0;
+ flex-wrap: wrap;
+ gap: 8px;
+ align-items: center;
+ margin-top: 4px;
+}
+.sh-panel-device {
+ overflow-wrap: anywhere;
+ padding: 2px 8px;
+ border-radius: 4px;
+ background: #fff3bf;
+ box-shadow: 0 0 0 2px #f0b429;
+ font-family: monospace;
+}
+.sh-example {
+ display: block;
+ margin-top: 4px;
+ color: var(--sim-muted);
+ font-style: italic;
+}
+@media (prefers-reduced-motion: reduce) {
+ .sh-dhcp--run .sh-dhcp-ask,
+ .sh-dhcp--run .sh-dhcp-reply {
+  animation: none;
+ }
+}

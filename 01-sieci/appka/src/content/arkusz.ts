@@ -9,13 +9,16 @@ import sheetDrawing from './arkusz-2025-01-schemat.jpg';
 import {
  sheetGateway,
  sheetIp,
+ SHEET_DHCP,
+ SHEET_EXAMPLE,
  SHEET_VM_LAN3,
  type SheetCard,
  type SheetNet
 } from '../model/arkusz';
 import type { TaskOption } from '../ui/controls/TalkControl';
 import type { Figure } from '../ui/ExamFigure';
-import type { ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
+import type { LinesSpec, ReservationSpec, SheetLine } from '../ui/views/SheetParts';
+import type { CardLabel, ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
 
 const SPEAKERS: Record<string, Speaker> = {
  ola: { name: 'Ola', role: 'administratorka sieci', avatar: 'O', color: '#d9ecf9' },
@@ -422,7 +425,294 @@ const ETAP_2: Exercise = {
   task(
    `Stacja dostała bramę ${WRONG_GATE_IP}. Zadziała?`,
    colored({ excerpt: undefined, shown: EVERY_ADDRESS }),
-   yesNo('Nie', `${WRONG_GATE_IP} jest zielone, stacja niebieska. Brama musi być w jej kolorze.`),
+   yesNo('Nie', `${WRONG_GATE_IP} jest zielone, stacja niebieska. Brama musi być w jej kolorze.`)
+  )
+ ]
+};
+
+// --- Warstwa 3: „Skąd adres?” (scenariusz-arkusz-3.md, wersja 3; PYT-090a, PYT-092a) ---
+// Reguła warstwy: 1 pytanie, 5 linijek arkusza, 2 pułapki, 1 nowa rzecz na schemacie (strzałka DHCP).
+
+const { from: POOL_FROM, to: POOL_TO, reserved: RESERVED } = SHEET_DHCP;
+const { leased: LEASED, macWan: MAC_WAN, macLan1: MAC_LAN1 } = SHEET_EXAMPLE;
+const lastOctet = (ip: string) => Number(ip.split('.').at(-1));
+
+const LINES: readonly SheetLine[] = [
+ { id: 'L1', text: 'serwer DHCP: włączony' },
+ { id: 'L2', text: `zakres adresów: ${POOL_FROM} ÷ ${POOL_TO}` },
+ { id: 'L3', text: `zarezerwowany adres IP ${RESERVED} dla interfejsu WAN serwera` },
+ {
+  id: 'L4',
+  text: 'adres IP oraz pozostałe parametry konfiguracji sieciowej: uzyskiwane automatycznie'
+ },
+ { id: 'L5', text: 'odśwież adres IP, w celu pobrania adresu zarezerwowanego w ruterze' }
+];
+const LINES_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o tym, skąd adres';
+const lines = (...lit: string[]): LinesSpec => ({ title: LINES_TITLE, items: LINES, lit });
+
+const EXAMPLE = '(przykład)';
+const ON_ROUTER = 'Jesteś na: ruter';
+const ON_SERVER = 'Jesteś na: serwer';
+const DHCP_ARROW = 'adres z DHCP';
+const DHCP_RESERVED = `${RESERVED} ↔ MAC karty WAN`;
+
+const QUESTION: Scene['labels'] = { 'serwer-wan': [{ text: '?' }] };
+const leasedLabel = (tone?: CardLabel['tone']): Scene['labels'] => ({
+ 'serwer-wan': [
+  { text: LEASED, tone },
+  { text: EXAMPLE, tone: 'example' }
+ ]
+});
+/** MAC-i przy obu kartach serwera; LAN 1 w trzecim rzędzie, żeby napisy na siebie nie wchodziły. */
+const macLabels = (wan?: CardLabel['tone'], lan1?: CardLabel['tone']): Scene['labels'] => ({
+ 'serwer-wan': [{ text: LEASED }, { text: `MAC ${MAC_WAN}`, tone: wan ?? 'example' }],
+ 'serwer-lan1': [{ text: '' }, { text: '' }, { text: `MAC ${MAC_LAN1}`, tone: lan1 ?? 'example' }]
+});
+
+/** Okno rezerwacji – napisy jak w panelu TP-Link (mapa-menu-urzadzen.md). */
+const reservation = (stage: ReservationSpec['stage']): ReservationSpec => ({
+ stage,
+ labels: {
+  title: 'Add a Reservation Entry',
+  mac: 'MAC Address',
+  ip: 'IP Address',
+  view: 'VIEW CONNECTED DEVICES',
+  save: 'SAVE',
+  list: 'Select from Connected Devices:'
+ },
+ device: { name: 'serwer (WAN)', mac: MAC_WAN, ip: LEASED },
+ fixedIp: RESERVED,
+ example: `MAC i adres ${LEASED} to przykład – na egzaminie będą inne.`
+});
+
+/** Warstwa 3 dzieje się na pokolorowanym schemacie; adresy z etapu 2 są tłem (przygaszone). */
+const layer3 = (state: Scene): Scene => ({
+ colored: ALL,
+ shown: EVERY_ADDRESS,
+ shownDim: true,
+ lines: lines(),
+ ...state
+});
+
+const NOTES_3: Note[] = [
+ {
+  q: 'Co to jest DHCP?',
+  a: 'Usługa, która rozdaje adresy kartom ustawionym na „automatycznie”. Na tym arkuszu działa na ruterze; w innych arkuszach bywa na serwerze.'
+ },
+ {
+  q: 'Co jeszcze daje DHCP oprócz adresu?',
+  a: `Maskę, bramę (${sheetIp('ruter-lan')}) i DNS. Dlatego w tabeli z etapu 2 karta WAN serwera ma „automatycznie” w każdej kolumnie.`
+ },
+ {
+  q: 'Dlaczego najpierw /release, a potem /renew?',
+  a: `Samo /renew prosi o przedłużenie starego adresu (${LEASED}) i część ruterów go przedłuży. /release oddaje stary adres, /renew prosi o nowy – wtedy przychodzi zarezerwowany.`
+ },
+ {
+  q: 'Co, jeśli karty nie ma na liście w panelu?',
+  a: `MAC odczytasz na serwerze: ipconfig /all, karta z adresem ${LEASED}, pole „Adres fizyczny”.`
+ },
+ {
+  q: 'Dlaczego MAC z ipconfig ma myślniki, a panel czasem chce dwukropków?',
+  a: 'To ten sam adres zapisany na dwa sposoby. Przy przepisywaniu zamień znaki.'
+ },
+ {
+  q: 'Co znaczy adres 169.254.x.x?',
+  a: 'DHCP nie odpowiedział – np. kabel jest w złym porcie. Sprawdzanie takich kłopotów to osobna warstwa.'
+ },
+ {
+  q: `Dlaczego ${LEASED} i MAC na schemacie są „przykładem”?`,
+  a: 'Arkusz ich nie podaje. Na egzaminie zobaczysz inne liczby – liczy się, skąd je wziąć.'
+ }
+];
+
+const ETAP_3: Exercise = {
+ code: '3',
+ title: 'Skąd adres?',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_3,
+ steps: [
+  kuba(
+   'Serwer, karta »WAN«: »uzyskiwane automatycznie«. Od kogo? 🤔',
+   layer3({ shownDim: false, lines: lines('L4'), labels: QUESTION, pulse: ['serwer-wan'] })
+  ),
+  ola(
+   'Te wpisaliśmy ręcznie. Tę dostaje się od DHCP – rozdawacza adresów.',
+   layer3({ labels: QUESTION })
+  ),
+  ola(
+   'Na tym arkuszu adresy rozdaje ruter.',
+   layer3({ lines: lines('L1'), labels: QUESTION, pulse: ['ruter-lan'] })
+  ),
+  kuba('Komu rozdaje? Stacji też?', layer3({ labels: QUESTION, pulse: ['stacja'] })),
+  ola(
+   'Nie. DHCP działa na karcie LAN rutera – tylko zielona sieć.',
+   layer3({ colored: ['zielona'], labels: QUESTION, pulse: ['ruter-lan'] }),
+   act('📨 Poproś ▶')
+  ),
+  action(
+   'Serwer prosi o adres, ruter odpowiada…',
+   layer3({ dhcp: { label: DHCP_ARROW, run: true }, labels: leasedLabel() })
+  ),
+  kuba(
+   `Dostał ${LEASED} z zakresu. A arkusz chce ${RESERVED}!`,
+   layer3({
+    dhcp: { label: DHCP_ARROW },
+    labels: leasedLabel('warn'),
+    lines: {
+     ...lines('L2', 'L3'),
+     pool: {
+      after: 'L2',
+      from: lastOctet(POOL_FROM),
+      to: lastOctet(POOL_TO),
+      mark: lastOctet(LEASED)
+     }
+    }
+   })
+  ),
+  ola(
+   'Dlatego jest rezerwacja: ten adres zawsze dla tej karty.',
+   layer3({ dhcp: { label: DHCP_ARROW }, labels: leasedLabel('warn'), lines: lines('L3') })
+  ),
+  kuba(
+   'Skąd ruter wie, która karta to ta?',
+   layer3({
+    dhcp: { label: DHCP_ARROW },
+    labels: leasedLabel(),
+    pulse: ['serwer-wan', 'serwer-lan1']
+   })
+  ),
+  ola(
+   'Po MAC – pamiętasz go z ARP? Każda karta ma swój.',
+   layer3({ dhcp: { label: DHCP_ARROW }, labels: macLabels() })
+  ),
+  ola(
+   `Panel rutera ma listę kart. Wybierz tę z ${LEASED}.`,
+   layer3({
+    youAreOn: ON_ROUTER,
+    dhcp: { label: DHCP_ARROW },
+    labels: macLabels('frame', 'strike'),
+    reservation: reservation('list'),
+    lines: undefined
+   }),
+   act('📌 Wybierz ▶')
+  ),
+  kuba(
+   `Wybrałem. Ale w polu adresu wpisało się ${LEASED} 🤨`,
+   layer3({
+    youAreOn: ON_ROUTER,
+    dhcp: { label: DHCP_ARROW },
+    labels: macLabels('frame', 'strike'),
+    reservation: reservation('picked'),
+    lines: undefined
+   })
+  ),
+  ola(
+   'Lista podaje obecny adres. Wpisz ten z arkusza.',
+   layer3({
+    youAreOn: ON_ROUTER,
+    dhcp: { label: DHCP_ARROW },
+    labels: macLabels('frame', 'strike'),
+    reservation: reservation('fixed'),
+    lines: { ...lines('L3'), items: LINES.filter((l) => l.id === 'L3') }
+   }),
+   act('💾 Zapisz ▶')
+  ),
+  action(
+   `Ruter zapisuje rezerwację: MAC karty WAN → ${RESERVED}…`,
+   layer3({ youAreOn: ON_ROUTER, dhcp: { label: DHCP_RESERVED }, labels: leasedLabel() })
+  ),
+  kuba(
+   'Wpisałem rezerwację, a serwer dalej ma stary adres 😩',
+   layer3({
+    youAreOn: ON_SERVER,
+    dhcp: { label: DHCP_RESERVED },
+    labels: leasedLabel('warn'),
+    lines: lines('L5')
+   })
+  ),
+  ola(
+   'Serwer pamięta stary. Każ mu zapytać jeszcze raz.',
+   layer3({
+    youAreOn: ON_SERVER,
+    dhcp: { label: DHCP_RESERVED },
+    labels: leasedLabel('warn'),
+    commands: ['ipconfig /release', 'ipconfig /renew']
+   }),
+   act('🔄 Odśwież ▶')
+  ),
+  action(
+   'Serwer pyta jeszcze raz i dostaje swój adres…',
+   layer3({
+    youAreOn: ON_SERVER,
+    dhcp: { label: DHCP_RESERVED, run: true },
+    labels: { 'serwer-wan': [{ text: `${RESERVED} ✓`, tone: 'ok' }] }
+   })
+  ),
+  quiz(
+   'Po czym ruter pozna kartę serwera?',
+   layer3({
+    dhcp: { label: DHCP_RESERVED },
+    labels: { 'serwer-wan': [{ text: `${RESERVED} ✓`, tone: 'ok' }] }
+   }),
+   [
+    ['A) Po nazwie »WAN«.', 'Nazwę »WAN« zna tylko Windows. Ruter widzi MAC.', false],
+    ['B) Po MAC.', 'Właśnie tak – MAC jest jak numer seryjny karty.', true]
+   ]
+  ),
+  // Ćwiczenie: schemat z adresami z etapu 2, bez strzałki DHCP, przy karcie „WAN” serwera „?”.
+  task(
+   'Kliknij kartę, która dostaje adres od DHCP.',
+   layer3({
+    shownDim: false,
+    labels: QUESTION,
+    task: {
+     kind: 'pick',
+     targets: CARDS_AND_SWITCH.filter((c) => c !== 'przelacznik'),
+     answer: ['serwer-wan'],
+     wrong: 'Ta karta ma adres wpisany ręcznie. Szukaj »automatycznie«.'
+    }
+   })
+  ),
+  task(
+   'Kliknij linijki, które ustawiasz na ruterze.',
+   layer3({
+    shownDim: false,
+    labels: QUESTION,
+    task: {
+     kind: 'lines',
+     answer: ['L1', 'L2', 'L3'],
+     check: 'Sprawdź',
+     wrong: 'Tę linijkę robisz na serwerze, nie na ruterze.',
+     missingOne: 'Brakuje jednej. Rezerwację też wpisujesz na ruterze.',
+     missingOneId: 'L3',
+     missingMore: 'Brakuje linijek. Wszystkie ustawienia DHCP wpisujesz na ruterze.'
+    }
+   })
+  ),
+  task(
+   'Do rezerwacji potrzebujesz MAC. Której karty?',
+   layer3({
+    shownDim: false,
+    labels: QUESTION,
+    task: {
+     kind: 'pick',
+     targets: SERVER_CARDS,
+     answer: ['serwer-wan'],
+     wrong: 'LAN 1 jest niebieska. Rezerwacja dotyczy karty w sieci rutera.'
+    }
+   })
+  ),
+  task(
+   `Serwer ma ${LEASED} zamiast ${RESERVED}. Co robisz?`,
+   layer3({ shownDim: false, labels: leasedLabel('warn') }),
+   [
+    {
+     text: `A) Wpisuję ${RESERVED} ręcznie.`,
+     feedback: 'Nie wpisuj ręcznie – arkusz każe »automatycznie«. Sprawdź rezerwację i odśwież.'
+    },
+    { text: 'B) Sprawdzam rezerwację i odświeżam adres.', correct: true }
+   ],
    { end: '↺ Od początku', restart: true }
   )
  ]
@@ -431,7 +721,7 @@ const ETAP_2: Exercise = {
 export const ARKUSZ: Course = {
  id: 'arkusz',
  title: 'Etapy ścieżki „Arkusz krok po kroku”',
- exercises: [ETAP_1, ETAP_2]
+ exercises: [ETAP_1, ETAP_2, ETAP_3]
 };
 
 /** Pod ćwiczeniami obu etapów: oryginalny schemat z arkusza, poglądowo (prośba operatora). */

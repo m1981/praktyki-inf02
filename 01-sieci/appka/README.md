@@ -85,6 +85,7 @@ szablonie ekranu (stan po kroku 5 migracji).
 | `src/content/arkusz.ts`         | „Arkusz krok po kroku”, etapy 1–2: kwestie z `scenariusz-arkusz-1-2.md`       |
 | `src/content/arkusz.test.ts`    | test: kwestie co do słowa ze scenariusza, nazwy z arkusza, bramy w kolorze    |
 | `src/ui/views/SheetView.tsx`    | schemat z arkusza, wycinek arkusza, ćwiczenia „kliknij kartę” i „tabela”      |
+| `src/ui/views/SheetParts.tsx`   | warstwy 3+: linijki arkusza z ćwiczeniem „zaznacz i sprawdź”, okno rezerwacji |
 | `src/ui/taskState.ts`           | wspólny stan ćwiczenia „uczeń sam”: widok (klik) ↔ okno rozmowy (reakcja)     |
 | `src/content/maska-swobodny.ts` | Tryb swobodny: gotowe przykłady z lekcjami i zdania paneli                    |
 | `src/content/maska-uklad.ts`    | układ diagramu maski: pozycje kart, boki kabli, napisy na kartach             |

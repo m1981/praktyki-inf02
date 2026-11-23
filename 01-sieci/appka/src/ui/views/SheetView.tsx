@@ -7,6 +7,13 @@ import {
  type SheetNet
 } from '../../model/arkusz';
 import { resetTask, setTask, useTask } from '../taskState';
+import {
+ Lines,
+ Reservation,
+ type LinesSpec,
+ type LinesTask,
+ type ReservationSpec
+} from './SheetParts';
 
 /** Pole karty z arkusza: adres, brama, DNS albo „uzyskiwane automatycznie”. */
 export type Field = 'ip' | 'gw' | 'dns' | 'auto';
@@ -84,9 +91,32 @@ export interface SheetSpec {
   /** Napisy pól jak w arkuszu. */
   labels: Record<Field, string>;
  };
- task?: PickTask | TableTask;
+ task?: PickTask | TableTask | LinesTask;
  /** Sieci pokolorowane po dobrze zrobionym ćwiczeniu. */
  solvedColored?: readonly SheetNet[];
+ // --- warstwy 3+ (PYT-089a) ---
+ /** Własne napisy pod kartą – zamiast pól z arkusza (np. „?”, przykładowy adres, MAC). */
+ labels?: Partial<Record<SheetCard, readonly CardLabel[]>>;
+ /** Adresy z arkusza przygaszone – tło, nie temat kroku. */
+ shownDim?: boolean;
+ /** Strzałka DHCP: interfejs LAN rutera ↔ karta „WAN” serwera; `run` – prośba i odpowiedź jadą teraz. */
+ dhcp?: { label: string; run?: boolean };
+ /** Na którym urządzeniu jesteśmy, np. „Jesteś na: ruter”. */
+ youAreOn?: string;
+ /** Polecenia przy serwerze, np. „ipconfig /release”. */
+ commands?: readonly string[];
+ /** Wycinek arkusza jako zwykłe linijki (zamiast `excerpt`). */
+ lines?: LinesSpec;
+ /** Okno rezerwacji w panelu rutera (zamiast wycinka). */
+ reservation?: ReservationSpec;
+ /** Mniejszy schemat – gdy pod nim stoją dwa bloki. */
+ compact?: boolean;
+}
+
+/** Napis pod kartą: zwykły, ostrzeżenie (zły adres), dobrze (✓), przykład, przekreślony. */
+export interface CardLabel {
+ text: string;
+ tone?: 'warn' | 'ok' | 'example' | 'strike' | 'frame';
 }
 
 // --- Geometria (jednostki viewBox) ---
@@ -195,15 +225,22 @@ export function SheetView({ spec, runId }: { spec: SheetSpec; runId: number }) {
  useLayoutEffect(() => resetTask(), [runId]);
  const task = useTask();
  const table = spec.task?.kind === 'table' ? spec.task : undefined;
+ const linesTask = spec.task?.kind === 'lines' ? spec.task : undefined;
  const colored = new Set<SheetNet>([
   ...(spec.colored ?? []),
   ...(task.solved ? (spec.solvedColored ?? []) : [])
  ]);
  return (
-  <div className={`sr-board sh-board${table ? ' sh-board--table' : ''}`}>
+  <div
+   className={`sr-board sh-board${table ? ' sh-board--table' : ''}${spec.compact ? ' sh-board--compact' : ''}`}
+  >
+   {spec.youAreOn && <div className="sh-on">{spec.youAreOn}</div>}
    <Schema key={`schema-${runId}`} spec={spec} colored={colored} />
+   {spec.reservation && <Reservation spec={spec.reservation} />}
    {table ? (
     <TableTaskView key={`table-${runId}`} spec={spec} task={table} />
+   ) : spec.lines ? (
+    <Lines key={`lines-${runId}`} spec={spec.lines} task={linesTask} />
    ) : (
     spec.excerpt && <Excerpt excerpt={spec.excerpt} />
    )}
@@ -342,22 +379,54 @@ function Schema({ spec, colored }: { spec: SheetSpec; colored: Set<SheetNet> }) 
     })}
 
    {/* Adresy przy kartach */}
-   {(Object.entries(spec.shown ?? {}) as [SheetCard, readonly Field[]][]).map(([card, fields]) => (
-    <g
-     key={card}
-     className={['sh-addr', spec.fly === card && 'sh-fly', pulse.has(`addr:${card}`) && 'sh-pulse']
-      .filter(Boolean)
-      .join(' ')}
-    >
-     {fields.map((field, i) => (
-      <text key={field} x={centerOf(card)} y={ADDR_Y[i]} textAnchor="middle">
-       {addressText(card, field)}
-      </text>
-     ))}
-    </g>
-   ))}
+   {(Object.entries(spec.shown ?? {}) as [SheetCard, readonly Field[]][])
+    .filter(([card]) => !spec.labels?.[card])
+    .map(([card, fields]) => (
+     <g
+      key={card}
+      className={[
+       'sh-addr',
+       spec.fly === card && 'sh-fly',
+       pulse.has(`addr:${card}`) && 'sh-pulse',
+       spec.shownDim && 'sh-addr--dim'
+      ]
+       .filter(Boolean)
+       .join(' ')}
+     >
+      {fields.map((field, i) => (
+       <text key={field} x={centerOf(card)} y={ADDR_Y[i]} textAnchor="middle">
+        {addressText(card, field)}
+       </text>
+      ))}
+     </g>
+    ))}
+
+   {/* Własne napisy pod kartami (warstwy 3+) */}
+   {(Object.entries(spec.labels ?? {}) as [SheetCard, readonly CardLabel[]][]).map(
+    ([card, items]) => (
+     <g key={`l-${card}`} className={`sh-addr${pulse.has(`addr:${card}`) ? ' sh-pulse' : ''}`}>
+      {items.map((item, i) => (
+       <text
+        key={i}
+        className={item.tone ? `sh-label--${item.tone}` : undefined}
+        x={centerOf(card)}
+        y={ADDR_Y[i]}
+        textAnchor="middle"
+       >
+        {item.text}
+       </text>
+      ))}
+     </g>
+    )
+   )}
 
    <Arrows spec={spec} pulse={pulse} />
+
+   {spec.commands?.map((cmd, i) => (
+    <text key={cmd} className="sh-cmd" x={centerOf('serwer-lan1') + 50} y={18 + i * 17}>
+     {cmd}
+    </text>
+   ))}
 
    {spec.note && (
     <text className="sh-note" x={centerOf('stacja-lan2') + 22} y={40}>
@@ -438,6 +507,24 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
       textAnchor="middle"
      >
       ✕
+     </text>
+    </g>
+   )}
+   {spec.dhcp && (
+    <g className={`sh-arrow sh-dhcp${spec.dhcp.run ? ' sh-dhcp--run' : ''}`}>
+     {/* Prośba: od karty „WAN” serwera do rutera; odpowiedź: z powrotem, trochę wyżej. */}
+     <path
+      className="sh-dhcp-ask"
+      d={`M ${srvWan - 6} ${top} C ${srvWan - 6} 52, ${rutLan + 6} 52, ${rutLan + 6} ${top}`}
+      markerEnd="url(#sh-head-zielona)"
+     />
+     <path
+      className="sh-dhcp-reply"
+      d={`M ${rutLan - 6} ${top} C ${rutLan - 6} 30, ${srvWan + 6} 30, ${srvWan + 6} ${top}`}
+      markerEnd="url(#sh-head-zielona)"
+     />
+     <text x={(srvWan + rutLan) / 2} y={26} textAnchor="middle">
+      {spec.dhcp.label}
      </text>
     </g>
    )}

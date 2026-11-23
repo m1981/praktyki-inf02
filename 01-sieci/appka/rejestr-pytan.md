@@ -104,6 +104,7 @@ zob. PYT-004).
 | PYT-094 | z-domyslna  | zamknięte (a)    | Brama przełącznika: kreator czy trasa 0.0.0.0/0 (warstwa 5)       |
 | PYT-095 | decyzja     | zamknięte        | Rozwijane notatki „Dla dociekliwych” pod sceną                    |
 | PYT-096 | decyzja     | zamknięte (a)    | Commit notatek, wzorców i scenariusza warstwy 3; push             |
+| PYT-097 | decyzja     | zamknięte (a)    | Commit i push warstwy 3                                           |
 
 ## Pytania
 
@@ -1327,7 +1328,11 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   (wzorzec 1).
 - **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 3.
 - **Odpowiedź (2026-11-23):** „92a 93a 94a” + zrzut ekranu Getting Started Wizard → 2. IP Settings + prośba o rozwijaną sekcję notatek pod sceną (PYT-095). → (a)
-- **Wykonanie:** kod warstwy 3 według wersji 3 – w toku.
+- **Wykonanie:** zakładka 3 „Skąd adres?” na stronie „Arkusz krok po kroku” (18 kroków sceny,
+  4 ćwiczenia, 7 notatek „Dla dociekliwych”); nowe części widoku: linijki arkusza z „Sprawdź”, okno
+  rezerwacji, strzałka DHCP, plakietka „Jesteś na:”. Dopisana do scenariusza reakcja ćwiczenia 2,
+  gdy brakuje więcej niż jednej linijki. Test porównuje kwestie, linijki, polecenia, reakcje
+  i notatki ze scenariuszem co do słowa. `pnpm build`: 1470 testów, 387 pomiarów e2e.
 
 ### PYT-093 · decyzja · zamknięte
 
@@ -1380,3 +1385,12 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a) – notatki od razu pomagają na lekcji z etapami 1–2.
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku do commita z warstwą 3.
 - **Odpowiedź (2026-11-23):** „96a” → (a): commit i push wszystkiego.
+
+### PYT-097 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 3 gotowa na dysku (PYT-092a). Push = zakładka widoczna dla uczniów, karta na
+  stronie zbiorczej mówi „Warstwy 1–3”, zapowiedź „Warstwy 4–7”.
+- **Opcje:** (a) commit i push; (b) commit bez push – push po Twoim obejrzeniu zakładki; (c) poprawki.
+- **Rekomendacja:** (b) – pilot dla uczniów warto najpierw obejrzeć, zwłaszcza okno rezerwacji.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-23):** „97a wyglada i dziala super jak dla mnie.” → (a): commit i push.

@@ -97,7 +97,32 @@ Obok pięć linijek L1–L5.
 Ćwiczenie 2 – reakcja, gdy uczeń zaznaczy tylko L1 i L2 (pominie L3, bo jest w niej słowo
 „serwera”): „Brakuje jednej. Rezerwację też wpisujesz na ruterze.”
 
+Ćwiczenie 2 – reakcja, gdy brakuje więcej niż jednej linijki rutera (dopisane przy kodzie, PYT-092a):
+„Brakuje linijek. Wszystkie ustawienia DHCP wpisujesz na ruterze.”
+
 Odpowiedzi do zadania 4: A) Wpisuję 10.10.0.20 ręcznie. B) Sprawdzam rezerwację i odświeżam adres.
+
+## Dla dociekliwych (rozwijane pod sceną, PYT-095)
+
+Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi być taka jak tutaj (test).
+
+### Warstwa 3
+
+- **Co to jest DHCP?** Usługa, która rozdaje adresy kartom ustawionym na „automatycznie”. Na tym
+  arkuszu działa na ruterze; w innych arkuszach bywa na serwerze.
+- **Co jeszcze daje DHCP oprócz adresu?** Maskę, bramę (10.10.0.1) i DNS. Dlatego w tabeli z etapu 2
+  karta WAN serwera ma „automatycznie” w każdej kolumnie.
+- **Dlaczego najpierw /release, a potem /renew?** Samo /renew prosi o przedłużenie starego adresu
+  (10.10.0.7) i część ruterów go przedłuży. /release oddaje stary adres, /renew prosi o nowy – wtedy
+  przychodzi zarezerwowany.
+- **Co, jeśli karty nie ma na liście w panelu?** MAC odczytasz na serwerze: ipconfig /all, karta
+  z adresem 10.10.0.7, pole „Adres fizyczny”.
+- **Dlaczego MAC z ipconfig ma myślniki, a panel czasem chce dwukropków?** To ten sam adres zapisany
+  na dwa sposoby. Przy przepisywaniu zamień znaki.
+- **Co znaczy adres 169.254.x.x?** DHCP nie odpowiedział – np. kabel jest w złym porcie. Sprawdzanie
+  takich kłopotów to osobna warstwa.
+- **Dlaczego 10.10.0.7 i MAC na schemacie są „przykładem”?** Arkusz ich nie podaje. Na egzaminie
+  zobaczysz inne liczby – liczy się, skąd je wziąć.
 
 ## Uproszczenia (notatka dla nauczyciela, nie na ekran)
 

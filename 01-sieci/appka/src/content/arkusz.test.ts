@@ -47,7 +47,7 @@ function quizReactions(stage: string): string[] {
  return [...SCENARIO.slice(start, end).matchAll(/^- [AB]: (.+)$/gm)].map((m) => unquote(m[1]));
 }
 
-const [ETAP_1, ETAP_2] = ARKUSZ.exercises;
+const [ETAP_1, ETAP_2, ETAP_3] = ARKUSZ.exercises;
 const isTask = (step: Step) => step.speaker === 'task';
 /** Polecenie ćwiczenia z tabelą – mechanika i tekst z PYT-077a, scenariusz go nie podaje. */
 const isTableTask = (step: Step) => step.view.type === 'sheet' && step.view.task?.kind === 'table';
@@ -116,6 +116,94 @@ describe('notatki „Dla dociekliwych” co do słowa ze scenariusza', () => {
  });
 });
 
+// --- Warstwa 3: scenariusz-arkusz-3.md (wersja 3) ---
+
+const SCENARIO_3 = readFileSync(new URL('../../scenariusz-arkusz-3.md', import.meta.url), 'utf8');
+
+/** Wiersze tabeli z sekcji `## {section}` scenariusza warstwy 3. */
+function rows3(section: string, first = /^\| \d+ /): string[][] {
+ const start = SCENARIO_3.indexOf(`## ${section}`);
+ const end = SCENARIO_3.indexOf('\n## ', start + 4);
+ return SCENARIO_3.slice(start, end)
+  .split('\n')
+  .filter((line) => first.test(line))
+  .map((line) =>
+   line
+    .split('|')
+    .slice(1, -1)
+    .map((cell) => cell.trim())
+  );
+}
+
+/** Tekst po etykiecie w akapicie scenariusza, np. „reakcja, gdy … : „…””. */
+function quoteAfter(label: string): string {
+ const start = SCENARIO_3.indexOf(label);
+ const text = SCENARIO_3.slice(start).replace(/\s*\n\s*/g, ' ');
+ return unquote(text.match(/: („[^\n]*?”)(?= |$)/)![1]);
+}
+
+describe('warstwa 3 co do słowa ze scenariusza', () => {
+ const isTask3 = (s: Step) => s.speaker === 'task';
+
+ it('pięć linijek arkusza', () => {
+  const sheet = ETAP_3.steps[0].view;
+  const items = sheet.type === 'sheet' ? sheet.lines?.items : [];
+  expect(items?.map((l) => [l.id, l.text])).toEqual(
+   rows3('Linijki z arkusza', /^\| L\d /).map((c) => [c[0], c[2]])
+  );
+ });
+
+ it('scena', () => {
+  const expected = rows3('Scena').map(sceneLine);
+  expect(ETAP_3.steps.filter((s) => !isTask3(s)).map((s) => s.text)).toEqual(expected);
+ });
+
+ it('reakcje na zagadkę', () => {
+  const start = SCENARIO_3.indexOf('Reakcje na zagadkę:');
+  const expected = [
+   ...SCENARIO_3.slice(start, SCENARIO_3.indexOf('##', start)).matchAll(/^- [AB]: (.+)$/gm)
+  ].map((m) => unquote(m[1]));
+  const quiz = ETAP_3.steps.find((s) => s.control.type === 'quiz')!;
+  expect(quiz.control.type === 'quiz' && quiz.control.options.map((o) => o.feedback)).toEqual(
+   expected
+  );
+ });
+
+ it('polecenia i reakcje na błąd', () => {
+  const rows = rows3('Ćwiczenie');
+  const tasks = ETAP_3.steps.filter(isTask3);
+  expect(tasks.map((s) => s.text)).toEqual(rows.map((c) => c[1]));
+  const reaction = (s: Step) => {
+   if (s.view.type === 'sheet' && s.view.task?.kind === 'lines') return s.view.task.wrong;
+   return wrongReaction(s);
+  };
+  expect(tasks.map(reaction)).toEqual(rows.map((c) => unquote(c.at(-1)!)));
+ });
+
+ it('ćwiczenie 2: reakcje na brakujące linijki', () => {
+  const lines = ETAP_3.steps.filter(isTask3)[1].view;
+  const task = lines.type === 'sheet' && lines.task?.kind === 'lines' ? lines.task : undefined;
+  expect(task?.missingOne).toBe(
+   quoteAfter('Ćwiczenie 2 – reakcja, gdy uczeń zaznaczy tylko L1 i L2')
+  );
+  expect(task?.missingMore).toBe(quoteAfter('Ćwiczenie 2 – reakcja, gdy brakuje więcej'));
+ });
+
+ it('notatki „Dla dociekliwych”', () => {
+  const start = SCENARIO_3.indexOf('### Warstwa 3');
+  const end = SCENARIO_3.indexOf('\n#', start + 4);
+  const expected = SCENARIO_3.slice(start, end)
+   .split(/\n- /)
+   .slice(1)
+   .map((item) => item.replace(/\s*\n\s*/g, ' ').trim())
+   .map((item) => {
+    const m = item.match(/^\*\*(.+?)\*\* (.+)$/)!;
+    return { q: m[1], a: m[2] };
+   });
+  expect(ETAP_3.notes).toEqual(expected);
+ });
+});
+
 describe('nazwy urządzeń jak w arkuszu', () => {
  const steps = ARKUSZ.exercises.flatMap((ex) => ex.steps);
  /** Kwestie Oli i Kuby – mowa potoczna (PYT-075b: „komputer” wolno tylko tu). */
@@ -144,6 +232,11 @@ describe('nazwy urządzeń jak w arkuszu', () => {
     }
     if (v.excerpt) out.push(v.excerpt.title, ...v.excerpt.rows.map((r) => r.heading));
     if (v.note) out.push(v.note);
+    if (v.lines) out.push(v.lines.title, ...v.lines.items.map((l) => l.text));
+    if (v.task?.kind === 'lines') out.push(v.task.wrong, v.task.missingOne, v.task.missingMore);
+    if (v.reservation) out.push(v.reservation.device.name, v.reservation.example);
+    if (v.youAreOn) out.push(v.youAreOn);
+    if (v.dhcp) out.push(v.dhcp.label);
    }
    return out;
   })

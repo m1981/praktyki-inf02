@@ -58,7 +58,7 @@ window.CWICZENIA = {
    krok: 'arkusz',
    ikona: '📝',
    nazwa: 'Arkusz krok po kroku',
-   opis: 'Etapy 1–2: koloruję sieci, wypełniam tabelę adresów.',
+   opis: 'Warstwy 1–3: koloruję sieci, wypełniam tabelę adresów, sprawdzam, skąd adres.',
    gdzie: 'arkusz: styczeń 2025'
   },
   {
@@ -74,8 +74,8 @@ window.CWICZENIA = {
  wkrotce: [
   {
    krok: 'arkusz',
-   nazwa: 'Etapy 3–6',
-   opis: 'DHCP, kolejność konfiguracji, ping nie działa, VLAN.',
+   nazwa: 'Warstwy 4–7',
+   opis: 'Kto zna nazwy, jak wejść na urządzenie, kolejność i sprawdzenie, cały arkusz.',
    gdzie: 'w przygotowaniu'
   }
  ]
