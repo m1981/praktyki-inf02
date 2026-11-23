@@ -140,12 +140,26 @@ Model minimalny, który ma zostać w głowie: (1) sieć to wszystko, co łączy 
 i kończy się na karcie rutera albo serwera; (2) bez bramy ping działa tylko w jednej sieci;
 (3) brama to jedyne wyjście poza swoją sieć.
 
-### Stan
+### Warstwy zamiast etapów 3–6 (PYT-089a, 2026-11-23)
 
-| Etap | Stan                                                                                         |
-| ---- | -------------------------------------------------------------------------------------------- |
-| 1–2  | scenariusz przyjęty (PYT-074a); strona `symulator-arkusz.html` gotowa, bez commita (PYT-078) |
-| 3–6  | nie zaczęte                                                                                  |
+Pełny widok arkusza z adnotacjami przytłaczał (PYT-088). Każde pytanie administratora dostaje
+własną zakładkę strony „Arkusz krok po kroku”, na tym samym schemacie. Reguła warstwy: 1 pytanie,
+najwyżej 5 linijek arkusza, najwyżej 2 pułapki, 1 nowa rzecz na schemacie.
+
+| #   | Warstwa                              | Stan                                                                 |
+| --- | ------------------------------------ | -------------------------------------------------------------------- |
+| 1   | Ile jest sieci?                      | gotowe (`symulator-arkusz.html`, PYT-074a)                           |
+| 2   | Którędy wychodzi się z sieci?        | gotowe (jw.)                                                         |
+| 3   | Skąd adres? (DHCP, rezerwacja, MAC)  | pilot – scenariusz do akceptacji: `scenariusz-arkusz-3.md` (PYT-090) |
+| 4   | Kto zna nazwy? (DNS)                 | po lekcji z warstwą 3                                                |
+| 5   | Jak wejść na urządzenie?             | po lekcji; zależy od modeli rutera i przełącznika                    |
+| 6   | W jakiej kolejności i jak sprawdzić? | po lekcji                                                            |
+| 7   | Cały arkusz (uczeń sam oznacza ①–⑤)  | makieta z PYT-088 jako ostatnia faza                                 |
+
+VLAN-y (dawny etap 6) wracają po warstwie 7, na arkuszach z czerwca 2023–2026.
+
+Każda warstwa: scenariusz według `wzorce-scenariuszy.md` → recenzja sub-agenta
+(`prompt-recenzent.md`) → akceptacja operatora → kod.
 
 ### Do ustalenia
 

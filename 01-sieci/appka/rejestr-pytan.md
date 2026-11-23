@@ -94,6 +94,16 @@ zob. PYT-004).
 | PYT-084 | decyzja     | zamknięte (a)    | Porządek w linkach: jedna lista ćwiczeń, stopka, strażnik linków  |
 | PYT-085 | decyzja     | zamknięte (a)    | Strona-sierota „Lab: Windows – Ostatnie Szlify” w `04-sprzet/`    |
 | PYT-086 | decyzja     | zamknięte (b)    | Commit i push strony zbiorczej, stopek i strażnika linków         |
+| PYT-087 | decyzja     | zamknięte (→088) | „Jak myśli administrator” jako podstawa etapów 3–4                |
+| PYT-088 | decyzja     | zamknięte (→089) | Strona „Czytam arkusz” zamiast osobnych etapów 3–5                |
+| PYT-089 | decyzja     | zamknięte (a)    | Warstwy „Arkusz krok po kroku”: jedno pytanie na zakładkę         |
+| PYT-090 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 3 „Skąd adres?”                    |
+| PYT-091 | z-domyslna  | zamknięte (b)    | Modele rutera i przełącznika w pracowni                           |
+| PYT-092 | decyzja     | zamknięte (a)    | Warstwa 3, wersja 3: rezerwacja z listy w panelu TP-Link          |
+| PYT-093 | decyzja     | zamknięte (a)    | Zrzut menu CBS350 operatora: miejsce w repozytorium               |
+| PYT-094 | z-domyslna  | zamknięte (a)    | Brama przełącznika: kreator czy trasa 0.0.0.0/0 (warstwa 5)       |
+| PYT-095 | decyzja     | zamknięte        | Rozwijane notatki „Dla dociekliwych” pod sceną                    |
+| PYT-096 | decyzja     | zamknięte (a)    | Commit notatek, wzorców i scenariusza warstwy 3; push             |
 
 ## Pytania
 
@@ -1218,3 +1228,155 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-20):** „86b wyglda cudnie :)” → (b): commit i push wszystkiego.
+- **Wykonanie:** commit `0c893c7`; push `99f8df9..0c893c7` (razem z `e414f6f`, `9eeaa95`, `af91540`).
+
+### PYT-087 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-23): „jako siecioweic i administrator skad wiedziales co i wjakiej
+  kolejnosci szukac i co ustawic? jak. Opowiedz na bazie tych tresci z egzaminu” + zrzuty zadań 2,
+  3 i 6 arkusza ze stycznia 2025. Agent opowiedział pięć pytań, które zadaje administrator (ile
+  sieci, wyjście z każdej sieci, skąd adres, kto zna nazwy, co od czego zależy), i wynikającą z nich
+  kolejność: MAC karty WAN serwera → ruter (rezerwacja) → przełącznik → serwer → stacja i maszyna
+  wirtualna → ping w każdej sieci.
+- **Opcje:** (a) ta opowieść jako szkielet scenariuszy etapu 3 (skąd adres: DHCP, rezerwacja, MAC)
+  i etapu 4 (kolejność z zależności), w stylu „rozmowa” Oli i Kuby; (b) najpierw osobna ściąga dla
+  ucznia „5 pytań do arkusza” (jedna strona, do druku); (c) obie, ściąga pierwsza.
+- **Rekomendacja:** (c) – ściąga jest krótka i od razu przydatna na lekcji; scenariusze etapów 3–4
+  mogą się do niej odwoływać.
+- **Skutek braku odpowiedzi:** nie piszę ani ściągi, ani scenariuszy.
+- **Odpowiedź (2026-11-23):** „czy my jestesmy az tak daleko w polu z materialem? ;) Bo jak czytam ile tutaj jest rzeczy do zrobienia to mnie glowa boli. Czy to tylko tak strasznie wyglada? czy mozesz zaproponowac makiete czytania arkusza wedlug tych procedur wraz z oryginalna trescia i pulapkami?” + tekst zadań 2–8 arkusza ze stycznia 2025.
+- **Rozstrzygnięcie:** zamiast ściągi i dwóch scenariuszy – makieta jednej strony „Czytam arkusz” (PYT-088).
+
+### PYT-088 · decyzja · zamknięte
+
+- **Kontekst:** makieta „Czytam arkusz” (2026-11-23, strona HTML w katalogu tymczasowym sesji):
+  oryginalny tekst zadań 2–8 ze stycznia 2025, przy każdej linijce pytanie ①–⑤, które ona
+  rozstrzyga, i pułapki (⚠, ze wskazaniem źródła: arkusz, zasady oceniania 2026-01 albo wiedza
+  inżynierska); filtr „jedno pytanie naraz”; na końcu kolejność pracy. Linijki spoza sieci
+  wyszarzone. Pytania ① i ② ćwiczy już „Arkusz krok po kroku”.
+- **Opcje:** (a) z makiety strona dla ucznia „📄 Czytam arkusz”, karta w kroku 4 strony zbiorczej;
+  zastępuje osobne etapy 3 (DHCP), 4 (kolejność) i 5 (ping) z mapy – etap 6 (VLAN) zostaje na
+  później; (b) jak (a), ale etapy 3–5 jako ćwiczenia „rozmowa” dalej w planie; (c) poprawki do
+  makiety najpierw.
+- **Rekomendacja:** (a) – jedna strona zamiast trzech aplikacji; uczniowie dostają procedurę od
+  razu. Ćwiczenia interaktywne dopiszemy tylko tam, gdzie po lekcji widać, że strona nie wystarcza.
+- **Skutek braku odpowiedzi:** makieta zostaje makietą.
+- **Odpowiedź (2026-11-23):** „Kurcze jest ladnie i dzieki za wysilek ale to jest ogrom informacji :( Nie sadzilem ze jeszcze tak wiele nie rozumiem i ja i uczniowie :( Czy masz pomysl jak spojnie da sie jeszcze to podzilic na etapy/bloki/warstwy zeby zmiejszyc obciazenie kognitywne a ten widodok bylby dopiero ostatnia faza?”
+- **Rozstrzygnięcie:** makieta zostaje jako ostatnia faza; podział na warstwy – PYT-089.
+
+### PYT-089 · decyzja · zamknięte
+
+- **Kontekst:** makieta „Czytam arkusz” (PYT-088) przytłacza: operator chce podziału na warstwy,
+  z pełnym widokiem dopiero na końcu. Propozycja: zakładki 3–7 tej samej strony „Arkusz krok po
+  kroku”, na tym samym schemacie, każda z regułą: 1 pytanie, najwyżej 5 linijek arkusza, najwyżej
+  2 pułapki, 1 rzecz dorysowana na schemacie. 3 „Skąd adres?” (DHCP, rezerwacja, MAC); 4 „Kto zna
+  nazwy?” (DNS); 5 „Jak wejść na urządzenie?” (dokumentacja, adres fabryczny, hasło); 6 „W jakiej
+  kolejności i jak sprawdzić?” (kolejność, ping w jednej sieci, zapora); 7 „Cały arkusz” – makieta,
+  ale uczeń najpierw sam oznacza linijki ①–⑤, dopiero potem widzi adnotacje.
+- **Opcje:** (a) przyjąć warstwy i zacząć od scenariusza warstwy 3 jako pilota – kolejne dopiero po
+  lekcji z uczniami; (b) przyjąć warstwy, ale 5 i 6 połączyć w jedną; (c) poprawki do podziału.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie piszę scenariuszy.
+- **Odpowiedź (2026-11-23):** „Swietnie :) 89a” → (a)
+- **Wykonanie:** scenariusz warstwy 3: `scenariusz-arkusz-3.md` (PYT-090).
+
+### PYT-090 · decyzja · zamknięte
+
+- **Kontekst:** `scenariusz-arkusz-3.md`, wersja 1: 5 linijek arkusza (DHCP, zakres, rezerwacja,
+  „automatycznie”, „odśwież”), 2 pułapki (MAC karty WAN; odświeżenie adresu), 1 nowa rzecz na
+  schemacie (strzałka DHCP). Scena 16 kroków, ćwiczenie 4 polecenia. Kwestie: najdłuższa 9 słów.
+  Przykładowy adres 10.10.0.7 i przykładowe MAC są zmyślone (arkusz ich nie podaje).
+- **Opcje:** (a) akceptuję – trzecia zakładka „Skąd adres?” na stronie „Arkusz krok po kroku”;
+  (b) poprawki: „krok, co zmienić”; (c) krótsza scena (np. bez kroków 9–11 o MAC).
+- **Rekomendacja:** (a) albo (b) po lekturze.
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 3.
+- **Recenzja (2026-11-23):** na prośbę operatora („czy mozemy sprobowac czebys napisal sobie prompt
+  dla recensenta trenera sieciowaca ktory zna obciazenia kognitynwe nastolatkow bez doswiadczenia
+  zeby zrobil review scenariusza?”, „jako sub agent”) – prompt `prompt-recenzent.md`, recenzent jako
+  sub-agent bez wniosków autora. Werdykt: „gotowe po poprawkach”; 12 uwag, agent przyjął wszystkie
+  → scenariusz w wersji 2. Pytanie recenzenta o MAC: uczniowie znają MAC z symulatora ARP i kroku 2
+  teorii (odpowiedź agenta). Pytanie o model rutera: PYT-091.
+- **Odpowiedź (2026-11-23):** „Super robota. Zapisz pochwalone trzy rzeczy jako warte uzywania w koljenych warstwa w takim miejscu zeby nowe sesje sie na tym wzorowoaly. 90a 91b Router TPLink z webowym interfejsem a jako Cisco seria 350 [link do emulatora CBS350] login: cisco pass: cisco Zlec moze subagentowi prace rozpoanania interfejsow webowych tych urzadzen zeby nie tracic tokenow w tej sesji. Niech agetn zapisz trwale do pliku mape menu tych urzadzen. Co ty na to?” → (a)
+- **Wykonanie:** kod warstwy 3 po mapie menu (PYT-091b): kroki 11–12 trzeba dopasować do TP-Linka.
+
+### PYT-091 · z-domyslna · zamknięte
+
+- **Kontekst:** recenzent pyta, jaki ruter jest w pracowni: od modelu zależy, czy rezerwację robi się
+  z listy klientów DHCP, czy przez przepisanie MAC, oraz format MAC i adresy fabryczne (warstwa 5).
+- **Opcje:** (a) scenariusz opisuje obie drogi (przepisanie z `ipconfig /all` albo wybór z listy),
+  bez nazwy modelu; (b) operator podaje modele rutera i przełącznika – kroki 11–12 i warstwa 5
+  pod te urządzenia.
+- **Rekomendacja:** (b), gdy znasz modele; do tego czasu (a).
+- **Skutek braku odpowiedzi:** pracuję na (a); warstwa 5 czeka na modele.
+- **Odpowiedź (2026-11-23):** „Super robota. Zapisz pochwalone trzy rzeczy jako warte uzywania w koljenych warstwa w takim miejscu zeby nowe sesje sie na tym wzorowoaly. 90a 91b Router TPLink z webowym interfejsem a jako Cisco seria 350 [link do emulatora CBS350] login: cisco pass: cisco Zlec moze subagentowi prace rozpoanania interfejsow webowych tych urzadzen zeby nie tracic tokenow w tej sesji. Niech agetn zapisz trwale do pliku mape menu tych urzadzen. Co ty na to?” → (b)
+- **Wykonanie:** sub-agent mapuje menu emulatorów (Cisco CBS350, TP-Link – model do potwierdzenia) do `mapa-menu-urzadzen.md`. Wzorce z recenzji: `wzorce-scenariuszy.md`, podlinkowane z README, `prompt-recenzent.md` i mapy.
+
+### PYT-092 · decyzja · zamknięte
+
+- **Kontekst:** mapa menu (`mapa-menu-urzadzen.md`, sub-agent, 2026-11-23): w panelu TP-Link
+  (Archer C6 v4, emulator) rezerwację robi się w Advanced → Network → DHCP Server → Address
+  Reservation → Add; przycisk VIEW CONNECTED DEVICES pozwala wybrać kartę z listy, ale wpisuje jej
+  obecny adres IP. Sub-agent nie zalogował się do emulatora Cisco (środowisko zablokowało
+  automatyczne wpisanie hasła) – menu przełącznika opisał z plików emulatora i pomocy Cisco.
+  Scenariusz warstwy 3 w wersji 3: kroki 11–14 przebudowane (wybór z listy zamiast
+  `ipconfig /all`), scena 18 kroków, P1 = „lista wpisuje obecny adres – wpisz ten z arkusza”;
+  droga przez `ipconfig /all` przeniesiona do notatki dla nauczyciela.
+- **Opcje:** (a) przyjąć wersję 3 i zacząć kod; (b) zostać przy wersji 2 (przepisywanie MAC
+  z `ipconfig /all`); (c) poprawki.
+- **Rekomendacja:** (a) – mniej skakania między urządzeniami, a pułapka P1 rodzi się ze sceny
+  (wzorzec 1).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 3.
+- **Odpowiedź (2026-11-23):** „92a 93a 94a” + zrzut ekranu Getting Started Wizard → 2. IP Settings + prośba o rozwijaną sekcję notatek pod sceną (PYT-095). → (a)
+- **Wykonanie:** kod warstwy 3 według wersji 3 – w toku.
+
+### PYT-093 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-23): „zrbo commit roboczy mapy menu. zrobilem agentem wiekszy
+  zrzut menu Cisco switcha. Przeanalizuj czy ta wersja cos rozjasnia, czy czegos brakuje i czy
+  wplywa na zmiany w scenariuszu.” Commit roboczy: `c22fa72` (bez push). Zrzut operatora:
+  `CBS350_menu_pola_basic.md` w katalogu głównym, poza gitem – 100 stron widoku Basic, pola
+  i przyciski stron, bez zawartości okien Add/Edit (poza Add w User Accounts), bez paska górnego
+  (Save), kreatorów i ekranu pierwszego logowania. Uzupełnia mapę sub-agenta, nie przeczy jej.
+- **Opcje:** (a) przenieść do `01-sieci/appka/mapa-menu-cbs350-basic.md`, podlinkować z
+  `mapa-menu-urzadzen.md` jako pełny spis stron, zacommitować; (b) zostawić poza gitem.
+- **Rekomendacja:** (a) – drugie, niezależne źródło dla tych samych ścieżek menu.
+- **Skutek braku odpowiedzi:** plik zostaje, gdzie jest.
+- **Odpowiedź (2026-11-23):** „92a 93a 94a” + zrzut ekranu Getting Started Wizard → 2. IP Settings + prośba o rozwijaną sekcję notatek pod sceną (PYT-095). → (a)
+- **Wykonanie:** plik przeniesiony do `mapa-menu-cbs350-basic.md`, podlinkowany ze źródeł `mapa-menu-urzadzen.md`.
+
+### PYT-094 · z-domyslna · zamknięte
+
+- **Kontekst:** arkusz każe ustawić przełącznikowi „brama domyślna”. W CBS350 nie ma takiego pola
+  na stronie IPv4 Interface (oba zrzuty to potwierdzają). Dwie drogi: IPv4 Static Routes → trasa
+  0.0.0.0/0 (nowe pojęcie dla ucznia) albo Configuration Wizards → Getting Started Wizard, zakładka
+  IP Settings z polem „Administrative Default Gateway” (wg pomocy Cisco; żaden zrzut nie pokazał
+  treści kreatora).
+- **Opcje:** (a) w warstwie 5 droga przez kreator – jedna strona: adres, maska, brama; trasa
+  0.0.0.0/0 w notatce dla nauczyciela; warunek: ktoś sprawdzi kreator w emulatorze (operator ręcznie,
+  ok. 5 minut – agent nie może się zalogować); (b) droga przez trasę statyczną.
+- **Rekomendacja:** (a) – mniej nowych pojęć; „trasa 0.0.0.0/0” to materiał na później.
+- **Skutek braku odpowiedzi:** scenariusz warstwy 5 opisze kreator jako „do sprawdzenia”.
+- **Odpowiedź (2026-11-23):** „92a 93a 94a” + zrzut ekranu Getting Started Wizard → 2. IP Settings + prośba o rozwijaną sekcję notatek pod sceną (PYT-095). → (a)
+- **Wykonanie:** zrzut operatora potwierdza pola kreatora; nowa pułapka: domyślny interfejs to Port GE1, a nie VLAN 1. Opis: `mapa-menu-urzadzen.md`, sekcja „Kreator”.
+
+### PYT-095 · decyzja · zamknięte
+
+- **Kontekst:** polecenie operatora (2026-11-23): „Czy mozesz dodac rozwijana sekcje pod spodem
+  okna scenriusza (domyslnie zamknieta) z zebranymi i aktualnymi notatkami dla nauczyciel gdybym ja
+  albo uczniowie chcieli sie dowiedziec wiecej lub zrozumiec przyczyny, motywacje, itp.?”
+- **Wykonanie:** sekcja „Dla dociekliwych” w scenariuszu (źródło treści) i rozwijana sekcja pod
+  sceną każdej zakładki; test porównuje treść na stronie ze scenariuszem co do słowa.
+
+### PYT-096 · decyzja · zamknięte
+
+- **Kontekst:** na dysku bez commita: notatki „Dla dociekliwych” na stronie „Arkusz krok po kroku”
+  (PYT-095: scenariusz, treść, test, szablon ekranu, zbudowane strony), wzorce scenariuszy, prompt
+  recenzenta, scenariusz warstwy 3 (wersja 3), mapa nauki, README, rejestr. Na `main` bez push:
+  `c22fa72` i `422df8d` (mapy menu). `pnpm build` zielony (1050 testów, 297 pomiarów). Porównania
+  zrzutów starych stron nie powtarzałem: zmiana w szablonie ekranu działa tylko, gdy ćwiczenie ma
+  notatki (stare strony ich nie mają).
+- **Opcje:** (a) commit teraz (dokumenty; notatki z kodem) i push wszystkiego; (b) commit bez push –
+  push razem z warstwą 3; (c) wszystko razem z warstwą 3.
+- **Rekomendacja:** (a) – notatki od razu pomagają na lekcji z etapami 1–2.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku do commita z warstwą 3.
+- **Odpowiedź (2026-11-23):** „96a” → (a): commit i push wszystkiego.

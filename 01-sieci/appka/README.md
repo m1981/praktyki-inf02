@@ -100,6 +100,10 @@ Laboratorium VLAN). Każdy krok to jedna kwestia (najwyżej 12 słów – test) 
 nikt nie mówi, a na schemacie coś się dzieje. Kwestie najpierw trafiają do scenariusza
 (`scenariusz-routing.md`) i dopiero po akceptacji do `src/content/`.
 
+Scenariusze warstw „Arkusz krok po kroku” piszesz według [`wzorce-scenariuszy.md`](wzorce-scenariuszy.md)
+(reguła warstwy, trzy wzorce, częste błędy), a przed akceptacją dajesz je recenzentowi
+([`prompt-recenzent.md`](prompt-recenzent.md), jako sub-agent).
+
 ## Redakcja tekstów
 
 Wszystkie zdania dla ucznia są w `src/content/`. Zmieniasz tylko tekst w cudzysłowach. W Trybie
