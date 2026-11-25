@@ -141,6 +141,11 @@ export interface SheetSpec {
  wrongPort?: boolean;
  /** Nazwa portu przy końcu kabla od strony rutera albo przełącznika, np. „PORT1”. */
  ports?: Partial<Record<Cable, string>>;
+ // --- warstwa 8: ping ---
+ /** Strzałki „ping”: kropkowane, neutralne; na końcu ✓ (odpowiedź) albo ✕ (limit czasu). */
+ pings?: readonly { from: SheetCard; to: SheetCard; ok: boolean }[];
+ /** Przy którym komputerze stoją `commands` (domyślnie przy serwerze). */
+ commandsAt?: 'serwer' | 'stacja';
 }
 
 /** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
@@ -504,7 +509,13 @@ function Schema({ spec, colored }: { spec: SheetSpec; colored: Set<SheetNet> }) 
    <Arrows spec={spec} pulse={pulse} />
 
    {spec.commands?.map((cmd, i) => (
-    <text key={cmd} className="sh-cmd" x={centerOf('serwer-lan1') + 50} y={18 + i * 17}>
+    <text
+     key={cmd}
+     className="sh-cmd"
+     x={spec.commandsAt === 'stacja' ? VIEW.w - 6 : centerOf('serwer-lan1') + 50}
+     y={18 + i * 17}
+     textAnchor={spec.commandsAt === 'stacja' ? 'end' : undefined}
+    >
      {cmd}
     </text>
    ))}
@@ -592,6 +603,9 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
     </g>
    )}
    {spec.browse && <BrowseArrow browse={spec.browse} />}
+   {(spec.pings ?? []).map((ping) => (
+    <PingArrow key={`${ping.from}-${ping.to}`} ping={ping} />
+   ))}
    {spec.kubaRow && <KubaRow at={spec.kuba} />}
    {(spec.asks ?? []).map((ask) => (
     <AskArrow key={`${ask.from}-${ask.to}`} ask={ask} />
@@ -844,6 +858,22 @@ function WrongPortCable() {
    className="sh-cable--wrong"
    d={`M ${from} ${y} C ${from} ${y + 24}, ${to} ${y + 24}, ${to} ${y}`}
   />
+ );
+}
+
+/** Strzałka „ping” (warstwa 8): kropkowana, w kolorze neutralnym – kolor zostaje dla sieci. */
+function PingArrow({ ping }: { ping: NonNullable<SheetSpec['pings']>[number] }) {
+ const from = centerOf(ping.from);
+ const to = centerOf(ping.to);
+ const top = (card: SheetCard) => (card === 'stacja-lan2' ? DEV_Y - 2 : CARD_Y - 4);
+ const peak = 40;
+ return (
+  <g className={`sh-arrow sh-ping${ping.ok ? '' : ' sh-ping--fail'}`}>
+   <path d={`M ${from} ${top(ping.from)} C ${from} ${peak}, ${to} ${peak}, ${to} ${top(ping.to)}`} />
+   <text x={to + 12} y={top(ping.to) - 4} textAnchor="start">
+    {ping.ok ? '✓' : '✕'}
+   </text>
+  </g>
  );
 }
 

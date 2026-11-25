@@ -1681,7 +1681,254 @@ const ETAP_7: Exercise = {
      text: 'B) Dopiero w zadaniu 7.',
      feedback: 'Bez odświeżenia nie wejdziesz pod nowy adres rutera.'
     }
-   ],
+   ]
+  )
+ ]
+};
+
+// --- Warstwa 8: „Jak sprawdzić, że działa?” (scenariusz-arkusz-8.md, wersja 2; PYT-117a) ---
+// Nowa rzecz na schemacie: strzałka „ping” (kropkowana, neutralna) z ✓ albo ✕. Nazwa reguły zapory –
+// skrót; pełna nazwa w polskim Windows do sprawdzenia (PYT-118).
+
+const STATION_ADDR = sheetIp('stacja-lan2');
+const SERVER_WAN_IP = SHEET_DHCP.reserved;
+
+const LINES_8: readonly SheetLine[] = [
+ {
+  id: 'L1',
+  where: 'zadanie 8',
+  text:
+   '8. Na serwerze za pomocą poleceń systemowych wykonaj test komunikacji serwera ze stacją roboczą oraz interfejsem LAN rutera.'
+ },
+ { id: 'L2', where: 'zadanie 8', text: 'Wyświetl adres IP interfejsu WAN serwera.' },
+ {
+  id: 'L3',
+  where: 'zadanie 8',
+  text: 'W razie potrzeby na stacji roboczej zmień odpowiednio ustawienia zapory sieciowej.'
+ },
+ {
+  id: 'L4',
+  where: 'zadanie 8',
+  text:
+   'UWAGA: Po wykonaniu testów połączenia zgłoś Przewodniczącemu ZN – przez podniesienie ręki – gotowość do przeprowadzenia ponownego sprawdzenia komunikacji serwera z ruterem oraz stacją roboczą. Sprawdzenie wykonaj w obecności egzaminatora. Na ekranie serwera wyświetl automatycznie nadany adres IP'
+ }
+];
+const LINES_8_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o sprawdzaniu';
+const lines8 = (...lit: string[]): LinesSpec => ({ title: LINES_8_TITLE, items: LINES_8, lit });
+
+const PING_ROUTER = { from: 'serwer-wan', to: 'ruter-lan', ok: true } as const;
+const pingStation = (ok: boolean) => ({ from: 'serwer-lan1', to: 'stacja-lan2', ok }) as const;
+const BOTH_OK = [PING_ROUTER, pingStation(true)];
+
+/** Napis o zaporze w trzecim rzędzie – w drugim stoi brama przełącznika obok. */
+const FIREWALL_ON: Labels = {
+ 'stacja-lan2': [
+  { text: STATION_CIDR },
+  { text: '' },
+  { text: '🛡 zapora: ping zablokowany', tone: 'warn' }
+ ]
+};
+const FIREWALL_OFF: Labels = {
+ 'stacja-lan2': [
+  { text: STATION_CIDR },
+  { text: '' },
+  { text: '🛡 zapora: ping dozwolony', tone: 'ok' }
+ ]
+};
+
+/** Warstwa 8: wszystko ustawione (koniec warstwy 7), adresy z arkusza przygaszone, serwer z rezerwacji. */
+const layer8 = (state: Scene): Scene => {
+ const { labels, ...rest } = state;
+ return {
+  colored: ALL,
+  shown: EVERY_ADDRESS,
+  shownDim: true,
+  lines: lines8(),
+  cables: ALL_CABLES,
+  ports: PORTS_ALL,
+  kubaRow: true,
+  labels: { ...serverWan({ text: SERVER_WAN_IP }), ...labels },
+  ...rest
+ };
+};
+/** Po regule zapory (krok 11 i dalej). */
+const allowed = (state: Scene): Scene =>
+ layer8({ ...state, labels: { ...FIREWALL_OFF, ...state.labels } });
+
+const NOTES_8: Note[] = [
+ {
+  q: 'Co to jest ping?',
+  a: 'Wysyła „żądanie echa” – wiadomość ICMP – i czeka na odpowiedź. „Odpowiedź z …” – działa. „Upłynął limit czasu żądania” – odpowiedź nie przyszła.'
+ },
+ {
+  q: 'Za co są punkty?',
+  a: 'Styczeń 2026: „urządzenie odpowiada na polecenie, np. ping”. Czerwiec 2025: „test potwierdzający komunikację”. Liczy się odpowiedź, nie samo wpisanie polecenia.'
+ },
+ {
+  q: 'Dlaczego zapora blokuje ping?',
+  a: 'Zapora Windows z fabryki nie odpowiada na „żądanie echa”. Reguła „żądanie echa ICMPv4” to wyjątek tylko dla pingu. Reguł o tej nazwie bywa kilka (dla różnych profili sieci) – włącz wszystkie.'
+ },
+ {
+  q: 'Czemu nie wyłączyć całej zapory?',
+  a: 'Arkusz mówi „zmień odpowiednio”. Wyłączona zapora otwiera wszystko, reguła – tylko ping.'
+ },
+ {
+  q: 'Jak sprawdzić, że to nie adres?',
+  a: `Na stacji ipconfig; z serwera ping ${SWITCH_IP} – przełącznik odpowiada, więc niebieska sieć działa.`
+ },
+ {
+  q: `ipconfig pokazuje inny adres niż ${SERVER_WAN_IP}?`,
+  a: 'Sprawdź rezerwację i odśwież adres (warstwa 3).'
+ },
+ {
+  q: 'A zadanie 9?',
+  a: 'Strona www.egzamin.local w maszynie wirtualnej sprawdza DNS z warstwy 4 i kartę maszyny w trybie mostkowanym. Wraca w warstwie 9.'
+ }
+];
+
+const ETAP_8: Exercise = {
+ code: '8',
+ title: 'Jak sprawdzić, że działa?',
+ tab: 'Sprawdzam',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_8,
+ steps: [
+  kuba(
+   'Wszystko ustawione i zapisane. Jak sprawdzić, że działa? 🤔',
+   layer8({ lines: lines8('L1') })
+  ),
+  ola(
+   'Test komunikacji to ping. Z serwera: do stacji i do rutera.',
+   layer8({ pulse: ['ruter-lan', 'stacja-lan2'] })
+  ),
+  ola('Ping wysyła »żądanie echa«. Odpowiedź znaczy: działa.', layer8({})),
+  kuba(
+   `Siadam do serwera. Najpierw ruter: ping ${ROUTER_LAN_IP}.`,
+   layer8({}),
+   act('📶 Ping ▶')
+  ),
+  action(
+   'Kuba wpisuje ping do rutera…',
+   layer8({ pings: [PING_ROUTER], commands: [`ping ${ROUTER_LAN_IP} → odpowiedź ✓`] })
+  ),
+  kuba(
+   `Ruter odpowiada! Teraz stacja: ping ${STATION_ADDR}.`,
+   layer8({ pings: [PING_ROUTER] }),
+   act('📶 Ping ▶')
+  ),
+  action(
+   'Kuba wpisuje ping do stacji…',
+   layer8({
+    pings: [PING_ROUTER, pingStation(false)],
+    commands: [`ping ${STATION_ADDR} → limit czasu ✕`]
+   })
+  ),
+  kuba(
+   'Stacja milczy 😩 Może zły adres? Zmienię go.',
+   layer8({ pings: [PING_ROUTER, pingStation(false)] })
+  ),
+  ola(
+   'Stop. Adres jest z arkusza. Windows z fabryki nie odpowiada na ping.',
+   layer8({
+    pings: [PING_ROUTER, pingStation(false)],
+    labels: FIREWALL_ON,
+    pulse: ['addr:stacja-lan2']
+   })
+  ),
+  ola(
+   'Arkusz to przewidział – linijka o zaporze. Idź do stacji.',
+   layer8({ pings: [PING_ROUTER, pingStation(false)], labels: FIREWALL_ON, lines: lines8('L3') }),
+   act('🛡 Zapora ▶')
+  ),
+  action(
+   'Kuba włącza w zaporze stacji regułę »żądanie echa ICMPv4«…',
+   allowed({ pings: [PING_ROUTER] })
+  ),
+  action(
+   'Kuba wraca do serwera i jeszcze raz pinguje stację…',
+   allowed({ pings: BOTH_OK, commands: [`ping ${STATION_ADDR} → odpowiedź ✓`] })
+  ),
+  kuba(
+   '»Ze stacją oraz interfejsem rutera« – ping ze stacji do rutera? Idę!',
+   allowed({ pings: BOTH_OK, lines: lines8('L1') }),
+   act('📶 Ping ▶')
+  ),
+  action(
+   'Kuba wpisuje na stacji ping do rutera…',
+   allowed({
+    arrows: ['blocked'],
+    commands: [`ping ${ROUTER_LAN_IP} → limit czasu ✕`],
+    commandsAt: 'stacja'
+   })
+  ),
+  kuba('Znowu limit czasu! Coś zepsułem? 😩', allowed({ arrows: ['blocked'] })),
+  ola(
+   'Nie. Ten serwer nie przekazuje ruchu dalej. Pamiętasz ✕ przy bramie?',
+   allowed({ arrows: ['blocked'], pulse: ['serwer'] })
+  ),
+  ola(
+   'Z serwera: do rutera zieloną kartą, do stacji niebieską.',
+   allowed({ pings: BOTH_OK, pulse: ['serwer-wan', 'serwer-lan1'] })
+  ),
+  action(
+   'Kuba wraca do serwera i wyświetla adres WAN: ipconfig…',
+   allowed({
+    pings: BOTH_OK,
+    commands: [`ipconfig → WAN: ${SERVER_WAN_IP}`],
+    pulse: ['addr:serwer-wan'],
+    lines: lines8('L2')
+   })
+  ),
+  ola(
+   'Zgłoś gotowość. Przy egzaminatorze powtórzysz pingi i ipconfig.',
+   allowed({ pings: BOTH_OK, commands: [`ipconfig → WAN: ${SERVER_WAN_IP}`], lines: lines8('L4') })
+  ),
+  quiz('Ping do stacji: limit czasu. Zgłaszasz gotowość?', allowed({ pings: BOTH_OK, lines: lines8('L4') }), [
+   ['A) Tak.', 'Punkt jest za odpowiedź, nie za wpisanie pingu.', false],
+   ['B) Nie, najpierw zapora.', 'Właśnie tak – najpierw stacja musi odpowiedzieć.', true]
+  ]),
+  // Ćwiczenie: schemat jak w kroku 1 – bez napisu o zaporze, bez strzałek i poleceń.
+  task(
+   'Kliknij linijki, które wykonasz poleceniami na serwerze.',
+   layer8({
+    task: {
+     kind: 'lines',
+     answer: ['L1', 'L2'],
+     check: 'Sprawdź',
+     wrong: 'Zaporę zmieniasz na stacji – choć linijka stoi w zadaniu 8.',
+     wrongBy: { L4: 'To zgłoszenie ręką. Polecenia powtórzysz przy egzaminatorze.' },
+     missingOne: 'Brakuje adresu WAN – wyświetlasz go na serwerze.',
+     missingOneId: 'L2',
+     missingMore: 'Przy serwerze robisz dwie rzeczy: ping i ipconfig.'
+    }
+   })
+  ),
+  task('Serwer: ruter odpowiada, stacja – limit czasu. Co zmieniasz?', layer8({}), [
+   { text: 'A) Regułę zapory na stacji.', correct: true },
+   {
+    text: 'B) Adres IP stacji.',
+    feedback: 'Adres wpisałeś z arkusza. Windows z fabryki nie odpowiada na ping.'
+   }
+  ]),
+  task('Ping ze stacji do rutera nie przechodzi. Co robisz?', layer8({}), [
+   {
+    text: 'A) Szukam błędu w bramie stacji.',
+    feedback: 'To nie błąd. Ten serwer nie przekazuje ruchu dalej.'
+   },
+   { text: 'B) Nic – tak ma być.', correct: true }
+  ]),
+  task(
+   'Kliknij kartę, którą serwer pinguje ruter.',
+   layer8({
+    task: {
+     kind: 'pick',
+     targets: ['serwer-wan', 'serwer-lan1'],
+     answer: ['serwer-wan'],
+     wrong: 'Ruter jest w zielonej sieci. Ping idzie zieloną kartą.'
+    }
+   }),
+   undefined,
    { end: '↺ Od początku', restart: true }
   )
  ]
@@ -1703,6 +1950,15 @@ const KUBA_7: KubaAt[] = [
  ...times(4, 'serwer'),
  'ruter',
  ...times(7, 'serwer'),
+ undefined
+];
+const KUBA_8: KubaAt[] = [
+ ...times(3, undefined),
+ ...times(7, 'serwer'),
+ 'stacja',
+ ...times(2, 'serwer'),
+ ...times(4, 'stacja'),
+ ...times(2, 'serwer'),
  undefined
 ];
 const KUBA_5: KubaAt[] = [
@@ -1737,7 +1993,8 @@ export const ARKUSZ: Course = {
   withKuba(ETAP_4, KUBA_4),
   withKuba(ETAP_5, KUBA_5),
   withKuba(ETAP_6, KUBA_6),
-  withKuba(ETAP_7, KUBA_7)
+  withKuba(ETAP_7, KUBA_7),
+  withKuba(ETAP_8, KUBA_8)
  ]
 };
 

@@ -124,6 +124,9 @@ zob. PYT-004).
 | PYT-114 | decyzja     | zamknięte (a)    | Odwołania do warstw 6–7 w notatkach wdrożonych warstw 5–6         |
 | PYT-115 | z-domyslna  | otwarte (a)      | Czy pula DHCP rutera przesuwa się sama po zmianie adresu LAN?     |
 | PYT-116 | decyzja     | zamknięte (a)    | Commit i push warstwy 7                                           |
+| PYT-117 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 8 „Jak sprawdzić, że działa?”      |
+| PYT-118 | z-domyslna  | otwarte (a)      | Nazwa reguły zapory „żądanie echa” w polskim Windows w pracowni   |
+| PYT-119 | decyzja     | zamknięte (a)    | Commit i push warstwy 8                                           |
 
 ## Pytania
 
@@ -1694,3 +1697,44 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) – pierwszy raz kable na schemacie; obejrzyj kroki 5–13 (zły port i przepięcie).
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-25):** „jest super 116a” → (a): commit i push.
+
+### PYT-117 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „warstwa 8”. `scenariusz-arkusz-8.md`, wersja 2 – po recenzji
+  sub-agenta („gotowe po poprawkach”, 12 uwag, agent przyjął wszystkie; m.in. reguła „ping z arkusza
+  zostaje w jednej sieci”, powód zapory „Windows z fabryki nie odpowiada na ping”, P2 rodzi się z L1,
+  poprawiony cytat z zasad oceniania, zagadka o zgłoszeniu gotowości). Pytanie recenzenta o schemat –
+  jak na końcu warstwy 7 (odpowiedź agenta). P1 zapora na stacji, P2 ping ze stacji do rutera „to nie
+  błąd”. Zadanie 9 (maszyna wirtualna, tryb mostkowany) odsunięte do warstwy 9 – brief wymieniał je
+  w materiale warstwy 8, ale to trzecia pułapka. Scena 20 kroków (najdłuższa kwestia 12 słów),
+  ćwiczenie 4 polecenia, 7 notatek.
+- **Opcje:** (a) akceptuję – ósma zakładka „8 Sprawdzam”, zadanie 9 w warstwie 9; (b) poprawki „krok,
+  co zmienić”; (c) zadanie 9 jednak w tej warstwie (dłuższa scena, trzecia pułapka).
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 8.
+- **Odpowiedź (2026-11-25):** „117a 118a” → (a)
+- **Wykonanie:** zakładka 8 „Jak sprawdzić, że działa?” (krótka nazwa „Sprawdzam”; 20 kroków sceny,
+  4 ćwiczenia, 7 notatek); nowe części widoku: strzałka „ping” (kropkowana, neutralna, ✓/✕), polecenia
+  także przy stacji. Napis o zaporze w trzecim rzędzie pod stacją (w drugim stoi brama przełącznika).
+  Test co do słowa ze scenariuszem i pozycje Kuby. `pnpm build`: 4659 testów, 846 pomiarów e2e.
+
+### PYT-118 · z-domyslna · otwarte (czeka na sprawdzenie)
+
+- **Kontekst:** scena mówi „reguła »żądanie echa ICMPv4«”; w notatce dla nauczyciela pełna nazwa
+  „Udostępnianie plików i drukarek (żądanie echa — ruch przychodzący ICMPv4)” – z wiedzy agenta,
+  niesprawdzona na polskim Windows z pracowni.
+- **Opcje:** (a) operator przy okazji sprawdza nazwę na stacji w pracowni (Zapora Windows Defender
+  z zabezpieczeniami zaawansowanymi → Reguły przychodzące); (b) zostawić jak jest.
+- **Rekomendacja:** (a) – kod nie czeka; na ekranie jest tylko skrót „żądanie echa ICMPv4”.
+- **Skutek braku odpowiedzi:** notatka zostaje z dopiskiem „niesprawdzone”.
+- **Odpowiedź (2026-11-25):** „117a 118a” → (a): operator sprawdzi nazwę w pracowni.
+
+### PYT-119 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 8 gotowa na dysku (PYT-117a); scenariusz 8 bez commita. Push = zakładka 8
+  u uczniów, karta „Warstwy 1–8”, zapowiedź „Warstwa 9”. Nazwa reguły zapory w notatce dla nauczyciela
+  – do sprawdzenia (PYT-118).
+- **Opcje:** (a) commit i push; (b) commit bez push – push po obejrzeniu; (c) poprawki.
+- **Rekomendacja:** (b) – obejrzyj kroki 7–12 (zapora) i 13–17 (ping ze stacji).
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-25):** „119a obejrzale i wyglada super” → (a): commit i push.

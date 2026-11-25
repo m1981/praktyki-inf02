@@ -155,7 +155,7 @@ najwyżej 5 linijek arkusza, najwyżej 2 pułapki, 1 nowa rzecz na schemacie.
 | 5   | Jak wejść na urządzenie?                                         | gotowe (zakładka 5, PYT-101a)                                              |
 | 6   | Co ustawić na przełączniku i jak tego nie zgubić? (VLAN 1, Save) | gotowe na dysku (zakładka 6 „Przełącznik: ustaw i zapisz”, PYT-107a)       |
 | 7   | W jakiej kolejności to robię? (kable pierwsze, panel „ucieka”)   | gotowe na dysku (zakładka 7 „Kolejność”, PYT-113a; P2 zły port, PYT-111a)  |
-| 8   | Jak sprawdzić, że działa? (zapora, ping w jednej sieci)          | po warstwie 7                                                              |
+| 8   | Jak sprawdzić, że działa? (zapora, ping w jednej sieci)          | gotowe na dysku (zakładka 8 „Sprawdzam”, PYT-117a)                         |
 | 9   | Cały arkusz (uczeń sam oznacza ①–⑤)                              | makieta z PYT-088 jako ostatnia faza                                       |
 
 VLAN-y (dawny etap 6) wracają po warstwie 9, na arkuszach z czerwca 2023–2026.
