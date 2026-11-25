@@ -682,3 +682,17 @@ line.sh-pulse:not(.sh-net) {
  text-transform: uppercase;
  letter-spacing: 0.03em;
 }
+
+/* --- Warstwa 5: strzałka „przeglądarka” --- */
+.sh-browse path {
+ fill: none;
+ stroke: #8395a7;
+ stroke-width: 3;
+}
+.sh-browse text {
+ fill: #576574;
+ font-family: monospace;
+}
+.sh-head--szara {
+ fill: #8395a7;
+}

@@ -107,6 +107,9 @@ zob. PYT-004).
 | PYT-097 | decyzja     | zamknięte (a)    | Commit i push warstwy 3                                           |
 | PYT-098 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 4 „Kto zna nazwy?”                 |
 | PYT-099 | decyzja     | zamknięte (a)    | Commit i push warstwy 4                                           |
+| PYT-100 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 5 „Jak wejść na urządzenie?”       |
+| PYT-101 | decyzja     | zamknięte (a)    | Commit i push warstwy 5                                           |
+| PYT-102 | decyzja     | zamknięte (a)    | Pasek „Gdzie jest Kuba” we wszystkich warstwach                   |
 
 ## Pytania
 
@@ -1424,3 +1427,52 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) – jak przy warstwie 3, jedno spojrzenie przed uczniami.
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-25):** „jest super, dobra robota :) 99a” → (a): commit i push.
+
+### PYT-100 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „warstwa 5 prosze”. `scenariusz-arkusz-5.md`, wersja 2 – po
+  recenzji sub-agenta („gotowe po poprawkach”, 12 uwag, agent przyjął wszystkie). Główna zmiana: na
+  fabryczny ruter wchodzimy z serwera (karta WAN na „automatycznie”, kabel ze schematu), nie ze stacji
+  kablem „na chwilę”. P1: maska /25 stacji a fabryczny adres przełącznika 192.168.1.254; P2: wymuszone
+  nowe hasło (Cisco: i użytkownik). Odsunięte do warstwy 6: adres i brama przełącznika (kreator,
+  VLAN 1), Save, nowy adres panelu rutera. Pytania recenzenta: komputer do rutera – serwer (przyjęte);
+  stan startowy stacji – bez adresu przed zadaniem 6, Kuba wpisuje go w kroku 9; model TP-Link – na
+  ekranie „przykład”, kod nie czeka na PYT-091 (odpowiedzi agenta). Scena 19 kroków (najdłuższa
+  kwestia 11 słów), ćwiczenie 4 polecenia, 6 notatek.
+- **Opcje:** (a) akceptuję – piąta zakładka; (b) poprawki „krok, co zmienić”; (c) krótsza scena.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 5.
+- **Odpowiedź (2026-11-25):** „100a swietna robota :)” → (a)
+- **Wykonanie:** zakładka 5 „Jak wejść na urządzenie?” (19 kroków sceny, 4 ćwiczenia, 6 notatek); nowa
+  część widoku: strzałka „przeglądarka”; adresy fabryczne w modelu (`SHEET_FACTORY`, TP-Link jako
+  przykład). Test co do słowa ze scenariuszem. `pnpm build`: 3009 testów, 564 pomiary e2e.
+
+### PYT-101 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 5 gotowa na dysku (PYT-100a); scenariusz warstwy 5 bez commita. Push =
+  zakładka 5 u uczniów, karta na stronie zbiorczej „Warstwy 1–5”, zapowiedź „Warstwy 6–7”.
+- **Opcje:** (a) commit i push; (b) commit bez push – push po Twoim obejrzeniu; (c) poprawki.
+- **Rekomendacja:** (b) – pierwsza warstwa z konkretnymi urządzeniami; warto rzucić okiem na
+  adresy fabryczne i hasła.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-25):** „101a 102a swietna intepretacja” → (a): commit i push.
+
+### PYT-102 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „czy mozesz przemyslec taki pomysl aby dodac rzad pomiedzy
+  schematem z animacjami a tym polem arkusza tak aby wyswietlaca w kazdym kroku gdzie jest Kuba
+  w danym kroku animacji. Mysle ze to pomoze zarowno uczniom zwizualizowac sobie dynamike/horeografie
+  ich pracy a takze pomoze tobie i recenzentom analizowac wykonalnosc krokow. Powiedz jak to rozumiesz
+  i jakbys to zrobil/zlecil?” Propozycja agenta: pasek „📍 miejsce · 🖥 ekran · ✋ czynność” + ślad
+  miejsc w zakładce; jeden słownik miejsc (arkusz, stacja, serwer, szafa) i ekranów; kolumna
+  „Kuba” w scenariuszach (test co do słowa); test spójności (ekran tylko przy komputerze, strzałka
+  „przeglądarka” z miejsca Kuby, bez „teleportu”); sekcja „wykonalność choreografii” u recenzenta
+  i we wzorcach. Pasek zastępuje plakietki „Jesteś na:” / „Przeglądarka na:”.
+- **Opcje:** (a) cały plan: A makieta HTML (3 kroki warstwy 5) → B sub-agent wypełnia kolumnę
+  „Kuba” w scenariuszach 1–5 i zgłasza niespójności → C akceptacja operatora → D kod → E nowy
+  recenzent sprawdza wykonalność 1–5; (b) tylko kolumna w scenariuszach i test spójności (narzędzie
+  dla autorów i recenzenta), bez paska na ekranie; (c) pasek tylko od warstwy 6.
+- **Rekomendacja:** (a), zaczynając od makiety – wygląd paska rozstrzyga, czy nie dokłada za dużo
+  czytania.
+- **Skutek braku odpowiedzi:** nie zaczynam.
+- **Odpowiedź (2026-11-25):** „101a 102a swietna intepretacja” → (a): etap A – makieta HTML w toku.

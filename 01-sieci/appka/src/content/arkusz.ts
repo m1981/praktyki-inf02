@@ -12,6 +12,7 @@ import {
  SHEET_DHCP,
  SHEET_CARDS,
  SHEET_EXAMPLE,
+ SHEET_FACTORY,
  SHEET_ROUTER_DNS,
  SHEET_VM_LAN3,
  type SheetCard,
@@ -935,8 +936,281 @@ const ETAP_4: Exercise = {
      answer: ['ruter-wan'],
      wrong: `Ta karta pyta nasz serwer. ${DNS_WORLD} jest w ustawieniach rutera.`
     }
-   }),
-   undefined,
+   })
+  )
+ ]
+};
+
+// --- Warstwa 5: „Jak wejść na urządzenie?” (scenariusz-arkusz-5.md, wersja 2; PYT-100a) ---
+// Nowa rzecz na schemacie: strzałka „przeglądarka” (ciągła, szara) od komputera do panelu urządzenia.
+
+const ipOf = (cidr: string) => cidr.split('/')[0];
+const ROUTER_FACTORY_IP = ipOf(SHEET_FACTORY.routerLan);
+const SWITCH_FACTORY_IP = ipOf(SHEET_FACTORY.switch);
+const STATION_CIDR = SHEET_CARDS['stacja-lan2'].cidr ?? '';
+const SWITCH_IP = sheetIp('przelacznik');
+
+const LINES_5: readonly SheetLine[] = [
+ {
+  id: 'L1',
+  where: 'ruter',
+  text:
+   'Ruter pracuje na ustawieniach fabrycznych zgodnie z dokumentacją, która jest dostępna w folderze RUTER na nośniku opisanym DOKUMENTACJA/PROGRAMY.'
+ },
+ {
+  id: 'L2',
+  where: 'ruter',
+  text: 'Jeżeli ruter wymaga zmiany hasła, ustaw je zgodnie z wymogami urządzenia.'
+ },
+ {
+  id: 'L3',
+  where: 'przełącznik',
+  text:
+   'Przełącznik pracuje na ustawieniach fabrycznych zgodnie z dokumentacją, która jest dostępna w folderze PRZEŁĄCZNIK na nośniku opisanym DOKUMENTACJA/PROGRAMY.'
+ },
+ {
+  id: 'L4',
+  where: 'przełącznik',
+  text: 'Jeżeli przełącznik wymaga zmiany hasła, ustaw je zgodnie z wymogami urządzenia.'
+ },
+ { id: 'L5', where: 'stacja, LAN 2', text: `adres IP: ${STATION_CIDR}` }
+];
+const LINES_5_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o tym, jak wejść na urządzenie';
+const lines5 = (...lit: string[]): LinesSpec => ({ title: LINES_5_TITLE, items: LINES_5, lit });
+
+const ON_SERVER_BROWSER = 'Przeglądarka na: serwer';
+const ON_STATION_BROWSER = 'Przeglądarka na: stacja';
+
+type Labels = NonNullable<Scene['labels']>;
+const ROUTER_FACTORY = (note: string): Labels => ({
+ 'ruter-lan': [{ text: SHEET_FACTORY.routerLan }, { text: note, tone: 'example' }]
+});
+const SWITCH_FACTORY: Labels = {
+ przelacznik: [{ text: SHEET_FACTORY.switch }, { text: '(fabrycznie)', tone: 'example' }]
+};
+/** Pod kartą WAN serwera o rząd niżej – żeby nie wchodzić na napisy pod ruterem. */
+const SERVER_LEASE: Labels = {
+ 'serwer-wan': [
+  { text: '' },
+  { text: SHEET_FACTORY.routerLease },
+  { text: '(od DHCP, przykład)', tone: 'example' }
+ ]
+};
+const STATION_SHEET: Labels = { 'stacja-lan2': [{ text: STATION_CIDR }] };
+const STATION_TEMP: Labels = {
+ 'stacja-lan2': [{ text: SHEET_FACTORY.stationTemp }, { text: '(na chwilę)', tone: 'example' }]
+};
+const SWITCH_DONE: Labels = {
+ przelacznik: [
+  { text: SHEET_CARDS.przelacznik.cidr ?? '' },
+  { text: '(po konfiguracji)', tone: 'example' }
+ ]
+};
+const RF = ROUTER_FACTORY('(fabrycznie, przykład)');
+const TO_ROUTER: Scene['browse'] = {
+ from: 'serwer-wan',
+ to: 'ruter-lan',
+ label: ROUTER_FACTORY_IP
+};
+const TO_SWITCH: Scene['browse'] = {
+ from: 'stacja-lan2',
+ to: 'przelacznik',
+ label: SWITCH_FACTORY_IP
+};
+
+/** Warstwa 5: urządzenia fabryczne – bez adresów z arkusza (WAN rutera, LAN 1 serwera, przełącznik, stacja). */
+const layer5 = (state: Scene): Scene => {
+ const { labels, ...rest } = state;
+ return {
+  colored: ALL,
+  shown: EVERY_ADDRESS,
+  shownDim: true,
+  lines: lines5(),
+  labels: {
+   'ruter-wan': [{ text: '' }],
+   'serwer-lan1': [{ text: '' }],
+   przelacznik: [{ text: '' }],
+   'stacja-lan2': [{ text: '' }],
+   ...labels
+  },
+  ...rest
+ };
+};
+/** Stan przy przełączniku (kroki 9–17): stacja z adresem z arkusza, przełącznik fabryczny. */
+const atSwitch = (state: Scene): Scene =>
+ layer5({
+  youAreOn: ON_STATION_BROWSER,
+  browse: TO_SWITCH,
+  bubble: `${SWITCH_FACTORY_IP} ✕ brak odpowiedzi`,
+  ...state,
+  labels: { ...RF, ...SWITCH_FACTORY, ...STATION_SHEET, ...state.labels }
+ });
+const switchOpen = (state: Scene): Scene =>
+ atSwitch({ bubble: `${SWITCH_FACTORY_IP} ✓`, labels: STATION_TEMP, ...state });
+
+const NOTES_5: Note[] = [
+ {
+  q: 'Skąd wziąć adres i hasło fabryczne?',
+  a: 'Z dokumentacji w folderach RUTER i PRZEŁĄCZNIK. Adresy w tej lekcji są z emulatorów producentów (TP-Link Archer C6, Cisco CBS350) – Twój model może mieć inne.'
+ },
+ {
+  q: 'Czy mogę wejść na ruter ze stacji?',
+  a: 'Tak – kablem na chwilę do rutera, z kartą ustawioną na „automatycznie”. Z serwera jest prościej: kabel do rutera i tak jest na schemacie.'
+ },
+ {
+  q: 'Czy przełącznik może rozdawać adresy?',
+  a: `Ten model ma serwer DHCP, ale z fabryki wyłączony. Sam pyta o adres, a gdy nikt nie odpowie, bierze ${SWITCH_FACTORY_IP}.`
+ },
+ {
+  q: 'Jakie hasło przyjmie Cisco?',
+  a: 'Co najmniej 8 znaków i 3 z 4 rodzajów: wielka litera, mała litera, cyfra, znak specjalny. Bez »cisco«, »cbs«, nazwy użytkownika i ciągów typu »abc« albo »123«.'
+ },
+ {
+  q: 'Co, gdy po zmianie adresu panel przestaje odpowiadać?',
+  a: 'Urządzenie ma już nowy adres – wejdź pod nowy. Ćwiczysz to w warstwie 6.'
+ },
+ {
+  q: 'Dlaczego na Cisco trzeba kliknąć Save?',
+  a: 'Apply zmienia tylko bieżącą konfigurację, Save zapisuje ją na stałe – bez tego restart kasuje zmiany. Ćwiczysz to w warstwie 6.'
+ }
+];
+
+const ETAP_5: Exercise = {
+ code: '5',
+ title: 'Jak wejść na urządzenie?',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_5,
+ steps: [
+  kuba(
+   'Ruter i przełącznik są fabryczne. Jak do nich wejść? 🤔',
+   layer5({ lines: lines5('L1', 'L3'), pulse: ['ruter', 'przelacznik'] })
+  ),
+  ola('Przez przeglądarkę – pod adresem z dokumentacji.', layer5({})),
+  ola(`Ruter fabrycznie: ${ROUTER_FACTORY_IP}.`, layer5({ labels: RF })),
+  kuba(
+   'Z którego komputera? Stacja nie ma kabla do rutera.',
+   layer5({ labels: RF, pulse: ['c-green'] })
+  ),
+  ola(
+   'Z serwera. Jego karta WAN jest na »automatycznie«.',
+   layer5({ labels: RF, youAreOn: ON_SERVER_BROWSER, pulse: ['serwer-wan'] }),
+   act('🌐 Otwórz ▶')
+  ),
+  action(
+   'Ruter daje serwerowi adres z DHCP. Panel się otwiera…',
+   layer5({
+    labels: { ...RF, ...SERVER_LEASE },
+    youAreOn: ON_SERVER_BROWSER,
+    browse: TO_ROUTER,
+    bubble: `${ROUTER_FACTORY_IP} ✓`
+   })
+  ),
+  kuba(
+   'Wszedłem! Ruter każe utworzyć hasło.',
+   layer5({
+    labels: { ...RF, ...SERVER_LEASE },
+    youAreOn: ON_SERVER_BROWSER,
+    browse: TO_ROUTER,
+    bubble: `${ROUTER_FACTORY_IP} ✓`,
+    lines: lines5('L2')
+   })
+  ),
+  ola(
+   'Ustaw takie, jakiego chce. I zapisz je sobie.',
+   layer5({
+    labels: { ...RF, ...SERVER_LEASE },
+    youAreOn: ON_SERVER_BROWSER,
+    browse: TO_ROUTER,
+    bubble: `${ROUTER_FACTORY_IP} ✓`,
+    lines: lines5('L2')
+   })
+  ),
+  kuba(
+   `Przełącznik: ${SWITCH_FACTORY_IP}. Wpiszę stacji ${STATION_CIDR} z arkusza!`,
+   atSwitch({ browse: undefined, bubble: undefined, lines: lines5('L5'), pulse: ['c-stacja'] }),
+   act('🌐 Otwórz ▶')
+  ),
+  action(`Stacja z ${STATION_CIDR} otwiera ${SWITCH_FACTORY_IP}…`, atSwitch({})),
+  kuba('Nie wchodzi?! Kabel jest, sieć ta sama 😩', atSwitch({ pulse: ['addr:stacja-lan2'] })),
+  ola('Kabel jest. Ale dla maski /25 adres .254 jest za płotem.', atSwitch({})),
+  ola('Ustaw stacji na chwilę maskę /24.', atSwitch({}), act('⚙️ Zmień ▶')),
+  action('Stacja ma maskę /24 – panel przełącznika się otwiera…', switchOpen({})),
+  ola(
+   'Login i hasło fabryczne są w dokumentacji: cisco i cisco.',
+   switchOpen({ lines: lines5('L3') })
+  ),
+  kuba(
+   'Każe założyć nowego użytkownika – nie »cisco«. Hasło »cisco123« odrzucił 😩',
+   switchOpen({ lines: lines5('L4') })
+  ),
+  ola(
+   'Twoje ma trzy błędy: »cisco«, ciąg »123«, mało rodzajów znaków.',
+   switchOpen({ lines: lines5('L4') })
+  ),
+  ola(
+   `Gdy przełącznik ma już ${SWITCH_IP}, wróć stacji /25.`,
+   atSwitch({
+    browse: undefined,
+    bubble: undefined,
+    labels: { ...SWITCH_DONE },
+    lines: lines5('L5')
+   })
+  ),
+  quiz(`Stacja ${STATION_CIDR} nie otwiera ${SWITCH_FACTORY_IP}. Czemu?`, atSwitch({}), [
+   ['A) Zły kabel.', 'Kabel jest dobry. Maska /25 kończy sieć na .127.', false],
+   ['B) .254 jest za płotem maski.', 'Właśnie tak – na chwilę potrzebna jest maska /24.', true]
+  ]),
+  // Ćwiczenie: oba urządzenia fabryczne, bez strzałki „przeglądarka” i bez dymka.
+  task(
+   'Kliknij kartę, z której wejdziesz na fabryczny ruter.',
+   layer5({
+    shownDim: false,
+    labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY },
+    task: {
+     kind: 'pick',
+     targets: CARDS_AND_SWITCH.filter((c) => c !== 'przelacznik'),
+     answer: ['serwer-wan'],
+     wrong: 'Szukaj karty z kablem do rutera i adresem »automatycznie«.'
+    }
+   })
+  ),
+  task(
+   'Kliknij linijkę, która mówi, skąd wziąć adres przełącznika.',
+   layer5({
+    shownDim: false,
+    labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY },
+    task: {
+     kind: 'lines',
+     answer: ['L3'],
+     check: 'Sprawdź',
+     wrong: 'Ta linijka nie mówi o adresie przełącznika.',
+     wrongBy: { L5: 'To adres stacji. Adres przełącznika podaje dokumentacja – patrz L3.' },
+     missingOne: 'Szukaj linijki o dokumentacji przełącznika.',
+     missingOneId: 'L3',
+     missingMore: 'Szukaj linijki o dokumentacji przełącznika.'
+    }
+   })
+  ),
+  task(
+   'Które hasło przyjmie przełącznik Cisco?',
+   layer5({ shownDim: false, labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY } }),
+   [
+    { text: 'A) cisco2025', feedback: 'Hasło nie może zawierać »cisco«.' },
+    { text: 'B) Pracownia#47Kz', correct: true },
+    { text: 'C) Haslo123', feedback: 'Ciąg »123« jest zabroniony.' }
+   ]
+  ),
+  task(
+   `Przełącznik ma już ${SWITCH_IP}. Co robisz ze stacją?`,
+   layer5({ shownDim: false, labels: { ...SWITCH_DONE, ...STATION_TEMP } }),
+   [
+    {
+     text: 'A) Zostawiam /24.',
+     feedback: 'Arkusz każe /25. Maska /24 była tylko kluczem do panelu.'
+    },
+    { text: `B) Przywracam ${STATION_CIDR} z arkusza.`, correct: true }
+   ],
    { end: '↺ Od początku', restart: true }
   )
  ]
@@ -945,7 +1219,7 @@ const ETAP_4: Exercise = {
 export const ARKUSZ: Course = {
  id: 'arkusz',
  title: 'Etapy ścieżki „Arkusz krok po kroku”',
- exercises: [ETAP_1, ETAP_2, ETAP_3, ETAP_4]
+ exercises: [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5]
 };
 
 /** Pod ćwiczeniami obu etapów: oryginalny schemat z arkusza, poglądowo (prośba operatora). */

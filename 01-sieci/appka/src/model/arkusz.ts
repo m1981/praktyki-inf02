@@ -92,6 +92,18 @@ export const SHEET_DHCP = {
  reserved: '10.10.0.20'
 } as const;
 
+/**
+ * Ustawienia fabryczne z dokumentacji producentów (mapa-menu-urzadzen.md): TP-Link Archer C6 v4
+ * (PRZYKŁAD – model w pracowni niepotwierdzony) i Cisco CBS350. Plus przykładowy adres, który serwer
+ * dostaje od fabrycznego DHCP rutera, i maska „na chwilę” dla stacji (warstwa 5).
+ */
+export const SHEET_FACTORY = {
+ routerLan: '192.168.0.1/24',
+ routerLease: '192.168.0.100',
+ switch: '192.168.1.254/24',
+ stationTemp: '192.168.1.3/24'
+} as const;
+
 /** Serwery DNS rutera dla interfejsu WAN (drugi – „jeśli jest wymagany”). */
 export const SHEET_ROUTER_DNS = { primary: '4.4.4.4', secondary: '4.4.5.5' } as const;
 

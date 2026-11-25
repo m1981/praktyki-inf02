@@ -47,7 +47,7 @@ function quizReactions(stage: string): string[] {
  return [...SCENARIO.slice(start, end).matchAll(/^- [AB]: (.+)$/gm)].map((m) => unquote(m[1]));
 }
 
-const [ETAP_1, ETAP_2, ETAP_3, ETAP_4] = ARKUSZ.exercises;
+const [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5] = ARKUSZ.exercises;
 const isTask = (step: Step) => step.speaker === 'task';
 /** Polecenie ćwiczenia z tabelą – mechanika i tekst z PYT-077a, scenariusz go nie podaje. */
 const isTableTask = (step: Step) => step.view.type === 'sheet' && step.view.task?.kind === 'table';
@@ -281,6 +281,79 @@ describe('warstwa 4 co do słowa ze scenariusza', () => {
  });
 });
 
+// --- Warstwa 5: scenariusz-arkusz-5.md (wersja 2) ---
+
+const SCENARIO_5 = readFileSync(new URL('../../scenariusz-arkusz-5.md', import.meta.url), 'utf8');
+
+describe('warstwa 5 co do słowa ze scenariusza', () => {
+ const isTask5 = (s: Step) => s.speaker === 'task';
+ const tasks = ETAP_5.steps.filter(isTask5);
+ const optionsOf = (s: Step) => (s.control.type === 'task' ? (s.control.options ?? []) : []);
+
+ it('pięć linijek arkusza (czyja i tekst)', () => {
+  const view = ETAP_5.steps[0].view;
+  const items = view.type === 'sheet' ? view.lines?.items : [];
+  expect(items?.map((l) => [l.id, l.where, l.text])).toEqual(
+   rows3('Linijki z arkusza', /^\| L\d /, SCENARIO_5).map((c) => [c[0], c[1], c[2]])
+  );
+ });
+
+ it('scena', () => {
+  const expected = rows3('Scena', undefined, SCENARIO_5).map(sceneLine);
+  expect(ETAP_5.steps.filter((s) => !isTask5(s)).map((s) => s.text)).toEqual(expected);
+ });
+
+ it('zagadka: odpowiedzi i reakcje', () => {
+  const quiz = ETAP_5.steps.find((s) => s.control.type === 'quiz')!;
+  const options = quiz.control.type === 'quiz' ? quiz.control.options : [];
+  const row = rows3('Scena', undefined, SCENARIO_5).find((c) => c[1] === '_zagadka_')!;
+  expect(options.map((o) => o.text)).toEqual(row[2].split(/ (?=[AB]\) )/).slice(1));
+  const start = SCENARIO_5.indexOf('Reakcje na zagadkę:');
+  const reactions = [
+   ...SCENARIO_5.slice(start, SCENARIO_5.indexOf('##', start)).matchAll(/^- [AB]: (.+)$/gm)
+  ].map((m) => unquote(m[1]));
+  expect(options.map((o) => o.feedback)).toEqual(reactions);
+ });
+
+ it('polecenia i reakcje na błąd (zadania 1, 2, 4)', () => {
+  const rows = rows3('Ćwiczenie', undefined, SCENARIO_5);
+  expect(tasks.map((s) => s.text)).toEqual(rows.map((c) => c[1]));
+  const reaction = (s: Step) =>
+   s.view.type === 'sheet' && s.view.task?.kind === 'lines' ? s.view.task.wrong : wrongReaction(s);
+  for (const i of [0, 1, 3]) expect(reaction(tasks[i])).toBe(unquote(rows[i].at(-1)!));
+ });
+
+ it('ćwiczenie 2: reakcje na L5 i na brak L3', () => {
+  const view = tasks[1].view;
+  const task = view.type === 'sheet' && view.task?.kind === 'lines' ? view.task : undefined;
+  expect(task?.wrongBy?.L5).toBe(quoteAfter('reakcja, gdy uczeń zaznaczy L5', SCENARIO_5));
+  expect(task?.missingOne).toBe(quoteAfter('reakcja, gdy uczeń nie zaznaczy L3', SCENARIO_5));
+ });
+
+ it('ćwiczenie 3: hasła i reakcje', () => {
+  const line = SCENARIO_5.match(/Odpowiedzi do zadania 3: ([^]*?)\n\n/)![1].replace(
+   /\s*\n\s*/g,
+   ' '
+  );
+  const expected = line.split(' · ').map((part) => {
+   const m = part.match(/^(\S+\) \S+)(?: – reakcja: („.+”))?$/)!;
+   return { text: m[1], feedback: m[2] ? unquote(m[2]) : undefined };
+  });
+  expect(optionsOf(tasks[2]).map((o) => ({ text: o.text, feedback: o.feedback }))).toEqual(
+   expected
+  );
+ });
+
+ it('ćwiczenie 4: odpowiedzi do wyboru', () => {
+  const line = SCENARIO_5.match(/Odpowiedzi do zadania 4: (.+)/)![1];
+  expect(optionsOf(tasks[3]).map((o) => o.text)).toEqual(line.split(/ (?=[AB]\) )/));
+ });
+
+ it('notatki „Dla dociekliwych”', () => {
+  expect(ETAP_5.notes).toEqual(notesOf(SCENARIO_5, 'Warstwa 5'));
+ });
+});
+
 describe('nazwy urządzeń jak w arkuszu', () => {
  const steps = ARKUSZ.exercises.flatMap((ex) => ex.steps);
  /** Kwestie Oli i Kuby – mowa potoczna (PYT-075b: „komputer” wolno tylko tu). */
@@ -314,6 +387,7 @@ describe('nazwy urządzeń jak w arkuszu', () => {
     if (v.reservation) out.push(v.reservation.device.name, v.reservation.example);
     if (v.youAreOn) out.push(v.youAreOn);
     if (v.dhcp) out.push(v.dhcp.label);
+    if (v.browse) out.push(v.browse.label);
     if (v.bubble) out.push(v.bubble);
     if (v.asks) out.push(...v.asks.map((x) => x.label ?? ''));
     if (v.lines) out.push(...v.lines.items.map((l) => l.where ?? ''));

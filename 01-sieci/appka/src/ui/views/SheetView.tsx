@@ -115,6 +115,8 @@ export interface SheetSpec {
  asks?: readonly Ask[];
  /** Dymek nad schematem: pytanie, które zadaje stacja, np. „www.egzamin.local = ?”. */
  bubble?: string;
+ /** Strzałka „przeglądarka” (warstwa 5): od komputera do panelu urządzenia, z wpisanym adresem. */
+ browse?: { from: SheetCard; to: SheetCard; label: string };
 }
 
 /** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
@@ -484,7 +486,7 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
  return (
   <>
    <defs>
-    {(['niebieska', 'zielona', 'czerwona', 'ciemna'] as const).map((c) => (
+    {(['niebieska', 'zielona', 'czerwona', 'ciemna', 'szara'] as const).map((c) => (
      <marker
       key={c}
       id={`sh-head-${c}`}
@@ -528,6 +530,7 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
      </text>
     </g>
    )}
+   {spec.browse && <BrowseArrow browse={spec.browse} />}
    {(spec.asks ?? []).map((ask) => (
     <AskArrow key={`${ask.from}-${ask.to}`} ask={ask} />
    ))}
@@ -762,6 +765,26 @@ function AskArrow({ ask }: { ask: Ask }) {
      {ask.label}
     </text>
    )}
+  </g>
+ );
+}
+
+/** Strzałka „przeglądarka”: ciągła, szara – od komputera do urządzenia, którego panel otwieramy. */
+function BrowseArrow({ browse }: { browse: NonNullable<SheetSpec['browse']> }) {
+ const topOf = (card: SheetCard) =>
+  CARD_SIDE[card] === 'whole' || card === 'stacja-lan2' ? DEV_Y - 2 : CARD_Y - 4;
+ const from = centerOf(browse.from);
+ const to = centerOf(browse.to);
+ const peak = Math.abs(from - to) > 200 ? 14 : 34;
+ return (
+  <g className="sh-arrow sh-browse">
+   <path
+    d={`M ${from} ${topOf(browse.from)} C ${from} ${peak}, ${to} ${peak}, ${to} ${topOf(browse.to)}`}
+    markerEnd="url(#sh-head-szara)"
+   />
+   <text x={(from + to) / 2} y={peak + 4} textAnchor="middle">
+    {browse.label}
+   </text>
   </g>
  );
 }

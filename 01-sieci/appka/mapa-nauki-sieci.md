@@ -151,8 +151,8 @@ najwyżej 5 linijek arkusza, najwyżej 2 pułapki, 1 nowa rzecz na schemacie.
 | 1   | Ile jest sieci?                      | gotowe (`symulator-arkusz.html`, PYT-074a)                                 |
 | 2   | Którędy wychodzi się z sieci?        | gotowe (jw.)                                                               |
 | 3   | Skąd adres? (DHCP, rezerwacja, MAC)  | gotowe (zakładka 3, PYT-097a); pilot z uczniami – dobra ocena (2026-11-25) |
-| 4   | Kto zna nazwy? (DNS)                 | gotowe na dysku (zakładka 4, PYT-098a)                                     |
-| 5   | Jak wejść na urządzenie?             | po lekcji; zależy od modeli rutera i przełącznika                          |
+| 4   | Kto zna nazwy? (DNS)                 | gotowe (zakładka 4, PYT-099a)                                              |
+| 5   | Jak wejść na urządzenie?             | gotowe na dysku (zakładka 5, PYT-100a); TP-Link: przykład z emulatora      |
 | 6   | W jakiej kolejności i jak sprawdzić? | po lekcji                                                                  |
 | 7   | Cały arkusz (uczeń sam oznacza ①–⑤)  | makieta z PYT-088 jako ostatnia faza                                       |
 
