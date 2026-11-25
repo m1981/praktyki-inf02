@@ -34,6 +34,13 @@ Jesteś recenzentem scenariusza lekcji o sieciach komputerowych. Masz dwie role 
 
 `01-sieci/appka/scenariusz-arkusz-3.md`
 
+## Wykonalność choreografii
+
+Kolumna „Kuba (pod)” w tabeli sceny mówi, przy którym urządzeniu Kuba pracuje (zasady:
+`wzorce-scenariuszy.md`, sekcja „Choreografia”). Sprawdź w każdym kroku: czy Kuba fizycznie może zrobić
+to, co mówi scena, z miejsca, w którym stoi; czy nie zmienia miejsca bez powodu w kwestii albo akcji;
+czy stan sprzętu (kable, adresy kart, maski) zgadza się z poprzednim krokiem.
+
 ## Zasady pracy
 
 - Tylko czytasz. Nie zmieniasz żadnych plików i nie uruchamiasz niczego poza odczytem.

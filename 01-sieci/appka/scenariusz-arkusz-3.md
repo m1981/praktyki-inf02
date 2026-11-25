@@ -40,8 +40,8 @@ L1 łączy nagłówek „serwer DHCP:” i podpunkt „włączony” – w arkus
 jedna.
 
 **Nowa rzecz na schemacie:** strzałka DHCP między interfejsem LAN rutera a kartą „WAN” serwera,
-z napisem „adres z DHCP” (potem: „10.10.0.20 ↔ MAC karty WAN”). Pomocniczo, tylko w krokach 11–15:
-etykieta „Jesteś na: serwer / ruter”.
+z napisem „adres z DHCP” (potem: „10.10.0.20 ↔ MAC karty WAN”). Pomocniczo: wiersz z sylwetką Kuby pod serwerem (kroki 6–17,
+PYT-104a) – zastąpił etykietę „Jesteś na: serwer / ruter” z wersji 3.
 
 **Pułapki (dwie):**
 
@@ -56,26 +56,28 @@ Postacie: Ola i Kuba, na „ty”. Kwestia najwyżej 12 słów, ruch w osobnym k
 
 ## Scena
 
-| #   | Kto       | Kwestia                                                             | Na schemacie                                                                                                                                          | Przycisk     |
-| --- | --------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| 1   | Kuba      | Serwer, karta »WAN«: »uzyskiwane automatycznie«. Od kogo? 🤔        | Obok schematu pięć linijek (L1–L5). Podświetla się L4. Pulsuje karta „WAN” serwera.                                                                   | Dalej ▶      |
-| 2   | Ola       | Te wpisaliśmy ręcznie. Tę dostaje się od DHCP – rozdawacza adresów. | Adresy z etapu 2 (wpisane ręcznie) przygasają. Przy karcie „WAN” serwera zostaje „?”.                                                                 | Dalej ▶      |
-| 3   | Ola       | Na tym arkuszu adresy rozdaje ruter.                                | Podświetla się L1. Pulsuje interfejs LAN rutera.                                                                                                      | Dalej ▶      |
-| 4   | Kuba      | Komu rozdaje? Stacji też?                                           | Pulsuje stacja.                                                                                                                                       | Dalej ▶      |
-| 5   | Ola       | Nie. DHCP działa na karcie LAN rutera – tylko zielona sieć.         | Sieć zielona w kolorze, pozostałe przygaszone. Pulsuje interfejs LAN rutera.                                                                          | 📨 Poproś ▶  |
-| 6   | _akcja_   | _Serwer prosi o adres, ruter odpowiada…_                            | Strzałka DHCP: od karty „WAN” do rutera i z powrotem. Przy karcie „WAN” pojawia się 10.10.0.7 (przykład).                                             | Dalej ▶      |
-| 7   | Kuba      | Dostał 10.10.0.7 z zakresu. A arkusz chce 10.10.0.20!               | Podświetla się L2, pod nią pasek adresów od .2 do .20 z zaznaczonym .7. Potem podświetla się L3.                                                      | Dalej ▶      |
-| 8   | Ola       | Dlatego jest rezerwacja: ten adres zawsze dla tej karty.            | Bez zmian.                                                                                                                                            | Dalej ▶      |
-| 9   | Kuba      | Skąd ruter wie, która karta to ta?                                  | Pulsują obie karty serwera.                                                                                                                           | Dalej ▶      |
-| 10  | Ola       | Po MAC – pamiętasz go z ARP? Każda karta ma swój.                   | Przy kartach serwera pojawiają się dwa różne MAC (przykładowe).                                                                                       | Dalej ▶      |
-| 11  | Ola       | Panel rutera ma listę kart. Wybierz tę z 10.10.0.7.                 | „Jesteś na: ruter”. Okno rezerwacji z listą podłączonych urządzeń (jak w TP-Link: VIEW CONNECTED DEVICES); na liście karta „WAN” serwera z 10.10.0.7. | 📌 Wybierz ▶ |
-| 12  | Kuba      | Wybrałem. Ale w polu adresu wpisało się 10.10.0.7 🤨                | Pułapka P1: pole „IP Address” w oknie rezerwacji pokazuje 10.10.0.7 i miga.                                                                           | Dalej ▶      |
-| 13  | Ola       | Lista podaje obecny adres. Wpisz ten z arkusza.                     | Podświetla się L3. W polu „IP Address” 10.10.0.20.                                                                                                    | 💾 Zapisz ▶  |
-| 14  | _akcja_   | _Ruter zapisuje rezerwację: MAC karty WAN → 10.10.0.20…_            | Napis na strzałce DHCP: „10.10.0.20 ↔ MAC karty WAN”. MAC-i przy kartach znikają.                                                                     | Dalej ▶      |
-| 15  | Kuba      | Wpisałem rezerwację, a serwer dalej ma stary adres 😩               | „Jesteś na: serwer”. Przy karcie „WAN” nadal 10.10.0.7. Podświetla się L5.                                                                            | Dalej ▶      |
-| 16  | Ola       | Serwer pamięta stary. Każ mu zapytać jeszcze raz.                   | Pułapka P2: przy serwerze „ipconfig /release” i „ipconfig /renew”.                                                                                    | 🔄 Odśwież ▶ |
-| 17  | _akcja_   | _Serwer pyta jeszcze raz i dostaje swój adres…_                     | Strzałka DHCP jeszcze raz. Przy karcie „WAN” „10.10.0.20 ✓” (pogrubione, bez zmiany koloru – kolor znaczy sieć).                                      | Dalej ▶      |
-| 18  | _zagadka_ | Po czym ruter pozna kartę serwera? A) Po nazwie »WAN«. B) Po MAC.   | Stan końcowy.                                                                                                                                         | Teraz Ty ▶   |
+| #   | Kto       | Kwestia                                                             | Na schemacie                                                                                                                                                                                             | Kuba (pod) | Przycisk     |
+| --- | --------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------ |
+| 1   | Kuba      | Serwer, karta »WAN«: »uzyskiwane automatycznie«. Od kogo? 🤔        | Obok schematu pięć linijek (L1–L5). Podświetla się L4. Pulsuje karta „WAN” serwera.                                                                                                                      | —          | Dalej ▶      |
+| 2   | Ola       | Te wpisaliśmy ręcznie. Tę dostaje się od DHCP – rozdawacza adresów. | Adresy z etapu 2 (wpisane ręcznie) przygasają. Przy karcie „WAN” serwera zostaje „?”.                                                                                                                    | —          | Dalej ▶      |
+| 3   | Ola       | Na tym arkuszu adresy rozdaje ruter.                                | Podświetla się L1. Pulsuje interfejs LAN rutera.                                                                                                                                                         | —          | Dalej ▶      |
+| 4   | Kuba      | Komu rozdaje? Stacji też?                                           | Pulsuje stacja.                                                                                                                                                                                          | —          | Dalej ▶      |
+| 5   | Ola       | Nie. DHCP działa na karcie LAN rutera – tylko zielona sieć.         | Sieć zielona w kolorze, pozostałe przygaszone. Pulsuje interfejs LAN rutera.                                                                                                                             | —          | 📨 Poproś ▶  |
+| 6   | _akcja_   | _Serwer prosi o adres, ruter odpowiada…_                            | Strzałka DHCP: od karty „WAN” do rutera i z powrotem. Przy karcie „WAN” pojawia się 10.10.0.7 (przykład).                                                                                                | serwer     | Dalej ▶      |
+| 7   | Kuba      | Dostał 10.10.0.7 z zakresu. A arkusz chce 10.10.0.20!               | Podświetla się L2, pod nią pasek adresów od .2 do .20 z zaznaczonym .7. Potem podświetla się L3.                                                                                                         | serwer     | Dalej ▶      |
+| 8   | Ola       | Dlatego jest rezerwacja: ten adres zawsze dla tej karty.            | Bez zmian.                                                                                                                                                                                               | serwer     | Dalej ▶      |
+| 9   | Kuba      | Skąd ruter wie, która karta to ta?                                  | Pulsują obie karty serwera.                                                                                                                                                                              | serwer     | Dalej ▶      |
+| 10  | Ola       | Po MAC – pamiętasz go z ARP? Każda karta ma swój.                   | Przy kartach serwera pojawiają się dwa różne MAC (przykładowe).                                                                                                                                          | serwer     | Dalej ▶      |
+| 11  | Ola       | Panel rutera ma listę kart. Wybierz tę z 10.10.0.7.                 | Strzałka „przeglądarka” od karty „WAN” serwera do rutera: „10.10.0.1”. Okno rezerwacji z listą podłączonych urządzeń (jak w TP-Link: VIEW CONNECTED DEVICES); na liście karta „WAN” serwera z 10.10.0.7. | serwer     | 📌 Wybierz ▶ |
+| 12  | Kuba      | Wybrałem. Ale w polu adresu wpisało się 10.10.0.7 🤨                | Pułapka P1: pole „IP Address” w oknie rezerwacji pokazuje 10.10.0.7 i miga.                                                                                                                              | serwer     | Dalej ▶      |
+| 13  | Ola       | Lista podaje obecny adres. Wpisz ten z arkusza.                     | Podświetla się L3. W polu „IP Address” 10.10.0.20.                                                                                                                                                       | serwer     | 💾 Zapisz ▶  |
+| 14  | _akcja_   | _Ruter zapisuje rezerwację: MAC karty WAN → 10.10.0.20…_            | Napis na strzałce DHCP: „10.10.0.20 ↔ MAC karty WAN”. MAC-i przy kartach znikają.                                                                                                                        | serwer     | Dalej ▶      |
+| 15  | Kuba      | Wpisałem rezerwację, a serwer dalej ma stary adres 😩               | Przy karcie „WAN” nadal 10.10.0.7. Podświetla się L5.                                                                                                                                                    | serwer     | Dalej ▶      |
+| 16  | Ola       | Serwer pamięta stary. Każ mu zapytać jeszcze raz.                   | Pułapka P2: przy serwerze „ipconfig /release” i „ipconfig /renew”.                                                                                                                                       | serwer     | 🔄 Odśwież ▶ |
+| 17  | _akcja_   | _Serwer pyta jeszcze raz i dostaje swój adres…_                     | Strzałka DHCP jeszcze raz. Przy karcie „WAN” „10.10.0.20 ✓” (pogrubione, bez zmiany koloru – kolor znaczy sieć).                                                                                         | serwer     | Dalej ▶      |
+| 18  | _zagadka_ | Po czym ruter pozna kartę serwera? A) Po nazwie »WAN«. B) Po MAC.   | Stan końcowy.                                                                                                                                                                                            | —          | Teraz Ty ▶   |
+
+**Kuba (pod):** sylwetka pod urządzeniem, przy którym Kuba pracuje w tym kroku (PYT-102a, PYT-104a); „—” – czyta arkusz, sylwetki nie ma.
 
 Reakcje na zagadkę:
 
@@ -150,7 +152,8 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 ## Do decyzji przy akceptacji
 
 - **Nowe elementy w kodzie:** strzałka DHCP z napisem (nowa rzecz na schemacie); pomocniczo:
-  chwilowe napisy MAC przy kartach serwera (kroki 10–13), etykieta „Jesteś na:” (kroki 11–17),
+  chwilowe napisy MAC przy kartach serwera (kroki 10–13), wiersz z sylwetką Kuby (PYT-104a) zamiast etykiety „Jesteś na:”, strzałka „przeglądarka” do
+  panelu rutera (kroki 11–14),
   uproszczone okno rezerwacji z listą (kroki 11–13),
   pasek zakresu pod linijką L2 (krok 7); ćwiczenie 2 – klikanie kilku linijek wycinka i „Sprawdź”.
 - **Strona:** trzecia zakładka „Skąd adres?” na stronie „Arkusz krok po kroku”.

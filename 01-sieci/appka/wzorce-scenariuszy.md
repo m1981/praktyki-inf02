@@ -12,6 +12,17 @@ warte używania w kolejnych warstwach”).
 1 pytanie · najwyżej 5 linijek arkusza · najwyżej 2 pułapki · 1 nowa rzecz na schemacie.
 Kwestia najwyżej 12 słów; ruch na schemacie w osobnym kroku „akcja”.
 
+## Choreografia: gdzie jest Kuba (PYT-102a, PYT-104a)
+
+Tabela sceny ma kolumnę **„Kuba (pod)”**: `—`, `serwer`, `stacja`, `ruter` albo `przełącznik`. Na stronie
+pod schematem stoi wtedy sylwetka 🧑‍💻 dokładnie pod tym urządzeniem (test sprawdza zgodność co do kroku).
+
+- Ruter i przełącznik nie mają ekranu – konfiguruje się je przeglądarką z komputera; wtedy Kuba stoi
+  pod **komputerem**, a strzałka „przeglądarka” wychodzi spod niego (test).
+- Pod ruterem albo przełącznikiem – tylko gdy Kuba fizycznie coś przy nich robi (kabel, przycisk).
+- `—` – Kuba czyta arkusz albo rozmawia; zagadka zawsze `—`; w ćwiczeniach „uczeń sam” wiersza nie ma.
+- Bez teleportu: zmiana miejsca wynika z kwestii albo z kroku „akcja”.
+
 ## Trzy wzorce
 
 | #   | Wzorzec                                                 | Jak to wygląda                                                                                                                                                                                                                    | Przykład (warstwa 3)                                                                                                            |

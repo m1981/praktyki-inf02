@@ -110,6 +110,9 @@ zob. PYT-004).
 | PYT-100 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 5 „Jak wejść na urządzenie?”       |
 | PYT-101 | decyzja     | zamknięte (a)    | Commit i push warstwy 5                                           |
 | PYT-102 | decyzja     | zamknięte (a)    | Pasek „Gdzie jest Kuba” we wszystkich warstwach                   |
+| PYT-103 | decyzja     | zamknięte (inna) | Wygląd paska „Gdzie jest Kuba”: linijka ze śladem czy mapa        |
+| PYT-104 | decyzja     | zamknięte (a)    | Wiersz z sylwetką Kuby: zakres i commit                           |
+| PYT-105 | decyzja     | zamknięte (a)    | Akceptacja kolumny „Kuba (pod)” i wiersza; commit i push          |
 
 ## Pytania
 
@@ -1476,3 +1479,53 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   czytania.
 - **Skutek braku odpowiedzi:** nie zaczynam.
 - **Odpowiedź (2026-11-25):** „101a 102a swietna intepretacja” → (a): etap A – makieta HTML w toku.
+
+### PYT-103 · decyzja · zamknięte
+
+- **Kontekst:** etap A z PYT-102a – makieta HTML (katalog tymczasowy sesji): warstwa 5, kroki 6, 10
+  i 14, prawdziwe zrzuty schematu i arkusza, między nimi pasek w dwóch wariantach. A: jedna linijka
+  „📍 miejsce · 🖥 ekran · ✋ ręce” i ślad sceny po prawej („📄 1–4 › 🖥 serwer 5–8 › 🖥 stacja 9–19”),
+  ok. 36 px. B: mapa stanowiska (arkusz, stacja, serwer, szafa) z „K” na bieżącym miejscu i okienko
+  „ekran”, ok. 50 px. Oba zastępują plakietki „Jesteś na:” / „Przeglądarka na:”.
+- **Opcje:** (a) wariant A; (b) wariant B; (c) poprawki – napisz, co zmienić.
+- **Rekomendacja:** (a) – niższy (łatwiej zmieścić w 1280×720) i jako jedyny pokazuje choreografię
+  całej sceny, o którą chodziło.
+- **Skutek braku odpowiedzi:** nie zlecam etapu B (kolumna „Kuba” w scenariuszach).
+- **Odpowiedź (2026-11-25):** „troche za skomplikowane, zle przeoczylem twoj opis. Chodzilo mi bardzie o sama sylwetke/emoji w osobnym wierszu (to jest ok) i dokladnie w lini pod konkrektym urzadzeniem.” → inna: sam wiersz z sylwetką 🧑‍💻 pod urządzeniem, przy którym Kuba pracuje.
+- **Wykonanie:** prototyp na dysku (bez commita) w warstwie 5: wiersz pod schematem, sylwetka pod
+  serwerem (kroki 5–8) i pod stacją (9–19); w krokach 1–4 brak sylwetki (Kuba czyta arkusz);
+  w ćwiczeniach „uczeń sam” bez wiersza (inaczej ćwiczenie 2 wystawało o 14 px w 1280×720);
+  plakietki „Przeglądarka na:” usunięte. e2e: 564 pomiary w normie. Dalej: PYT-104.
+
+### PYT-104 · decyzja · zamknięte
+
+- **Kontekst:** prototyp wiersza z sylwetką Kuby działa w warstwie 5 (PYT-103). Warstwy 3 i 4 mają
+  kroki z pracą przy komputerach; warstwa 3 ma plakietkę „Jesteś na: ruter” (kroki 11–14), choć
+  Kuba siedzi przy komputerze i ma panel rutera w przeglądarce. Warstwy 1–2 to czytanie arkusza.
+- **Opcje:** (a) wiersz w warstwach 3–5 (i każdej następnej): sub-agent dopisuje w scenariuszach 3–4
+  kolumnę „Kuba (pod)” i zgłasza niespójności, operator akceptuje, agent wdraża (w warstwie 3
+  plakietki zastępuje sylwetka + strzałka „przeglądarka”), test spójności (strzałka „przeglądarka”
+  wychodzi spod sylwetki), commit i push; (b) tylko warstwa 5 – commit i push teraz, reszta później;
+  (c) poprawki wyglądu.
+- **Rekomendacja:** (a) – jedna, spójna zmiana w całej ścieżce; warstwa 1–2 bez wiersza.
+- **Skutek braku odpowiedzi:** prototyp zostaje na dysku.
+- **Odpowiedź (2026-11-25):** „104a” → (a)
+- **Wykonanie:** etap B – sub-agent dopisał kolumnę „Kuba (pod)” w scenariuszach 3–5 i zgłosił 7
+  niespójności. Rozstrzygnięcia agenta: warstwa 3 – „Jesteś na: ruter” zastąpione strzałką
+  „przeglądarka” z karty WAN serwera do panelu rutera (10.10.0.1), plakietki „Jesteś na:” usunięte
+  (zastępuje je sylwetka); warstwa 4 – kroki 10–15 to rozmowa nad arkuszem (`—`), spis serwera jest
+  gotowy od kroku 8; warstwa 5 – zagadka `—`. Kod: pozycje z kolumny, test zgodności co do kroku
+  i test „strzałka »przeglądarka« wychodzi spod sylwetki” (od razu złapał strzałkę w zagadce
+  warstwy 5 – usunięta). Zasada we wzorcach i w prompcie recenzenta. `pnpm build`: 2967 testów,
+  564 pomiary e2e. Akceptacja i commit: PYT-105.
+
+### PYT-105 · decyzja · zamknięte
+
+- **Kontekst:** wiersz z sylwetką Kuby gotowy w warstwach 3–5 (PYT-104a, etapy B–D). Zmiany
+  w scenariuszach: kolumna „Kuba (pod)”, w warstwie 3 strzałka „przeglądarka” zamiast „Jesteś na:
+  ruter”, w warstwie 4 kroki 10–15 `—`. Kwestie bez zmian (test co do słowa przechodzi).
+- **Opcje:** (a) akceptuję – commit i push; (b) commit, push po obejrzeniu; (c) poprawki pozycji
+  („warstwa, krok, gdzie”).
+- **Rekomendacja:** (b) – obejrzyj warstwę 3 (kroki 6–17) i 4 (kroki 4–9).
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-25):** „105a przjrzalem i super robota :)” → (a): commit i push.

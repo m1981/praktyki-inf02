@@ -354,6 +354,42 @@ describe('warstwa 5 co do słowa ze scenariusza', () => {
  });
 });
 
+// --- Wiersz „gdzie jest Kuba” (PYT-104a): kolumna „Kuba (pod)” w scenariuszach 3–5 ---
+
+describe('Kuba stoi tam, gdzie mówi scenariusz', () => {
+ const DEVICE: Record<string, string | undefined> = {
+  '—': undefined,
+  serwer: 'serwer',
+  stacja: 'stacja',
+  ruter: 'ruter',
+  przełącznik: 'przelacznik'
+ };
+ it.each([
+  ['3', ETAP_3, SCENARIO_3],
+  ['4', ETAP_4, SCENARIO_4],
+  ['5', ETAP_5, SCENARIO_5]
+ ] as const)('warstwa %s', (_layer, exercise, scenario) => {
+  const head = rows3('Scena', /^\| # /, scenario)[0];
+  const col = head.indexOf('Kuba (pod)');
+  expect(col).toBeGreaterThan(0);
+  const expected = rows3('Scena', undefined, scenario).map((c) => DEVICE[c[col]]);
+  const scene = exercise.steps.filter((s) => s.speaker !== 'task');
+  expect(scene.map((s) => (s.view.type === 'sheet' ? s.view.kuba : 'x'))).toEqual(expected);
+  for (const s of exercise.steps.filter((st) => st.speaker === 'task')) {
+   expect(s.view.type === 'sheet' && s.view.kubaRow).toBe(false);
+  }
+ });
+
+ it('strzałka „przeglądarka” wychodzi spod sylwetki Kuby', () => {
+  for (const ex of ARKUSZ.exercises) {
+   for (const s of ex.steps) {
+    if (s.view.type !== 'sheet' || !s.view.browse) continue;
+    expect(SHEET_CARDS[s.view.browse.from].device).toBe(s.view.kuba);
+   }
+  }
+ });
+});
+
 describe('nazwy urządzeń jak w arkuszu', () => {
  const steps = ARKUSZ.exercises.flatMap((ex) => ex.steps);
  /** Kwestie Oli i Kuby – mowa potoczna (PYT-075b: „komputer” wolno tylko tu). */

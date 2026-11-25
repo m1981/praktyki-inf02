@@ -696,3 +696,13 @@ line.sh-pulse:not(.sh-net) {
 .sh-head--szara {
  fill: #8395a7;
 }
+
+/* --- Wiersz „gdzie jest Kuba” (PYT-102a) --- */
+.sh-kuba-row line {
+ stroke: #dfe6e9;
+ stroke-width: 1.5;
+ stroke-dasharray: 4 4;
+}
+.sh-kuba {
+ font-size: 34px;
+}

@@ -117,6 +117,13 @@ export interface SheetSpec {
  bubble?: string;
  /** Strzałka „przeglądarka” (warstwa 5): od komputera do panelu urządzenia, z wpisanym adresem. */
  browse?: { from: SheetCard; to: SheetCard; label: string };
+ /**
+  * Wiersz „gdzie jest Kuba” pod schematem (PYT-102a): sylwetka pod urządzeniem, przy którym Kuba
+  * pracuje w tym kroku. `kubaRow` – wiersz jest na całej zakładce (stała wysokość schematu);
+  * `kuba` – pod którym urządzeniem stoi sylwetka (bez pola – Kuba czyta arkusz, sylwetki nie ma).
+  */
+ kubaRow?: boolean;
+ kuba?: SheetDevice;
 }
 
 /** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
@@ -136,6 +143,8 @@ export interface CardLabel {
 
 // --- Geometria (jednostki viewBox) ---
 const VIEW = { w: 960, h: 214 };
+/** Wysokość wiersza „gdzie jest Kuba” pod schematem. */
+const KUBA_ROW_H = 40;
 const DEV_Y = 50;
 const DEV_H = 100;
 const CARD_Y = 92;
@@ -304,7 +313,7 @@ function Schema({ spec, colored }: { spec: SheetSpec; colored: Set<SheetNet> }) 
 
  return (
   <svg
-   viewBox={`0 0 ${VIEW.w} ${VIEW.h}`}
+   viewBox={`0 0 ${VIEW.w} ${VIEW.h + (spec.kubaRow ? KUBA_ROW_H : 0)}`}
    className="sh"
    role="img"
    aria-label="Schemat z arkusza: Ruter, Serwer, Przełącznik, Stacja robocza"
@@ -531,6 +540,7 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
     </g>
    )}
    {spec.browse && <BrowseArrow browse={spec.browse} />}
+   {spec.kubaRow && <KubaRow at={spec.kuba} />}
    {(spec.asks ?? []).map((ask) => (
     <AskArrow key={`${ask.from}-${ask.to}`} ask={ask} />
    ))}
@@ -785,6 +795,22 @@ function BrowseArrow({ browse }: { browse: NonNullable<SheetSpec['browse']> }) {
    <text x={(from + to) / 2} y={peak + 4} textAnchor="middle">
     {browse.label}
    </text>
+  </g>
+ );
+}
+
+/** Wiersz „gdzie jest Kuba”: cienka linia i sylwetka dokładnie pod urządzeniem. */
+function KubaRow({ at }: { at?: SheetDevice }) {
+ const y = VIEW.h + KUBA_ROW_H / 2;
+ const x = at ? DEVICES[at].x + DEVICES[at].w / 2 : undefined;
+ return (
+  <g className="sh-kuba-row">
+   <line x1={0} y1={VIEW.h + 4} x2={VIEW.w} y2={VIEW.h + 4} />
+   {x !== undefined && (
+    <text className="sh-kuba" x={x} y={y + 10} textAnchor="middle" aria-label="Kuba">
+     🧑‍💻
+    </text>
+   )}
   </g>
  );
 }

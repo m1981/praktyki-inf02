@@ -454,8 +454,6 @@ const LINES_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o tym, skąd adres'
 const lines = (...lit: string[]): LinesSpec => ({ title: LINES_TITLE, items: LINES, lit });
 
 const EXAMPLE = '(przykład)';
-const ON_ROUTER = 'Jesteś na: ruter';
-const ON_SERVER = 'Jesteś na: serwer';
 const DHCP_ARROW = 'adres z DHCP';
 const DHCP_RESERVED = `${RESERVED} ↔ MAC karty WAN`;
 
@@ -471,6 +469,13 @@ const macLabels = (wan?: CardLabel['tone'], lan1?: CardLabel['tone']): Scene['la
  'serwer-wan': [{ text: LEASED }, { text: `MAC ${MAC_WAN}`, tone: wan ?? 'example' }],
  'serwer-lan1': [{ text: '' }, { text: '' }, { text: `MAC ${MAC_LAN1}`, tone: lan1 ?? 'example' }]
 });
+
+/** Panel rutera otwierany w przeglądarce na serwerze (karta WAN jest w sieci rutera). */
+const TO_ROUTER_PANEL: Scene['browse'] = {
+ from: 'serwer-wan',
+ to: 'ruter-lan',
+ label: sheetIp('ruter-lan')
+};
 
 /** Okno rezerwacji – napisy jak w panelu TP-Link (mapa-menu-urzadzen.md). */
 const reservation = (stage: ReservationSpec['stage']): ReservationSpec => ({
@@ -592,10 +597,9 @@ const ETAP_3: Exercise = {
   ola(
    `Panel rutera ma listę kart. Wybierz tę z ${LEASED}.`,
    layer3({
-    youAreOn: ON_ROUTER,
-    dhcp: { label: DHCP_ARROW },
     labels: macLabels('frame', 'strike'),
     reservation: reservation('list'),
+    browse: TO_ROUTER_PANEL,
     lines: undefined
    }),
    act('📌 Wybierz ▶')
@@ -603,32 +607,29 @@ const ETAP_3: Exercise = {
   kuba(
    `Wybrałem. Ale w polu adresu wpisało się ${LEASED} 🤨`,
    layer3({
-    youAreOn: ON_ROUTER,
-    dhcp: { label: DHCP_ARROW },
     labels: macLabels('frame', 'strike'),
     reservation: reservation('picked'),
+    browse: TO_ROUTER_PANEL,
     lines: undefined
    })
   ),
   ola(
    'Lista podaje obecny adres. Wpisz ten z arkusza.',
    layer3({
-    youAreOn: ON_ROUTER,
-    dhcp: { label: DHCP_ARROW },
     labels: macLabels('frame', 'strike'),
     reservation: reservation('fixed'),
+    browse: TO_ROUTER_PANEL,
     lines: { ...lines('L3'), items: LINES.filter((l) => l.id === 'L3') }
    }),
    act('💾 Zapisz ▶')
   ),
   action(
    `Ruter zapisuje rezerwację: MAC karty WAN → ${RESERVED}…`,
-   layer3({ youAreOn: ON_ROUTER, dhcp: { label: DHCP_RESERVED }, labels: leasedLabel() })
+   layer3({ dhcp: { label: DHCP_RESERVED }, labels: leasedLabel() })
   ),
   kuba(
    'Wpisałem rezerwację, a serwer dalej ma stary adres 😩',
    layer3({
-    youAreOn: ON_SERVER,
     dhcp: { label: DHCP_RESERVED },
     labels: leasedLabel('warn'),
     lines: lines('L5')
@@ -637,7 +638,6 @@ const ETAP_3: Exercise = {
   ola(
    'Serwer pamięta stary. Każ mu zapytać jeszcze raz.',
    layer3({
-    youAreOn: ON_SERVER,
     dhcp: { label: DHCP_RESERVED },
     labels: leasedLabel('warn'),
     commands: ['ipconfig /release', 'ipconfig /renew']
@@ -647,7 +647,6 @@ const ETAP_3: Exercise = {
   action(
    'Serwer pyta jeszcze raz i dostaje swój adres…',
    layer3({
-    youAreOn: ON_SERVER,
     dhcp: { label: DHCP_RESERVED, run: true },
     labels: { 'serwer-wan': [{ text: `${RESERVED} ✓`, tone: 'ok' }] }
    })
@@ -978,9 +977,6 @@ const LINES_5: readonly SheetLine[] = [
 const LINES_5_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o tym, jak wejść na urządzenie';
 const lines5 = (...lit: string[]): LinesSpec => ({ title: LINES_5_TITLE, items: LINES_5, lit });
 
-const ON_SERVER_BROWSER = 'Przeglądarka na: serwer';
-const ON_STATION_BROWSER = 'Przeglądarka na: stacja';
-
 type Labels = NonNullable<Scene['labels']>;
 const ROUTER_FACTORY = (note: string): Labels => ({
  'ruter-lan': [{ text: SHEET_FACTORY.routerLan }, { text: note, tone: 'example' }]
@@ -1033,13 +1029,13 @@ const layer5 = (state: Scene): Scene => {
    'stacja-lan2': [{ text: '' }],
    ...labels
   },
+  kubaRow: true,
   ...rest
  };
 };
 /** Stan przy przełączniku (kroki 9–17): stacja z adresem z arkusza, przełącznik fabryczny. */
 const atSwitch = (state: Scene): Scene =>
  layer5({
-  youAreOn: ON_STATION_BROWSER,
   browse: TO_SWITCH,
   bubble: `${SWITCH_FACTORY_IP} ✕ brak odpowiedzi`,
   ...state,
@@ -1094,14 +1090,13 @@ const ETAP_5: Exercise = {
   ),
   ola(
    'Z serwera. Jego karta WAN jest na »automatycznie«.',
-   layer5({ labels: RF, youAreOn: ON_SERVER_BROWSER, pulse: ['serwer-wan'] }),
+   layer5({ labels: RF, pulse: ['serwer-wan'] }),
    act('🌐 Otwórz ▶')
   ),
   action(
    'Ruter daje serwerowi adres z DHCP. Panel się otwiera…',
    layer5({
     labels: { ...RF, ...SERVER_LEASE },
-    youAreOn: ON_SERVER_BROWSER,
     browse: TO_ROUTER,
     bubble: `${ROUTER_FACTORY_IP} ✓`
    })
@@ -1110,7 +1105,6 @@ const ETAP_5: Exercise = {
    'Wszedłem! Ruter każe utworzyć hasło.',
    layer5({
     labels: { ...RF, ...SERVER_LEASE },
-    youAreOn: ON_SERVER_BROWSER,
     browse: TO_ROUTER,
     bubble: `${ROUTER_FACTORY_IP} ✓`,
     lines: lines5('L2')
@@ -1120,7 +1114,6 @@ const ETAP_5: Exercise = {
    'Ustaw takie, jakiego chce. I zapisz je sobie.',
    layer5({
     labels: { ...RF, ...SERVER_LEASE },
-    youAreOn: ON_SERVER_BROWSER,
     browse: TO_ROUTER,
     bubble: `${ROUTER_FACTORY_IP} ✓`,
     lines: lines5('L2')
@@ -1157,14 +1150,19 @@ const ETAP_5: Exercise = {
     lines: lines5('L5')
    })
   ),
-  quiz(`Stacja ${STATION_CIDR} nie otwiera ${SWITCH_FACTORY_IP}. Czemu?`, atSwitch({}), [
-   ['A) Zły kabel.', 'Kabel jest dobry. Maska /25 kończy sieć na .127.', false],
-   ['B) .254 jest za płotem maski.', 'Właśnie tak – na chwilę potrzebna jest maska /24.', true]
-  ]),
+  quiz(
+   `Stacja ${STATION_CIDR} nie otwiera ${SWITCH_FACTORY_IP}. Czemu?`,
+   atSwitch({ browse: undefined }),
+   [
+    ['A) Zły kabel.', 'Kabel jest dobry. Maska /25 kończy sieć na .127.', false],
+    ['B) .254 jest za płotem maski.', 'Właśnie tak – na chwilę potrzebna jest maska /24.', true]
+   ]
+  ),
   // Ćwiczenie: oba urządzenia fabryczne, bez strzałki „przeglądarka” i bez dymka.
   task(
    'Kliknij kartę, z której wejdziesz na fabryczny ruter.',
    layer5({
+    kubaRow: false,
     shownDim: false,
     labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY },
     task: {
@@ -1178,6 +1176,7 @@ const ETAP_5: Exercise = {
   task(
    'Kliknij linijkę, która mówi, skąd wziąć adres przełącznika.',
    layer5({
+    kubaRow: false,
     shownDim: false,
     labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY },
     task: {
@@ -1194,7 +1193,11 @@ const ETAP_5: Exercise = {
   ),
   task(
    'Które hasło przyjmie przełącznik Cisco?',
-   layer5({ shownDim: false, labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY } }),
+   layer5({
+    kubaRow: false,
+    shownDim: false,
+    labels: { ...ROUTER_FACTORY('(fabrycznie)'), ...SWITCH_FACTORY }
+   }),
    [
     { text: 'A) cisco2025', feedback: 'Hasło nie może zawierać »cisco«.' },
     { text: 'B) Pracownia#47Kz', correct: true },
@@ -1203,7 +1206,7 @@ const ETAP_5: Exercise = {
   ),
   task(
    `Przełącznik ma już ${SWITCH_IP}. Co robisz ze stacją?`,
-   layer5({ shownDim: false, labels: { ...SWITCH_DONE, ...STATION_TEMP } }),
+   layer5({ kubaRow: false, shownDim: false, labels: { ...SWITCH_DONE, ...STATION_TEMP } }),
    [
     {
      text: 'A) Zostawiam /24.',
@@ -1216,10 +1219,46 @@ const ETAP_5: Exercise = {
  ]
 };
 
+// --- Wiersz „gdzie jest Kuba” (PYT-102a, PYT-104a) ---
+// Pozycje z kolumny „Kuba (pod)” scenariuszy (test co do kroku). `undefined` – Kuba czyta arkusz
+// albo rozmawia, sylwetki nie ma. W ćwiczeniach „uczeń sam” wiersza nie ma.
+
+type KubaAt = Scene['kuba'];
+const times = (n: number, at: KubaAt): KubaAt[] => Array.from({ length: n }, () => at);
+const KUBA_3: KubaAt[] = [...times(5, undefined), ...times(12, 'serwer'), undefined];
+const KUBA_4: KubaAt[] = [...times(3, undefined), ...times(6, 'stacja'), ...times(7, undefined)];
+const KUBA_5: KubaAt[] = [
+ ...times(4, undefined),
+ ...times(4, 'serwer'),
+ ...times(10, 'stacja'),
+ undefined
+];
+
+/** Wstawia pozycje Kuby do kroków sceny; ćwiczeniom „uczeń sam” zdejmuje wiersz. */
+function withKuba(exercise: Exercise, plan: readonly KubaAt[]): Exercise {
+ let scene = 0;
+ return {
+  ...exercise,
+  steps: exercise.steps.map((step) => {
+   if (step.view.type !== 'sheet') return step;
+   if (step.speaker === 'task')
+    return { ...step, view: { ...step.view, kubaRow: false, kuba: undefined } };
+   const kuba = plan[scene++];
+   return { ...step, view: { ...step.view, kubaRow: true, kuba } };
+  })
+ };
+}
+
 export const ARKUSZ: Course = {
  id: 'arkusz',
  title: 'Etapy ścieżki „Arkusz krok po kroku”',
- exercises: [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5]
+ exercises: [
+  ETAP_1,
+  ETAP_2,
+  withKuba(ETAP_3, KUBA_3),
+  withKuba(ETAP_4, KUBA_4),
+  withKuba(ETAP_5, KUBA_5)
+ ]
 };
 
 /** Pod ćwiczeniami obu etapów: oryginalny schemat z arkusza, poglądowo (prośba operatora). */
