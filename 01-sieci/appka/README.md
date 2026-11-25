@@ -56,43 +56,44 @@ szablonie ekranu (stan po kroku 5 migracji).
 | `src/pages/`   | wejścia stron: składają kurs z treści i podają go szablonowi                              |
 | `e2e/`         | testy w przeglądarce, zrzuty i porównanie                                                 |
 
-| Plik                            | Rola                                                                          |
-| ------------------------------- | ----------------------------------------------------------------------------- |
-| `src/model/siec.ts`             | urządzenia, adresy, kable + selektory (jedyny sposób odczytu)                 |
-| `src/model/glossary.ts`         | nazwy urządzeń ze Słownika pojęć (mianownik, dopełniacz, forma krótka)        |
-| `src/model/arkusz.ts`           | sieć z arkusza INF.02 (styczeń 2025): karty, adresy, kolory sieci, nazwy      |
-| `src/net/decide.ts`             | decyzja nadawcy: bezpośrednio, przez bramę albo brama poza siecią             |
-| `src/net/mask.ts`               | ćwiczenia z maską: ustawienia → decyzja → droga ramki                         |
-| `src/net/path.ts`               | droga ramki po kablach (Unicast, objazd przez bramę, Broadcast)               |
-| `src/net/traffic.ts`            | ruch w sieci w jednej chwili: role urządzeń i skoki ramek                     |
-| `src/net/arp.ts`                | ramki ARP i tablice ARP/MAC każdego urządzenia po kolejnych krokach           |
-| `src/engine/types.ts`           | kontrakt `Course` / `Exercise` / `Step`                                       |
-| `src/engine/nav.ts`             | jedna maszyna stanów nawigacji + adres `#kod`                                 |
-| `src/engine/registry.tsx`       | rejestry: rodzaj widoku, panelu i elementu sterującego → komponent            |
-| `src/engine/check.ts`           | kontrola spójności kursu w `pnpm dev` (ramki tylko po kablach)                |
-| `src/ui/LessonShell.tsx`        | **jedyne miejsce układu ekranu**: zakładki, pytanie, scena, tekst, sterowanie |
-| `src/ui/tokens.css`, `.ts`      | wymiary układu (CSS) i kolory ramek (TS) – jedyne miejsce, gdzie są wpisane   |
-| `src/ui/views/`                 | sceny: diagram, oś adresów z płotami, tabela porównania, „list za płot”       |
-| `src/ui/DialogStep.tsx`         | krok w stylu „rozmowa”: postać, jedna kwestia, kropki postępu                 |
-| `src/ui/panels/`                | panele: ramka, tablice ARP/MAC, pytania; decyzja, ulica adresów, bity         |
-| `src/ui/controls/`              | elementy sterujące: „dalej”, przełącznik, kroki scenariusza, rozmowa, zagadka |
-| `src/ui/diagram/`               | diagram React Flow: karta urządzenia, kabel z animowaną ramką                 |
-| `src/ui/free/`                  | Tryb swobodny maski: ekran i stan ustawień (treść dostaje z `content/`)       |
-| `src/ui/text.tsx`               | wypełnianie pól `{nazwa}` i pogrubienia `**…**` w tekstach z `content/`       |
-| `src/content/arp.ts`            | Symulator ARP: układ diagramu, ramki i kroki scenariusza                      |
-| `src/content/maska.ts`          | seria M1–M4: teksty i sceny kroków                                            |
-| `src/content/routing.ts`        | routing „List za płot”: kwestie z `scenariusz-routing.md` i stany sceny       |
-| `src/content/arkusz.ts`         | „Arkusz krok po kroku”, etapy 1–2: kwestie z `scenariusz-arkusz-1-2.md`       |
-| `src/content/arkusz.test.ts`    | test: kwestie co do słowa ze scenariusza, nazwy z arkusza, bramy w kolorze    |
-| `src/ui/views/SheetView.tsx`    | schemat z arkusza, wycinek arkusza, ćwiczenia „kliknij kartę” i „tabela”      |
-| `src/ui/views/SheetParts.tsx`   | warstwy 3+: linijki arkusza z ćwiczeniem „zaznacz i sprawdź”, okno rezerwacji |
-| `src/ui/taskState.ts`           | wspólny stan ćwiczenia „uczeń sam”: widok (klik) ↔ okno rozmowy (reakcja)     |
-| `src/content/maska-swobodny.ts` | Tryb swobodny: gotowe przykłady z lekcjami i zdania paneli                    |
-| `src/content/maska-uklad.ts`    | układ diagramu maski: pozycje kart, boki kabli, napisy na kartach             |
-| `src/content/content.test.ts`   | testy treści: ≤ 40 słów, ramki po kablach, nazwy tylko ze słownika            |
-| `src/warstwy.test.ts`           | test: zależności między warstwami idą tylko w dół                             |
-| `src/literaly.test.ts`          | test: adresy IP i MAC są wpisane tylko w `model/`                             |
-| `src/niezmiennosc.test.ts`      | strażnik refaktoru: dane i teksty zgodne ze wzorcem sprzed etapu B            |
+| Plik                            | Rola                                                                                                      |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `src/model/siec.ts`             | urządzenia, adresy, kable + selektory (jedyny sposób odczytu)                                             |
+| `src/model/glossary.ts`         | nazwy urządzeń ze Słownika pojęć (mianownik, dopełniacz, forma krótka)                                    |
+| `src/model/arkusz.ts`           | sieć z arkusza INF.02 (styczeń 2025): karty, adresy, kolory sieci, nazwy                                  |
+| `src/net/decide.ts`             | decyzja nadawcy: bezpośrednio, przez bramę albo brama poza siecią                                         |
+| `src/net/mask.ts`               | ćwiczenia z maską: ustawienia → decyzja → droga ramki                                                     |
+| `src/net/path.ts`               | droga ramki po kablach (Unicast, objazd przez bramę, Broadcast)                                           |
+| `src/net/traffic.ts`            | ruch w sieci w jednej chwili: role urządzeń i skoki ramek                                                 |
+| `src/net/arp.ts`                | ramki ARP i tablice ARP/MAC każdego urządzenia po kolejnych krokach                                       |
+| `src/engine/types.ts`           | kontrakt `Course` / `Exercise` / `Step`                                                                   |
+| `src/engine/nav.ts`             | jedna maszyna stanów nawigacji + adres `#kod`                                                             |
+| `src/engine/registry.tsx`       | rejestry: rodzaj widoku, panelu i elementu sterującego → komponent                                        |
+| `src/engine/check.ts`           | kontrola spójności kursu w `pnpm dev` (ramki tylko po kablach)                                            |
+| `src/ui/LessonShell.tsx`        | **jedyne miejsce układu ekranu**: zakładki, pytanie, scena, tekst, sterowanie                             |
+| `src/ui/tokens.css`, `.ts`      | wymiary układu (CSS) i kolory ramek (TS) – jedyne miejsce, gdzie są wpisane                               |
+| `src/ui/views/`                 | sceny: diagram, oś adresów z płotami, tabela porównania, „list za płot”                                   |
+| `src/ui/DialogStep.tsx`         | krok w stylu „rozmowa”: postać, jedna kwestia, kropki postępu                                             |
+| `src/ui/panels/`                | panele: ramka, tablice ARP/MAC, pytania; decyzja, ulica adresów, bity                                     |
+| `src/ui/controls/`              | elementy sterujące: „dalej”, przełącznik, kroki scenariusza, rozmowa, zagadka                             |
+| `src/ui/diagram/`               | diagram React Flow: karta urządzenia, kabel z animowaną ramką                                             |
+| `src/ui/free/`                  | Tryb swobodny maski: ekran i stan ustawień (treść dostaje z `content/`)                                   |
+| `src/ui/text.tsx`               | wypełnianie pól `{nazwa}` i pogrubienia `**…**` w tekstach z `content/`                                   |
+| `src/content/arp.ts`            | Symulator ARP: układ diagramu, ramki i kroki scenariusza                                                  |
+| `src/content/maska.ts`          | seria M1–M4: teksty i sceny kroków                                                                        |
+| `src/content/routing.ts`        | routing „List za płot”: kwestie z `scenariusz-routing.md` i stany sceny                                   |
+| `src/content/arkusz.ts`         | „Arkusz krok po kroku”, etapy 1–2: kwestie z `scenariusz-arkusz-1-2.md`                                   |
+| `src/content/arkusz.test.ts`    | test: kwestie co do słowa ze scenariusza, nazwy z arkusza, bramy w kolorze                                |
+| `src/ui/views/SheetView.tsx`    | schemat z arkusza, wycinek arkusza, ćwiczenia „kliknij kartę” i „tabela”                                  |
+| `src/ui/views/SheetParts.tsx`   | warstwy 3+: linijki arkusza z ćwiczeniem „zaznacz i sprawdź”, okno rezerwacji                             |
+| `src/ui/views/SheetPage.tsx`    | warstwa 9: strona arkusza z zakreślaczem, plakietki, mały schemat, ćwiczenia „linijka → zakładka” i filtr |
+| `src/ui/taskState.ts`           | wspólny stan ćwiczenia „uczeń sam”: widok (klik) ↔ okno rozmowy (reakcja)                                 |
+| `src/content/maska-swobodny.ts` | Tryb swobodny: gotowe przykłady z lekcjami i zdania paneli                                                |
+| `src/content/maska-uklad.ts`    | układ diagramu maski: pozycje kart, boki kabli, napisy na kartach                                         |
+| `src/content/content.test.ts`   | testy treści: ≤ 40 słów, ramki po kablach, nazwy tylko ze słownika                                        |
+| `src/warstwy.test.ts`           | test: zależności między warstwami idą tylko w dół                                                         |
+| `src/literaly.test.ts`          | test: adresy IP i MAC są wpisane tylko w `model/`                                                         |
+| `src/niezmiennosc.test.ts`      | strażnik refaktoru: dane i teksty zgodne ze wzorcem sprzed etapu B                                        |
 
 ## Sceny w stylu „rozmowa”
 

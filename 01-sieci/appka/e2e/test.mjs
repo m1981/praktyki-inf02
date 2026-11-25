@@ -52,7 +52,14 @@ function measure(kind) {
   // Scena i całe okno rozmowy (kwestia, zagadka, przyciski) widoczne bez przewijania.
   // Treść sceny nie może wystawać poza jej ramkę (np. wycinek arkusza w ćwiczeniu z tabelą).
   const board = q('.sim-stage--steps > :first-child');
-  const inner = Math.max(0, ...[...board.querySelectorAll('*')].map(bottom));
+  // Wnętrze okna z własnym przewijaniem (strona arkusza w warstwie 9, `data-scroll`) jest z założenia
+  // dłuższe niż okno – liczy się samo okno, nie to, co w nim przewinięte niżej.
+  const inner = Math.max(
+   0,
+   ...[...board.querySelectorAll('*')]
+    .filter((el) => !el.parentElement?.closest('[data-scroll]'))
+    .map(bottom)
+  );
   return {
    ...base,
    top: top(q('.sim-stage--steps')),

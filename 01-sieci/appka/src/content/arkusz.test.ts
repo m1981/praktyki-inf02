@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest';
 import type { Step } from '../engine/types';
 import { cardWithIp, SHEET_CARDS, SHEET_CARD_IDS } from '../model/arkusz';
 import { ARKUSZ, ARKUSZ_FIGURE } from './arkusz';
+import { FRAGMENT_TEXT, PAGE_BLOCKS } from './arkusz-strona';
 
 const SCENARIO = readFileSync(new URL('../../scenariusz-arkusz-1-2.md', import.meta.url), 'utf8');
 
@@ -47,7 +48,7 @@ function quizReactions(stage: string): string[] {
  return [...SCENARIO.slice(start, end).matchAll(/^- [AB]: (.+)$/gm)].map((m) => unquote(m[1]));
 }
 
-const [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5, ETAP_6, ETAP_7, ETAP_8] = ARKUSZ.exercises;
+const [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5, ETAP_6, ETAP_7, ETAP_8, ETAP_9] = ARKUSZ.exercises;
 const isTask = (step: Step) => step.speaker === 'task';
 /** Polecenie ćwiczenia z tabelą – mechanika i tekst z PYT-077a, scenariusz go nie podaje. */
 const isTableTask = (step: Step) => step.view.type === 'sheet' && step.view.task?.kind === 'table';
@@ -548,6 +549,78 @@ describe('warstwa 8 co do słowa ze scenariusza', () => {
  });
 });
 
+// --- Warstwa 9: scenariusz-arkusz-9.md (wersja 2) ---
+
+const SCENARIO_9 = readFileSync(new URL('../../scenariusz-arkusz-9.md', import.meta.url), 'utf8');
+
+describe('warstwa 9 co do słowa ze scenariusza', () => {
+ const isTask9 = (s: Step) => s.speaker === 'task';
+ const tasks = ETAP_9.steps.filter(isTask9);
+ const optionsOf = (s: Step) => (s.control.type === 'task' ? (s.control.options ?? []) : []);
+ const answersOf = (n: number) =>
+  SCENARIO_9.match(new RegExp(`Odpowiedzi do zadania ${n}: (.+)`))![1].split(/ (?=[AB]\) )/);
+ const rows = rows3('Zakreślane fragmenty', /^\| F\d+ /, SCENARIO_9);
+ const page = (s: Step) => (s.view.type === 'sheet' ? s.view.page : undefined);
+
+ it('fragmenty: tekst co do słowa, zakładki i pułapki', () => {
+  expect(rows.map((c) => [c[0], c[2]])).toEqual(Object.entries(FRAGMENT_TEXT));
+  const fragments = page(ETAP_9.steps[0])!.fragments;
+  expect(rows.map((c) => [c[0], c[3].split(' · '), c[4]])).toEqual(
+   Object.entries(fragments).map(([id, f]) => [id, [...f.tabs], f.trap])
+  );
+ });
+
+ it('każdy fragment stoi na stronie', () => {
+  const ids = PAGE_BLOCKS.flatMap((b) => (b.segs ?? []).flatMap((s) => (typeof s === 'string' ? [] : [s.id])));
+  expect(ids).toEqual(expect.arrayContaining([...Object.keys(FRAGMENT_TEXT), 'U2', 'U3', 'U8', 'U9']));
+ });
+
+ it('scena', () => {
+  const expected = rows3('Scena', undefined, SCENARIO_9).map(sceneLine);
+  expect(ETAP_9.steps.filter((s) => !isTask9(s)).map((s) => s.text)).toEqual(expected);
+ });
+
+ it('zagadka: odpowiedzi i reakcje', () => {
+  const quiz = ETAP_9.steps.find((s) => s.control.type === 'quiz')!;
+  const options = quiz.control.type === 'quiz' ? quiz.control.options : [];
+  const row = rows3('Scena', undefined, SCENARIO_9).find((c) => c[1] === '_zagadka_')!;
+  expect(options.map((o) => o.text)).toEqual(row[2].split(/ (?=[AB]\) )/).slice(1));
+  const start = SCENARIO_9.indexOf('Reakcje na zagadkę:');
+  const reactions = [
+   ...SCENARIO_9.slice(start, SCENARIO_9.indexOf('##', start)).matchAll(/^- [AB]: (.+)$/gm)
+  ].map((m) => unquote(m[1]));
+  expect(options.map((o) => o.feedback)).toEqual(reactions);
+ });
+
+ it('polecenia i reakcje na błąd', () => {
+  const rowsT = rows3('Ćwiczenie', undefined, SCENARIO_9);
+  expect(tasks.map((s) => s.text)).toEqual(rowsT.map((c) => c[1]));
+  const tagTask = page(tasks[0])?.task;
+  expect(tagTask?.kind === 'tags' && tagTask.wrong).toBe(unquote(rowsT[0].at(-1)!));
+  expect(wrongReaction(tasks[1])).toBe(unquote(rowsT[1].at(-1)!));
+  expect(wrongReaction(tasks[2])).toBe(unquote(rowsT[2].at(-1)!));
+ });
+
+ it('ćwiczenie 1: linijki, koniec; ćwiczenie 4: dopisek przy schemacie', () => {
+  const tagTask = page(tasks[0])?.task;
+  expect(tagTask?.kind === 'tags' && [...tagTask.lines]).toEqual(
+   rows3('Ćwiczenie', undefined, SCENARIO_9)[0][2].match(/F\d+/g)
+  );
+  expect(tagTask?.kind === 'tags' && tagTask.done).toBe(quoteAfter('koniec, gdy wszystkie', SCENARIO_9));
+  const filter = page(tasks[3])?.task;
+  expect(filter?.kind === 'filter' && filter.schemaNote).toBe(quoteAfter('z dopiskiem', SCENARIO_9));
+ });
+
+ it('odpowiedzi do zadań 2 i 3', () => {
+  expect(optionsOf(tasks[1]).map((o) => o.text)).toEqual(answersOf(2));
+  expect(optionsOf(tasks[2]).map((o) => o.text)).toEqual(answersOf(3));
+ });
+
+ it('notatki „Dla dociekliwych”', () => {
+  expect(ETAP_9.notes).toEqual(notesOf(SCENARIO_9, 'Warstwa 9'));
+ });
+});
+
 // --- Wiersz „gdzie jest Kuba” (PYT-104a): kolumna „Kuba (pod)” w scenariuszach 3–5 ---
 
 describe('Kuba stoi tam, gdzie mówi scenariusz', () => {
@@ -564,7 +637,8 @@ describe('Kuba stoi tam, gdzie mówi scenariusz', () => {
   ['5', ETAP_5, SCENARIO_5],
   ['6', ETAP_6, SCENARIO_6],
   ['7', ETAP_7, SCENARIO_7],
-  ['8', ETAP_8, SCENARIO_8]
+  ['8', ETAP_8, SCENARIO_8],
+  ['9', ETAP_9, SCENARIO_9]
  ] as const)('warstwa %s', (_layer, exercise, scenario) => {
   const head = rows3('Scena', /^\| # /, scenario)[0];
   const col = head.indexOf('Kuba (pod)');

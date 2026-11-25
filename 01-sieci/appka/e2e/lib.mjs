@@ -142,7 +142,11 @@ async function walkDialog(page, visit, { siteDir, settleMs, file, prefix }) {
     isEnd:
      step === dots.length &&
      (tabs.length === 0 || tabs.at(-1).getAttribute('aria-current') === 'step'),
-    task: document.querySelector('[data-line]')
+    task: document.querySelector('[data-tagline]')
+     ? 'zakladki'
+     : document.querySelector('[data-filter]')
+       ? 'filtr'
+       : document.querySelector('[data-line]')
      ? 'linie'
      : document.querySelector('[data-tile]')
        ? 'tabela'
@@ -180,6 +184,23 @@ async function answerTask(task, right) {
   const all = [...document.querySelectorAll(scope)];
   if (right) for (const el of all.filter((e) => e.dataset.ok === '1')) await click(el);
   else await click(all.find((el) => el.dataset.ok === '0'));
+  return;
+ }
+ // Warstwa 9: linijka → zakładka z listy. Zła odpowiedź = pierwsza linijka, zakładka spoza jej listy.
+ if (task === 'zakladki') {
+  const lines = [...document.querySelectorAll('[data-tagline]')];
+  for (const line of right ? lines : lines.slice(0, 1)) {
+   await click(line);
+   const ok = line.dataset.ans.split('|');
+   const tags = [...document.querySelectorAll('[data-tag]')];
+   await click(tags.find((t) => ok.includes(t.dataset.tag) === right));
+  }
+  return;
+ }
+ // Filtr „jedno pytanie naraz” (bez oceny): zła = zakładka bez linijek, dobra = ostatnia.
+ if (task === 'filtr') {
+  const all = [...document.querySelectorAll('[data-filter]')];
+  await click(right ? all.at(-1) : all[0]);
   return;
  }
  // Linijki: zaznacz i „Sprawdź”. Zła odpowiedź = jedna linijka spoza odpowiedzi.

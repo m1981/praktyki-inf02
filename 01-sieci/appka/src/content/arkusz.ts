@@ -23,6 +23,8 @@ import type { Figure } from '../ui/ExamFigure';
 import { formatIp, maskOf } from '../lib/ipv4';
 import type { LinesSpec, ReservationSpec, SheetLine, WizardSpec } from '../ui/views/SheetParts';
 import type { Cable, CardLabel, ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
+import type { MiniSpec, PageSpec } from '../ui/views/SheetPage';
+import { PAGE_BLOCKS } from './arkusz-strona';
 
 const SPEAKERS: Record<string, Speaker> = {
  ola: { name: 'Ola', role: 'administratorka sieci', avatar: 'O', color: '#d9ecf9' },
@@ -1927,6 +1929,277 @@ const ETAP_8: Exercise = {
      answer: ['serwer-wan'],
      wrong: 'Ruter jest w zielonej sieci. Ping idzie zieloną kartą.'
     }
+   })
+  )
+ ]
+};
+
+// --- Warstwa 9: „Cały arkusz” (scenariusz-arkusz-9.md, wersja 2; PYT-121a–125a) ---
+// W miejscu schematu strona arkusza (arkusz-strona.ts), zakreślacz w kolejności pracy, plakietki
+// „zakładka + pułapka”, mały schemat z wierszem Kuby i ramką „maszyna” (PYT-125a).
+
+/** Nazwa zakładki tak jak na stronie, np. „7 Kolejność”. */
+const tabOf = (ex: Exercise) => `${ex.code} ${ex.tab ?? ex.title}`;
+const [T1, T2, T3, T4, T5, T6, T7, T8] = [
+ ETAP_1,
+ ETAP_2,
+ ETAP_3,
+ ETAP_4,
+ ETAP_5,
+ ETAP_6,
+ ETAP_7,
+ ETAP_8
+].map(tabOf);
+const T9 = '9 Cały arkusz';
+const VM_IP = ipOf(SHEET_VM_LAN3);
+const STATION_DNS_9 = SHEET_CARDS['stacja-lan2'].dns ?? '';
+
+const FRAGMENTS_9: PageSpec['fragments'] = {
+ F1: { tabs: [T7], trap: '⚠ serwer do PORT LAN, nie do WAN rutera' },
+ F2: { tabs: [T5], trap: '⚠ wchodzisz z serwera – karta WAN „automatycznie”' },
+ F3: { tabs: [T2], trap: '⚠ brama WAN jest u dostawcy, poza schematem' },
+ F4: { tabs: [T4], trap: '⚠ DNS rutera, nie stacji' },
+ F5: { tabs: [T7, T2], trap: '⚠ panel „ucieka”' },
+ F6: { tabs: [T7], trap: '⚠ potrzebna już przy zadaniu 2' },
+ F7: { tabs: [T3], trap: '⚠ karta WAN; adres zmień na .20' },
+ F8: { tabs: [T5, T2], trap: '⚠ do panelu przełącznika /24 na chwilę' },
+ F9: { tabs: [T6, T2], trap: '⚠ VLAN 1, potem Save' },
+ F10: { tabs: [T2], trap: '⚠ „brak” = puste pole' },
+ F11: { tabs: [T4], trap: '⚠ adres karty LAN 1, nie WAN' },
+ F12: { tabs: [T8], trap: '⚠ z serwera, nie ze stacji' },
+ F13: { tabs: [T8], trap: '⚠ reguła na stacji, nie na serwerze' },
+ F14: { tabs: [T9], trap: '⚠ nowe: karta mostkowana, nie NAT' },
+ F15: { tabs: [T4], trap: `⚠ DNS maszyny: ${STATION_DNS_9}` }
+};
+
+/** Widok warstwy 9: strona arkusza i mały schemat. */
+const page9 = (page: Omit<PageSpec, 'blocks' | 'fragments'>, mini: MiniSpec = {}): Scene => ({
+ page: { blocks: PAGE_BLOCKS, fragments: FRAGMENTS_9, ...page },
+ mini,
+ kubaRow: true
+});
+
+interface Tour {
+ who: 'ola' | 'kuba';
+ text: string;
+ lit?: string[];
+ /** Fragmenty bez plakietki (UWAGI; F14 zanim pułapka się urodzi). */
+ bare?: string[];
+ focus?: string;
+ blinkTag?: string;
+ mini?: MiniSpec;
+}
+
+/** Przebieg sceny: każdy krok zakreśla swoje fragmenty, wcześniejsze zostają blade. */
+const TOUR_9: Tour[] = [
+ { who: 'kuba', text: 'Cały arkusz naraz! Od czego zacząć? 🤔' },
+ {
+  who: 'ola',
+  text: 'Od kabli – zadanie 4. Serwer wpinasz w PORT LAN.',
+  lit: ['F1'],
+  mini: { lit: ['cables'] }
+ },
+ {
+  who: 'kuba',
+  text: 'Siadam do serwera. Ruter fabryczny – adres z dokumentacji.',
+  lit: ['F2'],
+  mini: { lit: ['ruter-lan', 'serwer-wan'] }
+ },
+ {
+  who: 'ola',
+  text: 'Najpierw adres WAN i DNS. Ten DNS jest dla rutera.',
+  lit: ['F3', 'F4'],
+  mini: { lit: ['ruter-wan'] }
+ },
+ {
+  who: 'kuba',
+  text: `Zmieniam adres LAN na ${ROUTER_LAN_IP}… panel zniknął!`,
+  lit: ['F5'],
+  mini: { lit: ['ruter-lan'] }
+ },
+ {
+  who: 'ola',
+  text: 'Odśwież adres serwera. Ta linijka stoi w zadaniu 7.',
+  lit: ['F6'],
+  mini: { lit: ['serwer-wan'] }
+ },
+ {
+  who: 'ola',
+  text: 'Teraz DHCP i rezerwacja – dla karty WAN serwera.',
+  lit: ['F7'],
+  mini: { lit: ['serwer-wan'] }
+ },
+ {
+  who: 'kuba',
+  text: `Odświeżam drugi raz: ${SHEET_DHCP.reserved}. Ruter gotowy, ręka!`,
+  lit: ['U2'],
+  bare: ['U2']
+ },
+ {
+  who: 'kuba',
+  text: 'Teraz przełącznik. Siadam do stacji – maska /24 na chwilę.',
+  lit: ['F8'],
+  mini: { lit: ['stacja-lan2'] }
+ },
+ {
+  who: 'ola',
+  text: 'Adres na VLAN 1, Save. Stacji wróć /25 i ręka.',
+  lit: ['F9', 'U3'],
+  bare: ['U3'],
+  mini: { lit: ['przelacznik'] }
+ },
+ {
+  who: 'kuba',
+  text: 'Wracam do serwera. Karta LAN 1, brama – brak.',
+  lit: ['F10'],
+  mini: { lit: ['serwer-lan1'] }
+ },
+ {
+  who: 'ola',
+  text: 'Rekord www to adres karty LAN 1, nie WAN.',
+  lit: ['F11'],
+  mini: { lit: ['serwer-lan1'] }
+ },
+ {
+  who: 'kuba',
+  text: 'Ping z serwera: stacja milczy. Idę do stacji – zapora!',
+  lit: ['F12', 'F13'],
+  mini: { lit: ['serwer-wan', 'serwer-lan1', 'stacja-lan2'] }
+ },
+ {
+  who: 'kuba',
+  text: 'Reguła włączona. Wracam: ping z serwera przechodzi. Ręka!',
+  lit: ['U8'],
+  bare: ['U8']
+ },
+ {
+  who: 'kuba',
+  text: `Na stacji maszyna wirtualna: adres ${VM_IP} wpisany. Tryb karty zostawiam.`,
+  lit: ['F14'],
+  bare: ['F14'],
+  mini: { vm: 'nat' }
+ },
+ {
+  who: 'kuba',
+  text: 'Strona www.egzamin.local się nie otwiera 😩 A DNS dobry!',
+  lit: ['F15'],
+  mini: { vm: 'nat', vmBlink: true }
+ },
+ {
+  who: 'ola',
+  text: 'NAT chowa maszynę za stacją. Ustaw mostkowaną, do LAN 2.',
+  focus: 'F14',
+  blinkTag: 'F14',
+  mini: { vm: 'nat' }
+ },
+ {
+  who: 'kuba',
+  text: 'Mostkowana… strona działa! Ręka – koniec arkusza.',
+  lit: ['U9'],
+  bare: ['U9'],
+  mini: { vm: 'bridged' }
+ }
+];
+
+function tourSteps(): Step[] {
+ const done: string[] = [];
+ return TOUR_9.map((t) => {
+  const lit = t.lit ?? [];
+  const tags = [...lit.filter((id) => !(t.bare ?? []).includes(id)), ...(t.blinkTag ? [t.blinkTag] : [])];
+  const view = page9(
+   { lit, done: [...done], tags, focus: t.focus, blinkTag: t.blinkTag },
+   t.mini
+  );
+  done.push(...lit);
+  return t.who === 'ola' ? ola(t.text, view) : kuba(t.text, view);
+ });
+}
+const ALL_LIT_9 = TOUR_9.flatMap((t) => t.lit ?? []);
+
+const NOTES_9: Note[] = [
+ {
+  q: 'Dlaczego zakreślacz skacze po stronie?',
+  a: 'Bo idzie w kolejności pracy, a arkusz jest ułożony w kolejności oceniania (warstwa 7).'
+ },
+ {
+  q: 'A zadanie 1?',
+  a: 'To gniazdo i panel krosowy, sprawdzane testerem – dlatego strona zaczyna się od zadania 2.'
+ },
+ {
+  q: 'Co robi karta mostkowana?',
+  a: `Podłącza maszynę wirtualną do tej samej sieci, w której jest karta LAN 2 stacji. Maszyna ma wtedy własny adres z niebieskiej sieci: ${VM_IP}.`
+ },
+ {
+  q: 'A NAT?',
+  a: `Przy NAT maszyna jest w osobnej, wirtualnej sieci programu. Nawet z adresem ${VM_IP} nie dosięgnie serwera. Tryb karty to jej kabel: mostkowana = kabel do przełącznika.`
+ },
+ {
+  q: 'Którą kartę wybrać przy mostkowanej?',
+  a: 'Program pokazuje kartę stacji pod nazwą sprzętu (np. „Intel(R) Ethernet…”), nie „LAN 2”. Nazwę sprzętu karty LAN 2 zobaczysz w Połączeniach sieciowych.'
+ },
+ {
+  q: `Dlaczego DNS maszyny to ${STATION_DNS_9}?`,
+  a: 'To serwer – on zna nazwę www.egzamin.local (warstwa 4).'
+ },
+ {
+  q: 'Czemu zadanie 5 jest szare?',
+  a: 'Identyfikacja podzespołów w Linuksie nie dotyczy sieci.'
+ },
+ {
+  q: 'Skąd tekst arkusza?',
+  a: 'Arkusz CKE ze stycznia 2025, co do słowa. Pominięte fragmenty spoza sieci są oznaczone „…”.'
+ }
+];
+
+const ETAP_9: Exercise = {
+ code: '9',
+ title: 'Cały arkusz',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_9,
+ steps: [
+  ...tourSteps(),
+  quiz(
+   `Maszyna ma ${VM_IP}, karta w NAT. Serwer ją widzi?`,
+   page9({ done: ALL_LIT_9 }, { vm: 'nat' }),
+   [
+    ['A) Tak.', 'Adres to nie wszystko. NAT chowa maszynę za stacją.', false],
+    ['B) Nie.', 'Właśnie tak – dopiero mostkowana wpina ją do niebieskiej sieci.', true]
+   ]
+  ),
+  // Ćwiczenie: strona bez zakreśleń i plakietek, mały schemat bez ramki „maszyna”.
+  task(
+   'Kliknij obramowaną linijkę i wybierz zakładkę, która ją wyjaśnia.',
+   page9({
+    task: {
+     kind: 'tags',
+     lines: ['F1', 'F7', 'F9', 'F10', 'F11', 'F13'],
+     options: [T1, T2, T3, T4, T5, T6, T7, T8],
+     wrong: 'Haczyk: {pułapka}. Wyjaśnia to zakładka »{zakładka}«.',
+     done: '✓ Wszystkie linijki rozpoznane.'
+    }
+   })
+  ),
+  task('Co robisz wcześniej?', page9({}), [
+   {
+    text: 'A) Adres przełącznika (zadanie 3).',
+    feedback: 'Bez adresu stacji nie otworzysz panelu przełącznika.'
+   },
+   { text: 'B) Adres stacji – maska /24 na chwilę (zadanie 6).', correct: true }
+  ]),
+  task('Jaki tryb karty ustawisz maszynie wirtualnej?', page9({}), [
+   { text: 'A) Sieć NAT.', feedback: '»Sieć NAT« to też NAT – maszyna dalej schowana za stacją.' },
+   { text: 'B) Mostkowana karta sieciowa (bridged).', correct: true }
+  ]),
+  task(
+   'Wybierz zakładkę – zobacz jej linijki w całym arkuszu.',
+   page9({
+    task: {
+     kind: 'filter',
+     options: [T1, T2, T3, T4, T5, T6, T7, T8, T9],
+     schemaTab: T1,
+     schemaNote: 'Ta zakładka czyta schemat, nie linijki.'
+    }
    }),
    undefined,
    { end: '↺ Od początku', restart: true }
@@ -1950,6 +2223,14 @@ const KUBA_7: KubaAt[] = [
  ...times(4, 'serwer'),
  'ruter',
  ...times(7, 'serwer'),
+ undefined
+];
+const KUBA_9: KubaAt[] = [
+ ...times(2, undefined),
+ ...times(6, 'serwer'),
+ ...times(2, 'stacja'),
+ ...times(4, 'serwer'),
+ ...times(4, 'stacja'),
  undefined
 ];
 const KUBA_8: KubaAt[] = [
@@ -1994,7 +2275,8 @@ export const ARKUSZ: Course = {
   withKuba(ETAP_5, KUBA_5),
   withKuba(ETAP_6, KUBA_6),
   withKuba(ETAP_7, KUBA_7),
-  withKuba(ETAP_8, KUBA_8)
+  withKuba(ETAP_8, KUBA_8),
+  withKuba(ETAP_9, KUBA_9)
  ]
 };
 

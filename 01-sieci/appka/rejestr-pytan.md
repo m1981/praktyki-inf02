@@ -128,6 +128,12 @@ zob. PYT-004).
 | PYT-118 | z-domyslna  | zamknięte (inna) | Nazwa reguły zapory „żądanie echa” w polskim Windows w pracowni   |
 | PYT-119 | decyzja     | zamknięte (a)    | Commit i push warstwy 8                                           |
 | PYT-120 | decyzja     | zamknięte        | Pracownia: Windows Server 2022 (EN) i Windows 11 (PL)             |
+| PYT-121 | decyzja     | zamknięte (a)    | Warstwa 9: kolejność podświetleń na stronie arkusza               |
+| PYT-122 | decyzja     | zamknięte (a)    | Warstwa 9: wygląd strony arkusza i co ze schematem                |
+| PYT-123 | decyzja     | zamknięte (a)    | Warstwa 9: akceptacja kształtu z makiety                          |
+| PYT-124 | decyzja     | zamknięte (a)    | Warstwa 9: oznaczenia linijek – zakładki 1–8 zamiast ①–⑤          |
+| PYT-125 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 9 „Cały arkusz”                    |
+| PYT-126 | decyzja     | zamknięte (a)    | Commit i push warstwy 9                                           |
 
 ## Pytania
 
@@ -1760,3 +1766,89 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   fizyczny”); warstwa 4 – notatka dla nauczyciela „DNS Manager”, pole „Name”; warstwa 8 – wyniki pingu
   na serwerze „Reply from …” / „Request timed out.”, na stacji „Upłynął limit czasu żądania.”, notatka
   „Co to jest ping?” z obiema wersjami, uproszczenia. Reguła zapory na stacji – polska nazwa (PYT-118).
+
+### PYT-121 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „Co do makiery 9 uczniowie zaproponowali zeby odzwierciedlic
+  uklad tekstu z PDF egzaminacyjnego i wyswietlaca go tam gdzie teraz jest obrazek sieci. uczniowie
+  mysla o podobnych animacjach i podkresleniacha jaki fragment tesktu z arkusz a w danym kroku czytamy.
+  Jak to rozumiesz?” Rozumienie agenta: w miejscu schematu strona arkusza (zadania 2–9, układ jak w PDF);
+  w każdym kroku podświetla się czytany fragment, a Ola i Kuba mówią, na które pytanie ①–⑤ odpowiada.
+- **Opcje:** (a) podświetlenia w kolejności pracy (z warstwy 7) – zakreślacz skacze po stronie: zad. 4 →
+  MAC z zad. 7 → zad. 2 → zad. 3 → zad. 7 → zad. 6 → zad. 8 → zad. 9; (b) w kolejności strony (zad. 2 →
+  9), a kolejność pracy dopiero na końcu; (c) najpierw (b), potem drugi przebieg (a).
+- **Rekomendacja:** (a) – skaczący zakreślacz sam pokazuje, że kolejność w arkuszu to nie kolejność
+  pracy (rdzeń warstwy 7), a uczeń przy okazji przechodzi cały arkusz.
+- **Skutek braku odpowiedzi:** makieta pokaże wariant (a), oznaczony „tymczasowo”.
+- **Odpowiedź (2026-11-25):** „121a 122a” → (a)
+
+### PYT-122 · decyzja · zamknięte
+
+- **Kontekst:** strona arkusza zajmie miejsce schematu (scena ok. 470 px wysokości przy 1280×720;
+  zadania 2–9 to ok. 1,5 strony A4 – całość się nie zmieści, strona przewija się sama do czytanego
+  fragmentu).
+- **Opcje:** (a) wierny układ (numeracja, myślniki, wcięcia, pogrubione UWAGA, krój i odstępy jak
+  w PDF), tekst z PDF co do słowa; pod stroną wąski pasek z małym schematem – podświetla urządzenie,
+  którego dotyczy fragment; (b) jak (a), ale bez schematu; (c) uproszczony wygląd (bez kroju PDF),
+  ze schematem.
+- **Rekomendacja:** (a) – uczeń ćwiczy czytanie prawdziwego układu, a mały schemat łączy linijkę
+  z urządzeniem, jak w warstwach 1–8.
+- **Skutek braku odpowiedzi:** makieta pokaże wariant (a), oznaczony „tymczasowo”.
+- **Odpowiedź (2026-11-25):** „121a 122a” → (a)
+
+### PYT-123 · decyzja · zamknięte
+
+- **Kontekst:** makieta HTML warstwy 9 (katalog tymczasowy sesji, `makieta-9/index.html`): w miejscu
+  schematu strona arkusza (zadania 2–9, Arial, układ i tekst co do słowa z PDF, oryginalny schemat
+  w zadaniu 4, zadanie 5 wyszarzone, stopka „arkusze.pl” pominięta), strona przewija się sama; zakreślacz
+  w kolejności pracy (PYT-121a): zad. 4 → rezerwacja → LAN rutera → „odśwież” z zad. 7 → zad. 8; na
+  marginesie plakietki „zakładka + ⚠ pułapka”; pod stroną mały schemat ze świecącym urządzeniem
+  (PYT-122a); krok 7 „Teraz Ty”: klik w linijkę → wybór zakładki → ✓/✕.
+- **Opcje:** (a) kształt jak w makiecie – piszę scenariusz warstwy 9 (pełny przebieg kolejności pracy,
+  potem ćwiczenie i filtr „jedno pytanie naraz”); (b) poprawki „co zmienić”.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie piszę scenariusza warstwy 9.
+- **Odpowiedź (2026-11-25):** „123a 124a” → (a)
+
+### PYT-124 · decyzja · zamknięte
+
+- **Kontekst:** PYT-088 oznaczał linijki pytaniami ①–⑤ (ile sieci, wyjście, skąd adres, kto zna nazwy,
+  co od czego zależy). Od tamtej pory powstało 8 zakładek; pięć pytań nie obejmuje warstw 5, 6 i 8.
+  Makieta oznacza linijki numerem i nazwą zakładki („3 Skąd adres?”).
+- **Opcje:** (a) zakładki 1–8 – uczeń je zna, a plakietka mówi, gdzie wrócić po wyjaśnienie; (b) ①–⑤
+  jak w PYT-088.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** scenariusz używa zakładek, oznaczone „tymczasowo (PYT-124)”.
+- **Odpowiedź (2026-11-25):** „123a 124a” → (a)
+
+### PYT-125 · decyzja · zamknięte
+
+- **Kontekst:** `scenariusz-arkusz-9.md`, wersja 2 – po recenzji sub-agenta („gotowe po poprawkach”,
+  12 uwag; 11 przyjętych, 1 częściowo – bez drugiego kliknięcia w ćwiczeniu 1, za długie). Recenzent
+  sprawdził F1–F14 z PDF: co do słowa. Główne zmiany: P9 (karta maszyny w NAT) rodzi się ze sceny,
+  zagadka o P9, ćwiczenie 2 o skoku „zadanie 6 przed 3”, dwie zakładki przy F5, F8, F9, wszystkie UWAGI
+  o zgłoszeniu zakreślone, ramka „maszyna” przy stacji na małym schemacie (dodatek do makiety). Pytania
+  recenzenta: czy stacja ma więcej kart (wybór karty przy mostkowanej) – nie wiemy, w kwestii i notatce;
+  ramka „maszyna” – w tym pytaniu (odpowiedzi agenta). Scena 19 kroków (najdłuższa kwestia 12 słów),
+  15 fragmentów, ćwiczenie 4 polecenia, 8 notatek.
+- **Opcje:** (a) akceptuję z ramką „maszyna”; (b) akceptuję bez ramki (jak makieta); (c) poprawki.
+- **Rekomendacja:** (a) – jedyna nowość warstwy dostaje obrazek.
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 9.
+- **Odpowiedź (2026-11-26):** „125a” → (a)
+- **Wykonanie:** zakładka 9 „Cały arkusz” (19 kroków sceny, 15 fragmentów, 4 ćwiczenia, 8 notatek). Nowy
+  widok `SheetPage.tsx`: strona arkusza (tekst w `content/arkusz-strona.ts`, adresy z modelu), zakreślacz
+  z płynnym przewijaniem, plakietki, mały schemat z wierszem Kuby i ramką „maszyna”, ćwiczenie „linijka →
+  zakładka” i filtr. e2e: pomiar „treść wystaje poza ramkę” pomija wnętrze okna z własnym przewijaniem
+  (`data-scroll`); obsługa nowych ćwiczeń w `e2e/lib.mjs`; układ dla telefonu. Karta „Warstwy 1–9”,
+  zapowiedzi puste. Test co do słowa ze scenariuszem (fragmenty, zakładki, pułapki, scena, ćwiczenia,
+  notatki, pozycje Kuby). `pnpm build`: 4802 testy, 939 pomiarów e2e.
+
+### PYT-126 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 9 gotowa na dysku (PYT-125a); scenariusz 9 bez commita. Push = zakładka 9
+  u uczniów, karta „Warstwy 1–9”, bez zapowiedzi. Zmiana w e2e: pomiar pomija wnętrze okna
+  z przewijaniem (strona arkusza jest z założenia dłuższa niż okno).
+- **Opcje:** (a) commit i push; (b) commit bez push – push po obejrzeniu; (c) poprawki.
+- **Rekomendacja:** (b) – nowy widok; obejrzyj kroki 2–8 (skoki zakreślacza), 15–18 (maszyna) i ćwiczenie 1.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-26):** „126a obejrzalm i jest super” → (a): commit i push.

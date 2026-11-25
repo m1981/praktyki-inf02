@@ -1,6 +1,6 @@
 # Zlecenie: „Arkusz krok po kroku”, warstwy 7–9 (dla nowej sesji)
 
-Status: warstwa 7 wypchnięta (PYT-116a), warstwa 8 gotowa na dysku (PYT-117a; zadanie 9 przeniesione do warstwy 9), 9 do wykonania · 2026-11-25 · decyzje: PYT-089a (warstwy), PYT-106a (podział na 6–9), PYT-104a (sylwetka Kuby).
+Status: warstwa 7 wypchnięta (PYT-116a), warstwa 8 wypchnięta (PYT-119a), warstwa 9 gotowa na dysku (PYT-125a) – brief wykonany · 2026-11-25 · decyzje: PYT-089a (warstwy), PYT-106a (podział na 6–9), PYT-104a (sylwetka Kuby).
 Poprzednia sesja skończyła warstwę 6 (`078d032`, wypchnięte). Ten plik to kompletny brief – wykonawca
 nie zna wcześniejszej rozmowy.
 

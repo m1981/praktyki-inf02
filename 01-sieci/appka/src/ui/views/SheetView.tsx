@@ -7,6 +7,7 @@ import {
  type SheetNet
 } from '../../model/arkusz';
 import { resetTask, setTask, useTask } from '../taskState';
+import { SheetPage, type MiniSpec, type PageSpec } from './SheetPage';
 import {
  Lines,
  Reservation,
@@ -146,6 +147,10 @@ export interface SheetSpec {
  pings?: readonly { from: SheetCard; to: SheetCard; ok: boolean }[];
  /** Przy którym komputerze stoją `commands` (domyślnie przy serwerze). */
  commandsAt?: 'serwer' | 'stacja';
+ // --- warstwa 9: strona arkusza zamiast schematu (PYT-122a) ---
+ page?: PageSpec;
+ /** Mały schemat pod stroną arkusza. */
+ mini?: MiniSpec;
 }
 
 /** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
@@ -296,7 +301,18 @@ export function SheetView({ spec, runId }: { spec: SheetSpec; runId: number }) {
      {spec.bubble && <div className="sh-bubble">💬 {spec.bubble}</div>}
     </div>
    )}
-   <Schema key={`schema-${runId}`} spec={spec} colored={colored} />
+   {spec.page ? (
+    // Strona zostaje między krokami sceny (przewija się płynnie); ćwiczenie zaczyna od zera.
+    <SheetPage
+     key={spec.page.task ? `page-${runId}` : 'page'}
+     spec={spec.page}
+     mini={spec.mini}
+     kuba={spec.kuba}
+     kubaRow={spec.kubaRow}
+    />
+   ) : (
+    <Schema key={`schema-${runId}`} spec={spec} colored={colored} />
+   )}
    {spec.reservation && <Reservation spec={spec.reservation} />}
    {spec.wizard && <Wizard spec={spec.wizard} />}
    {table ? (
