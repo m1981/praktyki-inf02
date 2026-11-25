@@ -162,3 +162,58 @@ export function Reservation({ spec }: { spec: ReservationSpec }) {
   </section>
  );
 }
+
+/** Okienko kreatora przełącznika (warstwa 6): Getting Started Wizard → IP Settings. */
+export interface WizardSpec {
+ labels: {
+  title: string;
+  iface: string;
+  port: string;
+  vlan: string;
+  ip: string;
+  mask: string;
+  gw: string;
+  /** Ściąga masek pod okienkiem, np. „/24 = 255.255.255.0 · /25 = 255.255.255.128”. */
+  cheat: string;
+ };
+ iface: 'port' | 'vlan';
+ ip?: string;
+ mask?: string;
+ gw?: string;
+ /** Co miga: zaznaczony port (pułapka), puste pole maski, ściąga. */
+ blink?: 'port' | 'mask';
+}
+
+export function Wizard({ spec }: { spec: WizardSpec }) {
+ const { labels } = spec;
+ const radio = (on: boolean, text: string, warn?: boolean) => (
+  <span className={`sh-radio${on ? ' sh-radio--on' : ''}${warn ? ' sh-field--warn sh-blink' : ''}`}>
+   {on ? '◉' : '○'} {text}
+  </span>
+ );
+ return (
+  <section className="sh-panel sh-wizard" aria-label={labels.title}>
+   <h3>{labels.title}</h3>
+   <div className="sh-panel-row">
+    <span>{labels.iface}</span>
+    {radio(spec.iface === 'port', labels.port, spec.blink === 'port')}
+    {radio(spec.iface === 'vlan', labels.vlan)}
+   </div>
+   <div className="sh-panel-row">
+    <span>{labels.ip}</span>
+    <code className="sh-field">{spec.ip ?? ''}</code>
+   </div>
+   <div className="sh-panel-row">
+    <span>{labels.mask}</span>
+    <code className={`sh-field${spec.blink === 'mask' ? ' sh-field--warn sh-blink' : ''}`}>
+     {spec.mask ?? ''}
+    </code>
+   </div>
+   <div className="sh-panel-row">
+    <span>{labels.gw}</span>
+    <code className="sh-field">{spec.gw ?? ''}</code>
+   </div>
+   <small className={`sh-example${spec.blink === 'mask' ? ' sh-lit' : ''}`}>{labels.cheat}</small>
+  </section>
+ );
+}

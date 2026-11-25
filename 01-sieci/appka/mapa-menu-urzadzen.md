@@ -264,5 +264,5 @@ Pułapki:
    na VLAN 1 (wszystkie porty są w nim z fabryki). Adres na jednym porcie zadziała tylko przez ten
    port. [W]
 2. Maska jako **Network Mask** (255.255.255.128), nie jako /25. [E]
-3. Kreator kończy się w kroku 6 – po nim trzeba jeszcze **zapisać** konfigurację (Save w górnym
-   pasku), jak przy każdej zmianie. [W – do potwierdzenia, czy kreator zapisuje sam]
+3. Kreator **nie zapisuje** na stałe: po Apply na końcu kreatora w górnym pasku widać **Save**
+   [E, sprawdzone przez operatora 2026-11-25, PYT-108] – trzeba je jeszcze kliknąć.

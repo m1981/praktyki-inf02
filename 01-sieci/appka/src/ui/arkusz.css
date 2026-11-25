@@ -706,3 +706,43 @@ line.sh-pulse:not(.sh-net) {
 .sh-kuba {
  font-size: 34px;
 }
+
+/* --- Warstwa 6: okienko kreatora przełącznika --- */
+.sh-wizard .sh-panel-row > span:first-child {
+ min-width: 200px;
+}
+.sh-radio {
+ padding: 1px 8px;
+ border-radius: 6px;
+ border: 1px solid transparent;
+ color: var(--sim-muted);
+}
+.sh-radio--on {
+ color: #2d3436;
+ font-weight: 700;
+}
+.sh-blink {
+ animation: sh-fade 0.9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+ .sh-blink {
+  animation: none;
+ }
+}
+/* Kreator jest wyższy niż okno rezerwacji – zagęszczony, żeby zmieścić się z linijką arkusza. */
+.sh-wizard {
+ padding: 6px 12px;
+}
+.sh-wizard h3 {
+ margin-bottom: 3px;
+}
+.sh-wizard .sh-panel-row {
+ margin-bottom: 2px;
+}
+.sh-wizard .sh-field {
+ min-height: 20px;
+ padding: 0 8px;
+}
+.sh-wizard .sh-example {
+ margin-top: 2px;
+}

@@ -10,9 +10,11 @@ import { resetTask, setTask, useTask } from '../taskState';
 import {
  Lines,
  Reservation,
+ Wizard,
  type LinesSpec,
  type LinesTask,
- type ReservationSpec
+ type ReservationSpec,
+ type WizardSpec
 } from './SheetParts';
 
 /** Pole karty z arkusza: adres, brama, DNS albo „uzyskiwane automatycznie”. */
@@ -124,6 +126,8 @@ export interface SheetSpec {
   */
  kubaRow?: boolean;
  kuba?: SheetDevice;
+ /** Okienko kreatora przełącznika (warstwa 6). */
+ wizard?: WizardSpec;
 }
 
 /** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
@@ -266,6 +270,7 @@ export function SheetView({ spec, runId }: { spec: SheetSpec; runId: number }) {
    )}
    <Schema key={`schema-${runId}`} spec={spec} colored={colored} />
    {spec.reservation && <Reservation spec={spec.reservation} />}
+   {spec.wizard && <Wizard spec={spec.wizard} />}
    {table ? (
     <TableTaskView key={`table-${runId}`} spec={spec} task={table} />
    ) : spec.lines ? (

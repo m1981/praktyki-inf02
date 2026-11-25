@@ -113,6 +113,10 @@ zob. PYT-004).
 | PYT-103 | decyzja     | zamknięte (inna) | Wygląd paska „Gdzie jest Kuba”: linijka ze śladem czy mapa        |
 | PYT-104 | decyzja     | zamknięte (a)    | Wiersz z sylwetką Kuby: zakres i commit                           |
 | PYT-105 | decyzja     | zamknięte (a)    | Akceptacja kolumny „Kuba (pod)” i wiersza; commit i push          |
+| PYT-106 | decyzja     | zamknięte (a)    | Podział dawnej warstwy 6 na fazy                                  |
+| PYT-107 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 6 (przełącznik, VLAN 1, Save)      |
+| PYT-108 | blokujace   | zamknięte (a)    | Czy Apply w kreatorze Cisco zapisuje konfigurację na stałe?       |
+| PYT-109 | decyzja     | zamknięte (a)    | Commit i push warstwy 6                                           |
 
 ## Pytania
 
@@ -1529,3 +1533,57 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) – obejrzyj warstwę 3 (kroki 6–17) i 4 (kroki 4–9).
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-25):** „105a przjrzalem i super robota :)” → (a): commit i push.
+
+### PYT-106 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „JEzeli widzisz ze to duzo jak na ta warstwe to czy widzisz
+  sposoby jak to logicznie/spojnie podzielic na fazy?” Materiał dawnej warstwy 6 (kreator i VLAN 1,
+  Save, panel rutera „ucieka”, kable, ping, zapora, strona w maszynie wirtualnej) odpowiada na trzy
+  pytania w kolejności pracy z arkusza.
+- **Opcje:** (a) trzy warstwy: 6 „Co ustawić na przełączniku i jak tego nie zgubić?” (VLAN 1, Save),
+  7 „W jakiej kolejności to robię?” (panel „ucieka”, kable po konfiguracji), 8 „Jak sprawdzić, że
+  działa?” (zapora, ping w jednej sieci); 9 – cały arkusz; (b) dwie warstwy: 6 „kolejność i zapis”,
+  7 „sprawdzenie”, szczegóły przełącznika w notatkach; (c) inny podział.
+- **Rekomendacja:** (a) – każda warstwa trzyma regułę (1 pytanie, ≤2 pułapki), nic nie spada do
+  samych notatek, a jedyną warstwą zależną od modelu urządzenia jest 6.
+- **Skutek braku odpowiedzi:** nie zaczynam scenariusza warstwy 6.
+- **Odpowiedź (2026-11-25):** „106a genialne :)” → (a)
+- **Wykonanie:** tabela warstw w `mapa-nauki-sieci.md` (6–9); scenariusz warstwy 6: `scenariusz-arkusz-6.md`.
+
+### PYT-107 · decyzja · zamknięte
+
+- **Kontekst:** `scenariusz-arkusz-6.md`, wersja 2 – po recenzji sub-agenta („gotowe po poprawkach”,
+  12 uwag, agent przyjął wszystkie): Apply na końcu kreatora, restart z panelu (Reboot) zamiast
+  zasilania (kable i zadanie 4 zostają dla warstwy 7), ściąga masek na okienku, brama osobno („to
+  serwer”), „wróć stacji /25” w scenie, różna kolejność odpowiedzi. Scena 18 kroków (najdłuższa kwestia
+  10 słów), ćwiczenie 4 polecenia, 6 notatek; Kuba cały czas przy stacji.
+- **Opcje:** (a) akceptuję (kod po PYT-108); (b) poprawki „krok, co zmienić”; (c) krótsza scena.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 6.
+- **Odpowiedź (2026-11-25):** „108 wida 107a” → (a)
+- **Wykonanie:** zakładka 6 „Przełącznik: ustaw i zapisz” (18 kroków sceny, 4 ćwiczenia, 6 notatek,
+  Kuba pod stacją); nowa część widoku: okienko kreatora ze ściągą masek (maski liczone z `lib/ipv4`).
+  Test co do słowa ze scenariuszem i pozycje Kuby. `pnpm build`: 3370 testów, 654 pomiary e2e.
+
+### PYT-108 · blokujace · zamknięte
+
+- **Kontekst:** pułapka P2 warstwy 6 („Apply działa tylko do restartu, na stałe zapisuje Save”) stoi
+  na założeniu, że Apply na końcu kreatora Getting Started Wizard nie zapisuje do Startup Configuration.
+  Mapa menu ma to jako niesprawdzone; agent nie może zalogować się do emulatora (blokada wpisywania
+  hasła), recenzent wskazał to jako warunek.
+- **Opcje:** (a) operator sprawdza w emulatorze: kreator do końca → Apply → czy w górnym pasku widać
+  „Save” (miga/świeci). Widać → P2 zostaje jak w scenie; nie widać → (b); (b) P2 na zmianie poza
+  kreatorem: adres przez IPv4 Interface → Apply → Reboot (scena dłuższa o 2–3 kroki).
+- **Rekomendacja:** (a) – 2 minuty w emulatorze rozstrzygają.
+- **Skutek braku odpowiedzi:** wątek warstwy 6 czeka.
+- **Odpowiedź (2026-11-25):** „108 wida 107a” → (a)
+- **Rozstrzygnięcie:** po Apply na końcu kreatora w górnym pasku widać „Save” – kreator nie zapisuje na stałe; P2 zostaje jak w scenie. Do `mapa-menu-urzadzen.md` dopisane jako sprawdzone przez operatora.
+
+### PYT-109 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 6 gotowa na dysku (PYT-107a, PYT-108a); scenariusz bez commita. Push =
+  zakładka 6 u uczniów, karta „Warstwy 1–6”, zapowiedź „Warstwy 7–9”.
+- **Opcje:** (a) commit i push; (b) commit bez push – push po obejrzeniu; (c) poprawki.
+- **Rekomendacja:** (b) – obejrzyj kroki 3–9 (kreator) i 12–16 (restart i Save).
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-25):** „109a” → (a): commit i push.

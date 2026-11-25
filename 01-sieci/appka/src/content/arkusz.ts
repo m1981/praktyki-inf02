@@ -20,7 +20,8 @@ import {
 } from '../model/arkusz';
 import type { TaskOption } from '../ui/controls/TalkControl';
 import type { Figure } from '../ui/ExamFigure';
-import type { LinesSpec, ReservationSpec, SheetLine } from '../ui/views/SheetParts';
+import { formatIp, maskOf } from '../lib/ipv4';
+import type { LinesSpec, ReservationSpec, SheetLine, WizardSpec } from '../ui/views/SheetParts';
 import type { CardLabel, ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
 
 const SPEAKERS: Record<string, Speaker> = {
@@ -1213,6 +1214,223 @@ const ETAP_5: Exercise = {
      feedback: 'Arkusz każe /25. Maska /24 była tylko kluczem do panelu.'
     },
     { text: `B) Przywracam ${STATION_CIDR} z arkusza.`, correct: true }
+   ]
+  )
+ ]
+};
+
+// --- Warstwa 6: „Co ustawić na przełączniku i jak tego nie zgubić?” (scenariusz-arkusz-6.md, wersja 2;
+// PYT-107a, PYT-108a: po Apply w kreatorze widać Save – kreator nie zapisuje na stałe) ---
+// Nowa rzecz na schemacie: okienko kreatora ze ściągą masek.
+
+const MASK_24 = formatIp(maskOf(24));
+const MASK_25 = formatIp(maskOf(25));
+const SWITCH_CIDR = SHEET_CARDS.przelacznik.cidr ?? '';
+const SWITCH_GW = sheetGateway('przelacznik');
+
+const LINES_6: readonly SheetLine[] = [
+ { id: 'L1', where: 'przełącznik', text: `adres IP: ${SWITCH_CIDR}` },
+ { id: 'L2', where: 'przełącznik', text: `brama domyślna: ${SWITCH_GW}` },
+ {
+  id: 'L3',
+  where: 'przełącznik',
+  text:
+   'UWAGA: Po wykonaniu konfiguracji zgłoś Przewodniczącemu ZN – przez podniesienie ręki – gotowość do oceny ustawień przełącznika.'
+ }
+];
+const LINES_6_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o przełączniku';
+const lines6 = (...lit: string[]): LinesSpec => ({ title: LINES_6_TITLE, items: LINES_6, lit });
+const onlyLine6 = (id: string): LinesSpec => ({
+ ...lines6(id),
+ items: LINES_6.filter((l) => l.id === id)
+});
+
+const wizard = (state: Omit<WizardSpec, 'labels'>): WizardSpec => ({
+ labels: {
+  title: 'Getting Started Wizard → IP Settings',
+  iface: 'Interface:',
+  port: 'Unit 1 · Port GE1',
+  vlan: 'VLAN 1',
+  ip: 'IP Address:',
+  mask: 'Network Mask:',
+  gw: 'Administrative Default Gateway:',
+  cheat: `/24 = ${MASK_24} · /25 = ${MASK_25}`
+ },
+ ...state
+});
+
+const SWITCH_UNSAVED: Labels = {
+ przelacznik: [{ text: SWITCH_CIDR }, { text: '💾 niezapisane', tone: 'warn' }]
+};
+const SWITCH_SAVED: Labels = {
+ przelacznik: [{ text: SWITCH_CIDR }, { text: '💾 zapisane', tone: 'ok' }]
+};
+const TO_SWITCH_NEW: Scene['browse'] = { from: 'stacja-lan2', to: 'przelacznik', label: SWITCH_IP };
+
+/** Warstwa 6: stacja z maską /24 na chwilę, przełącznik fabryczny; adresy z etapu 2 jako tło. */
+const layer6 = (state: Scene): Scene => {
+ const { labels, ...rest } = state;
+ return {
+  colored: ALL,
+  shown: EVERY_ADDRESS,
+  shownDim: true,
+  lines: lines6(),
+  browse: TO_SWITCH,
+  labels: { ...SWITCH_FACTORY, ...STATION_TEMP, ...labels },
+  ...rest
+ };
+};
+
+const NOTES_6: Note[] = [
+ {
+  q: 'Co to jest VLAN 1?',
+  a: 'Grupa portów przełącznika – z fabryki są w niej wszystkie porty. Adres ustawiony na VLAN 1 odpowiada z każdego portu.'
+ },
+ {
+  q: 'Gdzie jest przycisk Save?',
+  a: 'Na górnym pasku panelu – pojawia się, gdy są niezapisane zmiany. Drugi sposób: File Operations, kopia Running Configuration do Startup Configuration.'
+ },
+ {
+  q: `Dlaczego maska jako ${MASK_25}?`,
+  a: `Pole „Network Mask” chce pełnej postaci. /25 to 25 jedynek: ${MASK_25}.`
+ },
+ {
+  q: 'Czy da się bez kreatora?',
+  a: `Tak: adres na VLAN 1 w IPv4 Interface, a bramę jako trasę ${formatIp(0)}/0 w IPv4 Static Routes. Kreator robi to na jednej stronie.`
+ },
+ {
+  q: 'Kiedy przełącznik się restartuje?',
+  a: 'Po Reboot, po zaniku prądu albo po przepięciu zasilania – na przykład przy kablach (warstwa 7). Zapisana konfiguracja przetrwa każdy z nich.'
+ },
+ {
+  q: `Dlaczego po restarcie jest ${SWITCH_FACTORY_IP}, a nie adres z DHCP?`,
+  a: 'W niebieskiej sieci nikt nie rozdaje adresów – DHCP rutera działa tylko w zielonej. Przełącznik bierze więc adres fabryczny.'
+ }
+];
+
+const ETAP_6: Exercise = {
+ code: '6',
+ title: 'Przełącznik: ustaw i zapisz',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_6,
+ steps: [
+  kuba('Jestem w panelu przełącznika. Co teraz ustawić? 🤔', layer6({ lines: lines6('L1', 'L2') })),
+  ola('Adres i bramę z arkusza. Najprościej w kreatorze.', layer6({}), act('🧭 Otwórz kreator ▶')),
+  action(
+   'Kuba otwiera Getting Started Wizard → IP Settings…',
+   layer6({ lines: undefined, wizard: wizard({ iface: 'port' }) })
+  ),
+  kuba(
+   'Wpisuję adres. Interfejs zostawiam, jak był.',
+   layer6({ lines: undefined, wizard: wizard({ iface: 'port', ip: SWITCH_IP }) })
+  ),
+  ola(
+   'Stop! Port GE1 to jedno gniazdo. Adres działałby tylko tam.',
+   layer6({ lines: undefined, wizard: wizard({ iface: 'port', ip: SWITCH_IP, blink: 'port' }) })
+  ),
+  ola(
+   'Wybierz VLAN 1 – w nim są wszystkie porty.',
+   layer6({ lines: undefined, wizard: wizard({ iface: 'vlan', ip: SWITCH_IP }) })
+  ),
+  kuba(
+   'A maska /25? Tu jest pole »Network Mask«.',
+   layer6({ lines: undefined, wizard: wizard({ iface: 'vlan', ip: SWITCH_IP, blink: 'mask' }) })
+  ),
+  ola(
+   `Maskę wpisz pełną: ${MASK_25}.`,
+   layer6({ lines: undefined, wizard: wizard({ iface: 'vlan', ip: SWITCH_IP, mask: MASK_25 }) })
+  ),
+  ola(
+   'Brama to serwer: pole »Administrative Default Gateway«.',
+   layer6({
+    lines: onlyLine6('L2'),
+    pulse: ['serwer-lan1'],
+    wizard: wizard({ iface: 'vlan', ip: SWITCH_IP, mask: MASK_25, gw: SWITCH_GW })
+   }),
+   act('▶ Next… Apply ▶')
+  ),
+  action(
+   'Kuba klika Next aż do podsumowania, potem Apply…',
+   layer6({ browse: TO_SWITCH_NEW, labels: SWITCH_UNSAVED, bubble: `${SWITCH_IP} ✓` })
+  ),
+  kuba(
+   'Działa! To już koniec?',
+   layer6({ browse: TO_SWITCH_NEW, labels: SWITCH_UNSAVED, bubble: `${SWITCH_IP} ✓` })
+  ),
+  ola(
+   'Sprawdźmy, czy przetrwa restart. Kliknij Reboot.',
+   layer6({ browse: TO_SWITCH_NEW, labels: SWITCH_UNSAVED, bubble: `${SWITCH_IP} ✓` }),
+   act('🔄 Reboot ▶')
+  ),
+  action('Przełącznik się restartuje…', layer6({ browse: undefined })),
+  kuba(
+   'Pod .2 cisza. Pod .254 fabryczny panel. Wszystko zniknęło 😩',
+   layer6({ bubble: `${SWITCH_IP} ✕ → ${SWITCH_FACTORY_IP} ✓` })
+  ),
+  ola(
+   'Apply działa tylko do restartu. Na stałe zapisuje Save.',
+   layer6({}),
+   act('💾 Ustaw i zapisz ▶')
+  ),
+  action(
+   'Kuba loguje się od nowa, ustawia adres i klika Save…',
+   layer6({ browse: TO_SWITCH_NEW, labels: SWITCH_SAVED, bubble: `${SWITCH_IP} ✓` })
+  ),
+  ola(
+   'Zapisane. Wróć stacji /25 i podnieś rękę.',
+   layer6({
+    browse: TO_SWITCH_NEW,
+    labels: { ...SWITCH_SAVED, ...STATION_SHEET },
+    lines: lines6('L3')
+   })
+  ),
+  quiz(
+   'Kiedy podnosisz rękę do oceny przełącznika?',
+   layer6({ browse: undefined, labels: { ...SWITCH_SAVED, ...STATION_SHEET } }),
+   [
+    ['A) Po Apply.', 'Po Apply zmiana żyje tylko do restartu. Najpierw Save.', false],
+    ['B) Po Save.', 'Właśnie tak – po Save ustawienia przetrwają restart.', true]
+   ]
+  ),
+  // Ćwiczenie: przełącznik fabryczny, bez okienka kreatora, strzałki i dymka.
+  task('Kreator pyta o interfejs. Co wybierzesz?', layer6({ shownDim: false, browse: undefined }), [
+   { text: 'A) VLAN 1.', correct: true },
+   {
+    text: 'B) Port GE1.',
+    feedback: 'Adres na porcie działa tylko na tym gnieździe. Wybierz VLAN 1.'
+   }
+  ]),
+  task(
+   'Kliknij linijki, które wpiszesz w kreatorze.',
+   layer6({
+    shownDim: false,
+    browse: undefined,
+    task: {
+     kind: 'lines',
+     answer: ['L1', 'L2'],
+     check: 'Sprawdź',
+     wrong: 'Gotowość zgłaszasz ręką, nie w kreatorze.',
+     missingOne: 'Brakuje bramy – to pole »Administrative Default Gateway«.',
+     missingOneId: 'L2',
+     missingMore: 'Do kreatora idą dwie linijki: adres i brama.'
+    }
+   })
+  ),
+  task(
+   'Jak wpiszesz maskę /25 w polu »Network Mask«?',
+   layer6({ shownDim: false, browse: undefined }),
+   [
+    { text: `A) ${MASK_24}.`, feedback: `${MASK_24} to /24. Maska /25 to ${MASK_25}.` },
+    { text: `B) ${MASK_25}.`, correct: true }
+   ]
+  ),
+  task(
+   'Kliknąłeś tylko Apply. Po restarcie przełącznik ma adres:',
+   layer6({ shownDim: false, browse: undefined }),
+   [
+    { text: `A) ${SWITCH_FACTORY_IP}.`, correct: true },
+    { text: `B) ${SWITCH_IP}.`, feedback: 'Bez Save zmiana żyje tylko do restartu.' }
    ],
    { end: '↺ Od początku', restart: true }
   )
@@ -1227,6 +1445,7 @@ type KubaAt = Scene['kuba'];
 const times = (n: number, at: KubaAt): KubaAt[] => Array.from({ length: n }, () => at);
 const KUBA_3: KubaAt[] = [...times(5, undefined), ...times(12, 'serwer'), undefined];
 const KUBA_4: KubaAt[] = [...times(3, undefined), ...times(6, 'stacja'), ...times(7, undefined)];
+const KUBA_6: KubaAt[] = [...times(17, 'stacja'), undefined];
 const KUBA_5: KubaAt[] = [
  ...times(4, undefined),
  ...times(4, 'serwer'),
@@ -1257,7 +1476,8 @@ export const ARKUSZ: Course = {
   ETAP_2,
   withKuba(ETAP_3, KUBA_3),
   withKuba(ETAP_4, KUBA_4),
-  withKuba(ETAP_5, KUBA_5)
+  withKuba(ETAP_5, KUBA_5),
+  withKuba(ETAP_6, KUBA_6)
  ]
 };
 
