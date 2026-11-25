@@ -7,6 +7,8 @@ import { setTask } from '../taskState';
 export interface SheetLine {
  id: string;
  text: string;
+ /** Czyja to linijka, np. „stacja, LAN 2” – gdy dwie linijki mają ten sam tekst (warstwa 4). */
+ where?: string;
 }
 
 /** Pasek zakresu DHCP pod linijką: ostatnie liczby adresów od–do i zaznaczony adres. */
@@ -38,6 +40,8 @@ export interface LinesTask {
  missingOneId: string;
  /** Reakcja: brakuje więcej linijek. */
  missingMore: string;
+ /** Osobne reakcje dla konkretnych złych linijek (warstwa 4), np. { L3: '…' }. */
+ wrongBy?: Readonly<Record<string, string>>;
 }
 
 /** Okno rezerwacji w panelu rutera (napisy jak w panelu TP-Link, mapa-menu-urzadzen.md). */
@@ -64,8 +68,10 @@ export function Lines({ spec, task }: { spec: LinesSpec; task?: LinesTask }) {
   if (!task) return;
   const extra = chosen.filter((id) => !task.answer.includes(id));
   const missing = task.answer.filter((id) => !chosen.includes(id));
-  if (extra.length > 0) setTask({ solved: false, feedback: { text: task.wrong, ok: false } });
-  else if (missing.length === 1 && missing[0] === task.missingOneId)
+  if (extra.length > 0) {
+   const text = task.wrongBy?.[extra[0]] ?? task.wrong;
+   setTask({ solved: false, feedback: { text, ok: false } });
+  } else if (missing.length === 1 && missing[0] === task.missingOneId)
    setTask({ solved: false, feedback: { text: task.missingOne, ok: false } });
   else if (missing.length > 0)
    setTask({ solved: false, feedback: { text: task.missingMore, ok: false } });
@@ -87,10 +93,14 @@ export function Lines({ spec, task }: { spec: LinesSpec; task?: LinesTask }) {
         aria-pressed={chosen.includes(line.id)}
         onClick={() => toggle(line.id)}
        >
+        {line.where && <em className="sh-where">{line.where}</em>}
         {line.text}
        </button>
       ) : (
-       <span className={lit.has(line.id) ? 'sh-lit' : undefined}>{line.text}</span>
+       <span className={lit.has(line.id) ? 'sh-lit' : undefined}>
+        {line.where && <em className="sh-where">{line.where}</em>}
+        {line.text}
+       </span>
       )}
       {spec.pool?.after === line.id && <Pool pool={spec.pool} />}
      </li>

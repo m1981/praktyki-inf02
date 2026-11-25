@@ -146,15 +146,15 @@ Pełny widok arkusza z adnotacjami przytłaczał (PYT-088). Każde pytanie admin
 własną zakładkę strony „Arkusz krok po kroku”, na tym samym schemacie. Reguła warstwy: 1 pytanie,
 najwyżej 5 linijek arkusza, najwyżej 2 pułapki, 1 nowa rzecz na schemacie.
 
-| #   | Warstwa                              | Stan                                                                              |
-| --- | ------------------------------------ | --------------------------------------------------------------------------------- |
-| 1   | Ile jest sieci?                      | gotowe (`symulator-arkusz.html`, PYT-074a)                                        |
-| 2   | Którędy wychodzi się z sieci?        | gotowe (jw.)                                                                      |
-| 3   | Skąd adres? (DHCP, rezerwacja, MAC)  | gotowe na dysku (zakładka 3, PYT-092a); pilot – lekcja z uczniami przed warstwą 4 |
-| 4   | Kto zna nazwy? (DNS)                 | po lekcji z warstwą 3                                                             |
-| 5   | Jak wejść na urządzenie?             | po lekcji; zależy od modeli rutera i przełącznika                                 |
-| 6   | W jakiej kolejności i jak sprawdzić? | po lekcji                                                                         |
-| 7   | Cały arkusz (uczeń sam oznacza ①–⑤)  | makieta z PYT-088 jako ostatnia faza                                              |
+| #   | Warstwa                              | Stan                                                                       |
+| --- | ------------------------------------ | -------------------------------------------------------------------------- |
+| 1   | Ile jest sieci?                      | gotowe (`symulator-arkusz.html`, PYT-074a)                                 |
+| 2   | Którędy wychodzi się z sieci?        | gotowe (jw.)                                                               |
+| 3   | Skąd adres? (DHCP, rezerwacja, MAC)  | gotowe (zakładka 3, PYT-097a); pilot z uczniami – dobra ocena (2026-11-25) |
+| 4   | Kto zna nazwy? (DNS)                 | gotowe na dysku (zakładka 4, PYT-098a)                                     |
+| 5   | Jak wejść na urządzenie?             | po lekcji; zależy od modeli rutera i przełącznika                          |
+| 6   | W jakiej kolejności i jak sprawdzić? | po lekcji                                                                  |
+| 7   | Cały arkusz (uczeń sam oznacza ①–⑤)  | makieta z PYT-088 jako ostatnia faza                                       |
 
 VLAN-y (dawny etap 6) wracają po warstwie 7, na arkuszach z czerwca 2023–2026.
 

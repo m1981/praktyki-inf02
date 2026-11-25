@@ -92,6 +92,9 @@ export const SHEET_DHCP = {
  reserved: '10.10.0.20'
 } as const;
 
+/** Serwery DNS rutera dla interfejsu WAN (drugi – „jeśli jest wymagany”). */
+export const SHEET_ROUTER_DNS = { primary: '4.4.4.4', secondary: '4.4.5.5' } as const;
+
 /**
  * PRZYKŁAD, nie dane z arkusza (warstwa 3): adres, który serwer dostaje z zakresu przed rezerwacją,
  * i adresy MAC kart serwera. Na ekranie oznaczone jako przykład.

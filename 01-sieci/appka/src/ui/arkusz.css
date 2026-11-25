@@ -635,3 +635,50 @@ line.sh-pulse:not(.sh-net) {
   animation: none;
  }
 }
+
+/* --- Warstwa 4: pytania o nazwę (DNS) --- */
+.sh-top {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ gap: 10px;
+}
+.sh-bubble {
+ margin-left: auto;
+ padding: 3px 12px;
+ border: 1.5px solid #2d3436;
+ border-radius: 14px;
+ background: #fff;
+ font-family: monospace;
+ font-size: 0.9rem;
+ font-weight: 700;
+}
+.sh-ask path {
+ fill: none;
+ stroke: #2d3436;
+ stroke-width: 2;
+ stroke-dasharray: 5 4;
+}
+.sh-ask text {
+ fill: #2d3436;
+}
+.sh-ask .sh-cross {
+ font-family: inherit;
+ font-size: 22px;
+ fill: #2d3436;
+ stroke-width: 0;
+}
+.sh-head--ciemna {
+ fill: #2d3436;
+}
+.sh-where {
+ display: inline-block;
+ min-width: 104px;
+ margin-right: 6px;
+ color: var(--sim-muted);
+ font-size: 0.75rem;
+ font-style: normal;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.03em;
+}

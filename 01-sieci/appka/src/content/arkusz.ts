@@ -10,7 +10,9 @@ import {
  sheetGateway,
  sheetIp,
  SHEET_DHCP,
+ SHEET_CARDS,
  SHEET_EXAMPLE,
+ SHEET_ROUTER_DNS,
  SHEET_VM_LAN3,
  type SheetCard,
  type SheetNet
@@ -712,7 +714,229 @@ const ETAP_3: Exercise = {
      feedback: 'Nie wpisuj ręcznie – arkusz każe »automatycznie«. Sprawdź rezerwację i odśwież.'
     },
     { text: 'B) Sprawdzam rezerwację i odświeżam adres.', correct: true }
-   ],
+   ]
+  )
+ ]
+};
+
+// --- Warstwa 4: „Kto zna nazwy?” (scenariusz-arkusz-4.md, wersja 2; PYT-098a) ---
+// Nowa rzecz na schemacie: strzałka „pytanie o nazwę” (przerywana, ciemna).
+
+const LAN1_IP = sheetIp('serwer-lan1');
+const SHEET_CARDS_DNS = (card: SheetCard): string => SHEET_CARDS[card].dns ?? '';
+const DNS_WORLD = SHEET_ROUTER_DNS.primary;
+const NAME = 'www.egzamin.local';
+
+const LINES_4: readonly SheetLine[] = [
+ { id: 'L1', where: 'stacja, LAN 2', text: `DNS: ${SHEET_CARDS_DNS('stacja-lan2')}` },
+ { id: 'L2', where: 'serwer, LAN 1', text: `DNS: ${SHEET_CARDS_DNS('serwer-lan1')}` },
+ {
+  id: 'L3',
+  where: 'serwer',
+  text:
+   'ustaw w strefie egzamin.local nowy rekord hosta o nazwie www, powiązany z adresem IP interfejsu sieciowego LAN 1'
+ },
+ { id: 'L4', where: 'ruter, DHCP', text: `serwer DNS: ${SHEET_DHCP.dns}` },
+ {
+  id: 'L5',
+  where: 'ruter, WAN',
+  text: `serwer DNS dla interfejsu WAN: ${DNS_WORLD} oraz drugi serwer DNS: ${SHEET_ROUTER_DNS.secondary}, jeśli jest wymagany`
+ }
+];
+const LINES_4_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o tym, kto zna nazwy';
+const lines4 = (...lit: string[]): LinesSpec => ({ title: LINES_4_TITLE, items: LINES_4, lit });
+
+const ASKING = `${NAME} = ?`;
+const NOT_FOUND = `${NAME} = ? ✕`;
+const FOUND = `${NAME} = ${LAN1_IP} ✓`;
+const BLOCKED: Scene['asks'] = [
+ { from: 'stacja-lan2', to: 'world', blocked: true, label: 'brak odpowiedzi' }
+];
+const TO_SERVER: Scene['asks'] = [
+ { from: 'stacja-lan2', to: 'serwer-lan1', label: `www? → ${LAN1_IP}` }
+];
+/** Spis serwera – w 2. i 3. rzędzie pod kartą LAN 1, żeby nie wchodził na adres karty WAN. */
+const ZONE: CardLabel[] = [
+ { text: '' },
+ { text: 'strefa egzamin.local' },
+ { text: `rekord: www → ${LAN1_IP}` }
+];
+
+/** Warstwa 4: schemat w kolorach, adresy z etapu 2 jako tło, przy karcie WAN serwera adres z warstwy 3. */
+const layer4 = (state: Scene): Scene => {
+ const { labels, ...rest } = state;
+ return {
+  colored: ALL,
+  shown: EVERY_ADDRESS,
+  shownDim: true,
+  lines: lines4(),
+  labels: { 'serwer-wan': [{ text: RESERVED }], ...labels },
+  ...rest
+ };
+};
+
+const NOTES_4: Note[] = [
+ {
+  q: 'Gdzie arkusz sprawdza DNS?',
+  a: `W zadaniu 9: maszyna wirtualna otwiera ${NAME}. Ustaw DNS ${LAN1_IP} także w niej – to ją ocenia egzaminator.`
+ },
+ {
+  q: 'Co to jest strefa wyszukiwania do przodu?',
+  a: 'Spis „nazwa → adres” dla jednej domeny, tu egzamin.local. Spis odwrotny („adres → nazwa”) to strefa wsteczna – arkusz jej nie wymaga.'
+ },
+ {
+  q: 'Czym sprawdzić DNS?',
+  a: `Na stacji: nslookup ${NAME}. Odpowiedź powinna podać ${LAN1_IP}.`
+ },
+ {
+  q: 'Skąd serwer zna nazwy spoza egzamin.local?',
+  a: 'Usługa DNS na Windows Server sama pyta serwery główne Internetu – przez kartę WAN i ruter. Arkusz tego nie ocenia.'
+ },
+ {
+  q: 'Dlaczego „drugi serwer DNS, jeśli jest wymagany”?',
+  a: 'Niektóre panele rutera nie zapiszą ustawień bez drugiego DNS. Gdy panel nie protestuje, drugie pole możesz zostawić puste.'
+ },
+ {
+  q: 'Co ma do tego IIS?',
+  a: `Witryna jest powiązana z kartą LAN 1 i nazwą ${NAME}. Rekord www ze złym adresem poprowadzi przeglądarkę tam, gdzie strony nie ma. Instalację IIS ćwiczysz w Filarze 2.`
+ }
+];
+
+const ETAP_4: Exercise = {
+ code: '4',
+ title: 'Kto zna nazwy?',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_4,
+ steps: [
+  kuba(
+   `Stacja ma otworzyć ${NAME}. Skąd wie, gdzie to? 🤔`,
+   layer4({ shownDim: false, bubble: ASKING, pulse: ['stacja'] })
+  ),
+  ola('Ludzie pamiętają nazwy, a sieć używa adresów.', layer4({ bubble: ASKING })),
+  ola(
+   'DNS zamienia nazwę na adres. Jak kontakty w telefonie.',
+   layer4({ bubble: ASKING, pulse: ['stacja-lan2'] })
+  ),
+  kuba(
+   `DNS? Wpiszę ${DNS_WORLD} – jak na ruterze!`,
+   layer4({ bubble: ASKING, lines: lines4('L5') }),
+   act('🔎 Zapytaj ▶')
+  ),
+  action(`Stacja pyta ${DNS_WORLD} o ${NAME}…`, layer4({ bubble: ASKING, asks: BLOCKED })),
+  kuba('Nie działa! Strona się nie otwiera 😩', layer4({ bubble: NOT_FOUND, asks: BLOCKED })),
+  ola(
+   `Tam nie dojdziesz. A ${DNS_WORLD} i tak nie zna egzamin.local.`,
+   layer4({ bubble: NOT_FOUND, asks: BLOCKED })
+  ),
+  ola(
+   'egzamin.local zna tylko serwer. Ma ją w swoim spisie.',
+   layer4({ bubble: ASKING, lines: lines4('L3'), labels: { 'serwer-lan1': ZONE } }),
+   act('🔎 Zapytaj ▶')
+  ),
+  action(
+   'Stacja pyta serwer, serwer odpowiada adresem…',
+   layer4({ bubble: FOUND, lines: lines4('L1'), asks: TO_SERVER, labels: { 'serwer-lan1': ZONE } })
+  ),
+  kuba(
+   `W rekordzie wpiszę ${RESERVED}? To przecież też serwer.`,
+   layer4({ bubble: FOUND, labels: { 'serwer-lan1': ZONE }, pulse: ['serwer-wan'] })
+  ),
+  ola(
+   `Arkusz mówi »LAN 1«. Jej adres masz w tabeli: ${LAN1_IP}.`,
+   layer4({
+    bubble: FOUND,
+    lines: lines4('L3'),
+    labels: { 'serwer-lan1': ZONE },
+    pulse: ['serwer-lan1']
+   })
+  ),
+  kuba(
+   `A serwer? Ma DNS ${LAN1_IP}, a od DHCP ${SHEET_DHCP.dns}.`,
+   layer4({ bubble: FOUND, lines: lines4('L2', 'L4'), labels: { 'serwer-lan1': ZONE } })
+  ),
+  ola(
+   'Oba to jego własne adresy. Pyta sam siebie.',
+   layer4({
+    bubble: FOUND,
+    lines: lines4('L2', 'L4'),
+    labels: { 'serwer-lan1': ZONE },
+    asks: [
+     { from: 'serwer-wan', to: 'self' },
+     { from: 'serwer-lan1', to: 'self' }
+    ]
+   })
+  ),
+  kuba(
+   `To po co ${DNS_WORLD}?`,
+   layer4({ bubble: FOUND, lines: lines4('L5'), labels: { 'serwer-lan1': ZONE } })
+  ),
+  ola(
+   'Dla samego rutera. Na stacji go nie wpisujesz.',
+   layer4({
+    bubble: FOUND,
+    lines: lines4('L5'),
+    labels: { 'serwer-lan1': ZONE },
+    asks: [{ from: 'ruter-wan', to: 'world', label: `${DNS_WORLD}?` }]
+   })
+  ),
+  quiz(
+   'Co stacja wpisze jako DNS?',
+   layer4({
+    bubble: FOUND,
+    labels: { 'serwer-lan1': ZONE },
+    asks: [...TO_SERVER!, { from: 'ruter-wan', to: 'world', label: `${DNS_WORLD}?` }]
+   }),
+   [
+    [`A) ${DNS_WORLD}.`, `${DNS_WORLD} nie zna egzamin.local. Stacja pyta serwer.`, false],
+    [`B) ${LAN1_IP}.`, 'Właśnie tak – karta LAN 1 serwera, w kolorze stacji.', true]
+   ]
+  ),
+  // Ćwiczenie: bez strzałek pytań, bez spisu serwera; przy karcie WAN serwera adres z warstwy 3.
+  task(
+   'Kliknij kartę, którą stacja pyta o nazwy.',
+   layer4({
+    shownDim: false,
+    task: {
+     kind: 'pick',
+     targets: CARDS_AND_SWITCH.filter((c) => c !== 'przelacznik'),
+     answer: ['serwer-lan1'],
+     wrong: 'Ta karta nie zna egzamin.local. Szukaj adresu z wpisu DNS stacji.'
+    }
+   })
+  ),
+  task(
+   'Kliknij linijki, w których adres DNS to nasz serwer.',
+   layer4({
+    shownDim: false,
+    task: {
+     kind: 'lines',
+     answer: ['L1', 'L2', 'L4'],
+     check: 'Sprawdź',
+     wrong: `»Serwer DNS« to nazwa pola. ${DNS_WORLD} to nie nasz serwer.`,
+     wrongBy: { L3: 'To rekord w strefie serwera, nie adres DNS karty.' },
+     missingOne: `Brakuje jednej. ${SHEET_DHCP.dns} to też serwer – jego karta WAN.`,
+     missingOneId: 'L4',
+     missingMore: `Brakuje linijek. Szukaj adresów serwera: ${LAN1_IP} i ${SHEET_DHCP.dns}.`
+    }
+   })
+  ),
+  task('Rekord www: który adres wpiszesz?', layer4({ shownDim: false }), [
+   { text: `A) ${RESERVED}.`, feedback: `Arkusz każe kartę LAN 1. Jej adres to ${LAN1_IP}.` },
+   { text: `B) ${LAN1_IP}.`, correct: true }
+  ]),
+  task(
+   `Kliknij kartę, której DNS to ${DNS_WORLD}.`,
+   layer4({
+    shownDim: false,
+    task: {
+     kind: 'pick',
+     targets: CARDS_AND_SWITCH.filter((c) => c !== 'przelacznik'),
+     answer: ['ruter-wan'],
+     wrong: `Ta karta pyta nasz serwer. ${DNS_WORLD} jest w ustawieniach rutera.`
+    }
+   }),
+   undefined,
    { end: '↺ Od początku', restart: true }
   )
  ]
@@ -721,7 +945,7 @@ const ETAP_3: Exercise = {
 export const ARKUSZ: Course = {
  id: 'arkusz',
  title: 'Etapy ścieżki „Arkusz krok po kroku”',
- exercises: [ETAP_1, ETAP_2, ETAP_3]
+ exercises: [ETAP_1, ETAP_2, ETAP_3, ETAP_4]
 };
 
 /** Pod ćwiczeniami obu etapów: oryginalny schemat z arkusza, poglądowo (prośba operatora). */

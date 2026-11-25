@@ -111,6 +111,19 @@ export interface SheetSpec {
  reservation?: ReservationSpec;
  /** Mniejszy schemat – gdy pod nim stoją dwa bloki. */
  compact?: boolean;
+ /** Strzałki „pytanie o nazwę” (DNS, warstwa 4). */
+ asks?: readonly Ask[];
+ /** Dymek nad schematem: pytanie, które zadaje stacja, np. „www.egzamin.local = ?”. */
+ bubble?: string;
+}
+
+/** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
+export interface Ask {
+ from: SheetCard;
+ to: SheetCard | 'world' | 'self';
+ label?: string;
+ /** Pytanie nie dochodzi – kończy się ✕ na serwerze (serwer nie przekazuje ruchu, warstwa 2). */
+ blocked?: boolean;
 }
 
 /** Napis pod kartą: zwykły, ostrzeżenie (zły adres), dobrze (✓), przykład, przekreślony. */
@@ -234,7 +247,12 @@ export function SheetView({ spec, runId }: { spec: SheetSpec; runId: number }) {
   <div
    className={`sr-board sh-board${table ? ' sh-board--table' : ''}${spec.compact ? ' sh-board--compact' : ''}`}
   >
-   {spec.youAreOn && <div className="sh-on">{spec.youAreOn}</div>}
+   {(spec.youAreOn || spec.bubble) && (
+    <div className="sh-top">
+     {spec.youAreOn && <div className="sh-on">{spec.youAreOn}</div>}
+     {spec.bubble && <div className="sh-bubble">💬 {spec.bubble}</div>}
+    </div>
+   )}
    <Schema key={`schema-${runId}`} spec={spec} colored={colored} />
    {spec.reservation && <Reservation spec={spec.reservation} />}
    {table ? (
@@ -466,7 +484,7 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
  return (
   <>
    <defs>
-    {(['niebieska', 'zielona', 'czerwona'] as const).map((c) => (
+    {(['niebieska', 'zielona', 'czerwona', 'ciemna'] as const).map((c) => (
      <marker
       key={c}
       id={`sh-head-${c}`}
@@ -510,6 +528,9 @@ function Arrows({ spec, pulse }: { spec: SheetSpec; pulse: Set<string> }) {
      </text>
     </g>
    )}
+   {(spec.asks ?? []).map((ask) => (
+    <AskArrow key={`${ask.from}-${ask.to}`} ask={ask} />
+   ))}
    {spec.dhcp && (
     <g className={`sh-arrow sh-dhcp${spec.dhcp.run ? ' sh-dhcp--run' : ''}`}>
      {/* Prośba: od karty „WAN” serwera do rutera; odpowiedź: z powrotem, trochę wyżej. */}
@@ -703,4 +724,44 @@ function TableTaskView({ spec, task }: { spec: SheetSpec; task: TableTask }) {
 function shortValue(tile: Tile): string {
  const [card, field] = tile.split(':') as [SheetCard, Field];
  return valueOf(card, field);
+}
+
+/** Strzałka „pytanie o nazwę”: przerywana, ciemna – kolor zostaje dla sieci. */
+function AskArrow({ ask }: { ask: Ask }) {
+ const from = centerOf(ask.from);
+ const top = CARD_Y - 4;
+ // Od stacji – z górnej krawędzi urządzenia, żeby nie przecinać nazwy.
+ const y0 = ask.from === 'stacja-lan2' ? DEV_Y - 2 : top;
+ const server = DEVICES.serwer.x + DEVICES.serwer.w / 2;
+ let d: string;
+ let label = { x: from, y: 30 };
+ if (ask.to === 'self') {
+  d = `M ${from - 12} ${top} C ${from - 34} 52, ${from + 34} 52, ${from + 12} ${top}`;
+  label = { x: from, y: 48 };
+ } else if (ask.to === 'world' && ask.blocked) {
+  d = `M ${from} ${y0} C ${from} 8, ${server + 40} 8, ${server + 6} 26`;
+  label = { x: server + 70, y: 14 };
+ } else if (ask.to === 'world') {
+  d = `M ${from} ${y0} C ${from} 30, ${WORLD.cx} 30, ${WORLD.cx} ${LINE_Y - WORLD.ry - 4}`;
+  label = { x: (from + WORLD.cx) / 2, y: 26 };
+ } else {
+  const to = centerOf(ask.to);
+  d = `M ${from} ${y0} C ${from} 22, ${to} 22, ${to} ${top}`;
+  label = { x: (from + to) / 2, y: 22 };
+ }
+ return (
+  <g className="sh-arrow sh-ask">
+   <path d={d} markerEnd={ask.blocked ? undefined : 'url(#sh-head-ciemna)'} />
+   {ask.blocked && (
+    <text className="sh-cross" x={server} y={34} textAnchor="middle">
+     ✕
+    </text>
+   )}
+   {ask.label && (
+    <text x={label.x} y={label.y} textAnchor="middle">
+     {ask.label}
+    </text>
+   )}
+  </g>
+ );
 }

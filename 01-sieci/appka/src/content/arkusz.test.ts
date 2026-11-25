@@ -47,7 +47,7 @@ function quizReactions(stage: string): string[] {
  return [...SCENARIO.slice(start, end).matchAll(/^- [AB]: (.+)$/gm)].map((m) => unquote(m[1]));
 }
 
-const [ETAP_1, ETAP_2, ETAP_3] = ARKUSZ.exercises;
+const [ETAP_1, ETAP_2, ETAP_3, ETAP_4] = ARKUSZ.exercises;
 const isTask = (step: Step) => step.speaker === 'task';
 /** Polecenie ćwiczenia z tabelą – mechanika i tekst z PYT-077a, scenariusz go nie podaje. */
 const isTableTask = (step: Step) => step.view.type === 'sheet' && step.view.task?.kind === 'table';
@@ -121,10 +121,11 @@ describe('notatki „Dla dociekliwych” co do słowa ze scenariusza', () => {
 const SCENARIO_3 = readFileSync(new URL('../../scenariusz-arkusz-3.md', import.meta.url), 'utf8');
 
 /** Wiersze tabeli z sekcji `## {section}` scenariusza warstwy 3. */
-function rows3(section: string, first = /^\| \d+ /): string[][] {
- const start = SCENARIO_3.indexOf(`## ${section}`);
- const end = SCENARIO_3.indexOf('\n## ', start + 4);
- return SCENARIO_3.slice(start, end)
+function rows3(section: string, first = /^\| \d+ /, text = SCENARIO_3): string[][] {
+ const start = text.indexOf(`## ${section}`);
+ const end = text.indexOf('\n## ', start + 4);
+ return text
+  .slice(start, end)
   .split('\n')
   .filter((line) => first.test(line))
   .map((line) =>
@@ -136,9 +137,9 @@ function rows3(section: string, first = /^\| \d+ /): string[][] {
 }
 
 /** Tekst po etykiecie w akapicie scenariusza, np. „reakcja, gdy … : „…””. */
-function quoteAfter(label: string): string {
- const start = SCENARIO_3.indexOf(label);
- const text = SCENARIO_3.slice(start).replace(/\s*\n\s*/g, ' ');
+function quoteAfter(label: string, scenario = SCENARIO_3): string {
+ const start = scenario.indexOf(label);
+ const text = scenario.slice(start).replace(/\s*\n\s*/g, ' ');
  return unquote(text.match(/: („[^\n]*?”)(?= |$)/)![1]);
 }
 
@@ -204,6 +205,82 @@ describe('warstwa 3 co do słowa ze scenariusza', () => {
  });
 });
 
+// --- Warstwa 4: scenariusz-arkusz-4.md (wersja 2) ---
+
+const SCENARIO_4 = readFileSync(new URL('../../scenariusz-arkusz-4.md', import.meta.url), 'utf8');
+
+/** Notatki „Dla dociekliwych” z sekcji `### {heading}` scenariusza. */
+function notesOf(text: string, heading: string): { q: string; a: string }[] {
+ const start = text.indexOf(`### ${heading}`);
+ const end = text.indexOf('\n#', start + 4);
+ return text
+  .slice(start, end)
+  .split(/\n- /)
+  .slice(1)
+  .map((item) => item.replace(/\s*\n\s*/g, ' ').trim())
+  .map((item) => {
+   const m = item.match(/^\*\*(.+?)\*\* (.+)$/)!;
+   return { q: m[1], a: m[2] };
+  });
+}
+
+describe('warstwa 4 co do słowa ze scenariusza', () => {
+ const isTask4 = (s: Step) => s.speaker === 'task';
+ const tasks = ETAP_4.steps.filter(isTask4);
+
+ it('pięć linijek arkusza (czyja i tekst)', () => {
+  const view = ETAP_4.steps[0].view;
+  const items = view.type === 'sheet' ? view.lines?.items : [];
+  expect(items?.map((l) => [l.id, l.where, l.text])).toEqual(
+   rows3('Linijki z arkusza', /^\| L\d /, SCENARIO_4).map((c) => [c[0], c[1], c[2]])
+  );
+ });
+
+ it('scena', () => {
+  const expected = rows3('Scena', undefined, SCENARIO_4).map(sceneLine);
+  expect(ETAP_4.steps.filter((s) => !isTask4(s)).map((s) => s.text)).toEqual(expected);
+ });
+
+ it('zagadka: odpowiedzi i reakcje', () => {
+  const quiz = ETAP_4.steps.find((s) => s.control.type === 'quiz')!;
+  const options = quiz.control.type === 'quiz' ? quiz.control.options : [];
+  const row = rows3('Scena', undefined, SCENARIO_4).find((c) => c[1] === '_zagadka_')!;
+  expect(options.map((o) => o.text)).toEqual(row[2].split(/ (?=[AB]\) )/).slice(1));
+  const start = SCENARIO_4.indexOf('Reakcje na zagadkę:');
+  const reactions = [
+   ...SCENARIO_4.slice(start, SCENARIO_4.indexOf('##', start)).matchAll(/^- [AB]: (.+)$/gm)
+  ].map((m) => unquote(m[1]));
+  expect(options.map((o) => o.feedback)).toEqual(reactions);
+ });
+
+ it('polecenia i reakcje na błąd', () => {
+  const rows = rows3('Ćwiczenie', undefined, SCENARIO_4);
+  expect(tasks.map((s) => s.text)).toEqual(rows.map((c) => c[1]));
+  const reaction = (s: Step) =>
+   s.view.type === 'sheet' && s.view.task?.kind === 'lines' ? s.view.task.wrong : wrongReaction(s);
+  expect(tasks.map(reaction)).toEqual(rows.map((c) => unquote(c.at(-1)!)));
+ });
+
+ it('ćwiczenie 2: osobne reakcje (L3, brak L4, brak kilku)', () => {
+  const view = tasks[1].view;
+  const task = view.type === 'sheet' && view.task?.kind === 'lines' ? view.task : undefined;
+  expect(task?.wrongBy?.L3).toBe(quoteAfter('reakcja, gdy uczeń zaznaczy L3', SCENARIO_4));
+  expect(task?.missingOne).toBe(quoteAfter('reakcja, gdy uczeń pominie tylko L4', SCENARIO_4));
+  expect(task?.missingMore).toBe(quoteAfter('reakcja, gdy brakuje więcej', SCENARIO_4));
+ });
+
+ it('ćwiczenie 3: odpowiedzi do wyboru', () => {
+  const control = tasks[2].control;
+  const options = control.type === 'task' ? (control.options ?? []) : [];
+  const line = SCENARIO_4.match(/Odpowiedzi do zadania 3: (.+)/)![1];
+  expect(options.map((o) => o.text)).toEqual(line.split(/ (?=[AB]\) )/));
+ });
+
+ it('notatki „Dla dociekliwych”', () => {
+  expect(ETAP_4.notes).toEqual(notesOf(SCENARIO_4, 'Warstwa 4'));
+ });
+});
+
 describe('nazwy urządzeń jak w arkuszu', () => {
  const steps = ARKUSZ.exercises.flatMap((ex) => ex.steps);
  /** Kwestie Oli i Kuby – mowa potoczna (PYT-075b: „komputer” wolno tylko tu). */
@@ -237,6 +314,10 @@ describe('nazwy urządzeń jak w arkuszu', () => {
     if (v.reservation) out.push(v.reservation.device.name, v.reservation.example);
     if (v.youAreOn) out.push(v.youAreOn);
     if (v.dhcp) out.push(v.dhcp.label);
+    if (v.bubble) out.push(v.bubble);
+    if (v.asks) out.push(...v.asks.map((x) => x.label ?? ''));
+    if (v.lines) out.push(...v.lines.items.map((l) => l.where ?? ''));
+    if (v.task?.kind === 'lines' && v.task.wrongBy) out.push(...Object.values(v.task.wrongBy));
    }
    return out;
   })

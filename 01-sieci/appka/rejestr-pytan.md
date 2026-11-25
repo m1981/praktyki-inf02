@@ -105,6 +105,8 @@ zob. PYT-004).
 | PYT-095 | decyzja     | zamknięte        | Rozwijane notatki „Dla dociekliwych” pod sceną                    |
 | PYT-096 | decyzja     | zamknięte (a)    | Commit notatek, wzorców i scenariusza warstwy 3; push             |
 | PYT-097 | decyzja     | zamknięte (a)    | Commit i push warstwy 3                                           |
+| PYT-098 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 4 „Kto zna nazwy?”                 |
+| PYT-099 | decyzja     | zamknięte (a)    | Commit i push warstwy 4                                           |
 
 ## Pytania
 
@@ -1394,3 +1396,31 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) – pilot dla uczniów warto najpierw obejrzeć, zwłaszcza okno rezerwacji.
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-23):** „97a wyglada i dziala super jak dla mnie.” → (a): commit i push.
+
+### PYT-098 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „warstwa 3 jest dobrze oceniana :) zrob prosze warstwe 4”.
+  `scenariusz-arkusz-4.md`, wersja 2 – po recenzji sub-agenta (werdykt „gotowe po poprawkach”, 12 uwag,
+  agent przyjął wszystkie; m.in. stacja nie dosięga 4.4.4.4 – ✕ na serwerze jak w warstwie 2; P2 =
+  „arkusz podaje kartę LAN 1, adres z tabeli”). Pytania recenzenta: pilot warstwy 3 – dobra ocena
+  operatora, bez uwag o długości; maszyna wirtualna – poza schematem, w notatce (odpowiedzi agenta).
+  Scena 16 kroków (najdłuższa kwestia 10 słów), ćwiczenie 4 polecenia, 6 notatek.
+- **Opcje:** (a) akceptuję – czwarta zakładka „Kto zna nazwy?”; (b) poprawki „krok, co zmienić”;
+  (c) krótsza scena.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 4.
+- **Odpowiedź (2026-11-25):** „jest super. wprowadz 98a” → (a)
+- **Wykonanie:** zakładka 4 „Kto zna nazwy?” (16 kroków sceny, 4 ćwiczenia, 6 notatek); nowe części
+  widoku: strzałka „pytanie o nazwę” (do karty, w stronę świata, pętla, ✕ na serwerze), dymek nad
+  schematem, napis „czyja” przy linijkach, osobne reakcje na złe linijki. Test co do słowa ze
+  scenariuszem (linijki z „czyja”, scena, zagadka, polecenia, reakcje, odpowiedzi, notatki).
+  `pnpm build`: 2278 testów, 471 pomiarów e2e.
+
+### PYT-099 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 4 gotowa na dysku (PYT-098a); scenariusz warstwy 4 jeszcze bez commita.
+  Push = zakładka 4 u uczniów, karta na stronie zbiorczej „Warstwy 1–4”, zapowiedź „Warstwy 5–7”.
+- **Opcje:** (a) commit i push; (b) commit bez push – push po Twoim obejrzeniu; (c) poprawki.
+- **Rekomendacja:** (b) – jak przy warstwie 3, jedno spojrzenie przed uczniami.
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-25):** „jest super, dobra robota :) 99a” → (a): commit i push.
