@@ -696,6 +696,27 @@ line.sh-pulse:not(.sh-net) {
 .sh-head--szara {
  fill: #8395a7;
 }
+.sh-browse .sh-cross {
+ font-family: inherit;
+ font-size: 22px;
+ fill: var(--sim-red);
+}
+
+/* --- Kable wpinane po kolei (warstwa 7, PYT-111a) --- */
+.sh-cable--gap {
+ stroke-dasharray: 6 5;
+}
+.sh-cable--wrong {
+ fill: none;
+ stroke: #8395a7;
+ stroke-width: 4;
+ stroke-dasharray: 8 6;
+}
+.sh-port {
+ font-size: 10px;
+ font-weight: 600;
+ fill: #576574;
+}
 
 /* --- Wiersz „gdzie jest Kuba” (PYT-102a) --- */
 .sh-kuba-row line {

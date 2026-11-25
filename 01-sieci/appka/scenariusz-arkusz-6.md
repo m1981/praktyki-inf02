@@ -117,8 +117,8 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
   255.255.255.128.
 - **Czy da się bez kreatora?** Tak: adres na VLAN 1 w IPv4 Interface, a bramę jako trasę 0.0.0.0/0
   w IPv4 Static Routes. Kreator robi to na jednej stronie.
-- **Kiedy przełącznik się restartuje?** Po Reboot, po zaniku prądu albo po przepięciu zasilania –
-  na przykład przy kablach (warstwa 7). Zapisana konfiguracja przetrwa każdy z nich.
+- **Kiedy przełącznik się restartuje?** Po Reboot, po zaniku prądu albo po przepięciu zasilania.
+  Zapisana konfiguracja przetrwa każdy z nich.
 - **Dlaczego po restarcie jest 192.168.1.254, a nie adres z DHCP?** W niebieskiej sieci nikt nie
   rozdaje adresów – DHCP rutera działa tylko w zielonej. Przełącznik bierze więc adres fabryczny.
 

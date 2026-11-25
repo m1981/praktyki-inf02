@@ -50,6 +50,8 @@ export interface LegendItem {
 export interface Exercise {
  code: string;
  title: string;
+ /** Krótka nazwa na zakładce, gdy tytuł się nie mieści (PYT-112a); pełny tytuł – w podpowiedzi. */
+ tab?: string;
  /**
   * Jak pokazać krok obok sceny: `lesson` (domyślnie) – tekst kroku z paskiem „Zmiana”;
   * `dialog` – rozmowa postaci, jedna krótka kwestia na krok (jak Laboratorium VLAN).

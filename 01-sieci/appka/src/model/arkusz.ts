@@ -114,7 +114,9 @@ export const SHEET_ROUTER_DNS = { primary: '4.4.4.4', secondary: '4.4.5.5' } as 
 export const SHEET_EXAMPLE = {
  leased: '10.10.0.7',
  macWan: '00-1A-2B-3C-4D-01',
- macLan1: '00-1A-2B-3C-4D-02'
+ macLan1: '00-1A-2B-3C-4D-02',
+ /** Warstwa 7: adres serwera po zmianie LAN rutera – domyślna pula TP-Link przesunięta do nowej sieci (PYT-115). */
+ afterLanChange: '10.10.0.100'
 } as const;
 
 export const SHEET_CARD_IDS = Object.keys(SHEET_CARDS) as SheetCard[];

@@ -125,7 +125,7 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 - **Jakie hasło przyjmie Cisco?** Co najmniej 8 znaków i 3 z 4 rodzajów: wielka litera, mała litera,
   cyfra, znak specjalny. Bez »cisco«, »cbs«, nazwy użytkownika i ciągów typu »abc« albo »123«.
 - **Co, gdy po zmianie adresu panel przestaje odpowiadać?** Urządzenie ma już nowy adres – wejdź pod
-  nowy. Ćwiczysz to w warstwie 6.
+  nowy. Ćwiczysz to w warstwach 6 i 7.
 - **Dlaczego na Cisco trzeba kliknąć Save?** Apply zmienia tylko bieżącą konfigurację, Save zapisuje
   ją na stałe – bez tego restart kasuje zmiany. Ćwiczysz to w warstwie 6.
 

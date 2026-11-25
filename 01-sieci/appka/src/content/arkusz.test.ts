@@ -47,7 +47,7 @@ function quizReactions(stage: string): string[] {
  return [...SCENARIO.slice(start, end).matchAll(/^- [AB]: (.+)$/gm)].map((m) => unquote(m[1]));
 }
 
-const [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5, ETAP_6] = ARKUSZ.exercises;
+const [ETAP_1, ETAP_2, ETAP_3, ETAP_4, ETAP_5, ETAP_6, ETAP_7] = ARKUSZ.exercises;
 const isTask = (step: Step) => step.speaker === 'task';
 /** Polecenie ćwiczenia z tabelą – mechanika i tekst z PYT-077a, scenariusz go nie podaje. */
 const isTableTask = (step: Step) => step.view.type === 'sheet' && step.view.task?.kind === 'table';
@@ -416,6 +416,72 @@ describe('warstwa 6 co do słowa ze scenariusza', () => {
  });
 });
 
+// --- Warstwa 7: scenariusz-arkusz-7.md (wersja 2) ---
+
+const SCENARIO_7 = readFileSync(new URL('../../scenariusz-arkusz-7.md', import.meta.url), 'utf8');
+
+describe('warstwa 7 co do słowa ze scenariusza', () => {
+ const isTask7 = (s: Step) => s.speaker === 'task';
+ const tasks = ETAP_7.steps.filter(isTask7);
+ const optionsOf = (s: Step) => (s.control.type === 'task' ? (s.control.options ?? []) : []);
+ const answersOf = (n: number) =>
+  SCENARIO_7.match(new RegExp(`Odpowiedzi do zadania ${n}: (.+)`))![1].split(/ (?=[AB]\) )/);
+
+ it('linijki arkusza (skąd i tekst)', () => {
+  const view = ETAP_7.steps[0].view;
+  const items = view.type === 'sheet' ? view.lines?.items : [];
+  expect(items?.map((l) => [l.id, l.where, l.text])).toEqual(
+   rows3('Linijki z arkusza', /^\| L\d /, SCENARIO_7).map((c) => [c[0], c[1], c[2]])
+  );
+ });
+
+ it('scena', () => {
+  const expected = rows3('Scena', undefined, SCENARIO_7).map(sceneLine);
+  expect(ETAP_7.steps.filter((s) => !isTask7(s)).map((s) => s.text)).toEqual(expected);
+ });
+
+ it('zagadka: odpowiedzi i reakcje', () => {
+  const quiz = ETAP_7.steps.find((s) => s.control.type === 'quiz')!;
+  const options = quiz.control.type === 'quiz' ? quiz.control.options : [];
+  const row = rows3('Scena', undefined, SCENARIO_7).find((c) => c[1] === '_zagadka_')!;
+  expect(options.map((o) => o.text)).toEqual(row[2].split(/ (?=[AB]\) )/).slice(1));
+  const start = SCENARIO_7.indexOf('Reakcje na zagadkę:');
+  const reactions = [
+   ...SCENARIO_7.slice(start, SCENARIO_7.indexOf('##', start)).matchAll(/^- [AB]: (.+)$/gm)
+  ].map((m) => unquote(m[1]));
+  expect(options.map((o) => o.feedback)).toEqual(reactions);
+ });
+
+ it('polecenia i reakcje na błąd', () => {
+  const rows = rows3('Ćwiczenie', undefined, SCENARIO_7);
+  expect(tasks.map((s) => s.text)).toEqual(rows.map((c) => c[1]));
+  const reaction = (s: Step) =>
+   s.view.type === 'sheet' && s.view.task?.kind === 'lines' ? s.view.task.wrong : wrongReaction(s);
+  expect(tasks.map(reaction)).toEqual(rows.map((c) => unquote(c.at(-1)!)));
+ });
+
+ it('ćwiczenie 1: reakcja na L5 i na brak zaznaczenia', () => {
+  const view = tasks[0].view;
+  const task = view.type === 'sheet' && view.task?.kind === 'lines' ? view.task : undefined;
+  expect(task?.wrongBy?.L5).toBe(quoteAfter('reakcja, gdy uczeń kliknie L5', SCENARIO_7));
+  const none = quoteAfter('reakcja, gdy uczeń nic nie zaznaczy', SCENARIO_7);
+  expect([task?.missingOne, task?.missingMore]).toEqual([none, none]);
+ });
+
+ it('odpowiedzi do zadań 3 i 4', () => {
+  expect(optionsOf(tasks[2]).map((o) => o.text)).toEqual(answersOf(3));
+  expect(optionsOf(tasks[3]).map((o) => o.text)).toEqual(answersOf(4));
+ });
+
+ it('notatki „Dla dociekliwych”', () => {
+  expect(ETAP_7.notes).toEqual(notesOf(SCENARIO_7, 'Warstwa 7'));
+ });
+
+ it('krótka nazwa zakładki (PYT-112a)', () => {
+  expect(ETAP_7.tab).toBe('Kolejność');
+ });
+});
+
 // --- Wiersz „gdzie jest Kuba” (PYT-104a): kolumna „Kuba (pod)” w scenariuszach 3–5 ---
 
 describe('Kuba stoi tam, gdzie mówi scenariusz', () => {
@@ -430,7 +496,8 @@ describe('Kuba stoi tam, gdzie mówi scenariusz', () => {
   ['3', ETAP_3, SCENARIO_3],
   ['4', ETAP_4, SCENARIO_4],
   ['5', ETAP_5, SCENARIO_5],
-  ['6', ETAP_6, SCENARIO_6]
+  ['6', ETAP_6, SCENARIO_6],
+  ['7', ETAP_7, SCENARIO_7]
  ] as const)('warstwa %s', (_layer, exercise, scenario) => {
   const head = rows3('Scena', /^\| # /, scenario)[0];
   const col = head.indexOf('Kuba (pod)');

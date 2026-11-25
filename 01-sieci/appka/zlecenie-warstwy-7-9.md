@@ -1,6 +1,6 @@
 # Zlecenie: „Arkusz krok po kroku”, warstwy 7–9 (dla nowej sesji)
 
-Status: do wykonania · 2026-11-25 · decyzje: PYT-089a (warstwy), PYT-106a (podział na 6–9), PYT-104a (sylwetka Kuby).
+Status: warstwa 7 gotowa na dysku (PYT-113a), 8–9 do wykonania · 2026-11-25 · decyzje: PYT-089a (warstwy), PYT-106a (podział na 6–9), PYT-104a (sylwetka Kuby).
 Poprzednia sesja skończyła warstwę 6 (`078d032`, wypchnięte). Ten plik to kompletny brief – wykonawca
 nie zna wcześniejszej rozmowy.
 
@@ -36,8 +36,8 @@ nie zna wcześniejszej rozmowy.
 | 8   | Jak sprawdzić, że działa?     | zad. 8 (ping z serwera do stacji i do LAN rutera, „wyświetl adres IP interfejsu WAN”, „zmień ustawienia zapory”), zad. 9 (www.egzamin.local w maszynie wirtualnej) | 1. Zapora Windows na stacji blokuje ping (reguła „żądanie echa ICMPv4”). 2. Ping poza jedną sieć nie przejdzie – to nie błąd (serwer nie routuje)                                                                                                                                                            | serwer, stacja                                                 |
 | 9   | Cały arkusz                   | wszystko                                                                                                                                                           | wszystkie                                                                                                                                                                                                                                                                                                    | –                                                              |
 
-Kolejność pracy z całej ścieżki (do warstwy 7): MAC karty WAN serwera → ruter (WAN, DNS, LAN, DHCP,
-rezerwacja) → przełącznik (kreator, VLAN 1, Save) → kable → serwer (WAN automatycznie + odśwież; LAN 1
+Kolejność pracy z całej ścieżki (do warstwy 7, po PYT-111a): kable według schematu → MAC karty WAN serwera →
+ruter (WAN, DNS, LAN, odśwież, DHCP, rezerwacja) → przełącznik (kreator, VLAN 1, Save) → serwer (WAN automatycznie + odśwież; LAN 1
 bez bramy) → stacja (LAN 2; maszyna wirtualna mostkowana, LAN 3) → sprawdzenie.
 
 Warstwa 9: makieta z PYT-088 (`Czytam arkusz`: oryginalny tekst zadań 2–8, przy linijkach pytania ①–⑤

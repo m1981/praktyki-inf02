@@ -59,7 +59,7 @@ window.CWICZENIA = {
    ikona: '📝',
    nazwa: 'Arkusz krok po kroku',
    opis:
-    'Warstwy 1–6: kolory sieci, tabela adresów, skąd adres, kto zna nazwy, jak wejść na urządzenie, przełącznik.',
+    'Warstwy 1–7: kolory sieci, tabela adresów, skąd adres, kto zna nazwy, jak wejść na urządzenie, przełącznik, kolejność pracy.',
    gdzie: 'arkusz: styczeń 2025'
   },
   {
@@ -75,8 +75,8 @@ window.CWICZENIA = {
  wkrotce: [
   {
    krok: 'arkusz',
-   nazwa: 'Warstwy 7–9',
-   opis: 'Kolejność pracy, sprawdzanie, cały arkusz.',
+   nazwa: 'Warstwy 8–9',
+   opis: 'Sprawdzanie, cały arkusz.',
    gdzie: 'w przygotowaniu'
   }
  ]

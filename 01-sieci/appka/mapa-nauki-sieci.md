@@ -146,17 +146,17 @@ Pełny widok arkusza z adnotacjami przytłaczał (PYT-088). Każde pytanie admin
 własną zakładkę strony „Arkusz krok po kroku”, na tym samym schemacie. Reguła warstwy: 1 pytanie,
 najwyżej 5 linijek arkusza, najwyżej 2 pułapki, 1 nowa rzecz na schemacie.
 
-| #   | Warstwa                                                               | Stan                                                                       |
-| --- | --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 1   | Ile jest sieci?                                                       | gotowe (`symulator-arkusz.html`, PYT-074a)                                 |
-| 2   | Którędy wychodzi się z sieci?                                         | gotowe (jw.)                                                               |
-| 3   | Skąd adres? (DHCP, rezerwacja, MAC)                                   | gotowe (zakładka 3, PYT-097a); pilot z uczniami – dobra ocena (2026-11-25) |
-| 4   | Kto zna nazwy? (DNS)                                                  | gotowe (zakładka 4, PYT-099a)                                              |
-| 5   | Jak wejść na urządzenie?                                              | gotowe (zakładka 5, PYT-101a)                                              |
-| 6   | Co ustawić na przełączniku i jak tego nie zgubić? (VLAN 1, Save)      | gotowe na dysku (zakładka 6 „Przełącznik: ustaw i zapisz”, PYT-107a)       |
-| 7   | W jakiej kolejności to robię? (panel „ucieka”, kable po konfiguracji) | po warstwie 6                                                              |
-| 8   | Jak sprawdzić, że działa? (zapora, ping w jednej sieci)               | po warstwie 7                                                              |
-| 9   | Cały arkusz (uczeń sam oznacza ①–⑤)                                   | makieta z PYT-088 jako ostatnia faza                                       |
+| #   | Warstwa                                                          | Stan                                                                       |
+| --- | ---------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 1   | Ile jest sieci?                                                  | gotowe (`symulator-arkusz.html`, PYT-074a)                                 |
+| 2   | Którędy wychodzi się z sieci?                                    | gotowe (jw.)                                                               |
+| 3   | Skąd adres? (DHCP, rezerwacja, MAC)                              | gotowe (zakładka 3, PYT-097a); pilot z uczniami – dobra ocena (2026-11-25) |
+| 4   | Kto zna nazwy? (DNS)                                             | gotowe (zakładka 4, PYT-099a)                                              |
+| 5   | Jak wejść na urządzenie?                                         | gotowe (zakładka 5, PYT-101a)                                              |
+| 6   | Co ustawić na przełączniku i jak tego nie zgubić? (VLAN 1, Save) | gotowe na dysku (zakładka 6 „Przełącznik: ustaw i zapisz”, PYT-107a)       |
+| 7   | W jakiej kolejności to robię? (kable pierwsze, panel „ucieka”)   | gotowe na dysku (zakładka 7 „Kolejność”, PYT-113a; P2 zły port, PYT-111a)  |
+| 8   | Jak sprawdzić, że działa? (zapora, ping w jednej sieci)          | po warstwie 7                                                              |
+| 9   | Cały arkusz (uczeń sam oznacza ①–⑤)                              | makieta z PYT-088 jako ostatnia faza                                       |
 
 VLAN-y (dawny etap 6) wracają po warstwie 9, na arkuszach z czerwca 2023–2026.
 

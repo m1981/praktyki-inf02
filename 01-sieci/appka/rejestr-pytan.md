@@ -118,6 +118,12 @@ zob. PYT-004).
 | PYT-108 | blokujace   | zamknięte (a)    | Czy Apply w kreatorze Cisco zapisuje konfigurację na stałe?       |
 | PYT-109 | decyzja     | zamknięte (a)    | Commit i push warstwy 6                                           |
 | PYT-110 | decyzja     | zamknięte (a)    | Przekazanie warstw 7–9 nowej sesji: commit i push briefu          |
+| PYT-111 | blokujace   | zamknięte (a)    | Warstwa 7: kable już są od warstwy 5 – jaka pułapka P2?           |
+| PYT-112 | decyzja     | zamknięte (a)    | Krótkie nazwy zakładek, żeby 9 zmieściło się w 1280 px            |
+| PYT-113 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 7 „W jakiej kolejności to robię?”  |
+| PYT-114 | decyzja     | zamknięte (a)    | Odwołania do warstw 6–7 w notatkach wdrożonych warstw 5–6         |
+| PYT-115 | z-domyslna  | otwarte (a)      | Czy pula DHCP rutera przesuwa się sama po zmianie adresu LAN?     |
+| PYT-116 | decyzja     | zamknięte (a)    | Commit i push warstwy 7                                           |
 
 ## Pytania
 
@@ -1600,3 +1606,91 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a).
 - **Skutek braku odpowiedzi:** brief zostaje na dysku.
 - **Odpowiedź (2026-11-25):** „110a” → (a): commit i push briefu i rejestru; nowa sesja startuje od `zlecenie-warstwy-7-9.md`.
+
+### PYT-111 · blokujace · zamknięte
+
+- **Kontekst:** brief `zlecenie-warstwy-7-9.md` daje warstwie 7 pułapkę P2 „kable według schematu
+  dopiero po konfiguracji (kabel do panelu był tymczasowy)”. To przeczy warstwom 5–6: tam Kuba wchodzi
+  na ruter z serwera kablem ze schematu („kabel jest na schemacie”, PYT-100a), a na przełącznik ze stacji
+  kablem stacja–przełącznik. Kabli „na chwilę” w scenach nie ma. Arkusz (zad. 4) każe łączyć według
+  schematu po zadaniach 2–3, ale numer zadania to kolejność oceniania, nie pracy.
+- **Opcje:** (a) P2 = „zły port”: kable według schematu są pierwszym krokiem pracy (zad. 4 przed 2–3),
+  a pułapka to wpięcie serwera w port WAN/Internet rutera zamiast w PORT LAN (i PORT1/PORT3 na
+  przełączniku); warstwy 5–6 bez zmian; (b) zostać przy briefie – wtedy warstwy 5–6 trzeba przerobić na
+  kable „na chwilę”; (c) jedna pułapka w warstwie 7 (panel „ucieka”), kable bez pułapki.
+- **Rekomendacja:** (a) – spójne z warstwami 5–6, a zły port to częsty błąd przy szafie; uczeń widzi też,
+  że kolejność zadań w arkuszu to nie kolejność pracy.
+- **Skutek braku odpowiedzi:** nie piszę scenariusza warstwy 7 (bez P2 nie da się ułożyć sceny).
+- **Odpowiedź (2026-11-25):** „111a 112a” → (a)
+
+### PYT-112 · decyzja · zamknięte
+
+- **Kontekst:** rząd zakładek przy 1280 px: 6 zakładek zajmuje 994 z 1200 px; „7 W jakiej kolejności
+  to robię?” go zawinie, a 9 pełnych nazw potrzebuje ok. 1500 px. Próba w przeglądarce (tylko DOM):
+  9 krótkich nazw mieści się w jednym rzędzie z zapasem 130 px.
+- **Opcje:** (a) krótkie nazwy wszystkich zakładek: 1 Koloruję sieci · 2 Tabela adresów · 3 Skąd adres? ·
+  4 Kto zna nazwy? · 5 Jak wejść? · 6 Przełącznik · 7 Kolejność · 8 Sprawdzam · 9 Cały arkusz; pełne
+  pytanie w podpowiedzi po najechaniu na zakładkę; (b) same numery z ikoną; (c) dwa rzędy zakładek
+  i niższy schemat we wszystkich warstwach.
+- **Rekomendacja:** (a) – jeden rząd, nazwy nadal czytelne, zmiana tylko w tytułach (karta na stronie
+  zbiorczej i testy dostosuję).
+- **Skutek braku odpowiedzi:** warstwa 7 wejdzie z krótką nazwą „Kolejność”, stare zakładki bez zmian –
+  tymczasowo, dopóki zmieści się w rzędzie.
+- **Odpowiedź (2026-11-25):** „111a 112a” → (a)
+
+### PYT-113 · decyzja · zamknięte
+
+- **Kontekst:** `scenariusz-arkusz-7.md`, wersja 2 – po recenzji sub-agenta („gotowe po poprawkach”,
+  12 uwag; 11 przyjętych, 1 częściowo: kolory zostają jak w warstwach 5–6, bo warstwa 5 koloruje sieci
+  także przy ustawieniach fabrycznych). Główne zmiany: haczyk P2 pada w scenie („Karta serwera to WAN –
+  więc port WAN!”), na ruterze i przełączniku tylko „port”, akcja z krokiem 14 zmienia tylko LAN,
+  bez numerków przy linijkach. Pytania recenzenta: stan startowy (urządzenia niepołączone i wyłączone)
+  – wynika z zadania 4 arkusza, zapisane w uproszczeniach; pula DHCP – PYT-115; poprawki warstw 5–6 –
+  PYT-114 (odpowiedzi agenta). Scena 20 kroków (najdłuższa kwestia 11 słów), ćwiczenie 4 polecenia,
+  7 notatek; pierwszy raz Kuba przy szafie (kroki 5–7, 12).
+- **Opcje:** (a) akceptuję – siódma zakładka „7 Kolejność”; (b) poprawki „krok, co zmienić”;
+  (c) krótsza scena.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** nie zaczynam kodu warstwy 7.
+- **Odpowiedź (2026-11-25):** „113a 114a 115a” → (a)
+- **Wykonanie:** zakładka 7 „W jakiej kolejności to robię?” (krótka nazwa „Kolejność”; 20 kroków sceny,
+  4 ćwiczenia, 7 notatek); nowe części widoku: kable widoczne po wpięciu (pulsujący niewpięty – przerywany),
+  kabel w złym porcie (szary łuk pod ruterem), nazwy portów, ✕ na strzałce „przeglądarka”. Krótkie nazwy
+  wszystkich zakładek (PYT-112a, pełny tytuł w podpowiedzi). Test co do słowa ze scenariuszem i pozycje
+  Kuby. `pnpm build`: 4073 testy, 750 pomiarów e2e.
+
+### PYT-114 · decyzja · zamknięte
+
+- **Kontekst:** recenzent warstwy 7: notatki wdrożonych warstw przeczą nowemu podziałowi. Warstwa 5
+  („Dla dociekliwych”, dwa razy): „Ćwiczysz to w warstwie 6”. Przy Save – dobrze. Przy „panel po
+  zmianie adresu” – przełącznik jest w warstwie 6, ale ruter (z odświeżeniem adresu) w warstwie 7. Warstwa 6: „po przepięciu zasilania –
+  na przykład przy kablach (warstwa 7)” – po PYT-111a kable są przed konfiguracją.
+- **Opcje:** (a) poprawić w tej samej paczce co warstwa 7: w warstwie 5 notatka o nowym adresie kończy
+  się „Ćwiczysz to w warstwach 6 i 7.”, notatka o Save bez zmian; w warstwie 6 „Po Reboot, po zaniku prądu albo po przepięciu zasilania.
+  Zapisana konfiguracja przetrwa każdy z nich.”; (b) zostawić.
+- **Rekomendacja:** (a) – dwie zmiany po kilka słów, test co do słowa pilnuje scenariusza i strony.
+- **Skutek braku odpowiedzi:** notatki zostają bez zmian.
+- **Odpowiedź (2026-11-25):** „113a 114a 115a” → (a)
+- **Wykonanie:** scenariusze 5 i 6 oraz notatki na stronie poprawione.
+
+### PYT-115 · z-domyslna · otwarte (czeka na sprawdzenie)
+
+- **Kontekst:** krok 18 warstwy 7 zakłada, że po zmianie adresu LAN rutera pula DHCP sama przesuwa się
+  do nowej sieci (serwer po `/renew` dostaje 10.10.0.x). Forum TP-Link tak to opisuje (pula „idzie za”
+  adresem LAN); mapa menu ma to jako niesprawdzone, emulator nie zapisuje wartości.
+- **Opcje:** (a) operator przy okazji sprawdza na ruterze z pracowni: zmiana LAN → strona DHCP Server
+  pokazuje pulę 10.10.0.x?; (b) przyjąć bez sprawdzania.
+- **Rekomendacja:** (a), ale kod nie czeka – scena zostaje jak jest; gdyby pula się nie przesuwała,
+  zmieniam krok 18 i notatkę.
+- **Skutek braku odpowiedzi:** pracuję na założeniu; wynik oznaczony „tymczasowo (PYT-115)”.
+- **Odpowiedź (2026-11-25):** „113a 114a 115a” → (a): operator sprawdzi na ruterze z pracowni; do tego czasu krok 18 „tymczasowo (PYT-115)”.
+
+### PYT-116 · decyzja · zamknięte
+
+- **Kontekst:** warstwa 7 gotowa na dysku (PYT-113a), z nią krótkie nazwy zakładek (PYT-112a) i poprawki
+  notatek warstw 5–6 (PYT-114a); scenariusz 7 bez commita. Push = zakładka 7 u uczniów, karta „Warstwy 1–7”,
+  zapowiedź „Warstwy 8–9”. Krok 18 tymczasowo (PYT-115).
+- **Opcje:** (a) commit i push; (b) commit bez push – push po obejrzeniu; (c) poprawki.
+- **Rekomendacja:** (b) – pierwszy raz kable na schemacie; obejrzyj kroki 5–13 (zły port i przepięcie).
+- **Skutek braku odpowiedzi:** zmiany zostają na dysku.
+- **Odpowiedź (2026-11-25):** „jest super 116a” → (a): commit i push.

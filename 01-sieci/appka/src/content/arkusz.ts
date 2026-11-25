@@ -22,7 +22,7 @@ import type { TaskOption } from '../ui/controls/TalkControl';
 import type { Figure } from '../ui/ExamFigure';
 import { formatIp, maskOf } from '../lib/ipv4';
 import type { LinesSpec, ReservationSpec, SheetLine, WizardSpec } from '../ui/views/SheetParts';
-import type { CardLabel, ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
+import type { Cable, CardLabel, ExcerptRow, Field, SheetSpec, TableRow } from '../ui/views/SheetView';
 
 const SPEAKERS: Record<string, Speaker> = {
  ola: { name: 'Ola', role: 'administratorka sieci', avatar: 'O', color: '#d9ecf9' },
@@ -294,6 +294,7 @@ const NOTES_2: Note[] = [
 const ETAP_2: Exercise = {
  code: '2',
  title: 'Z arkusza do tabeli adresów',
+ tab: 'Tabela adresów',
  style: 'dialog',
  speakers: SPEAKERS,
  notes: NOTES_2,
@@ -1064,7 +1065,7 @@ const NOTES_5: Note[] = [
  },
  {
   q: 'Co, gdy po zmianie adresu panel przestaje odpowiadać?',
-  a: 'Urządzenie ma już nowy adres – wejdź pod nowy. Ćwiczysz to w warstwie 6.'
+  a: 'Urządzenie ma już nowy adres – wejdź pod nowy. Ćwiczysz to w warstwach 6 i 7.'
  },
  {
   q: 'Dlaczego na Cisco trzeba kliknąć Save?',
@@ -1075,6 +1076,7 @@ const NOTES_5: Note[] = [
 const ETAP_5: Exercise = {
  code: '5',
  title: 'Jak wejść na urządzenie?',
+ tab: 'Jak wejść?',
  style: 'dialog',
  speakers: SPEAKERS,
  notes: NOTES_5,
@@ -1300,7 +1302,7 @@ const NOTES_6: Note[] = [
  },
  {
   q: 'Kiedy przełącznik się restartuje?',
-  a: 'Po Reboot, po zaniku prądu albo po przepięciu zasilania – na przykład przy kablach (warstwa 7). Zapisana konfiguracja przetrwa każdy z nich.'
+  a: 'Po Reboot, po zaniku prądu albo po przepięciu zasilania. Zapisana konfiguracja przetrwa każdy z nich.'
  },
  {
   q: `Dlaczego po restarcie jest ${SWITCH_FACTORY_IP}, a nie adres z DHCP?`,
@@ -1311,6 +1313,7 @@ const NOTES_6: Note[] = [
 const ETAP_6: Exercise = {
  code: '6',
  title: 'Przełącznik: ustaw i zapisz',
+ tab: 'Przełącznik',
  style: 'dialog',
  speakers: SPEAKERS,
  notes: NOTES_6,
@@ -1431,6 +1434,253 @@ const ETAP_6: Exercise = {
    [
     { text: `A) ${SWITCH_FACTORY_IP}.`, correct: true },
     { text: `B) ${SWITCH_IP}.`, feedback: 'Bez Save zmiana żyje tylko do restartu.' }
+   ]
+  )
+ ]
+};
+
+// --- Warstwa 7: „W jakiej kolejności to robię?” (scenariusz-arkusz-7.md, wersja 2; PYT-113a) ---
+// Nowa rzecz na schemacie: kable pojawiają się dopiero po wpięciu, z nazwami portów; kabel w złym
+// porcie (PYT-111a) – szary łuk do portu WAN rutera. Adres po zmianie LAN: tymczasowo (PYT-115).
+
+const ROUTER_LAN_CIDR = SHEET_CARDS['ruter-lan'].cidr ?? '';
+const ROUTER_LAN_IP = sheetIp('ruter-lan');
+
+const LINES_7: readonly SheetLine[] = [
+ { id: 'L1', where: 'zadanie 2', text: '2. Skonfiguruj ruter zgodnie z następującymi zaleceniami:' },
+ { id: 'L2', where: 'zadanie 2', text: `adres IP interfejsu LAN: ${ROUTER_LAN_CIDR}` },
+ {
+  id: 'L3',
+  where: 'zadanie 3',
+  text: '3. Skonfiguruj przełącznik zgodnie z następującymi zaleceniami:'
+ },
+ {
+  id: 'L4',
+  where: 'zadanie 4',
+  text:
+   '4. Za pomocą kabli połączeniowych znajdujących się na stanowisku egzaminacyjnym połącz urządzenia zgodnie ze schematem, a następnie podłącz je do sieci zasilającej.'
+ },
+ {
+  id: 'L5',
+  where: 'zadanie 7',
+  text: 'odśwież adres IP, w celu pobrania adresu zarezerwowanego w ruterze'
+ }
+];
+const LINES_7_TITLE = 'Arkusz, styczeń 2025 – tylko linijki o kolejności pracy';
+const lines7 = (...lit: string[]): LinesSpec => ({ title: LINES_7_TITLE, items: LINES_7, lit });
+
+/** Nazwy portów ze schematu z arkusza (strona 3). */
+const PORTS_SWITCH: Scene['ports'] = { 'c-lan1': 'PORT1', 'c-stacja': 'PORT3' };
+const PORTS_ALL: Scene['ports'] = { 'c-green': 'PORT LAN', ...PORTS_SWITCH };
+const SWITCH_CABLES: readonly Cable[] = ['c-lan1', 'c-stacja'];
+const ALL_CABLES: readonly Cable[] = ['c-green', ...SWITCH_CABLES];
+
+const ROUTER_FACTORY_7 = ROUTER_FACTORY('(fabrycznie)');
+const ROUTER_NEW: Labels = { 'ruter-lan': [{ text: ROUTER_LAN_CIDR }] };
+/** Pod kartą WAN serwera o rząd niżej – jak w warstwie 5, żeby nie wchodzić na napisy rutera. */
+const serverWan = (...rows: CardLabel[]): Labels => ({ 'serwer-wan': [{ text: '' }, ...rows] });
+const SERVER_NONE = serverWan({ text: 'brak adresu', tone: 'warn' });
+const SERVER_OLD = serverWan(
+ { text: SHEET_FACTORY.routerLease },
+ { text: '(przykład)', tone: 'example' }
+);
+const SERVER_NEW = serverWan(
+ { text: SHEET_EXAMPLE.afterLanChange },
+ { text: '(przykład)', tone: 'example' }
+);
+const TO_ROUTER_FAIL: Scene['browse'] = { ...TO_ROUTER!, fail: true };
+const TO_ROUTER_NEW: Scene['browse'] = { from: 'serwer-wan', to: 'ruter-lan', label: ROUTER_LAN_IP };
+
+/** Warstwa 7: stanowisko przed pracą – bez kabli, ruter i przełącznik fabryczne, adresów z arkusza brak. */
+const layer7 = (state: Scene): Scene => {
+ const { labels, ...rest } = state;
+ return {
+  colored: ALL,
+  lines: lines7(),
+  cables: [],
+  kubaRow: true,
+  labels: { ...ROUTER_FACTORY_7, ...labels },
+  ...rest
+ };
+};
+/** Po kroku 7: przełącznik podłączony, serwer w porcie WAN rutera. */
+const plugged = (state: Scene): Scene =>
+ layer7({
+  cables: SWITCH_CABLES,
+  ports: PORTS_SWITCH,
+  wrongPort: true,
+  ...state,
+  labels: { ...SWITCH_FACTORY, ...state.labels }
+ });
+/** Po kroku 12: wszystkie kable według schematu. */
+const wired = (state: Scene): Scene =>
+ plugged({ cables: ALL_CABLES, ports: PORTS_ALL, wrongPort: false, ...state });
+/** Po zmianie LAN rutera (kroki 14–17): ruter ma nowy adres, serwer stary, panel się nie otwiera. */
+const lanChanged = (state: Scene): Scene =>
+ wired({
+  browse: TO_ROUTER_FAIL,
+  ...state,
+  labels: { ...ROUTER_NEW, ...SERVER_OLD, ...state.labels }
+ });
+const renewed = (state: Scene): Scene =>
+ wired({
+  browse: TO_ROUTER_NEW,
+  ...state,
+  labels: { ...ROUTER_NEW, ...SERVER_NEW, ...state.labels }
+ });
+
+const START_HERE = 'Bez kabli nie wejdziesz na żadne urządzenie. Zacznij od zadania 4.';
+
+const NOTES_7: Note[] = [
+ {
+  q: 'Dlaczego kable są dopiero w zadaniu 4?',
+  a: 'Arkusz nie mówi, w jakiej kolejności pracować. Ruter i przełącznik ustawia się przeglądarką z serwera albo ze stacji, a do tego potrzebny jest kabel. Dlatego kable idą pierwsze – a zasilanie po kablach, jak w arkuszu.'
+ },
+ {
+  q: 'A zadanie 1?',
+  a: 'To gniazdo i panel krosowy, sprawdzane testerem. Nie łączy urządzeń ze schematu.'
+ },
+ {
+  q: 'Czemu w tej warstwie nie ma kabla do świata?',
+  a: 'Na egzaminie port WAN rutera zostaje pusty. Arkusz każe tylko wpisać jego adres (warstwa 2).'
+ },
+ {
+  q: 'Jak odróżnić port WAN od portów LAN?',
+  a: 'Port WAN jest zwykle jeden, ma inny kolor i podpis „Internet” albo „WAN”. Porty LAN są ponumerowane. Sprawdź na obudowie i w dokumentacji rutera.'
+ },
+ {
+  q: 'Dlaczego w porcie WAN serwer nie dostał adresu?',
+  a: 'Serwer DHCP rutera rozdaje adresy tylko od strony LAN. ipconfig pokaże wtedy 169.254.x.x – „DHCP nie odpowiedział” (warstwa 3).'
+ },
+ {
+  q: 'Czy przełącznikowi jest wszystko jedno, który port?',
+  a: 'Działać będzie każdy – wszystkie są w VLAN 1 (warstwa 6). Ale arkusz każe łączyć zgodnie ze schematem: serwer do PORT1, stacja do PORT3.'
+ },
+ {
+  q: 'Cała kolejność pracy:',
+  a: 'kable → ruter z serwera (WAN, DNS, LAN, odśwież, DHCP, rezerwacja, odśwież) → przełącznik ze stacji (maska /24 na chwilę) → serwer (LAN 1) → stacja (wróć /25, maszyna wirtualna) → sprawdzenie (warstwa 8).'
+ }
+];
+
+const ETAP_7: Exercise = {
+ code: '7',
+ title: 'W jakiej kolejności to robię?',
+ tab: 'Kolejność',
+ style: 'dialog',
+ speakers: SPEAKERS,
+ notes: NOTES_7,
+ steps: [
+  kuba('Zadanie 1 zrobione. Teraz po kolei: zadanie 2, ruter!', layer7({ lines: lines7('L1') })),
+  ola('Czym wejdziesz na ruter? Nie ma jeszcze żadnego kabla.', layer7({ pulse: ['c-green'] })),
+  kuba('Kable są dopiero w zadaniu 4. Mam je zrobić pierwsze?', layer7({ lines: lines7('L4') })),
+  ola(
+   'Tak. Kolejność zadań w arkuszu to nie kolejność pracy.',
+   layer7({}),
+   act('🔌 Do szafy ▶')
+  ),
+  kuba(
+   'Jestem przy szafie. Karta serwera to WAN – więc port WAN!',
+   layer7({ pulse: ['serwer-wan', 'ruter-wan'] })
+  ),
+  action('Kuba wpina kabel serwera w port WAN rutera…', layer7({ wrongPort: true })),
+  action('…potem serwer i stację do przełącznika i włącza zasilanie.', plugged({})),
+  kuba(
+   `Wszystko wpięte. Siadam do serwera, otwieram ${ROUTER_FACTORY_IP}.`,
+   plugged({ browse: TO_ROUTER_FAIL })
+  ),
+  kuba(
+   'Nie wchodzi! Serwer nawet nie dostał adresu 😩',
+   plugged({ browse: TO_ROUTER_FAIL, labels: SERVER_NONE })
+  ),
+  ola(
+   'Port WAN patrzy w internet. Tam ruter adresów nie rozdaje.',
+   plugged({ browse: TO_ROUTER_FAIL, labels: SERVER_NONE, pulse: ['ruter-wan'] })
+  ),
+  ola(
+   'Nazwa karty to nie nazwa portu. Serwer idzie do PORT LAN.',
+   plugged({
+    browse: TO_ROUTER_FAIL,
+    labels: SERVER_NONE,
+    pulse: ['ruter-lan'],
+    lines: lines7('L4')
+   }),
+   act('🔌 Przepnij ▶')
+  ),
+  action('Kuba idzie do szafy i przepina kabel do PORT LAN…', wired({})),
+  kuba(
+   'Wróciłem do serwera. Jest adres i panel się otwiera!',
+   wired({ browse: TO_ROUTER, labels: SERVER_OLD })
+  ),
+  action(
+   `Kuba zmienia adres LAN rutera na ${ROUTER_LAN_IP} i klika SAVE…`,
+   lanChanged({ lines: lines7('L2') })
+  ),
+  kuba(`Panel zniknął! Pod ${ROUTER_FACTORY_IP} cisza 😩`, lanChanged({})),
+  ola(
+   'Ruter ma już nowy adres. Serwer został w starej sieci.',
+   lanChanged({ pulse: ['addr:ruter-lan', 'addr:serwer-wan'] })
+  ),
+  ola(
+   'Odśwież adres serwera. To polecenie z zadania 7 – tylko wcześniej.',
+   lanChanged({ lines: lines7('L5') }),
+   act('⌨ Odśwież ▶')
+  ),
+  action(
+   'Kuba wpisuje ipconfig /release i ipconfig /renew…',
+   renewed({ commands: ['ipconfig /release', 'ipconfig /renew'] })
+  ),
+  ola(
+   'Potem DHCP, rezerwacja, zgłoszenie ręką. Dopiero wtedy przełącznik.',
+   renewed({ lines: lines7('L1', 'L3') })
+  ),
+  quiz('Arkusz: ruter w zadaniu 2, kable w 4. Co robisz najpierw?', renewed({ browse: undefined }), [
+   ['A) Ruter.', 'Na ruter wchodzisz kablem. Najpierw kable według schematu.', false],
+   ['B) Kable.', 'Właśnie tak – bez kabli nie wejdziesz na żadne urządzenie.', true]
+  ]),
+  // Ćwiczenie: stanowisko przed pracą – bez kabli, bez strzałki „przeglądarka”.
+  task(
+   'Kliknij linijkę, od której zaczniesz pracę przy stanowisku.',
+   layer7({
+    task: {
+     kind: 'lines',
+     answer: ['L4'],
+     check: 'Sprawdź',
+     wrong: START_HERE,
+     wrongBy: { L5: 'Odświeżasz, gdy już jest kabel. Zacznij od zadania 4.' },
+     missingOne: 'Zaznacz jedną linijkę – tę, od której zaczniesz.',
+     missingOneId: 'L4',
+     missingMore: 'Zaznacz jedną linijkę – tę, od której zaczniesz.'
+    }
+   })
+  ),
+  task(
+   'Kliknij port rutera, do którego wepniesz kabel serwera.',
+   plugged({
+    wrongPort: false,
+    task: {
+     kind: 'pick',
+     targets: ['ruter-wan', 'ruter-lan'],
+     answer: ['ruter-lan'],
+     wrong: 'Karta serwera nazywa się WAN, ale wpinasz ją w PORT LAN rutera.'
+    }
+   })
+  ),
+  task('Zmieniłeś adres LAN rutera i panel zniknął. Co robisz?', layer7({}), [
+   {
+    text: 'A) Resetuję ruter do ustawień fabrycznych.',
+    feedback: 'Reset skasuje twoją pracę. Odśwież adres serwera.'
+   },
+   { text: `B) Odświeżam adres serwera i wchodzę na ${ROUTER_LAN_IP}.`, correct: true }
+  ]),
+  task(
+   'Kiedy pierwszy raz odświeżysz adres serwera?',
+   layer7({}),
+   [
+    { text: 'A) Zaraz po zmianie adresu LAN rutera.', correct: true },
+    {
+     text: 'B) Dopiero w zadaniu 7.',
+     feedback: 'Bez odświeżenia nie wejdziesz pod nowy adres rutera.'
+    }
    ],
    { end: '↺ Od początku', restart: true }
   )
@@ -1446,6 +1696,15 @@ const times = (n: number, at: KubaAt): KubaAt[] => Array.from({ length: n }, () 
 const KUBA_3: KubaAt[] = [...times(5, undefined), ...times(12, 'serwer'), undefined];
 const KUBA_4: KubaAt[] = [...times(3, undefined), ...times(6, 'stacja'), ...times(7, undefined)];
 const KUBA_6: KubaAt[] = [...times(17, 'stacja'), undefined];
+const KUBA_7: KubaAt[] = [
+ ...times(4, undefined),
+ ...times(2, 'ruter'),
+ 'przelacznik',
+ ...times(4, 'serwer'),
+ 'ruter',
+ ...times(7, 'serwer'),
+ undefined
+];
 const KUBA_5: KubaAt[] = [
  ...times(4, undefined),
  ...times(4, 'serwer'),
@@ -1477,7 +1736,8 @@ export const ARKUSZ: Course = {
   withKuba(ETAP_3, KUBA_3),
   withKuba(ETAP_4, KUBA_4),
   withKuba(ETAP_5, KUBA_5),
-  withKuba(ETAP_6, KUBA_6)
+  withKuba(ETAP_6, KUBA_6),
+  withKuba(ETAP_7, KUBA_7)
  ]
 };
 

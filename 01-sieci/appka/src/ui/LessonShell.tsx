@@ -25,9 +25,10 @@ export function LessonShell({ course }: { course: Course }) {
        type="button"
        className="sr-tab"
        aria-current={state.ex === i ? 'step' : undefined}
+       title={ex.tab ? ex.title : undefined}
        onClick={() => dispatch({ type: 'GOTO', ex: i })}
       >
-       <strong>{ex.code}</strong> {ex.title}
+       <strong>{ex.code}</strong> {ex.tab ?? ex.title}
       </button>
      ))}
      {freeMode && (

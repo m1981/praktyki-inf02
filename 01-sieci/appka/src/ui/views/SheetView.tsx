@@ -118,7 +118,13 @@ export interface SheetSpec {
  /** Dymek nad schematem: pytanie, które zadaje stacja, np. „www.egzamin.local = ?”. */
  bubble?: string;
  /** Strzałka „przeglądarka” (warstwa 5): od komputera do panelu urządzenia, z wpisanym adresem. */
- browse?: { from: SheetCard; to: SheetCard; label: string };
+ browse?: {
+  from: SheetCard;
+  to: SheetCard;
+  label: string;
+  /** Panel się nie otwiera – zamiast grotu ✕ (warstwa 7). */
+  fail?: boolean;
+ };
  /**
   * Wiersz „gdzie jest Kuba” pod schematem (PYT-102a): sylwetka pod urządzeniem, przy którym Kuba
   * pracuje w tym kroku. `kubaRow` – wiersz jest na całej zakładce (stała wysokość schematu);
@@ -128,6 +134,13 @@ export interface SheetSpec {
  kuba?: SheetDevice;
  /** Okienko kreatora przełącznika (warstwa 6). */
  wizard?: WizardSpec;
+ // --- warstwa 7: kable wpinane po kolei (PYT-111a) ---
+ /** Które kable są wpięte; bez pola – wszystkie. Pulsujący niewpięty kabel to przerywane „puste miejsce”. */
+ cables?: readonly Cable[];
+ /** Kabel serwera w złym porcie: szary, przerywany łuk od karty „WAN” serwera do portu WAN rutera. */
+ wrongPort?: boolean;
+ /** Nazwa portu przy końcu kabla od strony rutera albo przełącznika, np. „PORT1”. */
+ ports?: Partial<Record<Cable, string>>;
 }
 
 /** Pytanie o nazwę: od karty do karty, w stronę świata albo do siebie (pętla). */
@@ -212,6 +225,16 @@ const SPREAD_ORDER: Record<SheetNet, readonly string[]> = {
  fioletowa: ['ruter-wan', 'c-world', 'world']
 };
 const SPREAD_STEP_S = 0.45;
+/**
+ * Gdzie stoi nazwa portu: przy końcu kabla od strony przełącznika albo na środku krótkiego kabla
+ * ruter–serwer (napis „PORT LAN” zająłby cały kabel).
+ */
+const PORT_END: Record<Cable, { end: 'x1' | 'x2' | 'mid'; anchor: 'start' | 'end' | 'middle' }> = {
+ 'c-world': { end: 'x2', anchor: 'end' },
+ 'c-green': { end: 'mid', anchor: 'middle' },
+ 'c-lan1': { end: 'x2', anchor: 'end' },
+ 'c-stacja': { end: 'x1', anchor: 'start' }
+};
 
 const netOf = (part: string): SheetNet | undefined => {
  if (part === 'world') return 'fioletowa';
@@ -339,6 +362,18 @@ function Schema({ spec, colored }: { spec: SheetSpec; colored: Set<SheetNet> }) 
    {/* Kable */}
    {(Object.keys(CABLES) as Cable[]).map((id) => {
     const c = CABLES[id];
+    if (spec.cables && !spec.cables.includes(id)) {
+     return pulse.has(id) ? (
+      <line
+       key={id}
+       className="sh-cable sh-cable--gap sh-pulse"
+       x1={c.x1}
+       y1={LINE_Y}
+       x2={c.x2}
+       y2={LINE_Y}
+      />
+     ) : null;
+    }
     const p = paint(id);
     return (
      <line
@@ -453,6 +488,18 @@ function Schema({ spec, colored }: { spec: SheetSpec; colored: Set<SheetNet> }) 
      </g>
     )
    )}
+
+   {spec.wrongPort && <WrongPortCable />}
+   {(Object.entries(spec.ports ?? {}) as [Cable, string][]).map(([id, name]) => {
+    const { end, anchor } = PORT_END[id];
+    const c = CABLES[id];
+    const x = end === 'mid' ? (c.x1 + c.x2) / 2 : c[end] + (anchor === 'start' ? 3 : -3);
+    return (
+     <text key={`port-${id}`} className="sh-port" x={x} y={LINE_Y - 7} textAnchor={anchor}>
+      {name}
+     </text>
+    );
+   })}
 
    <Arrows spec={spec} pulse={pulse} />
 
@@ -784,6 +831,22 @@ function AskArrow({ ask }: { ask: Ask }) {
  );
 }
 
+/**
+ * Kabel w złym porcie (warstwa 7): od dołu karty „WAN” serwera, pod ruterem, do jego portu WAN.
+ * Szary i przerywany – nie należy do żadnej sieci z planu.
+ */
+function WrongPortCable() {
+ const from = centerOf('serwer-wan');
+ const to = centerOf('ruter-wan');
+ const y = CARD_Y + CARD_H;
+ return (
+  <path
+   className="sh-cable--wrong"
+   d={`M ${from} ${y} C ${from} ${y + 24}, ${to} ${y + 24}, ${to} ${y}`}
+  />
+ );
+}
+
 /** Strzałka „przeglądarka”: ciągła, szara – od komputera do urządzenia, którego panel otwieramy. */
 function BrowseArrow({ browse }: { browse: NonNullable<SheetSpec['browse']> }) {
  const topOf = (card: SheetCard) =>
@@ -795,8 +858,13 @@ function BrowseArrow({ browse }: { browse: NonNullable<SheetSpec['browse']> }) {
   <g className="sh-arrow sh-browse">
    <path
     d={`M ${from} ${topOf(browse.from)} C ${from} ${peak}, ${to} ${peak}, ${to} ${topOf(browse.to)}`}
-    markerEnd="url(#sh-head-szara)"
+    markerEnd={browse.fail ? undefined : 'url(#sh-head-szara)'}
    />
+   {browse.fail && (
+    <text className="sh-cross" x={to} y={topOf(browse.to) - 2} textAnchor="middle">
+     ✕
+    </text>
+   )}
    <text x={(from + to) / 2} y={peak + 4} textAnchor="middle">
     {browse.label}
    </text>
