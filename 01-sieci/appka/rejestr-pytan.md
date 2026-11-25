@@ -117,6 +117,7 @@ zob. PYT-004).
 | PYT-107 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 6 (przełącznik, VLAN 1, Save)      |
 | PYT-108 | blokujace   | zamknięte (a)    | Czy Apply w kreatorze Cisco zapisuje konfigurację na stałe?       |
 | PYT-109 | decyzja     | zamknięte (a)    | Commit i push warstwy 6                                           |
+| PYT-110 | decyzja     | zamknięte (a)    | Przekazanie warstw 7–9 nowej sesji: commit i push briefu          |
 
 ## Pytania
 
@@ -1587,3 +1588,15 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) – obejrzyj kroki 3–9 (kreator) i 12–16 (restart i Save).
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-25):** „109a” → (a): commit i push.
+
+### PYT-110 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25): „Mamy tylko 80 kilotokenów do końca sesji, czyli do 1 miliona
+  tokenów. Jaką masz propozycję, żeby to zrealizować?” Pełny cykl jednej warstwy zajmuje więcej.
+  Agent napisał brief `zlecenie-warstwy-7-9.md` (przepis na warstwę, plan warstw 7–9, pułapki
+  techniczne, pierwsza wiadomość nowej sesji). Pierwszy wolny numer dla nowej sesji: PYT-111.
+- **Opcje:** (a) commit i push briefu i rejestru; nowa sesja startuje od briefu; (b) commit bez push;
+  (c) w tej sesji jeszcze scenariusz warstwy 7 (bez kodu) – ryzyko, że zabraknie tokenów w połowie.
+- **Rekomendacja:** (a).
+- **Skutek braku odpowiedzi:** brief zostaje na dysku.
+- **Odpowiedź (2026-11-25):** „110a” → (a): commit i push briefu i rejestru; nowa sesja startuje od `zlecenie-warstwy-7-9.md`.
