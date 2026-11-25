@@ -23,6 +23,13 @@ pod schematem stoi wtedy sylwetka 🧑‍💻 dokładnie pod tym urządzeniem (t
 - `—` – Kuba czyta arkusz albo rozmawia; zagadka zawsze `—`; w ćwiczeniach „uczeń sam” wiersza nie ma.
 - Bez teleportu: zmiana miejsca wynika z kwestii albo z kroku „akcja”.
 
+## Środowisko pracowni (PYT-120)
+
+Serwer – **Windows Server 2022 po angielsku**, stacja robocza – **Windows 11 po polsku**. Napisy z ekranu
+serwera (wyniki `ping`, `ipconfig`, nazwy okien i pól, np. „Physical Address”, „DNS Manager”) piszemy
+po angielsku, ze stacji – po polsku (np. reguła zapory „żądanie echa”). Ruter: TP-Link (panel po
+angielsku), przełącznik: Cisco CBS350 (po angielsku).
+
 ## Trzy wzorce
 
 | #   | Wzorzec                                                 | Jak to wygląda                                                                                                                                                                                                                    | Przykład (warstwa 3)                                                                                                            |

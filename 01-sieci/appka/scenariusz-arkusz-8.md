@@ -43,7 +43,7 @@ w warstwie 6).
 
 **Pułapki (dwie):**
 
-- **P1** – Windows z fabryki nie odpowiada na ping. Serwer widzi „Upłynął limit czasu żądania”, choć
+- **P1** – Windows z fabryki nie odpowiada na ping. Serwer widzi „Request timed out.”, choć
   adres jest z arkusza. Naprawa: reguła zapory „żądanie echa ICMPv4” – linijka L3. Haczyk: L3 stoi
   w zadaniu „na serwerze”, a robi się ją na stacji.
 - **P2** – L1 łatwo przeczytać jako „ze stacji do interfejsu rutera”. Ping ze stacji do rutera nie
@@ -59,28 +59,28 @@ z arkusza przy kartach przygaszone (jak w warstwach 5–6); pod kartą „WAN”
 
 ## Scena
 
-| #   | Kto       | Kwestia                                                                           | Na schemacie                                                                                                                                           | Kuba (pod) | Przycisk    |
-| --- | --------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ----------- |
-| 1   | Kuba      | Wszystko ustawione i zapisane. Jak sprawdzić, że działa? 🤔                       | Schemat jak na końcu warstwy 7, adresy przygaszone. Podświetla się L1.                                                                                 | —          | Dalej ▶     |
-| 2   | Ola       | Test komunikacji to ping. Z serwera: do stacji i do rutera.                       | Pulsują interfejs LAN rutera i karta „LAN 2” stacji.                                                                                                   | —          | Dalej ▶     |
-| 3   | Ola       | Ping wysyła »żądanie echa«. Odpowiedź znaczy: działa.                             | Bez zmian.                                                                                                                                             | —          | Dalej ▶     |
-| 4   | Kuba      | Siadam do serwera. Najpierw ruter: ping 10.10.0.1.                                | Bez zmian.                                                                                                                                             | serwer     | 📶 Ping ▶   |
-| 5   | _akcja_   | _Kuba wpisuje ping do rutera…_                                                    | Strzałka „ping” od karty „WAN” serwera do interfejsu LAN rutera, na końcu ✓. Przy serwerze „ping 10.10.0.1 → odpowiedź ✓”.                             | serwer     | Dalej ▶     |
-| 6   | Kuba      | Ruter odpowiada! Teraz stacja: ping 192.168.1.3.                                  | Bez zmian.                                                                                                                                             | serwer     | 📶 Ping ▶   |
-| 7   | _akcja_   | _Kuba wpisuje ping do stacji…_                                                    | Druga strzałka „ping” od karty „LAN 1” serwera do karty „LAN 2” stacji, na końcu ✕. Przy serwerze „ping 192.168.1.3 → limit czasu ✕”.                  | serwer     | Dalej ▶     |
-| 8   | Kuba      | Stacja milczy 😩 Może zły adres? Zmienię go.                                      | Bez zmian.                                                                                                                                             | serwer     | Dalej ▶     |
-| 9   | Ola       | Stop. Adres jest z arkusza. Windows z fabryki nie odpowiada na ping.              | Pułapka P1: pod stacją pojawia się i miga „🛡 zapora: ping zablokowany”.                                                                               | serwer     | Dalej ▶     |
-| 10  | Ola       | Arkusz to przewidział – linijka o zaporze. Idź do stacji.                         | Podświetla się L3.                                                                                                                                     | serwer     | 🛡 Zapora ▶ |
-| 11  | _akcja_   | _Kuba włącza w zaporze stacji regułę »żądanie echa ICMPv4«…_                      | Pod stacją „🛡 zapora: ping dozwolony” (dobrze). Strzałka ✕ do stacji znika; strzałka ✓ do rutera zostaje.                                             | stacja     | Dalej ▶     |
-| 12  | _akcja_   | _Kuba wraca do serwera i jeszcze raz pinguje stację…_                             | Strzałka „ping” do stacji, na końcu ✓. Przy serwerze „ping 192.168.1.3 → odpowiedź ✓”.                                                                 | serwer     | Dalej ▶     |
-| 13  | Kuba      | »Ze stacją oraz interfejsem rutera« – ping ze stacji do rutera? Idę!              | Podświetla się L1.                                                                                                                                     | serwer     | 📶 Ping ▶   |
-| 14  | _akcja_   | _Kuba wpisuje na stacji ping do rutera…_                                          | Strzałki z serwera znikają. Strzałka „ping” od stacji do interfejsu LAN rutera, urywa się ✕ na serwerze. Przy stacji „ping 10.10.0.1 → limit czasu ✕”. | stacja     | Dalej ▶     |
-| 15  | Kuba      | Znowu limit czasu! Coś zepsułem? 😩                                               | Bez zmian.                                                                                                                                             | stacja     | Dalej ▶     |
-| 16  | Ola       | Nie. Ten serwer nie przekazuje ruchu dalej. Pamiętasz ✕ przy bramie?              | Pułapka P2: miga ✕ na serwerze.                                                                                                                        | stacja     | Dalej ▶     |
-| 17  | Ola       | Z serwera: do rutera zieloną kartą, do stacji niebieską.                          | Strzałka ze stacji znika. Obie strzałki „ping” z serwera, na końcach ✓. Pulsują obie karty serwera.                                                    | stacja     | Dalej ▶     |
-| 18  | _akcja_   | _Kuba wraca do serwera i wyświetla adres WAN: ipconfig…_                          | Przy serwerze „ipconfig → WAN: 10.10.0.20”. Pulsuje adres pod kartą „WAN” serwera. Podświetla się L2.                                                  | serwer     | Dalej ▶     |
-| 19  | Ola       | Zgłoś gotowość. Przy egzaminatorze powtórzysz pingi i ipconfig.                   | Podświetla się L4.                                                                                                                                     | serwer     | Dalej ▶     |
-| 20  | _zagadka_ | Ping do stacji: limit czasu. Zgłaszasz gotowość? A) Tak. B) Nie, najpierw zapora. | Stan z kroku 19 bez poleceń przy serwerze.                                                                                                             | —          | Teraz Ty ▶  |
+| #   | Kto       | Kwestia                                                                           | Na schemacie                                                                                                                                                            | Kuba (pod) | Przycisk    |
+| --- | --------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
+| 1   | Kuba      | Wszystko ustawione i zapisane. Jak sprawdzić, że działa? 🤔                       | Schemat jak na końcu warstwy 7, adresy przygaszone. Podświetla się L1.                                                                                                  | —          | Dalej ▶     |
+| 2   | Ola       | Test komunikacji to ping. Z serwera: do stacji i do rutera.                       | Pulsują interfejs LAN rutera i karta „LAN 2” stacji.                                                                                                                    | —          | Dalej ▶     |
+| 3   | Ola       | Ping wysyła »żądanie echa«. Odpowiedź znaczy: działa.                             | Bez zmian.                                                                                                                                                              | —          | Dalej ▶     |
+| 4   | Kuba      | Siadam do serwera. Najpierw ruter: ping 10.10.0.1.                                | Bez zmian.                                                                                                                                                              | serwer     | 📶 Ping ▶   |
+| 5   | _akcja_   | _Kuba wpisuje ping do rutera…_                                                    | Strzałka „ping” od karty „WAN” serwera do interfejsu LAN rutera, na końcu ✓. Przy serwerze „ping 10.10.0.1 → Reply from 10.10.0.1 ✓”.                                   | serwer     | Dalej ▶     |
+| 6   | Kuba      | Ruter odpowiada! Teraz stacja: ping 192.168.1.3.                                  | Bez zmian.                                                                                                                                                              | serwer     | 📶 Ping ▶   |
+| 7   | _akcja_   | _Kuba wpisuje ping do stacji…_                                                    | Druga strzałka „ping” od karty „LAN 1” serwera do karty „LAN 2” stacji, na końcu ✕. Przy serwerze „ping 192.168.1.3 → Request timed out. ✕”.                            | serwer     | Dalej ▶     |
+| 8   | Kuba      | Stacja milczy 😩 Może zły adres? Zmienię go.                                      | Bez zmian.                                                                                                                                                              | serwer     | Dalej ▶     |
+| 9   | Ola       | Stop. Adres jest z arkusza. Windows z fabryki nie odpowiada na ping.              | Pułapka P1: pod stacją pojawia się i miga „🛡 zapora: ping zablokowany”.                                                                                                | serwer     | Dalej ▶     |
+| 10  | Ola       | Arkusz to przewidział – linijka o zaporze. Idź do stacji.                         | Podświetla się L3.                                                                                                                                                      | serwer     | 🛡 Zapora ▶ |
+| 11  | _akcja_   | _Kuba włącza w zaporze stacji regułę »żądanie echa ICMPv4«…_                      | Pod stacją „🛡 zapora: ping dozwolony” (dobrze). Strzałka ✕ do stacji znika; strzałka ✓ do rutera zostaje.                                                              | stacja     | Dalej ▶     |
+| 12  | _akcja_   | _Kuba wraca do serwera i jeszcze raz pinguje stację…_                             | Strzałka „ping” do stacji, na końcu ✓. Przy serwerze „ping 192.168.1.3 → Reply from 192.168.1.3 ✓”.                                                                     | serwer     | Dalej ▶     |
+| 13  | Kuba      | »Ze stacją oraz interfejsem rutera« – ping ze stacji do rutera? Idę!              | Podświetla się L1.                                                                                                                                                      | serwer     | 📶 Ping ▶   |
+| 14  | _akcja_   | _Kuba wpisuje na stacji ping do rutera…_                                          | Strzałki z serwera znikają. Strzałka „ping” od stacji do interfejsu LAN rutera, urywa się ✕ na serwerze. Przy stacji „ping 10.10.0.1 → Upłynął limit czasu żądania. ✕”. | stacja     | Dalej ▶     |
+| 15  | Kuba      | Znowu limit czasu! Coś zepsułem? 😩                                               | Bez zmian.                                                                                                                                                              | stacja     | Dalej ▶     |
+| 16  | Ola       | Nie. Ten serwer nie przekazuje ruchu dalej. Pamiętasz ✕ przy bramie?              | Pułapka P2: miga ✕ na serwerze.                                                                                                                                         | stacja     | Dalej ▶     |
+| 17  | Ola       | Z serwera: do rutera zieloną kartą, do stacji niebieską.                          | Strzałka ze stacji znika. Obie strzałki „ping” z serwera, na końcach ✓. Pulsują obie karty serwera.                                                                     | stacja     | Dalej ▶     |
+| 18  | _akcja_   | _Kuba wraca do serwera i wyświetla adres WAN: ipconfig…_                          | Przy serwerze „ipconfig → WAN: 10.10.0.20”. Pulsuje adres pod kartą „WAN” serwera. Podświetla się L2.                                                                   | serwer     | Dalej ▶     |
+| 19  | Ola       | Zgłoś gotowość. Przy egzaminatorze powtórzysz pingi i ipconfig.                   | Podświetla się L4.                                                                                                                                                      | serwer     | Dalej ▶     |
+| 20  | _zagadka_ | Ping do stacji: limit czasu. Zgłaszasz gotowość? A) Tak. B) Nie, najpierw zapora. | Stan z kroku 19 bez poleceń przy serwerze.                                                                                                                              | —          | Teraz Ty ▶  |
 
 **Kuba (pod):** sylwetka pod urządzeniem, przy którym Kuba pracuje w tym kroku (PYT-102a, PYT-104a);
 „—” – czyta arkusz, sylwetki nie ma. Ping wpisuje się w wierszu poleceń tego komputera, z którego się
@@ -118,8 +118,9 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 
 ### Warstwa 8
 
-- **Co to jest ping?** Wysyła „żądanie echa” – wiadomość ICMP – i czeka na odpowiedź. „Odpowiedź z …” –
-  działa. „Upłynął limit czasu żądania” – odpowiedź nie przyszła.
+- **Co to jest ping?** Wysyła „żądanie echa” – wiadomość ICMP – i czeka na odpowiedź. Na serwerze
+  (po angielsku): „Reply from …” – działa, „Request timed out.” – odpowiedź nie przyszła. Na stacji
+  (po polsku): „Odpowiedź z …” i „Upłynął limit czasu żądania.”
 - **Za co są punkty?** Styczeń 2026: „urządzenie odpowiada na polecenie, np. ping”. Czerwiec 2025:
   „test potwierdzający komunikację”. Liczy się odpowiedź, nie samo wpisanie polecenia.
 - **Dlaczego zapora blokuje ping?** Zapora Windows z fabryki nie odpowiada na „żądanie echa”. Reguła
@@ -135,9 +136,13 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 
 ## Uproszczenia (notatka dla nauczyciela, nie na ekran)
 
-- Dokładna nazwa reguły w polskim Windows (Zapora Windows Defender z zabezpieczeniami zaawansowanymi →
-  Reguły przychodzące): „Udostępnianie plików i drukarek (żądanie echa — ruch przychodzący ICMPv4)” –
-  **niesprawdzone na komputerze z pracowni** (PYT-118). Scena mówi krótko „żądanie echa ICMPv4”.
+- Pracownia (PYT-120): serwer – Windows Server 2022 po angielsku, stacja – Windows 11 po polsku. Wyniki
+  pingu i ipconfig na serwerze są po angielsku, reguła zapory i wyniki na stacji – po polsku.
+- Nazwa reguły (Zapora Windows Defender z zabezpieczeniami zaawansowanymi → Reguły przychodzące),
+  sprawdzone w internecie (PYT-118): po angielsku „File and Printer Sharing (Echo Request - ICMPv4-In)”;
+  po polsku zaczyna się od „Udostępnianie plików i drukarek (żądanie echa” – końcówka różni się między
+  źródłami („ICMPv4 przychodzące” / „ruch przychodzący ICMPv4”). Szukaj po słowach „żądanie echa”
+  i „ICMPv4”. Scena mówi krótko „żądanie echa ICMPv4”.
 - Reguła jest osobno dla profili sieci (prywatna, publiczna, domena); stacja bez bramy do internetu
   ląduje zwykle w profilu publicznym.
 - Czy egzaminator uznaje wyłączenie całej zapory – nie wiemy; notatka zaleca regułę.

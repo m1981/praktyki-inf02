@@ -130,7 +130,7 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 - Stacja nie dosięga 4.4.4.4, bo serwer nie przekazuje ruchu między kartami bez usługi routingu
   (warstwa 2). `nslookup` pokaże wtedy upłynięcie limitu czasu, nie „nie znam” – na lekcji warto to
   pokazać.
-- Rekord hosta w Menedżerze DNS: w polu „Nazwa” wpisuje się samo `www`. Wpisanie
+- Rekord hosta w DNS Manager (serwer po angielsku, PYT-120): w polu „Name” wpisuje się samo `www`. Wpisanie
   `www.egzamin.local` da `www.egzamin.local.egzamin.local` – częsta wpadka.
 - Nie pokazujemy portu 53, UDP ani pamięci podręcznej DNS; `ipconfig /flushdns` przyda się, gdy ktoś
   poprawił DNS, a stacja pamięta złą odpowiedź.

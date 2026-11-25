@@ -143,9 +143,11 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 - Po zmianie LAN TP-Link pokazuje okno „Save and log in again?” i ok. 40 s przekierowania
   (`mapa-menu-urzadzen.md`). Scena skraca to do „panel zniknął”.
 - Pula DHCP po zmianie LAN: scena zakłada, że przesuwa się sama do nowej sieci (adres 10.10.0.100 to
-  przykład – domyślna pula .100–.249 w sieci 10.10.0.x). Tak opisuje to forum TP-Link; dla modelu
-  z pracowni niesprawdzone (PYT-115). Jeśli nie, serwer po `/renew` nie dostanie adresu – wtedy na
-  chwilę ręczny adres z sieci 10.10.0.0/24.
+  przykład – domyślna pula .100–.249 w sieci 10.10.0.x). Sprawdzone w internecie (PYT-115): na forum
+  TP-Link pula „idzie za” adresem LAN (inny model), a obsługa TP-Link pisze o Archer C6, że pula nie
+  może leżeć w innej podsieci niż LAN; przewodnik Archer A20 każe po zmianie podsieci LAN ustawić
+  rezerwacje od nowa. Oficjalnego zdania dla C6 brak. Jeśli pula się nie przesunie, serwer po `/renew`
+  nie dostanie adresu – wtedy na chwilę ręczny adres z sieci 10.10.0.0/24.
 - Kolejność w ruterze: WAN i DNS przed LAN, bo po zmianie LAN trzeba się logować od nowa. DHCP po LAN,
   bo zakres musi być w sieci LAN (komunikat TP-Link w `mapa-menu-urzadzen.md`). Scena pokazuje tylko
   zmianę LAN.

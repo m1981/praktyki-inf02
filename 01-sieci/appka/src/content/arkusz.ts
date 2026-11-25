@@ -519,7 +519,7 @@ const NOTES_3: Note[] = [
  },
  {
   q: 'Co, jeśli karty nie ma na liście w panelu?',
-  a: `MAC odczytasz na serwerze: ipconfig /all, karta z adresem ${LEASED}, pole „Adres fizyczny”.`
+  a: `MAC odczytasz na serwerze: ipconfig /all, karta z adresem ${LEASED}, pole „Physical Address”.`
  },
  {
   q: 'Dlaczego MAC z ipconfig ma myślniki, a panel czasem chce dwukropków?',
@@ -1758,7 +1758,7 @@ const allowed = (state: Scene): Scene =>
 const NOTES_8: Note[] = [
  {
   q: 'Co to jest ping?',
-  a: 'Wysyła „żądanie echa” – wiadomość ICMP – i czeka na odpowiedź. „Odpowiedź z …” – działa. „Upłynął limit czasu żądania” – odpowiedź nie przyszła.'
+  a: 'Wysyła „żądanie echa” – wiadomość ICMP – i czeka na odpowiedź. Na serwerze (po angielsku): „Reply from …” – działa, „Request timed out.” – odpowiedź nie przyszła. Na stacji (po polsku): „Odpowiedź z …” i „Upłynął limit czasu żądania.”'
  },
  {
   q: 'Za co są punkty?',
@@ -1810,7 +1810,7 @@ const ETAP_8: Exercise = {
   ),
   action(
    'Kuba wpisuje ping do rutera…',
-   layer8({ pings: [PING_ROUTER], commands: [`ping ${ROUTER_LAN_IP} → odpowiedź ✓`] })
+   layer8({ pings: [PING_ROUTER], commands: [`ping ${ROUTER_LAN_IP} → Reply from ${ROUTER_LAN_IP} ✓`] })
   ),
   kuba(
    `Ruter odpowiada! Teraz stacja: ping ${STATION_ADDR}.`,
@@ -1821,7 +1821,7 @@ const ETAP_8: Exercise = {
    'Kuba wpisuje ping do stacji…',
    layer8({
     pings: [PING_ROUTER, pingStation(false)],
-    commands: [`ping ${STATION_ADDR} → limit czasu ✕`]
+    commands: [`ping ${STATION_ADDR} → Request timed out. ✕`]
    })
   ),
   kuba(
@@ -1847,7 +1847,7 @@ const ETAP_8: Exercise = {
   ),
   action(
    'Kuba wraca do serwera i jeszcze raz pinguje stację…',
-   allowed({ pings: BOTH_OK, commands: [`ping ${STATION_ADDR} → odpowiedź ✓`] })
+   allowed({ pings: BOTH_OK, commands: [`ping ${STATION_ADDR} → Reply from ${STATION_ADDR} ✓`] })
   ),
   kuba(
    '»Ze stacją oraz interfejsem rutera« – ping ze stacji do rutera? Idę!',
@@ -1858,7 +1858,7 @@ const ETAP_8: Exercise = {
    'Kuba wpisuje na stacji ping do rutera…',
    allowed({
     arrows: ['blocked'],
-    commands: [`ping ${ROUTER_LAN_IP} → limit czasu ✕`],
+    commands: [`ping ${ROUTER_LAN_IP} → Upłynął limit czasu żądania. ✕`],
     commandsAt: 'stacja'
    })
   ),

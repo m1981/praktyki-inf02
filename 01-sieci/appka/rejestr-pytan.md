@@ -122,11 +122,12 @@ zob. PYT-004).
 | PYT-112 | decyzja     | zamknięte (a)    | Krótkie nazwy zakładek, żeby 9 zmieściło się w 1280 px            |
 | PYT-113 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 7 „W jakiej kolejności to robię?”  |
 | PYT-114 | decyzja     | zamknięte (a)    | Odwołania do warstw 6–7 w notatkach wdrożonych warstw 5–6         |
-| PYT-115 | z-domyslna  | otwarte (a)      | Czy pula DHCP rutera przesuwa się sama po zmianie adresu LAN?     |
+| PYT-115 | z-domyslna  | zamknięte (inna) | Czy pula DHCP rutera przesuwa się sama po zmianie adresu LAN?     |
 | PYT-116 | decyzja     | zamknięte (a)    | Commit i push warstwy 7                                           |
 | PYT-117 | decyzja     | zamknięte (a)    | Akceptacja scenariusza warstwy 8 „Jak sprawdzić, że działa?”      |
-| PYT-118 | z-domyslna  | otwarte (a)      | Nazwa reguły zapory „żądanie echa” w polskim Windows w pracowni   |
+| PYT-118 | z-domyslna  | zamknięte (inna) | Nazwa reguły zapory „żądanie echa” w polskim Windows w pracowni   |
 | PYT-119 | decyzja     | zamknięte (a)    | Commit i push warstwy 8                                           |
+| PYT-120 | decyzja     | zamknięte        | Pracownia: Windows Server 2022 (EN) i Windows 11 (PL)             |
 
 ## Pytania
 
@@ -1676,7 +1677,7 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Odpowiedź (2026-11-25):** „113a 114a 115a” → (a)
 - **Wykonanie:** scenariusze 5 i 6 oraz notatki na stronie poprawione.
 
-### PYT-115 · z-domyslna · otwarte (czeka na sprawdzenie)
+### PYT-115 · z-domyslna · zamknięte
 
 - **Kontekst:** krok 18 warstwy 7 zakłada, że po zmianie adresu LAN rutera pula DHCP sama przesuwa się
   do nowej sieci (serwer po `/renew` dostaje 10.10.0.x). Forum TP-Link tak to opisuje (pula „idzie za”
@@ -1687,6 +1688,12 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   zmieniam krok 18 i notatkę.
 - **Skutek braku odpowiedzi:** pracuję na założeniu; wynik oznaczony „tymczasowo (PYT-115)”.
 - **Odpowiedź (2026-11-25):** „113a 114a 115a” → (a): operator sprawdzi na ruterze z pracowni; do tego czasu krok 18 „tymczasowo (PYT-115)”.
+- **Odpowiedź (2026-11-25):** „115 masz na mysli router TPlink na brzegu czy Router/Server maszyna windows? Sprawdz w internecie” → inna: agent sprawdza w internecie (chodzi o ruter TP-Link na brzegu).
+- **Rozstrzygnięcie:** forum TP-Link: pula „idzie za” adresem LAN (inny model); obsługa TP-Link o Archer C6:
+  pula nie może leżeć w innej podsieci niż LAN; przewodnik Archer A20: po zmianie podsieci LAN rezerwacje
+  ustawić od nowa – zgodne z kolejnością w scenie (DHCP i rezerwacja po LAN). Oficjalnego zdania dla C6
+  brak. Krok 18 zostaje; notatka dla nauczyciela w `scenariusz-arkusz-7.md` uzupełniona.
+- **Odpowiedź (2026-11-25):** „115a” → (a): przyjęte po sprawdzeniu w internecie.
 
 ### PYT-116 · decyzja · zamknięte
 
@@ -1718,7 +1725,7 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
   także przy stacji. Napis o zaporze w trzecim rzędzie pod stacją (w drugim stoi brama przełącznika).
   Test co do słowa ze scenariuszem i pozycje Kuby. `pnpm build`: 4659 testów, 846 pomiarów e2e.
 
-### PYT-118 · z-domyslna · otwarte (czeka na sprawdzenie)
+### PYT-118 · z-domyslna · zamknięte
 
 - **Kontekst:** scena mówi „reguła »żądanie echa ICMPv4«”; w notatce dla nauczyciela pełna nazwa
   „Udostępnianie plików i drukarek (żądanie echa — ruch przychodzący ICMPv4)” – z wiedzy agenta,
@@ -1728,6 +1735,11 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (a) – kod nie czeka; na ekranie jest tylko skrót „żądanie echa ICMPv4”.
 - **Skutek braku odpowiedzi:** notatka zostaje z dopiskiem „niesprawdzone”.
 - **Odpowiedź (2026-11-25):** „117a 118a” → (a): operator sprawdzi nazwę w pracowni.
+- **Odpowiedź (2026-11-25):** „118 sprawdz w internecie” → inna: agent sprawdza w internecie.
+- **Rozstrzygnięcie:** po angielsku „File and Printer Sharing (Echo Request - ICMPv4-In)”; polska nazwa
+  zaczyna się od „Udostępnianie plików i drukarek (żądanie echa”, końcówka różni się między źródłami.
+  Skrót na ekranie („żądanie echa ICMPv4”) zostaje; notatka dla nauczyciela w `scenariusz-arkusz-8.md`
+  uzupełniona.
 
 ### PYT-119 · decyzja · zamknięte
 
@@ -1738,3 +1750,13 @@ znaczy dziś PYT-061a, PYT-062c, PYT-060a.
 - **Rekomendacja:** (b) – obejrzyj kroki 7–12 (zapora) i 13–17 (ping ze stacji).
 - **Skutek braku odpowiedzi:** zmiany zostają na dysku.
 - **Odpowiedź (2026-11-25):** „119a obejrzale i wyglada super” → (a): commit i push.
+
+### PYT-120 · decyzja · zamknięte
+
+- **Kontekst:** operator (2026-11-25), przy PYT-118: „przypomnialem sobie ze oni beda uzywali Windows
+  Server 2022 (Eng) jako serwera i Win11 (Pol) jako klienta wiec uwzglednij to”.
+- **Wykonanie:** zasada we `wzorce-scenariuszy.md` („Środowisko pracowni”): napisy z ekranu serwera po
+  angielsku, ze stacji po polsku. Poprawione: warstwa 3 – notatka „Physical Address” (było „Adres
+  fizyczny”); warstwa 4 – notatka dla nauczyciela „DNS Manager”, pole „Name”; warstwa 8 – wyniki pingu
+  na serwerze „Reply from …” / „Request timed out.”, na stacji „Upłynął limit czasu żądania.”, notatka
+  „Co to jest ping?” z obiema wersjami, uproszczenia. Reguła zapory na stacji – polska nazwa (PYT-118).

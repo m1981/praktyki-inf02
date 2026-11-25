@@ -118,7 +118,7 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
   (10.10.0.7) i część ruterów go przedłuży. /release oddaje stary adres, /renew prosi o nowy – wtedy
   przychodzi zarezerwowany.
 - **Co, jeśli karty nie ma na liście w panelu?** MAC odczytasz na serwerze: ipconfig /all, karta
-  z adresem 10.10.0.7, pole „Adres fizyczny”.
+  z adresem 10.10.0.7, pole „Physical Address”.
 - **Dlaczego MAC z ipconfig ma myślniki, a panel czasem chce dwukropków?** To ten sam adres zapisany
   na dwa sposoby. Przy przepisywaniu zamień znaki.
 - **Co znaczy adres 169.254.x.x?** DHCP nie odpowiedział – np. kabel jest w złym porcie. Sprawdzanie
@@ -138,7 +138,8 @@ Na stronie: sekcja pod sceną, domyślnie zwinięta. Treść na stronie musi by�
 - `ipconfig` pokazuje MAC z myślnikami (`AA-BB-…`), część paneli rutera chce dwukropków
   (`AA:BB:…`) – przy przepisywaniu zamień znaki.
 - Gdy karty nie ma na liście w panelu (np. inny ruter), MAC odczytuje się na serwerze:
-  `ipconfig /all`, karta z adresem 10.10.0.7, pole „Adres fizyczny” (nie karta LAN 1).
+  `ipconfig /all`, karta z adresem 10.10.0.7, pole „Physical Address” (nie karta LAN 1; serwer
+  to Windows Server 2022 po angielsku, PYT-120).
 - TP-Link: wpis rezerwacji ma przełącznik **Status** – wyłączony wpis nie działa; przycisk
   **SAVE** w oknie rezerwacji. Szczegóły i ścieżka menu: `mapa-menu-urzadzen.md`.
 - Adres 169.254.x.x na karcie „WAN” znaczy, że DHCP nie odpowiedział (np. kabel w złym porcie) –

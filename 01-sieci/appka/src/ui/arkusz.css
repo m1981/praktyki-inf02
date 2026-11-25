@@ -481,6 +481,11 @@ line.sh-pulse:not(.sh-net) {
  font-size: 13px;
  font-weight: 700;
  fill: var(--sim-red);
+ /* Biała obwódka pod literami: strzałka, która przechodzi pod poleceniem, nie zasłania tekstu. */
+ paint-order: stroke;
+ stroke: #fff;
+ stroke-width: 4px;
+ stroke-linejoin: round;
 }
 .sh-dhcp path {
  stroke: var(--net-zielona);
